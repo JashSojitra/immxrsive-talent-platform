@@ -1,4 +1,2 @@
-// Point this at your deployed backend. No trailing slash.
-// Local development:  http://localhost:3000
-// Deployed:           https://your-api.onrender.com
+// Production backend. No trailing slash.
 window.API_BASE_URL = "https://immxrsive-talent-platform.onrender.com";
