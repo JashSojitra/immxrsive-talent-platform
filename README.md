@@ -1,6 +1,6 @@
 # ImmXrsive Talent & Industry Platform
 
-Release 1 is a public, data-backed talent and project evidence platform. The current implementation is **M1 only**: the Next.js foundation, relational database schema, fixture validation, deterministic import, and automated M1 tests. Public directory, profile, project, inquiry, and API workflows are intentionally not implemented yet.
+Release 1 is a public, data-backed talent and project evidence platform. The current implementation includes the M1 foundation and persistent-data layer plus the M2 public directory APIs. Frontend directory, profile, project, and inquiry workflows are intentionally not implemented yet.
 
 ## Requirements
 
@@ -26,6 +26,7 @@ Copy `.env.example` to `.env.local`. The database npm scripts load `.env.local` 
 | `npm run typecheck` | Run strict TypeScript checks |
 | `npm test` | Run credential-free unit tests |
 | `npm run test:integration` | Run PostgreSQL integration tests using `TEST_DATABASE_URL` |
+| `npm run test:api` | Run only the PostgreSQL-backed M2 API tests |
 | `npm run fixtures:validate` | Validate the three official JSON fixture files without database mutation |
 | `npm run fixtures:verify` | Verify imported M1 fixture counts and key relationships using `DATABASE_URL` |
 | `npm run db:generate` | Generate a reviewed SQL migration from the Drizzle schema |
@@ -45,3 +46,10 @@ The application does not read JSON fixtures during normal runtime. The importer 
 `npm run test:integration` only uses `TEST_DATABASE_URL`. It migrates and clears application tables in that database, so the variable must point to a dedicated disposable test database—never development or production.
 
 If `TEST_DATABASE_URL` is absent, the PostgreSQL suite is reported as skipped. Unit tests and fixture validation do not require credentials.
+
+## Public directory API
+
+- `GET /api/v1/talent` accepts `q` and repeated `skill`, `availability`, and `status` parameters.
+- `GET /api/v1/skills` returns database-backed skills plus availability and status metadata.
+
+Skill filters use AND semantics. Repeated availability and status values use OR semantics within their category, while all categories combine with AND. Invalid filter values return a structured `400` response.
