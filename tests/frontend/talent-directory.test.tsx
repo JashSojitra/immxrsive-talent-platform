@@ -64,6 +64,7 @@ function mockApi(talent = { items: [avery, maya], count: 2 }) {
 
 describe("talent directory", () => {
   beforeEach(() => {
+    window.__IMMXRSIVE_DISABLE_MOTION__ = true;
     window.history.replaceState(null, "", "/talent");
   });
 
@@ -79,6 +80,9 @@ describe("talent directory", () => {
     expect(screen.getAllByText("Project evidence").length).toBeGreaterThan(0);
     expect(screen.getByLabelText("2 matches")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "View Avery Chen's profile" })).toHaveAttribute("href", "/students/S01");
+    expect(screen.getByRole("heading", { name: /one field.*many dimensions/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /talent is more than.*a list of skills/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /find the person.*behind the possibility/i })).toBeInTheDocument();
   });
 
   it("submits search to the API and serializes it into the URL", async () => {
@@ -171,16 +175,69 @@ describe("talent directory", () => {
     await screen.findByText("Avery Chen");
 
     await user.tab();
+    expect(screen.getByRole("link", { name: /skip to talent directory/i })).toHaveFocus();
+    await user.tab();
     expect(screen.getByRole("link", { name: /directory home/i })).toHaveFocus();
     await user.tab();
-    expect(screen.getByRole("link", { name: /^talent 01$/i })).toHaveFocus();
+    expect(screen.getByRole("link", { name: /^talent index$/i })).toHaveFocus();
     await user.tab();
-    expect(screen.getByRole("link", { name: /explore talent/i })).toHaveFocus();
+    expect(screen.getByRole("link", { name: /enter the field/i })).toHaveFocus();
     await user.tab();
     expect(screen.getByRole("searchbox", { name: /search talent/i })).toHaveFocus();
     screen.getByRole("checkbox", { name: "Unity" }).focus();
     await user.keyboard(" ");
     expect(screen.getByRole("checkbox", { name: "Unity" })).toBeChecked();
+  });
+
+  it("keeps every chapter and the directory functional when GSAP does not initialize", async () => {
+    window.__IMMXRSIVE_DISABLE_MOTION__ = true;
+    mockApi();
+    const user = userEvent.setup();
+    const { container } = render(<TalentDirectory />);
+
+    expect(await screen.findByText("Avery Chen")).toBeInTheDocument();
+    expect(container.querySelector("main")).toHaveAttribute("data-motion", "fallback");
+    expect(screen.getByText("Spatial Computing")).toBeInTheDocument();
+    expect(screen.getByText(/shared projects, real contributor roles/i)).toBeInTheDocument();
+    await user.click(screen.getByRole("checkbox", { name: "Alumni" }));
+    expect(screen.getByRole("checkbox", { name: "Alumni" })).toBeChecked();
+  });
+
+  it("moves focus to the stable result summary when a focused card disappears", async () => {
+    window.__IMMXRSIVE_DISABLE_MOTION__ = true;
+    vi.spyOn(globalThis, "fetch").mockImplementation((input) => {
+      const url = String(input);
+      if (url.includes("/api/v1/skills")) return json(metadata);
+      return json(url.includes("q=Maya") ? { items: [maya], count: 1 } : { items: [avery, maya], count: 2 });
+    });
+    render(<TalentDirectory />);
+    const averyLink = await screen.findByRole("link", { name: "View Avery Chen's profile" });
+    averyLink.focus();
+    expect(averyLink).toHaveFocus();
+
+    window.history.pushState(null, "", "/talent?q=Maya");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+
+    await waitFor(() => expect(screen.getByLabelText("1 match")).toHaveFocus());
+    expect(screen.queryByRole("link", { name: "View Avery Chen's profile" })).not.toBeInTheDocument();
+  });
+
+  it("settles all content immediately when reduced motion is requested", async () => {
+    vi.spyOn(window, "matchMedia").mockImplementation((query) => ({
+      matches: query.includes("prefers-reduced-motion"),
+      media: query,
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
+    mockApi();
+    const { container } = render(<TalentDirectory />);
+    expect(await screen.findByText("Avery Chen")).toBeInTheDocument();
+    expect(container.querySelector("main")).toHaveAttribute("data-motion", "reduced");
+    expect(screen.getByRole("heading", { name: /the spatial field becomes.*a searchable index/i })).toBeInTheDocument();
   });
 });
 

@@ -1,9 +1,10 @@
 "use client";
 
 import Script from "next/script";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 
 import styles from "./talent.module.css";
+import type { SceneMotionState } from "./useCinematicMotion";
 
 declare global {
   interface Window {
@@ -13,7 +14,7 @@ declare global {
 
 const THREE_SOURCE = "/threeui/three.min.js";
 
-export function ImmersiveField() {
+export function ImmersiveField({ sceneState }: { sceneState: RefObject<SceneMotionState> }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [scriptReady, setScriptReady] = useState(
@@ -126,14 +127,23 @@ export function ImmersiveField() {
 
       const draw = (time = 0) => {
         if (disposed) return;
-        const scrollProgress = Math.min(window.scrollY / Math.max(window.innerHeight * 1.35, 1), 1);
-        const targetX = reducedMotion.matches ? 0 : pointer.x * 0.52;
-        const targetY = reducedMotion.matches ? 0 : -pointer.y * 0.34 - scrollProgress * 0.5;
+        const motion = sceneState.current;
+        const scrollProgress = motion.progress;
+        const targetX = reducedMotion.matches ? 0 : pointer.x * 0.52 * motion.parallax;
+        const targetY = reducedMotion.matches ? 0 : -pointer.y * 0.34 * motion.parallax - scrollProgress * 0.5;
         camera.position.x += (targetX - camera.position.x) * 0.035;
         camera.position.y += (1.2 + targetY - camera.position.y) * 0.035;
-        camera.position.z = 14 - scrollProgress * 2.2;
+        camera.position.z = 14 - scrollProgress * 3.4;
+        rig.scale.setScalar(1 + motion.spread * 0.18);
+        rig.position.y = motion.chapter * -0.28;
+        coreMaterial.opacity = 0.3 + motion.intensity * 0.2;
+        haloMaterial.opacity = 0.1 + motion.intensity * 0.16;
+        starsMaterial.opacity = 0.3 + motion.intensity * 0.28;
+        gridMaterials.forEach((material) => {
+          material.opacity = 0.08 + motion.grid * 0.24;
+        });
         if (!reducedMotion.matches) {
-          core.rotation.y = time * 0.00008 + scrollProgress * 0.9;
+          core.rotation.y = time * 0.00008 + scrollProgress * 1.45;
           core.rotation.x = time * 0.000035;
           halo.rotation.z = -time * 0.000045;
           stars.rotation.y = time * 0.000008;
@@ -190,7 +200,7 @@ export function ImmersiveField() {
       queueMicrotask(() => setRenderState("fallback"));
       return;
     }
-  }, [scriptReady]);
+  }, [sceneState, scriptReady]);
 
   return (
     <div ref={hostRef} className={styles.immersiveField} data-render-state={renderState} aria-hidden="true">

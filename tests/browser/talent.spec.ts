@@ -39,6 +39,12 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
+test("root redirects to the talent experience", async ({ page }) => {
+  await page.goto("/");
+  await expect(page).toHaveURL(/\/talent$/);
+  await expect(page.getByRole("heading", { name: /discover the people/i })).toBeVisible();
+});
+
 test("directory workflow remains functional and URL-addressable", async ({ page }) => {
   await page.goto("/talent");
   await expect(page.getByRole("heading", { name: /discover the people/i })).toBeVisible();
@@ -104,4 +110,51 @@ test("a WebGL context failure leaves the directory intact", async ({ page }) => 
   await expect(page.getByLabel("17 matches")).toBeVisible();
   await expect(page.getByRole("searchbox", { name: /search talent/i })).toBeEnabled();
   await expect(page.getByRole("link", { name: /view avery chen/i })).toBeVisible();
+});
+
+test("GSAP fallback exposes every chapter and preserves filtering", async ({ page }) => {
+  await page.addInitScript(() => {
+    window.__IMMXRSIVE_DISABLE_MOTION__ = true;
+  });
+  await page.goto("/talent");
+  await expect(page.locator("main")).toHaveAttribute("data-motion", "fallback");
+  await expect(page.getByRole("heading", { name: /one field.*many dimensions/i })).toBeAttached();
+  await expect(page.getByRole("heading", { name: /talent is more than.*a list of skills/i })).toBeAttached();
+  await expect(page.getByRole("heading", { name: /find the person.*behind the possibility/i })).toBeAttached();
+  await page.getByRole("checkbox", { name: "Alumni" }).focus();
+  await page.keyboard.press("Space");
+  await expect(page.getByLabel("3 matches")).toBeVisible();
+});
+
+test("focused removed card hands focus to the result summary", async ({ page }) => {
+  await page.goto("/talent#directory");
+  const avery = page.getByRole("link", { name: /view avery chen/i });
+  await avery.focus();
+  await page.evaluate(() => {
+    window.history.pushState(null, "", "/talent?q=Maya");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  });
+  await expect(page.getByLabel("1 match")).toBeFocused();
+  await expect(avery).toHaveCount(0);
+});
+
+test("native scroll advances the authored field sequence", async ({ page }) => {
+  await page.goto("/talent");
+  await expect(page.locator("main")).toHaveAttribute("data-motion", "ready");
+
+  const fieldWord = page.locator("[data-field-word='near']").first();
+  const before = await fieldWord.evaluate((element) => getComputedStyle(element).transform);
+  await page.locator("[data-chapter='field']").scrollIntoViewIfNeeded();
+  await page.waitForTimeout(250);
+  const after = await fieldWord.evaluate((element) => getComputedStyle(element).transform);
+
+  expect(after).not.toBe(before);
+});
+
+test("motion cleanup runs when the talent page unmounts", async ({ page }) => {
+  await page.goto("/talent");
+  await expect.poll(() => page.evaluate(() => window.__IMMXRSIVE_MOTION_ACTIVE__)).toBe(true);
+  await page.getByRole("link", { name: /view avery chen/i }).click();
+  await expect(page).toHaveURL(/\/students\/S01$/);
+  await expect.poll(() => page.evaluate(() => window.__IMMXRSIVE_MOTION_ACTIVE__ === true)).toBe(false);
 });
