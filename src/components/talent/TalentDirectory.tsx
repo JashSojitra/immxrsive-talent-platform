@@ -125,7 +125,7 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
 
   useEffect(() => {
     const nextUrl = `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`;
-    window.history.replaceState(null, "", nextUrl);
+    window.history.replaceState(window.history.state, "", nextUrl);
   }, [query]);
 
   useEffect(() => {
