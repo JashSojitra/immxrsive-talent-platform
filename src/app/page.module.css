@@ -1,0 +1,17 @@
+.main {
+  width: min(100% - 2rem, 60rem);
+  margin-inline: auto;
+  padding-block: 4rem;
+}
+
+.main h1 {
+  margin-block: 0 1rem;
+  font-size: clamp(2rem, 7vw, 4rem);
+  line-height: 1.05;
+}
+
+.main p {
+  max-width: 42rem;
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
