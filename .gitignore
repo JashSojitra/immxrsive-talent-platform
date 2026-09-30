@@ -8,6 +8,8 @@
 # test output
 /coverage/
 /.vitest/
+/playwright-report/
+/test-results/
 
 # local environment files
 .env

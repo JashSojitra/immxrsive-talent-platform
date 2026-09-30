@@ -16,6 +16,8 @@
     "test:unit": "vitest run tests/unit",
     "test:integration": "node --env-file-if-exists=.env.local node_modules/vitest/vitest.mjs run tests/integration",
     "test:api": "node --env-file-if-exists=.env.local node_modules/vitest/vitest.mjs run tests/integration/talent-api.test.ts",
+    "test:frontend": "vitest run tests/frontend",
+    "test:browser": "playwright test",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "node --env-file-if-exists=.env.local --import tsx scripts/migrate.ts",
     "fixtures:validate": "tsx scripts/validate-fixtures.ts",
@@ -32,12 +34,18 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
     "@types/node": "^26.6.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.149.0",
     "drizzle-kit": "^0.31.11",
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.3.7",
+    "jsdom": "^29.1.1",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3",
     "vitest": "^5.0.2"
