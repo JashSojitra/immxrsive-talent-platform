@@ -14,28 +14,43 @@ try {
   const [counts] = await sql<
     Array<{
       students: number;
+      publishedStudents: number;
       projects: number;
       skills: number;
       contributors: number;
       studentSkills: number;
+      availabilityOptions: number;
       studentAvailability: number;
+      professionalLinks: number;
+      projectTechnologies: number;
+      projectAssets: number;
     }>
   >`
     select
       (select count(*)::int from students) as students,
+      (select count(*)::int from students where profile_status = 'published') as "publishedStudents",
       (select count(*)::int from projects) as projects,
       (select count(*)::int from skills) as skills,
       (select count(*)::int from project_contributors) as contributors,
       (select count(*)::int from student_skills) as "studentSkills",
-      (select count(*)::int from student_availability) as "studentAvailability"
+      (select count(*)::int from availability_options) as "availabilityOptions",
+      (select count(*)::int from student_availability) as "studentAvailability",
+      (select count(*)::int from professional_links) as "professionalLinks",
+      (select count(*)::int from project_technologies) as "projectTechnologies",
+      (select count(*)::int from project_assets) as "projectAssets"
   `;
 
   assertEqual(counts.students, 18, "student count");
+  assertEqual(counts.publishedStudents, 17, "published student count");
   assertEqual(counts.projects, 9, "project count");
   assertEqual(counts.skills, 24, "standardized skill count");
   assertEqual(counts.contributors, 24, "project contributor count");
   assertEqual(counts.studentSkills, 53, "explicit student skill count");
+  assertEqual(counts.availabilityOptions, 3, "availability option count");
   assertEqual(counts.studentAvailability, 22, "student availability count");
+  assertEqual(counts.professionalLinks, 18, "professional link count");
+  assertEqual(counts.projectTechnologies, 31, "project technology count");
+  assertEqual(counts.projectAssets, 9, "project asset count");
 
   const multiValuedAvailability = await sql<
     Array<{ id: string; values: string[] }>

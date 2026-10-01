@@ -10,7 +10,9 @@ export function getRuntimeDatabase() {
   }
 
   if (!runtimeConnection || runtimeDatabaseUrl !== databaseUrl) {
-    runtimeConnection = createDatabase(databaseUrl);
+    // The directory loads results and filter metadata concurrently. Keep the
+    // runtime pool small, but allow independent requests to make progress.
+    runtimeConnection = createDatabase(databaseUrl, 5);
     runtimeDatabaseUrl = databaseUrl;
   }
 

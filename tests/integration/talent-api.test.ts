@@ -232,6 +232,16 @@ describeWithDatabase("public directory API", () => {
     expect(body.status.map((option) => option.value)).toEqual(["current", "alumni"]);
   });
 
+  test("directory and filter metadata requests complete concurrently", async () => {
+    const [talentResponse, metadataResponse] = await Promise.all([
+      talentGet(requestFor("/api/v1/talent?q=Unity")),
+      skillsGet(),
+    ]);
+
+    expect(talentResponse.status).toBe(200);
+    expect(metadataResponse.status).toBe(200);
+  });
+
   test("runtime APIs work without access to the fixture directory", async () => {
     const originalDirectory = process.cwd();
     try {

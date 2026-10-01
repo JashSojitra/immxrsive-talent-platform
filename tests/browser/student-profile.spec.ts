@@ -74,7 +74,7 @@ test("reduced motion leaves the complete profile immediately available", async (
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/students/S01");
 
-  await expect(page.locator("main")).toHaveAttribute("data-motion", "reduced");
+  await expect(page.locator("main[data-motion]")).toHaveAttribute("data-motion", "reduced");
   await expect(page.getByRole("heading", { name: "Industrial Safety VR Trainer" })).toBeAttached();
   await expect(page.getByRole("link", { name: /employer inquiry for avery chen/i })).toBeAttached();
 });
