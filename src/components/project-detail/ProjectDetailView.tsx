@@ -121,7 +121,7 @@ export function ProjectDetailView({ project }: { project: PublicProjectDetail })
           Interested in collaborating<br />around <em>this project?</em>
         </h2>
         <p data-project-reveal>
-          Start with a project-specific inquiry. The complete inquiry workflow arrives in M6.
+          Send a project-specific inquiry with this project context attached automatically.
         </p>
         <Link className={styles.inquiryCta} href={`/inquiry/project/${project.id}`} data-project-reveal>
           Project inquiry for {project.title} <span aria-hidden="true">↗</span>

@@ -147,7 +147,7 @@ export function StudentProfileView({ profile }: { profile: PublicStudentProfile 
           Interested in working<br />with <em>{profile.name}?</em>
         </h2>
         <p data-profile-reveal>
-          Start with a student-specific inquiry. The complete inquiry workflow arrives in M6.
+          Send a student-specific inquiry with this profile context attached automatically.
         </p>
         <Link className={styles.inquiryCta} href={`/inquiry/student/${profile.id}`} data-profile-reveal>
           Employer inquiry for {profile.name} <span aria-hidden="true">↗</span>
