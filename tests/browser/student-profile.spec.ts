@@ -115,11 +115,11 @@ test("WebGL failure cannot remove profile functionality", async ({ page }) => {
   await expect(page.getByRole("link", { name: /employer inquiry for avery chen/i })).toBeAttached();
 });
 
-test("inquiry handoff preserves the selected student without implementing the form", async ({ page }) => {
+test("inquiry handoff preserves the selected student in the real form", async ({ page }) => {
   await page.goto("/students/S01");
   await page.getByRole("link", { name: /employer inquiry for avery chen/i }).click();
 
   await expect(page).toHaveURL(/\/inquiry\/student\/S01$/);
-  await expect(page.getByRole("heading", { name: /inquiry for.*avery chen/i })).toBeVisible();
-  await expect(page.getByText(/complete employer inquiry form will be introduced in M6/i)).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Avery Chen" })).toBeVisible();
+  await expect(page.getByRole("form", { name: /employer inquiry about avery chen/i })).toBeVisible();
 });

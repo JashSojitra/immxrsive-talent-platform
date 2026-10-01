@@ -43,8 +43,9 @@ test("project inquiry handoff preserves project identity without choosing a cont
   await page.goto("/projects/P01");
   await page.getByRole("link", { name: /project inquiry for industrial safety/i }).click();
   await expect(page).toHaveURL(/\/inquiry\/project\/P01$/);
-  await expect(page.getByRole("heading", { name: /inquiry for.*industrial safety vr trainer/i })).toBeVisible();
-  await expect(page.getByText(/preserves the selected project without selecting a contributor/i)).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Industrial Safety VR Trainer" })).toBeVisible();
+  await expect(page.getByRole("form", { name: /employer inquiry about industrial safety/i })).toBeVisible();
+  await expect(page.getByText("Avery Chen")).toHaveCount(0);
 });
 
 test("student evidence reaches the canonical page and browser back remains natural", async ({ page }) => {

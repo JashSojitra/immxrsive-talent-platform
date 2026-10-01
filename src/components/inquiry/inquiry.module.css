@@ -1,0 +1,126 @@
+.page {
+  --hairline: rgba(223, 231, 224, 0.17);
+  position: relative;
+  min-height: 100svh;
+  overflow: clip;
+  background:
+    linear-gradient(to right, transparent calc(100% - 1px), rgba(223, 231, 224, 0.04) 1px) 0 0 / calc(100% / 6) 100%,
+    radial-gradient(circle at 78% 15%, rgba(118, 247, 230, 0.08), transparent 26%),
+    radial-gradient(circle at 12% 48%, rgba(255, 77, 61, 0.08), transparent 25%),
+    var(--ink);
+}
+
+.siteHeader,
+.context,
+.formSection,
+.stateSection { position: relative; z-index: 2; width: var(--content); margin-inline: auto; }
+.spatialBackdrop { position: fixed; z-index: 0; inset: 0; pointer-events: none; overflow: hidden; }
+.spatialBackdrop::before { position: absolute; width: 55vw; aspect-ratio: 1; top: -22vw; right: -17vw; border: 1px solid rgba(118, 247, 230, 0.1); border-radius: 50%; content: ""; }
+.spatialBackdrop span { position: absolute; top: 0; bottom: 0; width: 1px; left: 25%; background: rgba(223, 231, 224, 0.035); }
+.spatialBackdrop span:nth-child(2) { left: 50%; }
+.spatialBackdrop span:nth-child(3) { left: 75%; }
+.skipLink { position: fixed; z-index: 20; top: 12px; left: 12px; padding: 12px 16px; color: var(--ink); background: var(--electric); transform: translateY(-180%); }
+.skipLink:focus { transform: none; }
+
+.siteHeader { display: flex; height: 88px; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--hairline); }
+.brand { text-decoration: none; font-size: 0.9rem; font-weight: 650; letter-spacing: 0.18em; }
+.brand span { color: var(--signal); }
+.siteHeader nav { display: flex; gap: 24px; align-items: center; text-transform: uppercase; font-size: 0.68rem; letter-spacing: 0.14em; }
+.siteHeader nav a { color: var(--muted); text-decoration: none; }
+.siteHeader nav span { color: var(--electric); }
+
+.context { display: grid; min-height: min(720px, calc(100svh - 88px)); padding: 100px 0; grid-template-columns: minmax(150px, 0.28fr) minmax(0, 1fr); gap: clamp(42px, 8vw, 150px); align-items: center; border-bottom: 1px solid var(--hairline); animation: inquiry-enter 0.7s var(--ease-out) both; }
+.contextIndex { align-self: start; display: grid; gap: 12px; color: var(--muted); text-transform: uppercase; font-size: 0.63rem; letter-spacing: 0.15em; }
+.contextIndex strong { color: var(--signal); font-size: clamp(3rem, 6vw, 6rem); font-weight: 350; line-height: 0.9; letter-spacing: -0.07em; }
+.eyebrow { margin: 0 0 26px; color: var(--electric); text-transform: uppercase; font-size: 0.66rem; letter-spacing: 0.16em; }
+.context h1 { max-width: 1100px; margin: 0; font-size: clamp(4.5rem, 9vw, 9rem); font-weight: 350; line-height: 0.88; letter-spacing: -0.07em; text-wrap: balance; overflow-wrap: anywhere; }
+.contextDetail { max-width: 720px; margin: 42px 0 0; color: var(--bone); font-size: clamp(1.15rem, 2vw, 1.75rem); line-height: 1.5; }
+.lockedContext { max-width: 650px; margin: 28px 0 0; padding-top: 22px; color: var(--muted); border-top: 1px solid var(--hairline); font-size: 0.82rem; line-height: 1.6; }
+
+.formSection { display: grid; padding: 130px 0 150px; grid-template-columns: minmax(280px, 0.75fr) minmax(0, 1.25fr); gap: clamp(56px, 9vw, 160px); }
+.formIntro { align-self: start; position: sticky; top: 48px; }
+.formIntro h2 { margin: 0; font-size: clamp(3.6rem, 6.5vw, 7rem); font-weight: 350; line-height: 0.91; letter-spacing: -0.065em; }
+.formIntro h2 em { color: var(--signal); font-style: normal; }
+.formIntro > p:last-child { max-width: 430px; margin: 38px 0 0; color: var(--muted); line-height: 1.7; }
+.form { min-width: 0; animation: inquiry-enter 0.7s 0.12s var(--ease-out) both; }
+.field { position: relative; margin-bottom: 30px; }
+.field label { display: block; margin-bottom: 12px; text-transform: uppercase; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.12em; }
+.field label span { color: var(--muted); font-weight: 400; }
+.field input,
+.field textarea { width: 100%; min-height: 58px; padding: 15px 16px; border: 1px solid rgba(223, 231, 224, 0.3); border-radius: 0; color: var(--bone); background: rgba(8, 13, 17, 0.76); font: inherit; line-height: 1.5; transition: border-color 0.2s ease, background 0.2s ease; }
+.field textarea { min-height: 180px; resize: vertical; }
+.field input:focus,
+.field textarea:focus { border-color: var(--electric); background: rgba(12, 20, 24, 0.92); }
+.field[data-invalid="true"] input,
+.field[data-invalid="true"] textarea { border-color: var(--signal); }
+.field > small { display: block; margin-top: 9px; color: var(--muted); font-size: 0.76rem; line-height: 1.5; }
+.fieldError { margin: 9px 0 0; color: #ff9288; font-size: 0.82rem; line-height: 1.45; animation: feedback-enter 0.22s var(--ease-out) both; }
+.errorSummary,
+.submissionError { margin: 0 0 34px; padding: 22px; border: 1px solid var(--signal); background: rgba(255, 77, 61, 0.08); }
+.errorSummary strong,
+.submissionError strong { display: block; margin-bottom: 10px; color: #ff9288; }
+.errorSummary ul { margin: 0; padding-left: 20px; }
+.errorSummary li + li { margin-top: 7px; }
+.errorSummary a { text-underline-offset: 4px; }
+.submissionError p { margin: 8px 0 0; color: var(--muted); line-height: 1.55; }
+.honeypot { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.submitRow { display: flex; margin-top: 42px; align-items: center; justify-content: space-between; gap: 22px; }
+.submitRow > p { margin: 0; color: var(--muted); font-size: 0.78rem; }
+.submitRow button { display: inline-flex; min-width: min(100%, 300px); min-height: 68px; padding: 0 22px; align-items: center; justify-content: space-between; gap: 20px; border: 1px solid var(--electric); color: var(--ink); background: var(--electric); text-transform: uppercase; font: inherit; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.13em; cursor: pointer; transition: transform 0.25s var(--ease-out), opacity 0.2s ease; }
+.submitRow button:hover:not(:disabled),
+.submitRow button:focus-visible:not(:disabled) { transform: translateY(-3px); }
+.submitRow button:disabled { opacity: 0.55; cursor: wait; }
+
+.success { min-height: 440px; padding: clamp(34px, 6vw, 72px); border: 1px solid rgba(118, 247, 230, 0.5); background: radial-gradient(circle at 85% 15%, rgba(118, 247, 230, 0.12), transparent 30%), rgba(8, 13, 17, 0.8); animation: success-enter 0.55s var(--ease-out) both; }
+.success > span { display: grid; width: 54px; height: 54px; place-items: center; border: 1px solid var(--electric); border-radius: 50%; color: var(--electric); }
+.success > p:first-of-type { margin: 52px 0 18px; color: var(--electric); text-transform: uppercase; font-size: 0.65rem; letter-spacing: 0.15em; }
+.success h2 { margin: 0; font-size: clamp(2.8rem, 5vw, 5.6rem); font-weight: 350; line-height: 0.95; letter-spacing: -0.055em; }
+.success > p:last-child { max-width: 580px; margin: 32px 0 0; color: var(--muted); line-height: 1.7; overflow-wrap: anywhere; }
+
+.stateSection { display: grid; min-height: calc(100svh - 88px); padding: 110px 0; align-content: center; }
+.stateSection h1 { max-width: 1100px; margin: 0; font-size: clamp(4.3rem, 9vw, 9rem); font-weight: 350; line-height: 0.9; letter-spacing: -0.07em; }
+.stateSection h1 em { color: var(--signal); font-style: normal; }
+.stateSection > p:not(.eyebrow) { max-width: 590px; margin: 42px 0 34px; color: var(--muted); line-height: 1.7; }
+.stateActions { display: flex; align-items: center; gap: 24px; }
+.stateActions a,
+.stateActions button { min-height: 48px; color: var(--bone); background: transparent; border: 0; font: inherit; text-decoration: underline; text-underline-offset: 5px; cursor: pointer; }
+
+@keyframes inquiry-enter { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes feedback-enter { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
+@keyframes success-enter { from { opacity: 0; transform: scale(0.985); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 900px) {
+  .context,
+  .formSection { grid-template-columns: 1fr; }
+  .context { gap: 48px; }
+  .formIntro { position: static; }
+}
+
+@media (max-width: 700px) {
+  .siteHeader { height: 72px; }
+  .siteHeader nav { gap: 13px; font-size: 0.59rem; }
+  .brand { font-size: 0.76rem; }
+  .context { min-height: auto; padding: 76px 0 82px; }
+  .context h1 { font-size: clamp(3.8rem, 18vw, 5.5rem); }
+  .contextDetail { margin-top: 32px; }
+  .formSection { padding: 88px 0 100px; gap: 54px; }
+  .formIntro h2 { font-size: clamp(3.2rem, 15vw, 4.5rem); }
+  .field input { min-height: 56px; }
+  .submitRow { align-items: flex-start; flex-direction: column; }
+  .submitRow button { width: 100%; }
+  .success { min-height: 380px; }
+  .stateSection h1 { font-size: clamp(3.7rem, 18vw, 5.4rem); }
+  .stateActions { align-items: flex-start; flex-direction: column; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .context,
+  .form,
+  .fieldError,
+  .success { animation: none; }
+  .field input,
+  .field textarea,
+  .submitRow button { transition: none; }
+  .submitRow button:hover:not(:disabled),
+  .submitRow button:focus-visible:not(:disabled) { transform: none; }
+}
