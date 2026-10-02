@@ -1,0 +1,18 @@
+{
+  "directory_endpoint": "/api/v1/talent",
+  "student_detail_endpoint": "/api/v1/students/{id}",
+  "project_detail_endpoint": "/api/v1/projects/{id}",
+  "student_page_route": "/students/{id}",
+  "project_page_route": "/projects/{id}",
+  "query_parameters": {
+    "text": "q",
+    "skill": "skill",
+    "availability": "availability",
+    "status": "status"
+  },
+  "directory_results_path": "items",
+  "id_field": "id",
+  "skills_field": "skills",
+  "contributors_field": "contributors",
+  "optional_broken_project_id": "P07"
+}
