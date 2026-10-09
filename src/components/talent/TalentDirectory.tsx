@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { createPortal } from "react-dom";
 import { FormEvent, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { ImmersiveField } from "./ImmersiveField";
@@ -50,11 +51,29 @@ function apiMessage(error: unknown) {
   return error instanceof Error ? error.message : "The directory is temporarily unavailable.";
 }
 
+class ApiRequestError extends Error {
+  readonly code?: string;
+  readonly details: Array<{ field?: string; message?: string }>;
+
+  constructor(message: string, code?: string, details: Array<{ field?: string; message?: string }> = []) {
+    super(message);
+    this.name = "ApiRequestError";
+    this.code = code;
+    this.details = details;
+  }
+}
+
 async function fetchJson<T>(url: string, signal: AbortSignal): Promise<T> {
   const response = await fetch(url, { cache: "no-store", signal });
   if (!response.ok) {
-    const body = (await response.json().catch(() => null)) as { error?: { message?: string } } | null;
-    throw new Error(body?.error?.message ?? "The directory is temporarily unavailable.");
+    const body = (await response.json().catch(() => null)) as {
+      error?: { code?: string; message?: string; details?: Array<{ field?: string; message?: string }> };
+    } | null;
+    throw new ApiRequestError(
+      body?.error?.message ?? "The directory is temporarily unavailable.",
+      body?.error?.code,
+      body?.error?.details,
+    );
   }
   return response.json() as Promise<T>;
 }
@@ -63,6 +82,8 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
   const pageRef = useRef<HTMLElement>(null);
   const cardGridRef = useRef<HTMLDivElement>(null);
   const resultSummaryRef = useRef<HTMLParagraphElement>(null);
+  const historyReadyRef = useRef(false);
+  const restoringHistoryRef = useRef(false);
   const sceneState = useRef<SceneMotionState>({
     progress: 0,
     chapter: 0,
@@ -81,6 +102,7 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
   const [results, setResults] = useState<TalentDirectoryResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [searchError, setSearchError] = useState("");
   const [retryKey, setRetryKey] = useState(0);
   const query = serializeTalentFilters(filters);
   const resultIds = results?.items.map((student) => student.id).join("|") ?? "";
@@ -108,11 +130,21 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
         }
         setResults(response);
         setError("");
+        setSearchError("");
         setLoading(false);
       })
       .catch((reason: unknown) => {
         if (!abort.signal.aborted) {
-          setError(apiMessage(reason));
+          if (reason instanceof ApiRequestError && reason.code === "INVALID_QUERY") {
+            const queryDetail = reason.details.find((detail) => detail.field === "q");
+            if (queryDetail) {
+              setSearchError(queryDetail.message ?? reason.message);
+            } else {
+              setError(reason.message);
+            }
+          } else {
+            setError(apiMessage(reason));
+          }
           setLoading(false);
         }
       });
@@ -125,14 +157,25 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
 
   useEffect(() => {
     const nextUrl = `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`;
-    window.history.replaceState(window.history.state, "", nextUrl);
+    if (restoringHistoryRef.current) {
+      restoringHistoryRef.current = false;
+      return;
+    }
+    if (!historyReadyRef.current) {
+      historyReadyRef.current = true;
+      window.history.replaceState(window.history.state, "", nextUrl);
+      return;
+    }
+    window.history.pushState(window.history.state, "", nextUrl);
   }, [query]);
 
   useEffect(() => {
     const onPopState = () => {
       const restored = parseTalentFilters(window.location.search);
+      restoringHistoryRef.current = true;
       setLoading(true);
       setError("");
+      setSearchError("");
       setFilters(restored);
       setSearchDraft(restored.q);
     };
@@ -144,6 +187,7 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
     (key: (typeof FILTER_KEYS)[number], value: string, checked: boolean) => {
       setLoading(true);
       setError("");
+      setSearchError("");
       setFilters((current) => ({
         ...current,
         [key]: checked
@@ -157,6 +201,7 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
   const clearAll = useCallback(() => {
     setLoading(true);
     setError("");
+    setSearchError("");
     setFilters(EMPTY_FILTERS);
     setSearchDraft("");
   }, []);
@@ -165,6 +210,7 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
     event.preventDefault();
     setLoading(true);
     setError("");
+    setSearchError("");
     setFilters((current) => ({ ...current, q: searchDraft.trim() }));
   };
 
@@ -179,6 +225,7 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
     if (key === "q") {
       setLoading(true);
       setError("");
+      setSearchError("");
       setFilters((current) => ({ ...current, q: "" }));
       setSearchDraft("");
       return;
@@ -268,17 +315,24 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
         <div className={styles.discoveryGrid}>
           <aside className={styles.filterPanel} aria-label="Talent filters">
             <form className={styles.searchForm} onSubmit={submitSearch} role="search">
-              <label htmlFor="talent-search">Search talent</label>
+              <div className={styles.searchLabelRow}>
+                <label htmlFor="talent-search">Search talent</label>
+                <SearchHelp />
+              </div>
               <div className={styles.searchRow}>
                 <input
                   id="talent-search"
                   type="search"
                   value={searchDraft}
                   onChange={(event) => setSearchDraft(event.target.value)}
-                  placeholder="Name, headline, or skill"
+                  placeholder="Search talent, skills, or phrases..."
+                  aria-describedby={`talent-search-hint${searchError ? " talent-search-error" : ""}`}
+                  aria-invalid={searchError ? "true" : undefined}
                 />
                 <button type="submit" aria-label="Submit talent search">↗</button>
               </div>
+              <p id="talent-search-hint" className={styles.searchHint}>Use commas for AND, <code>|</code> for OR</p>
+              {searchError ? <p id="talent-search-error" className={styles.searchError} role="alert">{searchError}</p> : null}
             </form>
 
             {metadata ? (
@@ -396,6 +450,137 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
         <p>Algoma University-connected talent, built for what comes next.</p>
       </footer>
     </main>
+  );
+}
+
+function SearchHelp() {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [open, setOpen] = useState(false);
+  const [pinned, setPinned] = useState(false);
+  const [position, setPosition] = useState({ top: 0, left: 16, width: 360, maxHeight: 520 });
+
+  const cancelClose = useCallback(() => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = null;
+  }, []);
+
+  const close = useCallback((restoreFocus = false) => {
+    cancelClose();
+    setOpen(false);
+    setPinned(false);
+    if (restoreFocus) buttonRef.current?.focus();
+  }, [cancelClose]);
+
+  const scheduleClose = useCallback(() => {
+    cancelClose();
+    if (!pinned) closeTimer.current = setTimeout(() => setOpen(false), 140);
+  }, [cancelClose, pinned]);
+
+  const updatePosition = useCallback(() => {
+    const anchor = buttonRef.current;
+    if (!anchor) return;
+    const rect = anchor.getBoundingClientRect();
+    const width = Math.min(360, Math.max(280, window.innerWidth - 32));
+    const left = Math.min(Math.max(16, rect.right - width), window.innerWidth - width - 16);
+    const belowTop = rect.bottom + 10;
+    const belowSpace = window.innerHeight - belowTop - 16;
+    const aboveSpace = rect.top - 26;
+    const useAbove = belowSpace < 260 && aboveSpace > belowSpace;
+    const maxHeight = Math.max(160, Math.min(520, useAbove ? aboveSpace : belowSpace));
+    const top = useAbove ? Math.max(16, rect.top - maxHeight - 10) : belowTop;
+    setPosition({ top, left, width, maxHeight });
+  }, []);
+
+  useLayoutEffect(() => {
+    if (open) updatePosition();
+  }, [open, updatePosition]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onPositionChange = () => updatePosition();
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (!buttonRef.current?.contains(target) && !panelRef.current?.contains(target)) close();
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") close(true);
+    };
+    window.addEventListener("resize", onPositionChange);
+    window.addEventListener("scroll", onPositionChange, true);
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("resize", onPositionChange);
+      window.removeEventListener("scroll", onPositionChange, true);
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [close, open, updatePosition]);
+
+  useEffect(() => () => cancelClose(), [cancelClose]);
+
+  const panel = open && typeof document !== "undefined" ? createPortal(
+    <div
+      ref={panelRef}
+      id="talent-search-help"
+      className={styles.searchHelpPanel}
+      role="region"
+      aria-labelledby="talent-search-help-title"
+      style={{ top: position.top, left: position.left, width: position.width, maxHeight: position.maxHeight }}
+      onPointerEnter={(event) => {
+        if (event.pointerType === "mouse") cancelClose();
+      }}
+      onPointerLeave={(event) => {
+        if (event.pointerType === "mouse") scheduleClose();
+      }}
+    >
+      <p id="talent-search-help-title" className={styles.searchHelpTitle}>Search tips</p>
+      <p className={styles.searchHelpIntro}>Find students by name, headline, or skills. Use these shortcuts to refine your search.</p>
+      <dl className={styles.searchHelpExamples}>
+        <div><dt><code>React</code></dt><dd>Find students matching React.</dd></div>
+        <div><dt><code>React, TypeScript</code></dt><dd>Match BOTH keywords.</dd></div>
+        <div><dt><code>React | TypeScript</code></dt><dd>Match EITHER keyword.</dd></div>
+        <div><dt><code>&quot;Machine Learning&quot;</code></dt><dd>Search for the complete phrase.</dd></div>
+        <div><dt><code>React | TypeScript, Figma</code></dt><dd>Match React OR TypeScript, AND Figma.</dd></div>
+      </dl>
+      <p className={styles.searchHelpFooter}>Tip: Use the Skills, Availability, and Status filters below for more precise results.</p>
+    </div>,
+    document.body,
+  ) : null;
+
+  return (
+    <>
+      <button
+        ref={buttonRef}
+        type="button"
+        className={styles.searchHelpButton}
+        aria-label="Search tips"
+        aria-expanded={open}
+        aria-controls="talent-search-help"
+        onPointerEnter={(event) => {
+          if (event.pointerType === "mouse") {
+            cancelClose();
+            setOpen(true);
+          }
+        }}
+        onPointerLeave={(event) => {
+          if (event.pointerType === "mouse") scheduleClose();
+        }}
+        onClick={() => {
+          cancelClose();
+          if (pinned) close();
+          else {
+            setPinned(true);
+            setOpen(true);
+          }
+        }}
+      >
+        <span aria-hidden="true">?</span>
+      </button>
+      {panel}
+    </>
   );
 }
 

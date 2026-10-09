@@ -48,7 +48,13 @@
 .field label span { color: var(--muted); font-weight: 400; }
 .field input,
 .field textarea { width: 100%; min-height: 58px; padding: 15px 16px; border: 1px solid rgba(223, 231, 224, 0.3); border-radius: 0; color: var(--bone); background: rgba(8, 13, 17, 0.76); font: inherit; line-height: 1.5; transition: border-color 0.2s ease, background 0.2s ease; }
-.field textarea { min-height: 180px; resize: vertical; }
+.field textarea { min-height: 520px; resize: vertical; white-space: pre-wrap; }
+.templateHeader { display: flex; margin-bottom: 12px; align-items: flex-end; justify-content: space-between; gap: 18px; }
+.templateHeader label { margin-bottom: 7px; }
+.templateHeader p { margin: 0; color: var(--muted); font-size: 0.76rem; line-height: 1.5; }
+.resetTemplate { flex: 0 0 auto; min-height: 44px; padding: 8px 12px; border: 1px solid rgba(255, 77, 61, 0.62); color: var(--bone); background: rgba(255, 77, 61, 0.08); text-transform: uppercase; font: inherit; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.1em; cursor: pointer; transition: border-color 0.2s ease, background 0.2s ease; }
+.resetTemplate:hover,
+.resetTemplate:focus-visible { border-color: var(--signal); background: rgba(255, 77, 61, 0.16); }
 .field input:focus,
 .field textarea:focus { border-color: var(--electric); background: rgba(12, 20, 24, 0.92); }
 .field[data-invalid="true"] input,
@@ -106,6 +112,8 @@
   .formSection { padding: 88px 0 100px; gap: 54px; }
   .formIntro h2 { font-size: clamp(3.2rem, 15vw, 4.5rem); }
   .field input { min-height: 56px; }
+  .field textarea { min-height: 460px; }
+  .templateHeader { align-items: flex-start; flex-direction: column; }
   .submitRow { align-items: flex-start; flex-direction: column; }
   .submitRow button { width: 100%; }
   .success { min-height: 380px; }
@@ -120,6 +128,7 @@
   .success { animation: none; }
   .field input,
   .field textarea,
+  .resetTemplate,
   .submitRow button { transition: none; }
   .submitRow button:hover:not(:disabled),
   .submitRow button:focus-visible:not(:disabled) { transform: none; }

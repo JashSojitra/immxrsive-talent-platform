@@ -1,5 +1,10 @@
 import { z } from "zod";
 
+import {
+  findUnresolvedInquiryPlaceholders,
+  unresolvedPlaceholderMessage,
+} from "@/lib/inquiry-template";
+
 export const MAX_INQUIRY_BODY_BYTES = 16 * 1024;
 
 export const inquiryRequestSchema = z.object({
@@ -19,7 +24,16 @@ export const inquiryRequestSchema = z.object({
     .email("Enter a valid contact email."),
   description: z.string().trim()
     .min(20, "Inquiry description must be at least 20 characters.")
-    .max(2_000, "Inquiry description must be 2,000 characters or fewer."),
+    .max(2_000, "Inquiry description must be 2,000 characters or fewer.")
+    .superRefine((description, context) => {
+      const unresolved = findUnresolvedInquiryPlaceholders(description);
+      if (unresolved.length > 0) {
+        context.addIssue({
+          code: "custom",
+          message: unresolvedPlaceholderMessage(unresolved),
+        });
+      }
+    }),
   website: z.string().max(0, "Unable to submit this inquiry.").optional().default(""),
 }).strict();
 

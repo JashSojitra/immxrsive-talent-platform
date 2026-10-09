@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 
 import {
   escapeLikeLiteral,
+  parseTalentSearchExpression,
   parseTalentQuery,
   TalentQueryValidationError,
 } from "@/validation/talent-query";
@@ -21,6 +22,7 @@ describe("talent query normalization", () => {
 
     expect(parseTalentQuery(params, skills)).toEqual({
       q: "developer",
+      searchGroups: [["developer"]],
       skills: ["React"],
       availability: ["contract"],
       status: ["current"],
@@ -47,5 +49,47 @@ describe("talent query normalization", () => {
       expect(error).toBeInstanceOf(TalentQueryValidationError);
       expect((error as TalentQueryValidationError).details[0]?.code).toBe(expectedCode);
     }
+  });
+});
+
+describe("talent search expression parser", () => {
+  test.each([
+    ["React", [["React"]]],
+    ["Machine Learning", [["Machine Learning"]]],
+    ["React, TypeScript", [["React"], ["TypeScript"]]],
+    ["React | TypeScript", [["React", "TypeScript"]]],
+    ["Unity | Blender, Maya", [["Unity", "Blender"], ["Maya"]]],
+    ['"Machine Learning"', [["Machine Learning"]]],
+    ['"Research, Design", React', [["Research, Design"], ["React"]]],
+    ['"C|C++" | Rust', [["C|C++", "Rust"]]],
+    ["  React |  TypeScript , Figma  ", [["React", "TypeScript"], ["Figma"]]],
+    ["React | react | REACT", [["React"]]],
+    ['"Say \\"hello\\""', [['Say "hello"']]],
+  ])("parses %s", (expression, expected) => {
+    expect(parseTalentSearchExpression(expression)).toEqual(expected);
+  });
+
+  test.each([
+    ["React,", "EMPTY_SEARCH_TERM"],
+    ["| React", "EMPTY_SEARCH_TERM"],
+    ["React || TypeScript", "EMPTY_SEARCH_TERM"],
+    ['"React', "UNCLOSED_QUOTE"],
+    ["React,,TypeScript", "EMPTY_SEARCH_TERM"],
+  ])("rejects malformed expression %s", (expression, code) => {
+    expect(() => parseTalentSearchExpression(expression)).toThrowError(
+      expect.objectContaining({ code }),
+    );
+  });
+
+  test("enforces expression complexity and length limits", () => {
+    expect(() => parseTalentSearchExpression("x".repeat(501))).toThrowError(
+      expect.objectContaining({ code: "SEARCH_TOO_LONG" }),
+    );
+    expect(() => parseTalentSearchExpression(Array.from({ length: 31 }, (_, index) => `t${index}`).join("|"))).toThrowError(
+      expect.objectContaining({ code: "SEARCH_TOO_COMPLEX" }),
+    );
+    expect(() => parseTalentSearchExpression(Array.from({ length: 31 }, () => "React").join("|"))).toThrowError(
+      expect.objectContaining({ code: "SEARCH_TOO_COMPLEX" }),
+    );
   });
 });

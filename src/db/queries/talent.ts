@@ -4,6 +4,7 @@ import {
   countDistinct,
   eq,
   inArray,
+  or,
   type SQL,
   sql,
 } from "drizzle-orm";
@@ -86,19 +87,9 @@ export async function queryTalentDirectory(
 ): Promise<TalentDirectoryResponse> {
   const conditions: SQL[] = [eq(students.profileStatus, "published")];
 
-  if (query.q) {
-    const pattern = `%${escapeLikeLiteral(query.q)}%`;
-    conditions.push(sql`(
-      ${students.name} ILIKE ${pattern} ESCAPE '!'
-      OR ${students.headline} ILIKE ${pattern} ESCAPE '!'
-      OR EXISTS (
-        SELECT 1
-        FROM ${studentSkills}
-        INNER JOIN ${skills} ON ${skills.id} = ${studentSkills.skillId}
-        WHERE ${studentSkills.studentId} = ${students.id}
-          AND ${skills.name} ILIKE ${pattern} ESCAPE '!'
-      )
-    )`);
+  for (const group of query.searchGroups) {
+    const groupCondition = or(...group.map(searchTermCondition));
+    if (groupCondition) conditions.push(groupCondition);
   }
 
   for (const skillName of query.skills) {
@@ -188,6 +179,21 @@ export async function queryTalentDirectory(
     })),
     query,
   );
+}
+
+function searchTermCondition(term: string): SQL {
+  const pattern = `%${escapeLikeLiteral(term)}%`;
+  return sql`(
+    ${students.name} ILIKE ${pattern} ESCAPE '!'
+    OR ${students.headline} ILIKE ${pattern} ESCAPE '!'
+    OR EXISTS (
+      SELECT 1
+      FROM ${studentSkills}
+      INNER JOIN ${skills} ON ${skills.id} = ${studentSkills.skillId}
+      WHERE ${studentSkills.studentId} = ${students.id}
+        AND ${skills.name} ILIKE ${pattern} ESCAPE '!'
+    )
+  )`;
 }
 
 function responseEnvelope(

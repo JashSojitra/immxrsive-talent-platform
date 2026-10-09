@@ -1,4 +1,15 @@
 import { defineConfig, devices } from "@playwright/test";
+import { existsSync } from "node:fs";
+
+if (existsSync(".env.local")) process.loadEnvFile(".env.local");
+
+const testDatabaseUrl = process.env.TEST_DATABASE_URL;
+if (!testDatabaseUrl) {
+  throw new Error("TEST_DATABASE_URL is required for browser tests.");
+}
+if (testDatabaseUrl === process.env.DATABASE_URL) {
+  throw new Error("Browser tests require TEST_DATABASE_URL to differ from DATABASE_URL.");
+}
 
 export default defineConfig({
   testDir: "./tests/browser",
@@ -10,9 +21,10 @@ export default defineConfig({
     trace: "retain-on-failure",
   },
   webServer: {
-    command: "npm run dev -- --hostname 127.0.0.1 --port 3100",
+    command: "npm run start -- --hostname 127.0.0.1 --port 3100",
+    env: { DATABASE_URL: testDatabaseUrl },
     url: "http://127.0.0.1:3100/talent",
-    reuseExistingServer: true,
+    reuseExistingServer: false,
     timeout: 120_000,
   },
   projects: [

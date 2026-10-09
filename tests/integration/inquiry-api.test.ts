@@ -107,6 +107,39 @@ describeWithDatabase("contextual employer inquiry API", () => {
     expect(body.error.details.some((detail) => detail.field === field)).toBe(true);
   });
 
+  test("rejects unresolved template prompts without persisting them", async () => {
+    const before = await db.select({ id: inquiries.id }).from(inquiries);
+    const response = await post({
+      sourceType: "student",
+      sourceId: "S01",
+      ...validEmployerFields,
+      description: "We would like to discuss [opportunity or collaboration] with Avery.",
+    });
+    expect(response.status).toBe(422);
+    const body = await response.json() as { error: { details: Array<{ field: string; message: string }> } };
+    expect(body.error.details).toContainEqual(expect.objectContaining({
+      field: "description",
+      message: expect.stringContaining("[opportunity or collaboration]"),
+    }));
+    const after = await db.select({ id: inquiries.id }).from(inquiries);
+    expect(after).toHaveLength(before.length);
+  });
+
+  test("persists a final personalized message with unrelated bracket text", async () => {
+    const description = "We would like to discuss the scoped [Phase 2] collaboration with Avery.";
+    const response = await post({
+      sourceType: "student",
+      sourceId: "S01",
+      ...validEmployerFields,
+      description,
+    });
+    expect(response.status).toBe(201);
+    const confirmation = await response.json() as { id: string };
+    const [row] = await db.select().from(inquiries).where(eq(inquiries.id, confirmation.id));
+    expect(row?.description).toBe(description);
+    expect(row).toMatchObject({ sourceName: "Avery Chen", sourceUrl: "/students/S01" });
+  });
+
   test("oversized and malformed bodies are rejected before persistence", async () => {
     const oversized = await postInquiry(new Request("http://localhost/api/v1/inquiries", {
       method: "POST", headers: { "Content-Type": "application/json" }, body: "x".repeat(16_385),

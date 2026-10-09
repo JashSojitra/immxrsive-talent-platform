@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import fixtureStudents from "../../data/fixtures/students.json" with { type: "json" };
+import { parseTalentSearchExpression, TalentSearchSyntaxError } from "../../src/validation/talent-query";
 
 const publishedStudents = fixtureStudents
   .filter((student) => student.profile_status === "published")
@@ -25,17 +26,29 @@ test.beforeEach(async ({ page }) => {
   }));
   await page.route("**/api/v1/talent**", (route) => {
     const url = new URL(route.request().url());
-    const q = url.searchParams.get("q")?.toLowerCase();
+    const q = url.searchParams.get("q") ?? "";
     const skills = url.searchParams.getAll("skill");
     const availability = url.searchParams.getAll("availability");
     const statuses = url.searchParams.getAll("status");
-    const items = publishedStudents.filter((student) =>
-      (!q || `${student.name} ${student.headline} ${student.skills.join(" ")}`.toLowerCase().includes(q))
-      && skills.every((skill) => student.skills.includes(skill))
-      && (availability.length === 0 || availability.some((value) => student.availability.some((item) => item === value)))
-      && (statuses.length === 0 || statuses.includes(student.status)),
-    );
-    return route.fulfill({ json: { items, count: items.length } });
+    try {
+      const groups = parseTalentSearchExpression(q);
+      const items = publishedStudents.filter((student) => {
+        const searchable = [student.name, student.headline, ...student.skills].map((value) => value.toLowerCase());
+        return groups.every((group) => group.some((term) => searchable.some((value) => value.includes(term.toLowerCase()))))
+          && skills.every((skill) => student.skills.includes(skill))
+          && (availability.length === 0 || availability.some((value) => student.availability.some((item) => item === value)))
+          && (statuses.length === 0 || statuses.includes(student.status));
+      });
+      return route.fulfill({ json: { items, count: items.length } });
+    } catch (error) {
+      if (error instanceof TalentSearchSyntaxError) {
+        return route.fulfill({
+          status: 400,
+          json: { error: { code: "INVALID_QUERY", message: "One or more directory filters are invalid.", details: [{ field: "q", code: error.code, message: error.message }] } },
+        });
+      }
+      throw error;
+    }
   });
 });
 
@@ -59,6 +72,43 @@ test("directory workflow remains functional and URL-addressable", async ({ page 
   await page.reload();
   await expect(page.getByRole("searchbox", { name: /search talent/i })).toHaveValue("Maya Patel");
   await expect(page.getByRole("link", { name: /view maya patel/i })).toBeVisible();
+});
+
+test("advanced expressions remain URL-addressable and browser history restores them", async ({ page }) => {
+  await page.goto("/talent");
+  const search = page.getByRole("searchbox", { name: /search talent/i });
+  await search.fill("Unity | Blender, artist");
+  await page.getByRole("button", { name: /submit talent search/i }).click();
+  await expect(page.getByLabel("2 matches")).toBeVisible();
+  await expect(page.getByRole("link", { name: /view maya patel/i })).toBeVisible();
+  await expect(page).toHaveURL(/q=Unity\+%7C\+Blender%2C\+artist/);
+
+  await search.fill("Avery");
+  await page.getByRole("button", { name: /submit talent search/i }).click();
+  await expect(page.getByLabel("1 match")).toBeVisible();
+  await page.goBack();
+  await expect(search).toHaveValue("Unity | Blender, artist");
+  await expect(page.getByLabel("2 matches")).toBeVisible();
+});
+
+test("search tips are keyboard-accessible and malformed searches retain results", async ({ page }) => {
+  await page.goto("/talent#directory");
+  const help = page.getByRole("button", { name: "Search tips" });
+  await help.focus();
+  await page.keyboard.press("Enter");
+  const panel = page.getByRole("region", { name: "Search tips" });
+  await expect(panel).toBeVisible();
+  await expect(panel).toContainText("Match React OR TypeScript, AND Figma.");
+  await page.keyboard.press("Escape");
+  await expect(panel).toBeHidden();
+  await expect(help).toBeFocused();
+
+  const search = page.getByRole("searchbox", { name: /search talent/i });
+  await search.fill("React,");
+  await page.getByRole("button", { name: /submit talent search/i }).click();
+  await expect(page.locator("#talent-search-error")).toContainText("final separator");
+  await expect(page.getByRole("link", { name: /view avery chen/i })).toBeVisible();
+  await expect(search).toHaveValue("React,");
 });
 
 test("keyboard focus is visible and filters operate without a pointer", async ({ page }) => {
@@ -89,6 +139,11 @@ test("390px layout has no horizontal document overflow", async ({ page }, testIn
   await expect(page.getByRole("searchbox", { name: /search talent/i })).toBeVisible();
   await expect(page.getByRole("checkbox", { name: "Unity" })).toBeVisible();
   await expect(page.getByRole("link", { name: /view avery chen/i })).toBeVisible();
+  await page.getByRole("button", { name: "Search tips" }).click();
+  const panelBox = await page.getByRole("region", { name: "Search tips" }).boundingBox();
+  expect(panelBox).not.toBeNull();
+  expect(panelBox!.x).toBeGreaterThanOrEqual(0);
+  expect(panelBox!.x + panelBox!.width).toBeLessThanOrEqual(390);
 });
 
 test("reduced motion keeps the complete directory usable", async ({ page }) => {

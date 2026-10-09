@@ -107,6 +107,31 @@ describeWithDatabase("public directory API", () => {
     expect(underscore.body.items).toEqual([]);
   });
 
+  test("comma groups use AND and may match different searchable fields", async () => {
+    const { body } = await getTalent("q=React%2C%20developer");
+    expect(ids(body)).toEqual(["S10", "S18", "S04"]);
+  });
+
+  test("pipe terms use OR semantics", async () => {
+    const { body } = await getTalent("q=OpenXR%20%7C%20Figma");
+    expect(ids(body)).toEqual(["S01", "S10", "S11", "S06"]);
+  });
+
+  test("mixed expressions apply OR within AND groups", async () => {
+    const { body } = await getTalent("q=Unity%20%7C%20Blender%2C%20artist");
+    expect(ids(body)).toEqual(["S02", "S12"]);
+  });
+
+  test("quoted phrases retain literal multiword behavior", async () => {
+    const { body } = await getTalent("q=%22Machine%20Learning%22");
+    expect(ids(body)).toEqual(["S09"]);
+  });
+
+  test("free-text search does not inspect project evidence", async () => {
+    const { body } = await getTalent("q=industrial%20safety");
+    expect(body.items).toEqual([]);
+  });
+
   test("one skill filter matches explicit student skills", async () => {
     const { body } = await getTalent("skill=React");
     expect(ids(body)).toEqual(["S10", "S18", "S04"]);
@@ -183,6 +208,22 @@ describeWithDatabase("public directory API", () => {
     expect(body.error.details).toContainEqual(
       expect.objectContaining({ field, code }),
     );
+  });
+
+  test.each([
+    ["q=React%2C", "EMPTY_SEARCH_TERM"],
+    ["q=%22React", "UNCLOSED_QUOTE"],
+    ["q=%7C%20React", "EMPTY_SEARCH_TERM"],
+  ])("invalid search %s returns a useful structured 400", async (query, code) => {
+    const response = await talentGet(requestFor(`/api/v1/talent?${query}`));
+    const body = (await response.json()) as ApiErrorBody;
+
+    expect(response.status).toBe(400);
+    expect(body.error).toEqual(expect.objectContaining({
+      code: "INVALID_QUERY",
+      details: expect.arrayContaining([expect.objectContaining({ field: "q", code })]),
+    }));
+    expect(JSON.stringify(body)).not.toMatch(/select|postgres|sql/i);
   });
 
   test("an empty match returns 200 with an empty envelope", async () => {

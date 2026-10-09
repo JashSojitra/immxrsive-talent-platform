@@ -37,4 +37,25 @@ describe("inquiry validation", () => {
     expect(inquiryRequestSchema.safeParse({ ...validRequest, sourceName: "Spoofed" }).success).toBe(false);
     expect(inquiryRequestSchema.safeParse({ ...validRequest, sourceUrl: "/spoofed" }).success).toBe(false);
   });
+
+  test("rejects recognized template prompts with actionable feedback", () => {
+    const result = inquiryRequestSchema.safeParse({
+      ...validRequest,
+      description: "We would like to discuss [opportunity or collaboration] with your team.",
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues[0]).toMatchObject({
+        path: ["description"],
+        message: "Replace the remaining template prompt: [opportunity or collaboration]",
+      });
+    }
+  });
+
+  test("allows unrelated bracketed custom text", () => {
+    expect(inquiryRequestSchema.safeParse({
+      ...validRequest,
+      description: "We would like to discuss the planned [Phase 2] collaboration in detail.",
+    }).success).toBe(true);
+  });
 });

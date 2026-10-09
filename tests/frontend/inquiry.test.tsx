@@ -31,6 +31,9 @@ describe("contextual inquiry experience", () => {
     expect(screen.getAllByLabelText(/required/i)).toHaveLength(4);
     expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
     expect(screen.queryByDisplayValue("S01")).not.toBeInTheDocument();
+    expect(screen.getByText("Suggested template — fully editable")).toBeInTheDocument();
+    expect((screen.getByLabelText(/inquiry description/i) as HTMLTextAreaElement).value).toContain("profile of Avery Chen");
+    expect((screen.getByLabelText(/inquiry description/i) as HTMLTextAreaElement).value).toContain(studentSource.detail);
   });
 
   it("renders project context without selecting a contributor", () => {
@@ -42,6 +45,51 @@ describe("contextual inquiry experience", () => {
     expect(screen.getByText("Inquiry about")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Industrial Safety VR Trainer" })).toBeInTheDocument();
     expect(document.body).not.toHaveTextContent("Avery Chen");
+    expect((screen.getByLabelText(/inquiry description/i) as HTMLTextAreaElement).value).toContain('project "Industrial Safety VR Trainer"');
+    expect((screen.getByLabelText(/inquiry description/i) as HTMLTextAreaElement).value).toContain("(P01)");
+  });
+
+  it("keeps edits across rerenders and resets substantial edits only after confirmation", async () => {
+    const user = userEvent.setup();
+    const confirm = vi.spyOn(window, "confirm").mockReturnValueOnce(false).mockReturnValueOnce(true);
+    const { rerender } = render(<InquiryPage source={studentSource} />);
+    const description = screen.getByLabelText(/inquiry description/i);
+    const edited = "A fully personalized message with enough original content to protect from an accidental reset.";
+    await user.clear(description);
+    await user.type(description, edited);
+
+    rerender(<InquiryPage source={studentSource} />);
+    expect(description).toHaveValue(edited);
+
+    await user.click(screen.getByRole("button", { name: /reset template/i }));
+    expect(confirm).toHaveBeenCalledOnce();
+    expect(description).toHaveValue(edited);
+
+    await user.click(screen.getByRole("button", { name: /reset template/i }));
+    expect((description as HTMLTextAreaElement).value).toContain("profile of Avery Chen");
+    await waitFor(() => expect(description).toHaveFocus());
+  });
+
+  it("blocks unresolved canonical prompts locally but permits unrelated brackets", async () => {
+    const user = userEvent.setup();
+    render(<InquiryForm source={studentSource} />);
+    await fillIdentityFields(user);
+
+    await user.click(screen.getByRole("button", { name: /submit inquiry/i }));
+    expect(fetch).not.toHaveBeenCalled();
+    expect((await screen.findAllByText(/replace the remaining template prompts/i)).length).toBeGreaterThan(0);
+    await waitFor(() => expect(screen.getByLabelText(/inquiry description/i)).toHaveFocus());
+
+    await user.clear(screen.getByLabelText(/inquiry description/i));
+    fireEvent.change(screen.getByLabelText(/inquiry description/i), {
+      target: { value: "We would like to discuss the scoped [Phase 2] collaboration in detail." },
+    });
+    vi.mocked(fetch).mockResolvedValueOnce(new Response(JSON.stringify({
+      id: "46aa3f31-cc0a-4f84-b20a-8c6a3ca3ef31",
+      message: "Inquiry submitted successfully.",
+    }), { status: 201, headers: { "Content-Type": "application/json" } }));
+    await user.click(screen.getByRole("button", { name: /submit inquiry/i }));
+    expect(fetch).toHaveBeenCalledOnce();
   });
 
   it("shows accessible field errors and retains employer values", async () => {
@@ -53,10 +101,11 @@ describe("contextual inquiry experience", () => {
       },
     }), { status: 422, headers: { "Content-Type": "application/json" } }));
     const user = userEvent.setup();
-    render(<InquiryForm source={{ type: "student", id: "S01", name: "Avery Chen" }} />);
+    render(<InquiryForm source={studentSource} />);
     await user.type(screen.getByLabelText(/company name/i), "Example Inc.");
     await user.type(screen.getByLabelText(/contact name/i), "Alex Employer");
     await user.type(screen.getByLabelText(/contact email/i), "invalid");
+    await user.clear(screen.getByLabelText(/inquiry description/i));
     await user.type(screen.getByLabelText(/inquiry description/i), "A meaningful inquiry description for Avery.");
     await user.click(screen.getByRole("button", { name: /submit inquiry/i }));
 
@@ -68,8 +117,11 @@ describe("contextual inquiry experience", () => {
 
   it("prevents duplicate submission while the request is pending", () => {
     vi.mocked(fetch).mockReturnValue(new Promise(() => undefined));
-    render(<InquiryForm source={{ type: "student", id: "S01", name: "Avery Chen" }} />);
+    render(<InquiryForm source={studentSource} />);
     const form = screen.getByRole("form");
+    fireEvent.change(screen.getByLabelText(/inquiry description/i), {
+      target: { value: "We would like to discuss an internship opportunity." },
+    });
     fireEvent.submit(form);
     fireEvent.submit(form);
     expect(fetch).toHaveBeenCalledOnce();
@@ -82,7 +134,7 @@ describe("contextual inquiry experience", () => {
       message: "Inquiry submitted successfully.",
     }), { status: 201, headers: { "Content-Type": "application/json" } }));
     const user = userEvent.setup();
-    render(<InquiryForm source={{ type: "student", id: "S01", name: "Avery Chen" }} />);
+    render(<InquiryForm source={studentSource} />);
     await fillValidForm(user);
     await user.click(screen.getByRole("button", { name: /submit inquiry/i }));
     const success = await screen.findByRole("status");
@@ -95,7 +147,12 @@ describe("contextual inquiry experience", () => {
       error: { code: "INTERNAL_ERROR", message: "The inquiry could not be submitted right now.", details: [] },
     }), { status: 500, headers: { "Content-Type": "application/json" } }));
     const user = userEvent.setup();
-    render(<InquiryForm source={{ type: "project", id: "P01", name: "Industrial Safety VR Trainer" }} />);
+    render(<InquiryForm source={{
+      type: "project",
+      id: "P01",
+      name: "Industrial Safety VR Trainer",
+      detail: "Immersive safety training prototype for industrial onboarding.",
+    }} />);
     await fillValidForm(user);
     await user.click(screen.getByRole("button", { name: /submit inquiry/i }));
     expect(await screen.findByText("Submission interrupted")).toBeInTheDocument();
@@ -123,8 +180,13 @@ describe("inquiry route states", () => {
 });
 
 async function fillValidForm(user: ReturnType<typeof userEvent.setup>) {
+  await fillIdentityFields(user);
+  await user.clear(screen.getByLabelText(/inquiry description/i));
+  await user.type(screen.getByLabelText(/inquiry description/i), "We would like to discuss an internship opportunity.");
+}
+
+async function fillIdentityFields(user: ReturnType<typeof userEvent.setup>) {
   await user.type(screen.getByLabelText(/company name/i), "Example Inc.");
   await user.type(screen.getByLabelText(/contact name/i), "Alex Employer");
   await user.type(screen.getByLabelText(/contact email/i), "alex@example.com");
-  await user.type(screen.getByLabelText(/inquiry description/i), "We would like to discuss an internship opportunity.");
 }

@@ -103,6 +103,78 @@ describe("talent directory", () => {
     expect(screen.getByRole("button", { name: /remove search: maya filter/i })).toBeInTheDocument();
   });
 
+  it("keeps advanced expressions shareable through the existing q parameter", async () => {
+    const fetchMock = mockApi({ items: [avery], count: 1 });
+    const user = userEvent.setup();
+    render(<TalentDirectory />);
+    await screen.findByText("Avery Chen");
+
+    await user.type(screen.getByRole("searchbox", { name: /search talent/i }), 'React | TypeScript, "Machine Learning"');
+    await user.click(screen.getByRole("button", { name: /submit talent search/i }));
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledWith(
+      "/api/v1/talent?q=React+%7C+TypeScript%2C+%22Machine+Learning%22",
+      expect.any(Object),
+    ));
+    expect(parseTalentFilters(window.location.search).q).toBe('React | TypeScript, "Machine Learning"');
+  });
+
+  it("opens accessible search tips by hover, click, keyboard, Escape, and outside click", async () => {
+    mockApi();
+    const user = userEvent.setup();
+    render(<TalentDirectory />);
+    await screen.findByText("Avery Chen");
+    const help = screen.getByRole("button", { name: "Search tips" });
+    expect(help).toHaveAttribute("type", "button");
+    expect(help).toHaveAttribute("aria-expanded", "false");
+
+    await user.hover(help);
+    expect(screen.getByRole("region", { name: "Search tips" })).toBeInTheDocument();
+    expect(screen.getByText("Match BOTH keywords.")).toBeInTheDocument();
+    await user.unhover(help);
+    await user.hover(screen.getByRole("region", { name: "Search tips" }));
+    expect(screen.getByRole("region", { name: "Search tips" })).toBeInTheDocument();
+
+    await user.click(help);
+    expect(help).toHaveAttribute("aria-expanded", "true");
+    await user.keyboard("{Escape}");
+    expect(screen.queryByRole("region", { name: "Search tips" })).not.toBeInTheDocument();
+    expect(help).toHaveFocus();
+
+    await user.keyboard("{Enter}");
+    expect(screen.getByRole("region", { name: "Search tips" })).toBeInTheDocument();
+    await user.click(screen.getByRole("heading", { name: /discover the people/i }));
+    expect(screen.queryByRole("region", { name: "Search tips" })).not.toBeInTheDocument();
+  });
+
+  it("shows malformed search feedback inline and preserves valid results", async () => {
+    vi.spyOn(globalThis, "fetch").mockImplementation((input) => {
+      const url = String(input);
+      if (url.includes("/api/v1/skills")) return json(metadata);
+      if (url.includes("q=React%2C")) {
+        return json({ error: {
+          code: "INVALID_QUERY",
+          message: "One or more directory filters are invalid.",
+          details: [{ field: "q", code: "EMPTY_SEARCH_TERM", message: "Add a keyword after the final separator." }],
+        } }, 400);
+      }
+      return json({ items: [avery, maya], count: 2 });
+    });
+    const user = userEvent.setup();
+    render(<TalentDirectory />);
+    expect(await screen.findByText("Avery Chen")).toBeInTheDocument();
+
+    const search = screen.getByRole("searchbox", { name: /search talent/i });
+    await user.type(search, "React,");
+    await user.click(screen.getByRole("button", { name: /submit talent search/i }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("Add a keyword after the final separator.");
+    expect(search).toHaveValue("React,");
+    expect(search).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByText("Avery Chen")).toBeInTheDocument();
+    expect(screen.queryByText("No matching students.")).not.toBeInTheDocument();
+  });
+
   it("supports multiple API-backed filters, individual removal, and Clear All", async () => {
     const fetchMock = mockApi();
     const user = userEvent.setup();
@@ -183,6 +255,8 @@ describe("talent directory", () => {
     await user.tab();
     expect(screen.getByRole("link", { name: /enter the field/i })).toHaveFocus();
     await user.tab();
+    expect(screen.getByRole("button", { name: "Search tips" })).toHaveFocus();
+    await user.tab();
     expect(screen.getByRole("searchbox", { name: /search talent/i })).toHaveFocus();
     screen.getByRole("checkbox", { name: "Unity" }).focus();
     await user.keyboard(" ");
@@ -247,4 +321,12 @@ describe("talent URL helpers", () => {
     expect(filters.skill).toEqual(["Unity", "React"]);
     expect(serializeTalentFilters(filters)).toBe("q=xr&skill=Unity&skill=React&availability=contract&status=alumni");
   });
+
+  it("round-trips commas, pipes, and quotes in q", () => {
+    const q = 'React | TypeScript, "Machine Learning"';
+    const serialized = serializeTalentFilters({ ...EMPTY_FILTERS_FOR_TEST, q });
+    expect(parseTalentFilters(`?${serialized}`).q).toBe(q);
+  });
 });
+
+const EMPTY_FILTERS_FOR_TEST = { q: "", skill: [], availability: [], status: [] };

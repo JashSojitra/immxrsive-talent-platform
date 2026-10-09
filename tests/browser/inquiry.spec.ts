@@ -3,12 +3,15 @@ import { expect, test } from "@playwright/test";
 test("student inquiry renders trusted source context and a locked form", async ({ page }) => {
   await page.goto("/inquiry/student/S01");
   await expect(page.getByRole("heading", { level: 1, name: "Avery Chen" })).toBeVisible();
-  await expect(page.getByText("XR Developer focused on training simulations")).toBeVisible();
+  await expect(page.getByText("XR Developer focused on training simulations", { exact: true })).toBeVisible();
   await expect(page.getByRole("form", { name: /employer inquiry about avery chen/i })).toBeVisible();
   await expect(page.getByLabel(/company name/i)).toBeVisible();
   await expect(page.getByLabel(/contact name/i)).toBeVisible();
   await expect(page.getByLabel(/contact email/i)).toBeVisible();
   await expect(page.getByLabel(/inquiry description/i)).toBeVisible();
+  await expect(page.getByText("Suggested template — fully editable")).toBeVisible();
+  await expect(page.getByLabel(/inquiry description/i)).toHaveValue(/profile of Avery Chen/);
+  await expect(page.getByLabel(/inquiry description/i)).toHaveValue(/XR Developer focused on training simulations/);
   await expect(page.getByRole("combobox")).toHaveCount(0);
 });
 
@@ -18,6 +21,48 @@ test("project inquiry retains the project and never selects a contributor", asyn
   await expect(page.getByText("Inquiry about")).toBeVisible();
   await expect(page.getByText("Avery Chen")).toHaveCount(0);
   await expect(page.getByRole("form", { name: /employer inquiry about industrial safety/i })).toBeVisible();
+  await expect(page.getByLabel(/inquiry description/i)).toHaveValue(/project "Industrial Safety VR Trainer"/);
+  await expect(page.getByLabel(/inquiry description/i)).toHaveValue(/\(P01\)/);
+});
+
+test("template reset protects substantial edits and restores source context", async ({ page }) => {
+  await page.goto("/inquiry/project/P01");
+  const description = page.getByLabel(/inquiry description/i);
+  const edited = "A fully personalized message with enough original content to protect from an accidental reset.";
+  await description.fill(edited);
+
+  page.once("dialog", (dialog) => dialog.dismiss());
+  await page.getByRole("button", { name: /reset template/i }).click();
+  await expect(description).toHaveValue(edited);
+
+  page.once("dialog", (dialog) => dialog.accept());
+  await page.getByRole("button", { name: /reset template/i }).click();
+  await expect(description).toHaveValue(/project "Industrial Safety VR Trainer"/);
+  await expect(description).toHaveValue(/\(P01\)/);
+});
+
+test("unresolved prompts are blocked locally while custom bracket text is allowed", async ({ page }) => {
+  let requestCount = 0;
+  await page.route("**/api/v1/inquiries", (route) => {
+    requestCount += 1;
+    return route.fulfill({
+      status: 201,
+      contentType: "application/json",
+      body: JSON.stringify({ id: "46aa3f31-cc0a-4f84-b20a-8c6a3ca3ef31", message: "Inquiry submitted successfully." }),
+    });
+  });
+  await page.goto("/inquiry/student/S01");
+  await page.getByLabel(/company name/i).fill("Example Inc.");
+  await page.getByLabel(/contact name/i).fill("Alex Employer");
+  await page.getByLabel(/contact email/i).fill("alex@example.com");
+  await page.getByRole("button", { name: /submit inquiry/i }).click();
+  await expect(page.locator("#description-error")).toContainText(/replace the remaining template prompts/i);
+  expect(requestCount).toBe(0);
+
+  await page.getByLabel(/inquiry description/i).fill("We would like to discuss the scoped [Phase 2] collaboration in detail.");
+  await page.getByRole("button", { name: /submit inquiry/i }).click();
+  await expect(page.getByText("Inquiry received")).toBeVisible();
+  expect(requestCount).toBe(1);
 });
 
 test("accessible validation feedback retains entered employer values", async ({ page }) => {
@@ -97,6 +142,7 @@ test("keyboard workflow and visible focus cover every form control", async ({ pa
     page.getByLabel(/company name/i),
     page.getByLabel(/contact name/i),
     page.getByLabel(/contact email/i),
+    page.getByRole("button", { name: /reset template/i }),
     page.getByLabel(/inquiry description/i),
     page.getByRole("button", { name: /submit inquiry/i }),
   ]) {

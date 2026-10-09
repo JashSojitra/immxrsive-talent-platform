@@ -45,7 +45,12 @@ export function InquiryPage({ source }: { source: InquirySourceView }) {
           <h2 id="form-title">Start the<br /><em>conversation.</em></h2>
           <p>Four fields, no account required. Required fields are marked in their labels.</p>
         </div>
-        <InquiryForm source={{ type: source.type, id: source.id, name: source.name }} />
+        <InquiryForm source={{
+          type: source.type,
+          id: source.id,
+          name: source.name,
+          detail: source.detail,
+        }} />
       </section>
     </main>
   );

@@ -459,14 +459,113 @@
   backdrop-filter: blur(18px);
 }
 
-.searchForm label {
-  display: block;
+.searchLabelRow {
+  display: flex;
   margin-bottom: 12px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.searchForm label {
   color: var(--bone);
   text-transform: uppercase;
   font-size: 0.7rem;
   letter-spacing: 0.16em;
 }
+
+.searchHelpButton {
+  display: inline-grid;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(255, 77, 61, 0.55);
+  border-radius: 50%;
+  color: var(--signal);
+  background: rgba(255, 77, 61, 0.08);
+  cursor: pointer;
+  font: 600 0.78rem/1 var(--font-mono, monospace);
+  box-shadow: 0 0 20px rgba(255, 77, 61, 0.08);
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.searchHelpButton:hover,
+.searchHelpButton[aria-expanded="true"] {
+  border-color: var(--electric);
+  color: var(--electric);
+  background: rgba(118, 247, 230, 0.1);
+  transform: translateY(-1px);
+}
+
+.searchHelpButton:focus-visible {
+  outline: 2px solid var(--electric);
+  outline-offset: 3px;
+}
+
+.searchHelpPanel {
+  position: fixed;
+  z-index: 120;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 32px);
+  padding: 20px;
+  overflow-y: auto;
+  border: 1px solid rgba(118, 247, 230, 0.3);
+  color: var(--bone);
+  background:
+    linear-gradient(rgba(118, 247, 230, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(118, 247, 230, 0.035) 1px, transparent 1px),
+    rgba(7, 10, 13, 0.97);
+  background-size: 24px 24px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 77, 61, 0.08) inset;
+  backdrop-filter: blur(20px);
+  animation: search-help-in 160ms var(--ease-out) both;
+}
+
+.searchHelpTitle {
+  margin: 0 0 8px;
+  color: var(--signal);
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.18em;
+}
+
+.searchHelpIntro,
+.searchHelpFooter {
+  margin: 0;
+  color: #b7c1bd;
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.searchHelpExamples {
+  display: grid;
+  margin: 16px 0;
+  gap: 10px;
+}
+
+.searchHelpExamples div { display: grid; gap: 4px; }
+.searchHelpExamples dt,
+.searchHelpExamples dd { margin: 0; }
+.searchHelpExamples code,
+.searchHint code {
+  color: var(--electric);
+  font-family: var(--font-mono, monospace);
+}
+.searchHelpExamples code { font-size: 0.75rem; }
+.searchHelpExamples dd { color: #d3dad6; font-size: 0.75rem; }
+.searchHelpFooter { padding-top: 13px; border-top: 1px solid var(--hairline); }
+
+.searchHint,
+.searchError {
+  margin: 9px 0 0;
+  font-size: 0.68rem;
+  line-height: 1.45;
+}
+
+.searchHint { color: #899590; }
+.searchError { color: #ff8f84; }
 
 .searchRow {
   display: grid;
@@ -816,6 +915,10 @@
 
 @keyframes loading-scan { to { left: 65%; } }
 @keyframes skeleton { to { background-position: -200% 0; } }
+@keyframes search-help-in {
+  from { opacity: 0; transform: translateY(-5px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
 
 @media (max-width: 1050px) {
   .directoryIntro { grid-template-columns: 1fr 2fr; }
@@ -874,6 +977,7 @@
   .avatarMark { width: 50px; height: 50px; }
   .cardEvidence { grid-template-columns: minmax(0, 1fr) 80px 24px; }
   .loadingCards { grid-template-columns: 1fr; }
+  .searchHelpPanel { padding: 17px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -890,5 +994,7 @@
   .transitionLine { opacity: 1 !important; transform: none !important; }
   .studentCard:hover,
   .studentCard:focus-within,
-  .primaryCta:hover { transform: none; }
+  .primaryCta:hover,
+  .searchHelpButton:hover { transform: none; }
+  .searchHelpPanel { animation: none; }
 }

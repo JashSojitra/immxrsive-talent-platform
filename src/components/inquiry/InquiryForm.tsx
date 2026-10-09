@@ -2,13 +2,17 @@
 
 import { useRef, useState, type FormEvent } from "react";
 
+import {
+  createInquiryTemplate,
+  findUnresolvedInquiryPlaceholders,
+  isInquiryTemplateSubstantiallyModified,
+  unresolvedPlaceholderMessage,
+  type InquiryTemplateSource,
+} from "@/lib/inquiry-template";
+
 import styles from "./inquiry.module.css";
 
-type SourceContext = {
-  type: "student" | "project";
-  id: string;
-  name: string;
-};
+type SourceContext = InquiryTemplateSource;
 
 type FormValues = {
   companyName: string;
@@ -20,16 +24,15 @@ type FormValues = {
 
 type FieldName = keyof Omit<FormValues, "website">;
 
-const initialValues: FormValues = {
-  companyName: "",
-  contactName: "",
-  contactEmail: "",
-  description: "",
-  website: "",
-};
-
 export function InquiryForm({ source }: { source: SourceContext }) {
-  const [values, setValues] = useState(initialValues);
+  const [template] = useState(() => createInquiryTemplate(source));
+  const [values, setValues] = useState<FormValues>(() => ({
+    companyName: "",
+    contactName: "",
+    contactEmail: "",
+    description: template,
+    website: "",
+  }));
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<FieldName, string>>>({});
   const [submissionError, setSubmissionError] = useState<string | null>(null);
   const [confirmationId, setConfirmationId] = useState<string | null>(null);
@@ -37,10 +40,22 @@ export function InquiryForm({ source }: { source: SourceContext }) {
   const submittingRef = useRef(false);
   const errorSummaryRef = useRef<HTMLDivElement>(null);
   const successRef = useRef<HTMLDivElement>(null);
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (submittingRef.current) return;
+
+    const unresolved = findUnresolvedInquiryPlaceholders(values.description);
+    if (unresolved.length > 0) {
+      setFieldErrors({ description: unresolvedPlaceholderMessage(unresolved) });
+      setSubmissionError(null);
+      requestAnimationFrame(() => {
+        errorSummaryRef.current?.focus();
+        descriptionRef.current?.focus();
+      });
+      return;
+    }
 
     submittingRef.current = true;
     setIsPending(true);
@@ -110,6 +125,24 @@ export function InquiryForm({ source }: { source: SourceContext }) {
 
   const errorEntries = Object.entries(fieldErrors);
 
+  function handleResetTemplate() {
+    if (
+      isInquiryTemplateSubstantiallyModified(values.description, template)
+      && !window.confirm("Reset your edited message to the original suggested template?")
+    ) {
+      return;
+    }
+
+    setValues((current) => ({ ...current, description: template }));
+    setFieldErrors((current) => {
+      const nextErrors = { ...current };
+      delete nextErrors.description;
+      return nextErrors;
+    });
+    setSubmissionError(null);
+    requestAnimationFrame(() => descriptionRef.current?.focus());
+  }
+
   return (
     <form className={styles.form} onSubmit={handleSubmit} noValidate aria-label={`Employer inquiry about ${source.name}`}>
       {errorEntries.length > 0 ? (
@@ -161,8 +194,17 @@ export function InquiryForm({ source }: { source: SourceContext }) {
       />
 
       <div className={styles.field} data-invalid={Boolean(fieldErrors.description)}>
-        <label htmlFor="description">Inquiry description <span>(required)</span></label>
+        <div className={styles.templateHeader}>
+          <div>
+            <label htmlFor="description">Inquiry description <span>(required)</span></label>
+            <p id="description-template-label">Suggested template — fully editable</p>
+          </div>
+          <button type="button" className={styles.resetTemplate} onClick={handleResetTemplate}>
+            Reset template
+          </button>
+        </div>
         <textarea
+          ref={descriptionRef}
           id="description"
           name="description"
           required
@@ -171,7 +213,9 @@ export function InquiryForm({ source }: { source: SourceContext }) {
           rows={7}
           value={values.description}
           aria-invalid={Boolean(fieldErrors.description)}
-          aria-describedby={fieldErrors.description ? "description-error description-help" : "description-help"}
+          aria-describedby={fieldErrors.description
+            ? "description-template-label description-error description-help"
+            : "description-template-label description-help"}
           onChange={(event) => setValues((current) => ({ ...current, description: event.target.value }))}
         />
         <small id="description-help">Include the opportunity, collaboration, or question you would like to discuss.</small>
