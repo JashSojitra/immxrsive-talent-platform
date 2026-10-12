@@ -27,6 +27,19 @@ test("student dashboard redirects unauthenticated visitors", async ({ page }) =>
   await expect(page.getByRole("button", { name: "Continue with GitHub" })).toBeVisible();
 });
 
+test("student verification and its APIs fail closed when signed out", async ({ page }) => {
+  await page.goto("/student/verify");
+  await expect(page).toHaveURL(/\/student\/sign-in\?callbackURL=%2Fstudent%2Fverify$/);
+
+  const response = await page.request.post("/api/v1/student/verification/request", {
+    data: { email: "student@algomau.ca" },
+  });
+  expect(response.status()).toBe(401);
+  const body = await response.text();
+  expect(body).not.toContain("student@algomau.ca");
+  expect(body).not.toContain("BETTER_AUTH_SECRET");
+});
+
 test("Release 1 public journeys remain unauthenticated", async ({ page }) => {
   for (const path of [
     "/talent",

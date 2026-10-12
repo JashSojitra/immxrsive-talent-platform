@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { getInternalUserId, requireAuthenticatedUser } from "@/auth/server";
+import {
+  getInternalUserId,
+  getStudentVerificationStatus,
+  requireAuthenticatedUser,
+} from "@/auth/server";
 import { SignOutButton } from "@/components/auth/SignOutButton";
 
 import styles from "../auth.module.css";
@@ -15,6 +19,7 @@ export const dynamic = "force-dynamic";
 
 export default async function StudentDashboardPage() {
   const user = await requireAuthenticatedUser("/student/dashboard");
+  const verification = await getStudentVerificationStatus(user.id);
 
   return (
     <div className={styles.shell}>
@@ -42,13 +47,23 @@ export default async function StudentDashboardPage() {
           <p className={styles.identityMeta}>
             Internal user ID<br /><code>{getInternalUserId(user)}</code>
           </p>
-          <div className={styles.notice}>
-            <strong>Affiliation not yet verified</strong>
-            <p>
-              Algoma University affiliation verification is required before
-              profile editing or publishing. That workflow is not part of M1.
-            </p>
-          </div>
+          {verification.status === "verified" ? (
+            <div className={styles.verifiedNotice}>
+              <strong>Algoma affiliation verified</strong>
+              <p>{verification.institutionalEmail}</p>
+            </div>
+          ) : (
+            <div className={styles.notice}>
+              <strong>Affiliation not yet verified</strong>
+              <p>
+                Confirm an Algoma University email before using verified-student
+                profile features.
+              </p>
+              <Link className={styles.inlineLink} href="/student/verify">
+                Verify affiliation
+              </Link>
+            </div>
+          )}
           <SignOutButton />
         </section>
       </main>

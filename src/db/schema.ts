@@ -27,6 +27,10 @@ export const inquirySourceTypeEnum = pgEnum("inquiry_source_type", [
   "student",
   "project",
 ]);
+export const studentAffiliationStatusEnum = pgEnum(
+  "student_affiliation_status",
+  ["verified"],
+);
 
 export const students = pgTable(
   "students",
@@ -330,6 +334,74 @@ export const authVerifications = pgTable(
   ],
 );
 
+export const studentAffiliations = pgTable(
+  "student_affiliations",
+  {
+    userId: text("user_id")
+      .primaryKey()
+      .references(() => authUsers.id, { onDelete: "cascade" }),
+    institutionalEmail: text("institutional_email").notNull(),
+    status: studentAffiliationStatusEnum("status")
+      .default("verified")
+      .notNull(),
+    verifiedAt: timestamp("verified_at", { withTimezone: true }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [
+    uniqueIndex("student_affiliations_email_unique").on(
+      table.institutionalEmail,
+    ),
+  ],
+);
+
+export const affiliationVerificationChallenges = pgTable(
+  "affiliation_verification_challenges",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => authUsers.id, { onDelete: "cascade" }),
+    institutionalEmail: text("institutional_email").notNull(),
+    tokenHash: text("token_hash").notNull().unique(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    consumedAt: timestamp("consumed_at", { withTimezone: true }),
+    supersededAt: timestamp("superseded_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("affiliation_challenges_user_idx").on(table.userId),
+    index("affiliation_challenges_email_idx").on(table.institutionalEmail),
+    index("affiliation_challenges_expires_idx").on(table.expiresAt),
+  ],
+);
+
+export const affiliationVerificationRateLimits = pgTable(
+  "affiliation_verification_rate_limits",
+  {
+    keyHash: text("key_hash").primaryKey(),
+    action: text("action").notNull(),
+    windowStartedAt: timestamp("window_started_at", {
+      withTimezone: true,
+    }).notNull(),
+    attemptCount: integer("attempt_count").default(1).notNull(),
+    blockedUntil: timestamp("blocked_until", { withTimezone: true }),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [index("affiliation_rate_limits_action_idx").on(table.action)],
+);
+
 export type Student = typeof students.$inferSelect;
 export type Project = typeof projects.$inferSelect;
 export type AuthUser = typeof authUsers.$inferSelect;
+export type StudentAffiliation = typeof studentAffiliations.$inferSelect;

@@ -15,7 +15,7 @@
     "test": "vitest run --exclude tests/integration/**",
     "test:unit": "vitest run tests/unit",
     "test:integration": "node --env-file-if-exists=.env.local node_modules/vitest/vitest.mjs run tests/integration",
-    "test:api": "node --env-file-if-exists=.env.local node_modules/vitest/vitest.mjs run tests/integration/talent-api.test.ts tests/integration/student-profile-api.test.ts tests/integration/project-detail-api.test.ts tests/integration/inquiry-api.test.ts tests/integration/auth-identity.test.ts",
+    "test:api": "node --env-file-if-exists=.env.local node_modules/vitest/vitest.mjs run tests/integration/talent-api.test.ts tests/integration/student-profile-api.test.ts tests/integration/project-detail-api.test.ts tests/integration/inquiry-api.test.ts tests/integration/auth-identity.test.ts tests/integration/affiliation-verification.test.ts",
     "test:frontend": "vitest run tests/frontend",
     "test:browser": "npm run build && playwright test",
     "db:generate": "drizzle-kit generate",
@@ -35,6 +35,7 @@
     "postgres": "^3.4.9",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
+    "resend": "^6.32.1",
     "zod": "^4.6.5"
   },
   "devDependencies": {

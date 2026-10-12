@@ -5,6 +5,10 @@ import { redirect } from "next/navigation";
 
 import { getAuth, isGitHubAuthConfigured } from "@/auth/auth";
 import { normalizeAuthCallbackPath } from "@/auth/config";
+import { getRuntimeDatabase } from "@/db/runtime";
+import {
+  getStudentVerificationStatus as queryStudentVerificationStatus,
+} from "@/verification/service";
 
 type AuthInstance = ReturnType<typeof getAuth>;
 type SessionResult = Awaited<ReturnType<AuthInstance["api"]["getSession"]>>;
@@ -16,6 +20,15 @@ export class AuthenticationRequiredError extends Error {
   constructor() {
     super("Authentication required.");
     this.name = "AuthenticationRequiredError";
+  }
+}
+
+export class AffiliationVerificationRequiredError extends Error {
+  readonly status = 403;
+
+  constructor() {
+    super("Verified student affiliation required.");
+    this.name = "AffiliationVerificationRequiredError";
   }
 }
 
@@ -54,4 +67,28 @@ export async function requireAuthenticatedRequestUser(
 
 export function getInternalUserId(user: AuthenticatedUser) {
   return user.id;
+}
+
+export async function getStudentVerificationStatus(userId: string) {
+  return queryStudentVerificationStatus(getRuntimeDatabase(), userId);
+}
+
+export async function requireVerifiedStudent(
+  callbackPath = "/student/dashboard",
+) {
+  const user = await requireAuthenticatedUser(callbackPath);
+  const affiliation = await getStudentVerificationStatus(user.id);
+  if (affiliation.status !== "verified") {
+    redirect(`/student/verify?callbackURL=${encodeURIComponent(callbackPath)}`);
+  }
+  return { user, affiliation };
+}
+
+export async function requireVerifiedRequestStudent(request: Request) {
+  const user = await requireAuthenticatedRequestUser(request);
+  const affiliation = await getStudentVerificationStatus(user.id);
+  if (affiliation.status !== "verified") {
+    throw new AffiliationVerificationRequiredError();
+  }
+  return { user, affiliation };
 }
