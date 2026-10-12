@@ -1,0 +1,407 @@
+"use client";
+
+import { FormEvent, useEffect, useMemo, useState } from "react";
+
+import type { ProfileEditorVocabulary } from "@/profile/service";
+
+import styles from "./student-profile-editor.module.css";
+
+type ExternalLink = { label: string; url: string; type: "portfolio" | "other" };
+type EditorValues = {
+  headline: string;
+  biography: string;
+  publicLocation: string;
+  skillIds: string[];
+  availability: Array<"internship" | "full-time" | "contract">;
+  linkedinUrl: string;
+  githubUrl: string;
+  externalLinks: ExternalLink[];
+  revision: string | null;
+};
+
+type SerializableProfile = EditorValues & {
+  id: string;
+  publicationStatus: "unpublished";
+  createdAt: string;
+  updatedAt: string;
+};
+
+type ProfileEditorProps = {
+  initialProfile: SerializableProfile | null;
+  vocabulary: ProfileEditorVocabulary;
+  githubIdentity: { name: string; email: string };
+};
+
+type ApiError = {
+  error?: {
+    message?: string;
+    details?: Array<{ field: string; message: string }>;
+  };
+};
+
+const EMPTY_VALUES: EditorValues = {
+  headline: "",
+  biography: "",
+  publicLocation: "",
+  skillIds: [],
+  availability: [],
+  linkedinUrl: "",
+  githubUrl: "",
+  externalLinks: [],
+  revision: null,
+};
+
+function toEditorValues(profile: SerializableProfile | null): EditorValues {
+  if (!profile) return { ...EMPTY_VALUES };
+  return {
+    headline: profile.headline,
+    biography: profile.biography,
+    publicLocation: profile.publicLocation,
+    skillIds: [...profile.skillIds],
+    availability: [...profile.availability],
+    linkedinUrl: profile.linkedinUrl,
+    githubUrl: profile.githubUrl,
+    externalLinks: profile.externalLinks.map((link) => ({ ...link })),
+    revision: profile.updatedAt,
+  };
+}
+
+export function ProfileEditor({
+  initialProfile,
+  vocabulary,
+  githubIdentity,
+}: ProfileEditorProps) {
+  const [profileId, setProfileId] = useState(initialProfile?.id ?? null);
+  const [values, setValues] = useState<EditorValues>(() => toEditorValues(initialProfile));
+  const [lastSavedValues, setLastSavedValues] = useState<EditorValues>(() =>
+    toEditorValues(initialProfile));
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState("");
+  const [messageTone, setMessageTone] = useState<"neutral" | "success" | "error">("neutral");
+  const [errors, setErrors] = useState<Array<{ field: string; message: string }>>([]);
+  const dirty = useMemo(
+    () => JSON.stringify(values) !== JSON.stringify(lastSavedValues),
+    [lastSavedValues, values],
+  );
+
+  useEffect(() => {
+    if (!dirty) return;
+    const warnBeforeLeaving = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+    };
+    window.addEventListener("beforeunload", warnBeforeLeaving);
+    return () => window.removeEventListener("beforeunload", warnBeforeLeaving);
+  }, [dirty]);
+
+  async function save(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setSaving(true);
+    setMessage("");
+    setMessageTone("neutral");
+    setErrors([]);
+    try {
+      const response = await fetch("/api/v1/student/profile/me", {
+        method: profileId ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+      const body = await response.json() as ApiError & { profile?: SerializableProfile };
+      if (!response.ok || !body.profile) {
+        setErrors(body.error?.details ?? []);
+        throw new Error(body.error?.message || "Your profile could not be saved.");
+      }
+      const savedValues = toEditorValues(body.profile);
+      setProfileId(body.profile.id);
+      setValues(savedValues);
+      setLastSavedValues(savedValues);
+      setMessage("Private draft saved.");
+      setMessageTone("success");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Your profile could not be saved.");
+      setMessageTone("error");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function toggleSkill(skillId: string, checked: boolean) {
+    setValues((current) => ({
+      ...current,
+      skillIds: checked
+        ? [...current.skillIds, skillId]
+        : current.skillIds.filter((value) => value !== skillId),
+    }));
+  }
+
+  function toggleAvailability(
+    value: "internship" | "full-time" | "contract",
+    checked: boolean,
+  ) {
+    setValues((current) => ({
+      ...current,
+      availability: checked
+        ? [...current.availability, value]
+        : current.availability.filter((item) => item !== value),
+    }));
+  }
+
+  function updateExternalLink(index: number, update: Partial<ExternalLink>) {
+    setValues((current) => ({
+      ...current,
+      externalLinks: current.externalLinks.map((link, linkIndex) =>
+        linkIndex === index ? { ...link, ...update } : link,
+      ),
+    }));
+  }
+
+  return (
+    <form className={styles.editor} onSubmit={save} noValidate>
+      <header className={styles.editorHeader}>
+        <div>
+          <p className={styles.kicker}>Private workspace</p>
+          <h1>Shape your professional profile.</h1>
+          <p>
+            Build the structured draft employers will eventually discover.
+            Nothing entered here is public in this milestone.
+          </p>
+        </div>
+        <div className={styles.draftStatus}>
+          <span className={styles.statusDot} aria-hidden="true" />
+          <strong>Private draft</strong>
+          <small>{dirty ? "Unsaved changes" : profileId ? "All changes saved" : "Not created yet"}</small>
+        </div>
+      </header>
+
+      <EditorSection index="01" title="Profile identity" description="The concise professional context at the top of your future profile.">
+        <div className={styles.fieldGrid}>
+          <Field label="Professional headline" field="headline" errors={errors} wide>
+            <input
+              id="headline"
+              maxLength={140}
+              value={values.headline}
+              onChange={(event) => setValues({ ...values, headline: event.target.value })}
+              aria-describedby="headline-hint"
+            />
+            <span id="headline-hint" className={styles.hint}>140 characters maximum</span>
+          </Field>
+          <Field label="Public location" field="publicLocation" errors={errors}>
+            <input
+              id="publicLocation"
+              maxLength={100}
+              placeholder="Sault Ste. Marie, ON"
+              value={values.publicLocation}
+              onChange={(event) => setValues({ ...values, publicLocation: event.target.value })}
+            />
+          </Field>
+          <div className={styles.identityCard}>
+            <span>GitHub identity</span>
+            <strong>{githubIdentity.name}</strong>
+            <small>{githubIdentity.email}</small>
+          </div>
+        </div>
+      </EditorSection>
+
+      <EditorSection index="02" title="About" description="Introduce your interests, direction, and the kind of work you want to do.">
+        <Field label="Biography" field="biography" errors={errors} wide>
+          <textarea
+            id="biography"
+            rows={8}
+            maxLength={4_000}
+            value={values.biography}
+            onChange={(event) => setValues({ ...values, biography: event.target.value })}
+            aria-describedby="biography-count"
+          />
+          <span id="biography-count" className={styles.hint}>
+            {values.biography.length.toLocaleString()} / 4,000 characters
+          </span>
+        </Field>
+      </EditorSection>
+
+      <EditorSection index="03" title="Capabilities" description="Choose from the same standardized vocabulary used by talent discovery.">
+        <fieldset className={styles.choiceFieldset}>
+          <legend>Standardized skills</legend>
+          <div className={styles.choiceGrid}>
+            {vocabulary.skills.map((skill) => (
+              <label key={skill.id} className={styles.choice}>
+                <input
+                  type="checkbox"
+                  checked={values.skillIds.includes(skill.id)}
+                  onChange={(event) => toggleSkill(skill.id, event.target.checked)}
+                />
+                <span>{skill.name}</span>
+              </label>
+            ))}
+          </div>
+          <FieldError field="skillIds" errors={errors} />
+          <p className={styles.hint}>Missing skills can be proposed in a later workflow; they are not added automatically.</p>
+        </fieldset>
+      </EditorSection>
+
+      <EditorSection index="04" title="Opportunities" description="Select every engagement type you are currently open to.">
+        <fieldset className={styles.choiceFieldset}>
+          <legend>Availability</legend>
+          <div className={styles.availabilityGrid}>
+            {vocabulary.availability.map((option) => (
+              <label key={option.value} className={styles.choice}>
+                <input
+                  type="checkbox"
+                  checked={values.availability.includes(option.value)}
+                  onChange={(event) => toggleAvailability(option.value, event.target.checked)}
+                />
+                <span>{option.label}</span>
+              </label>
+            ))}
+          </div>
+          <FieldError field="availability" errors={errors} />
+        </fieldset>
+      </EditorSection>
+
+      <EditorSection index="05" title="Professional presence" description="Add secure HTTPS links that support your work and identity.">
+        <div className={styles.fieldGrid}>
+          <Field label="LinkedIn URL" field="linkedinUrl" errors={errors}>
+            <input
+              id="linkedinUrl"
+              type="url"
+              placeholder="https://www.linkedin.com/in/…"
+              value={values.linkedinUrl}
+              onChange={(event) => setValues({ ...values, linkedinUrl: event.target.value })}
+            />
+          </Field>
+          <Field label="GitHub profile URL" field="githubUrl" errors={errors}>
+            <input
+              id="githubUrl"
+              type="url"
+              placeholder="https://github.com/…"
+              value={values.githubUrl}
+              onChange={(event) => setValues({ ...values, githubUrl: event.target.value })}
+            />
+          </Field>
+        </div>
+        <div className={styles.linksHeader}>
+          <h3>Portfolio and external links</h3>
+          <button
+            type="button"
+            className={styles.secondaryButton}
+            disabled={values.externalLinks.length >= 5}
+            onClick={() => setValues((current) => ({
+              ...current,
+              externalLinks: [...current.externalLinks, { label: "", url: "", type: "portfolio" }],
+            }))}
+          >
+            Add link
+          </button>
+        </div>
+        {values.externalLinks.map((link, index) => (
+          <div className={styles.linkRow} key={`link-${index}`}>
+            <label>
+              <span>Label</span>
+              <input
+                value={link.label}
+                maxLength={60}
+                onChange={(event) => updateExternalLink(index, { label: event.target.value })}
+              />
+            </label>
+            <label>
+              <span>HTTPS URL</span>
+              <input
+                type="url"
+                value={link.url}
+                onChange={(event) => updateExternalLink(index, { url: event.target.value })}
+              />
+            </label>
+            <button
+              type="button"
+              className={styles.removeButton}
+              aria-label={`Remove ${link.label || `link ${index + 1}`}`}
+              onClick={() => setValues((current) => ({
+                ...current,
+                externalLinks: current.externalLinks.filter((_, linkIndex) => linkIndex !== index),
+              }))}
+            >
+              Remove
+            </button>
+          </div>
+        ))}
+        <FieldError field="externalLinks" errors={errors} />
+      </EditorSection>
+
+      <footer className={styles.saveBar}>
+        <div
+          aria-live="polite"
+          role="status"
+          className={messageTone === "success" ? styles.success : styles.feedback}
+          data-tone={messageTone}
+        >
+          {message || (dirty ? "You have unsaved changes." : "Your draft is private.")}
+        </div>
+        <button type="submit" disabled={saving || !dirty}>
+          {saving ? "Saving…" : profileId ? "Save changes" : "Create private draft"}
+        </button>
+      </footer>
+    </form>
+  );
+}
+
+function EditorSection({
+  index,
+  title,
+  description,
+  children,
+}: {
+  index: string;
+  title: string;
+  description: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className={styles.section} aria-labelledby={`section-${index}`}>
+      <header>
+        <span>{index}</span>
+        <div>
+          <h2 id={`section-${index}`}>{title}</h2>
+          <p>{description}</p>
+        </div>
+      </header>
+      <div className={styles.sectionBody}>{children}</div>
+    </section>
+  );
+}
+
+function Field({
+  label,
+  field,
+  errors,
+  wide = false,
+  children,
+}: {
+  label: string;
+  field: string;
+  errors: Array<{ field: string; message: string }>;
+  wide?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className={`${styles.field} ${wide ? styles.wideField : ""}`}>
+      <label htmlFor={field}>{label}</label>
+      {children}
+      <FieldError field={field} errors={errors} />
+    </div>
+  );
+}
+
+function FieldError({
+  field,
+  errors,
+}: {
+  field: string;
+  errors: Array<{ field: string; message: string }>;
+}) {
+  const relevant = errors.filter((error) =>
+    error.field === field || error.field.startsWith(`${field}.`),
+  );
+  return relevant.map((error, index) => (
+    <span className={styles.fieldError} role="alert" key={`${error.field}-${index}`}>
+      {error.message}
+    </span>
+  ));
+}

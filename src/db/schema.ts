@@ -31,6 +31,12 @@ export const studentAffiliationStatusEnum = pgEnum(
   "student_affiliation_status",
   ["verified"],
 );
+export const studentProfileLinkTypeEnum = pgEnum("student_profile_link_type", [
+  "linkedin",
+  "github",
+  "portfolio",
+  "other",
+]);
 
 export const students = pgTable(
   "students",
@@ -401,7 +407,94 @@ export const affiliationVerificationRateLimits = pgTable(
   (table) => [index("affiliation_rate_limits_action_idx").on(table.action)],
 );
 
+export const studentProfiles = pgTable(
+  "student_profiles",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    ownerUserId: text("owner_user_id")
+      .notNull()
+      .unique()
+      .references(() => authUsers.id, { onDelete: "cascade" }),
+    publicationStatus: profileStatusEnum("publication_status")
+      .default("unpublished")
+      .notNull(),
+    headline: text("headline").default("").notNull(),
+    biography: text("biography").default("").notNull(),
+    publicLocation: text("public_location").default("").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [index("student_profiles_owner_idx").on(table.ownerUserId)],
+);
+
+export const studentProfileSkills = pgTable(
+  "student_profile_skills",
+  {
+    profileId: uuid("profile_id")
+      .notNull()
+      .references(() => studentProfiles.id, { onDelete: "cascade" }),
+    skillId: text("skill_id")
+      .notNull()
+      .references(() => skills.id, { onDelete: "restrict" }),
+    displayOrder: integer("display_order").notNull(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.profileId, table.skillId] }),
+    uniqueIndex("student_profile_skills_order_unique").on(
+      table.profileId,
+      table.displayOrder,
+    ),
+  ],
+);
+
+export const studentProfileAvailability = pgTable(
+  "student_profile_availability",
+  {
+    profileId: uuid("profile_id")
+      .notNull()
+      .references(() => studentProfiles.id, { onDelete: "cascade" }),
+    availabilityValue: availabilityValueEnum("availability_value")
+      .notNull()
+      .references(() => availabilityOptions.value, { onDelete: "restrict" }),
+    displayOrder: integer("display_order").notNull(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.profileId, table.availabilityValue] }),
+    uniqueIndex("student_profile_availability_order_unique").on(
+      table.profileId,
+      table.displayOrder,
+    ),
+  ],
+);
+
+export const studentProfileLinks = pgTable(
+  "student_profile_links",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    profileId: uuid("profile_id")
+      .notNull()
+      .references(() => studentProfiles.id, { onDelete: "cascade" }),
+    linkType: studentProfileLinkTypeEnum("link_type").notNull(),
+    label: text("label").notNull(),
+    url: text("url").notNull(),
+    displayOrder: integer("display_order").notNull(),
+  },
+  (table) => [
+    uniqueIndex("student_profile_links_order_unique").on(
+      table.profileId,
+      table.displayOrder,
+    ),
+    index("student_profile_links_profile_idx").on(table.profileId),
+  ],
+);
+
 export type Student = typeof students.$inferSelect;
 export type Project = typeof projects.$inferSelect;
 export type AuthUser = typeof authUsers.$inferSelect;
 export type StudentAffiliation = typeof studentAffiliations.$inferSelect;
+export type StudentProfile = typeof studentProfiles.$inferSelect;

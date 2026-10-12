@@ -51,6 +51,9 @@ export default async function StudentDashboardPage() {
             <div className={styles.verifiedNotice}>
               <strong>Algoma affiliation verified</strong>
               <p>{verification.institutionalEmail}</p>
+              <Link className={styles.inlineLink} href="/student/profile/edit">
+                Edit private profile
+              </Link>
             </div>
           ) : (
             <div className={styles.notice}>

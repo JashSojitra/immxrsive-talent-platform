@@ -1,0 +1,374 @@
+.editor {
+  width: min(1180px, calc(100vw - 64px));
+  margin: 0 auto;
+  padding: 72px 0 140px;
+}
+
+.editorHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 64px;
+  align-items: end;
+  padding-bottom: 64px;
+  border-bottom: 1px solid var(--line);
+}
+
+.kicker,
+.section > header > span {
+  color: var(--electric);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.editorHeader h1 {
+  max-width: 830px;
+  margin: 10px 0 22px;
+  font-size: clamp(3rem, 7vw, 6.8rem);
+  font-weight: 520;
+  letter-spacing: -0.075em;
+  line-height: 0.9;
+}
+
+.editorHeader p,
+.section header p {
+  max-width: 660px;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.draftStatus {
+  padding: 22px;
+  border: 1px solid var(--line);
+  background: rgba(118, 247, 230, 0.04);
+}
+
+.draftStatus strong,
+.draftStatus small {
+  display: block;
+}
+
+.draftStatus small {
+  margin-top: 5px;
+  color: var(--muted);
+}
+
+.statusDot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin: 0 9px 1px 0;
+  border-radius: 50%;
+  background: var(--signal);
+}
+
+.section {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.42fr) minmax(0, 1fr);
+  gap: clamp(36px, 8vw, 110px);
+  padding: 72px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.section > header {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 18px;
+  align-content: start;
+}
+
+.section h2 {
+  margin: -6px 0 12px;
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  letter-spacing: -0.045em;
+}
+
+.sectionBody,
+.fieldGrid {
+  min-width: 0;
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+}
+
+.field,
+.linkRow label {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 9px;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.wideField {
+  grid-column: 1 / -1;
+}
+
+.field input,
+.field textarea,
+.linkRow input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: rgba(5, 7, 10, 0.78);
+  color: var(--bone);
+  font: inherit;
+  font-weight: 450;
+}
+
+.field input,
+.linkRow input {
+  min-height: 52px;
+  padding: 0 14px;
+}
+
+.field textarea {
+  min-height: 180px;
+  padding: 15px;
+  resize: vertical;
+  line-height: 1.65;
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible,
+.linkRow input:focus-visible {
+  border-color: var(--electric);
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 450;
+  line-height: 1.5;
+}
+
+.identityCard {
+  min-height: 116px;
+  padding: 19px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.identityCard span,
+.identityCard strong,
+.identityCard small {
+  display: block;
+}
+
+.identityCard span {
+  margin-bottom: 13px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.identityCard small {
+  margin-top: 4px;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.choiceFieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.choiceFieldset legend {
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.choiceGrid,
+.availabilityGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.choice {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+.choice input {
+  position: absolute;
+  opacity: 0;
+}
+
+.choice span {
+  display: flex;
+  min-height: 46px;
+  padding: 10px 13px;
+  align-items: center;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.84rem;
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.choice input:checked + span {
+  border-color: var(--electric);
+  background: rgba(118, 247, 230, 0.1);
+  color: var(--bone);
+}
+
+.choice input:focus-visible + span {
+  outline: 2px solid var(--electric);
+  outline-offset: 3px;
+}
+
+.linksHeader {
+  display: flex;
+  margin-top: 36px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.linksHeader h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.secondaryButton,
+.removeButton {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--bone);
+  cursor: pointer;
+}
+
+.secondaryButton {
+  min-height: 42px;
+  padding: 0 16px;
+}
+
+.linkRow {
+  display: grid;
+  grid-template-columns: 0.65fr 1fr auto;
+  gap: 12px;
+  margin-top: 14px;
+  align-items: end;
+}
+
+.removeButton {
+  min-height: 52px;
+  padding: 0 13px;
+  color: #f2a69f;
+}
+
+.fieldError,
+.feedback {
+  color: #f2a69f;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.fieldError {
+  display: block;
+  margin-top: 4px;
+}
+
+.saveBar {
+  position: sticky;
+  bottom: 20px;
+  z-index: 5;
+  display: flex;
+  margin-top: 44px;
+  padding: 16px 18px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  border: 1px solid var(--line);
+  background: rgba(10, 13, 17, 0.95);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(18px);
+}
+
+.saveBar button {
+  min-width: 190px;
+  min-height: 50px;
+  padding: 0 22px;
+  border: 0;
+  background: var(--electric);
+  color: var(--ink);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.saveBar button:disabled,
+.secondaryButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.success {
+  color: var(--electric);
+  font-size: 0.86rem;
+}
+
+@media (max-width: 850px) {
+  .editorHeader,
+  .section {
+    grid-template-columns: 1fr;
+  }
+
+  .editorHeader {
+    gap: 36px;
+  }
+
+  .draftStatus {
+    max-width: 360px;
+  }
+
+  .section {
+    gap: 36px;
+  }
+}
+
+@media (max-width: 600px) {
+  .editor {
+    width: calc(100vw - 32px);
+    padding-top: 48px;
+  }
+
+  .editorHeader h1 {
+    font-size: clamp(3rem, 15vw, 4.7rem);
+  }
+
+  .fieldGrid,
+  .choiceGrid,
+  .availabilityGrid,
+  .linkRow {
+    grid-template-columns: 1fr;
+  }
+
+  .wideField {
+    grid-column: auto;
+  }
+
+  .saveBar {
+    bottom: 10px;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .saveBar button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .choice span {
+    transition: none;
+  }
+}
