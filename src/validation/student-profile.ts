@@ -5,6 +5,9 @@ export const MAX_PROFILE_SKILLS = 20;
 export const MAX_PROFILE_LINKS = 5;
 export const MAX_PROFILE_EDUCATION_ENTRIES = 10;
 export const MAX_PROFILE_EXPERIENCE_ENTRIES = 15;
+export const PRESENTATION_PRESETS = ["spatial", "editorial", "minimal"] as const;
+export const HERO_MEDIA_OPTIONS = ["default", "aurora", "contours", "prism"] as const;
+export const PORTFOLIO_SECTIONS = ["about", "skills", "background", "links"] as const;
 
 const maintainedEntrySchema = z.string().trim().min(1).max(500);
 
@@ -54,6 +57,12 @@ export const studentProfileDraftSchema = z.object({
   showPublicLocation: z.boolean().default(false),
   showEducation: z.boolean().default(false),
   showExperience: z.boolean().default(false),
+  presentationPreset: z.enum(PRESENTATION_PRESETS).default("spatial"),
+  heroMedia: z.enum(HERO_MEDIA_OPTIONS).default("default"),
+  sectionOrder: z.array(z.enum(PORTFOLIO_SECTIONS)).length(PORTFOLIO_SECTIONS.length)
+    .refine((value) => new Set(value).size === PORTFOLIO_SECTIONS.length,
+      "Include every portfolio section exactly once.")
+    .default([...PORTFOLIO_SECTIONS]),
   skillIds: z.array(z.string().trim().min(1)).max(MAX_PROFILE_SKILLS)
     .transform(uniqueValues),
   availability: z.array(z.enum(["internship", "full-time", "contract"]))

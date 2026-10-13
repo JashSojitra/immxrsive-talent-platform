@@ -10,7 +10,13 @@ declare global {
   }
 }
 
-export function StudentProfileMotion({ children }: { children: ReactNode }) {
+export function StudentProfileMotion({
+  children,
+  preset,
+}: {
+  children: ReactNode;
+  preset: "spatial" | "editorial" | "minimal";
+}) {
   const pageRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -78,7 +84,8 @@ export function StudentProfileMotion({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <main ref={pageRef} className={styles.page} data-motion="pending" id="profile-content">
+    <main ref={pageRef} className={styles.page} data-motion="pending"
+      data-preset={preset} id="profile-content">
       {children}
     </main>
   );

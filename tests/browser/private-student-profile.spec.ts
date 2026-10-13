@@ -117,6 +117,11 @@ test("verified student creates and returns to a private profile draft", async ({
     expect(publicSearch.status()).toBe(200);
     expect(await publicSearch.json()).toMatchObject({ items: [], count: 0 });
 
+    await page.getByRole("radio", { name: /Editorial/ }).check();
+    await page.getByRole("radio", { name: /Topographic contours/ }).check();
+    const moveSkillsUp = page.getByRole("button", { name: "Move Skills up" });
+    await moveSkillsUp.focus();
+    await page.keyboard.press("Enter");
     await page.getByRole("checkbox", { name: /^Show availability/ }).check();
     await page.getByRole("checkbox", { name: /^Show location/ }).check();
     await page.getByRole("checkbox", { name: /^Show education/ }).check();
@@ -126,10 +131,16 @@ test("verified student creates and returns to a private profile draft", async ({
 
     await page.getByRole("link", { name: "Preview saved public profile" }).click();
     await expect(page.getByText("Private preview — not public")).toBeVisible();
+    await expect(page.locator("main#profile-content")).toHaveAttribute("data-preset", "editorial");
+    await expect(page.locator('[data-media="contours"]')).toBeVisible();
     await expect(page.getByRole("heading", { name: "Browser Profile Student", exact: true }))
       .toBeVisible();
     await expect(page.getByText("Sault Ste. Marie, ON")).toBeVisible();
     await expect(page.getByText("BSc Computer Science - Algoma University")).toBeVisible();
+    const previewHeadingIds = await page.getByRole("heading", { level: 2 })
+      .evaluateAll((headings) => headings.map((heading) => heading.id));
+    expect(previewHeadingIds.indexOf("capabilities-title"))
+      .toBeLessThan(previewHeadingIds.indexOf("about-title"));
     const privateResponse = await page.request.get("/api/v1/student/profile/me");
     const privateBody = await privateResponse.json() as { profile: { id: string } };
     const publicId = privateBody.profile.id;
@@ -147,6 +158,8 @@ test("verified student creates and returns to a private profile draft", async ({
       items: [expect.objectContaining({ id: publicId })], count: 1,
     });
     await page.goto(`/students/${publicId}`);
+    await expect(page.locator("main#profile-content")).toHaveAttribute("data-preset", "editorial");
+    await expect(page.locator('[data-media="contours"]')).toBeVisible();
     await expect(page.getByRole("heading", { name: "Browser Profile Student", exact: true }))
       .toBeVisible();
     await expect(page.getByRole("link", { name: /employer inquiry for browser profile student/i }))

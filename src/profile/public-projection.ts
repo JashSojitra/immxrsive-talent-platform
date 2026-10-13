@@ -42,6 +42,9 @@ export async function querySelfServiceProfileProjection(
     showPublicLocation: studentProfiles.showPublicLocation,
     showEducation: studentProfiles.showEducation,
     showExperience: studentProfiles.showExperience,
+    presentationPreset: studentProfiles.presentationPreset,
+    heroMedia: studentProfiles.heroMedia,
+    sectionOrder: studentProfiles.sectionOrder,
   }).from(studentProfiles)
     .innerJoin(authUsers, eq(authUsers.id, studentProfiles.ownerUserId))
     .where(and(...conditions)).limit(1);
@@ -90,6 +93,9 @@ export async function querySelfServiceProfileProjection(
     status: profile.status,
     skills: skillRows.map(({ name }) => name),
     projects: [],
+    presentationPreset: profile.presentationPreset as PublicStudentProfile["presentationPreset"],
+    heroMedia: profile.heroMedia as PublicStudentProfile["heroMedia"],
+    sectionOrder: profile.sectionOrder,
     ...(profile.showPublicLocation && profile.publicLocation
       ? { location: profile.publicLocation }
       : {}),

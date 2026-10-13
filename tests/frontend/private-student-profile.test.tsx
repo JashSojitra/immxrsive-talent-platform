@@ -172,6 +172,38 @@ describe("private student profile editor", () => {
     expect(screen.getByText("Complete the required public profile fields before publishing."))
       .toBeVisible();
   });
+
+  test("persists allowlisted presentation, media, and keyboard-operable section ordering", async () => {
+    const fetchMock = vi.spyOn(globalThis, "fetch").mockImplementation(async (_input, init) => {
+      const body = JSON.parse(String(init?.body));
+      return new Response(JSON.stringify({
+        profile: {
+          ...completeInitialProfile(), ...body,
+          updatedAt: "2026-10-12T14:00:00.000Z",
+        },
+      }), { status: 200 });
+    });
+    const user = userEvent.setup();
+    render(<ProfileEditor vocabulary={vocabulary}
+      githubIdentity={{ name: "Student", email: "student@example.test" }}
+      initialProfile={completeInitialProfile()} />);
+
+    await user.click(screen.getByRole("radio", { name: /Editorial/ }));
+    await user.click(screen.getByRole("radio", { name: /Prismatic plane/ }));
+    const moveSkillsUp = screen.getByRole("button", { name: "Move Skills up" });
+    moveSkillsUp.focus();
+    await user.keyboard("{Enter}");
+    await user.click(screen.getByRole("button", { name: "Save changes" }));
+
+    const payload = JSON.parse(String((fetchMock.mock.calls[0]?.[1] as RequestInit).body));
+    expect(payload).toMatchObject({
+      presentationPreset: "editorial",
+      heroMedia: "prism",
+      sectionOrder: ["skills", "about", "background", "links"],
+    });
+    expect(payload).not.toHaveProperty("publicationStatus");
+    expect(await screen.findByText("Private draft saved.")).toBeVisible();
+  });
 });
 
 function completeInitialProfile() {
@@ -184,5 +216,10 @@ function completeInitialProfile() {
     education: [], experience: [], createdAt: "2026-10-12T12:00:00.000Z",
     updatedAt: "2026-10-12T12:00:00.000Z", revision: "2026-10-12T12:00:00.000Z",
     publishedAt: null,
+    presentationPreset: "spatial" as const,
+    heroMedia: "default" as const,
+    sectionOrder: ["about", "skills", "background", "links"] as Array<
+      "about" | "skills" | "background" | "links"
+    >,
   };
 }

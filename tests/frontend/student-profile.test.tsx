@@ -145,6 +145,28 @@ describe("public student profile", () => {
     expect(screen.getByRole("link", { name: "Return to editor" }))
       .toHaveAttribute("href", "/student/profile/edit");
   });
+
+  it("applies each controlled preset, hero treatment, and semantic section order", () => {
+    const customized: PublicStudentProfile = {
+      ...profile,
+      biography: "Plain-text biography",
+      education: ["Algoma University"],
+      presentationPreset: "spatial",
+      heroMedia: "contours",
+      sectionOrder: ["skills", "about", "background", "links"],
+    };
+    const { container, rerender } = render(<StudentProfileView profile={customized} />);
+    const main = container.querySelector("main");
+    expect(main).toHaveAttribute("data-preset", "spatial");
+    expect(container.querySelector('[data-media="contours"]')).toBeInTheDocument();
+    const headings = screen.getAllByRole("heading", { level: 2 }).map((heading) => heading.id);
+    expect(headings.indexOf("capabilities-title")).toBeLessThan(headings.indexOf("about-title"));
+
+    rerender(<StudentProfileView profile={{ ...customized, presentationPreset: "editorial" }} />);
+    expect(main).toHaveAttribute("data-preset", "editorial");
+    rerender(<StudentProfileView profile={{ ...customized, presentationPreset: "minimal" }} />);
+    expect(main).toHaveAttribute("data-preset", "minimal");
+  });
 });
 
 describe("student profile route states", () => {

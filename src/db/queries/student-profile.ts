@@ -45,6 +45,9 @@ export interface PublicStudentProfile {
   links?: PublicLink[];
   education?: string[];
   experience?: string[];
+  presentationPreset?: "spatial" | "editorial" | "minimal";
+  heroMedia?: "default" | "aurora" | "contours" | "prism";
+  sectionOrder?: Array<"about" | "skills" | "background" | "links">;
   projects: StudentProjectEvidence[];
 }
 

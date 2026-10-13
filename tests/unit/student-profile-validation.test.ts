@@ -51,4 +51,19 @@ describe("student profile draft validation", () => {
       ...validDraft, biography: "x".repeat(4_001),
     }).success).toBe(false);
   });
+
+  test("allowlists presentation choices and requires each ordered section exactly once", () => {
+    expect(studentProfileDraftSchema.parse({
+      ...validDraft,
+      presentationPreset: "editorial",
+      heroMedia: "prism",
+      sectionOrder: ["skills", "about", "links", "background"],
+    })).toMatchObject({ presentationPreset: "editorial", heroMedia: "prism" });
+    expect(studentProfileDraftSchema.safeParse({
+      ...validDraft,
+      presentationPreset: "custom-css",
+      heroMedia: "https://example.test/payload.svg",
+      sectionOrder: ["about", "about", "background", "links"],
+    }).success).toBe(false);
+  });
 });

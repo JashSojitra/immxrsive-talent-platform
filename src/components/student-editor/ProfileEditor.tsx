@@ -20,6 +20,9 @@ export type EditorValues = {
   showPublicLocation: boolean;
   showEducation: boolean;
   showExperience: boolean;
+  presentationPreset: "spatial" | "editorial" | "minimal";
+  heroMedia: "default" | "aurora" | "contours" | "prism";
+  sectionOrder: Array<"about" | "skills" | "background" | "links">;
   skillIds: string[];
   availability: Array<"internship" | "full-time" | "contract">;
   linkedinUrl: string;
@@ -30,7 +33,10 @@ export type EditorValues = {
   revision: string | null;
 };
 
-type SerializableProfile = EditorValues & {
+type CustomizationValues = Pick<EditorValues,
+  "presentationPreset" | "heroMedia" | "sectionOrder">;
+
+type SerializableProfile = Omit<EditorValues, keyof CustomizationValues> & Partial<CustomizationValues> & {
   id: string;
   publicationStatus: "published" | "unpublished";
   createdAt: string;
@@ -51,6 +57,13 @@ type ApiError = {
   };
 };
 
+const SECTION_LABELS = {
+  about: "About",
+  skills: "Skills",
+  background: "Education and experience",
+  links: "Professional links",
+} as const;
+
 const EMPTY_VALUES: EditorValues = {
   headline: "",
   biography: "",
@@ -62,6 +75,9 @@ const EMPTY_VALUES: EditorValues = {
   showPublicLocation: false,
   showEducation: false,
   showExperience: false,
+  presentationPreset: "spatial",
+  heroMedia: "default",
+  sectionOrder: ["about", "skills", "background", "links"],
   skillIds: [],
   availability: [],
   linkedinUrl: "",
@@ -85,6 +101,9 @@ function toEditorValues(profile: SerializableProfile | null): EditorValues {
     showPublicLocation: profile.showPublicLocation ?? false,
     showEducation: profile.showEducation ?? false,
     showExperience: profile.showExperience ?? false,
+    presentationPreset: profile.presentationPreset ?? "spatial",
+    heroMedia: profile.heroMedia ?? "default",
+    sectionOrder: [...(profile.sectionOrder ?? ["about", "skills", "background", "links"])],
     skillIds: [...profile.skillIds],
     availability: [...profile.availability],
     linkedinUrl: profile.linkedinUrl,
@@ -237,6 +256,18 @@ export function ProfileEditor({
         linkIndex === index ? { ...link, ...update } : link,
       ),
     }));
+  }
+
+  function moveSection(index: number, direction: -1 | 1) {
+    const destination = index + direction;
+    if (destination < 0 || destination >= values.sectionOrder.length) return;
+    setValues((current) => {
+      const sectionOrder = [...current.sectionOrder];
+      [sectionOrder[index], sectionOrder[destination]] = [
+        sectionOrder[destination], sectionOrder[index],
+      ];
+      return { ...current, sectionOrder };
+    });
   }
 
   return (
@@ -458,7 +489,71 @@ export function ProfileEditor({
         <FieldError field="externalLinks" errors={errors} />
       </EditorSection>
 
-      <EditorSection index="07" title="Privacy controls" description="Optional fields remain private unless you explicitly include them in the public projection.">
+      <EditorSection index="07" title="Portfolio presentation" description="Choose a controlled visual system, hero treatment, and public section sequence.">
+        <fieldset className={styles.customizationFieldset}>
+          <legend>Presentation preset</legend>
+          <div className={styles.presetGrid}>
+            {([
+              ["spatial", "Spatial", "Cinematic scale, layered geometry, and expressive composition."],
+              ["editorial", "Editorial", "Refined typography, a publication-inspired grid, and generous rhythm."],
+              ["minimal", "Minimal", "Restrained hierarchy, compact spacing, and direct readability."],
+            ] as const).map(([value, title, detail]) => (
+              <label className={styles.presetChoice} data-preset={value} key={value}>
+                <input type="radio" name="presentationPreset" value={value}
+                  checked={values.presentationPreset === value}
+                  onChange={() => setValues({ ...values, presentationPreset: value })} />
+                <span className={styles.presetPreview} aria-hidden="true"><i /><i /><i /></span>
+                <strong>{title}</strong><small>{detail}</small>
+                {values.presentationPreset === value ? <em>Selected preset</em> : null}
+              </label>
+            ))}
+          </div>
+          <FieldError field="presentationPreset" errors={errors} />
+        </fieldset>
+
+        <fieldset className={styles.customizationFieldset}>
+          <legend>Hero media treatment</legend>
+          <p className={styles.hint}>Safe built-in artwork requires no upload, external URL, or storage credential.</p>
+          <div className={styles.mediaGrid}>
+            {([
+              ["default", "Signature field"], ["aurora", "Aurora veil"],
+              ["contours", "Topographic contours"], ["prism", "Prismatic plane"],
+            ] as const).map(([value, title]) => (
+              <label className={styles.mediaChoice} data-media={value} key={value}>
+                <input type="radio" name="heroMedia" value={value}
+                  checked={values.heroMedia === value}
+                  onChange={() => setValues({ ...values, heroMedia: value })} />
+                <span aria-hidden="true" />
+                <strong>{title}</strong>
+              </label>
+            ))}
+          </div>
+          <FieldError field="heroMedia" errors={errors} />
+        </fieldset>
+
+        <fieldset className={styles.customizationFieldset}>
+          <legend>Optional section order</legend>
+          <p className={styles.hint}>Use the buttons to set the sequence used by saved preview and public profile.</p>
+          <ol className={styles.sectionOrderList}>
+            {values.sectionOrder.map((section, index) => (
+              <li key={section}>
+                <span><b>{index + 1}</b>{SECTION_LABELS[section]}</span>
+                <div>
+                  <button type="button" disabled={index === 0}
+                    aria-label={`Move ${SECTION_LABELS[section]} up`}
+                    onClick={() => moveSection(index, -1)}>Up</button>
+                  <button type="button" disabled={index === values.sectionOrder.length - 1}
+                    aria-label={`Move ${SECTION_LABELS[section]} down`}
+                    onClick={() => moveSection(index, 1)}>Down</button>
+                </div>
+              </li>
+            ))}
+          </ol>
+          <FieldError field="sectionOrder" errors={errors} />
+        </fieldset>
+      </EditorSection>
+
+      <EditorSection index="08" title="Privacy controls" description="Optional fields remain private unless you explicitly include them in the public projection.">
         <fieldset className={styles.privacyFieldset}>
           <legend>Public field visibility</legend>
           <VisibilityChoice checked={values.showAvailability}
@@ -479,7 +574,7 @@ export function ProfileEditor({
         </fieldset>
       </EditorSection>
 
-      <EditorSection index="08" title="Preview and publication" description="Preview the saved public projection, then explicitly publish or unpublish it.">
+      <EditorSection index="09" title="Preview and publication" description="Preview the saved public projection, then explicitly publish or unpublish it.">
         <div className={styles.publicationPanel}>
           <div>
             <span>Current state</span>

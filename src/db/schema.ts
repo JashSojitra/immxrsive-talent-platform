@@ -4,6 +4,7 @@ import {
   check,
   index,
   integer,
+  jsonb,
   pgEnum,
   pgTable,
   primaryKey,
@@ -37,6 +38,8 @@ export const studentProfileLinkTypeEnum = pgEnum("student_profile_link_type", [
   "portfolio",
   "other",
 ]);
+
+export type PortfolioSection = "about" | "skills" | "background" | "links";
 
 export const students = pgTable(
   "students",
@@ -428,6 +431,10 @@ export const studentProfiles = pgTable(
     showPublicLocation: boolean("show_public_location").default(false).notNull(),
     showEducation: boolean("show_education").default(false).notNull(),
     showExperience: boolean("show_experience").default(false).notNull(),
+    presentationPreset: text("presentation_preset").default("spatial").notNull(),
+    heroMedia: text("hero_media").default("default").notNull(),
+    sectionOrder: jsonb("section_order").$type<PortfolioSection[]>()
+      .default(["about", "skills", "background", "links"]).notNull(),
     publishedAt: timestamp("published_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()

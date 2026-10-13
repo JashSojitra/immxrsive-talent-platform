@@ -150,6 +150,12 @@ describeWithDatabase("private student profile", () => {
     const unknownSkill = await handlers.POST(profileRequest("POST", draft("not-a-real-skill")));
     expect(unknownSkill.status).toBe(422);
     expect(await unknownSkill.json()).toMatchObject({ error: { code: "INVALID_SKILL" } });
+
+    const unsafeCustomization = await handlers.POST(profileRequest("POST", {
+      ...draft(skillId), presentationPreset: "<style>body{display:none}</style>",
+      heroMedia: "https://attacker.example/media.svg",
+    }));
+    expect(unsafeCustomization.status).toBe(422);
   });
 
   test("publishes only an explicit allowlisted projection and supports unpublish and republish", async () => {
@@ -219,11 +225,38 @@ describeWithDatabase("private student profile", () => {
       expect.objectContaining({ id: profile.id }),
     );
 
+    const customized = await updatePrivateStudentProfile({
+      db,
+      ownerUserId,
+      draft: studentProfileDraftSchema.parse({
+        ...draft(skillId, "XR developer", published.updatedAt.toISOString()),
+        program: "Computer Science",
+        studentStatus: "current",
+        publicLocation: privateLocation,
+        education: [privateEducation],
+        experience: [privateExperience],
+        presentationPreset: "editorial",
+        heroMedia: "contours",
+        sectionOrder: ["skills", "about", "links", "background"],
+      }),
+    });
+    expect(customized.publicationStatus).toBe("published");
+    expect(await queryPublicStudentProfile(db, profile.id)).toMatchObject({
+      presentationPreset: "editorial",
+      heroMedia: "contours",
+      sectionOrder: ["skills", "about", "links", "background"],
+    });
+    const directoryAfterCustomization = await queryTalentDirectory(db, {
+      q: "XR developer", searchGroups: [["XR", "developer"]], skills: [],
+      availability: [], status: ["current"],
+    });
+    expect(directoryAfterCustomization.items).toEqual(directory.items);
+
     const unpublished = await changeProfilePublication({
       db,
       ownerUserId,
       action: "unpublish",
-      revision: published.updatedAt.toISOString(),
+      revision: customized.updatedAt.toISOString(),
     });
     expect(await queryPublicStudentProfile(db, profile.id)).toBeNull();
     expect((await getPrivateStudentProfile(db, ownerUserId))?.education).toEqual([privateEducation]);

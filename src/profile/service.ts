@@ -37,6 +37,9 @@ export type PrivateStudentProfile = {
   showPublicLocation: boolean;
   showEducation: boolean;
   showExperience: boolean;
+  presentationPreset: "spatial" | "editorial" | "minimal";
+  heroMedia: "default" | "aurora" | "contours" | "prism";
+  sectionOrder: Array<"about" | "skills" | "background" | "links">;
   skillIds: string[];
   availability: Array<"internship" | "full-time" | "contract">;
   linkedinUrl: string;
@@ -138,6 +141,9 @@ export async function getPrivateStudentProfile(
     showPublicLocation: profile.showPublicLocation,
     showEducation: profile.showEducation,
     showExperience: profile.showExperience,
+    presentationPreset: profile.presentationPreset as PrivateStudentProfile["presentationPreset"],
+    heroMedia: profile.heroMedia as PrivateStudentProfile["heroMedia"],
+    sectionOrder: profile.sectionOrder,
     skillIds: skillRows.map(({ skillId }) => skillId),
     availability: availabilityRows.map(({ value }) => value),
     linkedinUrl: linkRows.find(({ type }) => type === "linkedin")?.url ?? "",
@@ -177,6 +183,9 @@ export async function createPrivateStudentProfile(input: {
         showPublicLocation: input.draft.showPublicLocation,
         showEducation: input.draft.showEducation,
         showExperience: input.draft.showExperience,
+        presentationPreset: input.draft.presentationPreset,
+        heroMedia: input.draft.heroMedia,
+        sectionOrder: input.draft.sectionOrder,
         createdAt,
         updatedAt: createdAt,
       }).returning({ id: studentProfiles.id });
@@ -246,6 +255,9 @@ export async function updatePrivateStudentProfile(input: {
       showPublicLocation: input.draft.showPublicLocation,
       showEducation: input.draft.showEducation,
       showExperience: input.draft.showExperience,
+      presentationPreset: input.draft.presentationPreset,
+      heroMedia: input.draft.heroMedia,
+      sectionOrder: input.draft.sectionOrder,
       updatedAt,
     }).where(and(
       eq(studentProfiles.id, current.id),
