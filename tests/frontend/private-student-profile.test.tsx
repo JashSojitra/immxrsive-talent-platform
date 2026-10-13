@@ -90,10 +90,13 @@ describe("private student profile editor", () => {
     render(<ProfileEditor vocabulary={vocabulary} githubIdentity={{ name: "Student", email: "student@example.test" }}
       initialProfile={{
         id: "profile-1", publicationStatus: "unpublished", headline: "Before",
-        biography: "<script>safe text</script>", publicLocation: "", skillIds: [],
+        biography: "<script>safe text</script>", publicLocation: "", program: "",
+        studentStatus: null, showAvailability: false, showProfessionalLinks: false,
+        showPublicLocation: false, showEducation: false, showExperience: false, skillIds: [],
         availability: [], linkedinUrl: "", githubUrl: "", externalLinks: [],
         education: [], experience: [],
         createdAt: "2026-10-12T12:00:00.000Z", updatedAt: "2026-10-12T12:00:00.000Z",
+        publishedAt: null,
         revision: "2026-10-12T12:00:00.000Z",
       }} />);
     expect(screen.getByLabelText("Biography")).toHaveValue("<script>safe text</script>");
@@ -108,4 +111,78 @@ describe("private student profile editor", () => {
     expect(payload).not.toHaveProperty("createdAt");
     expect(payload).not.toHaveProperty("updatedAt");
   });
+
+  test("keeps publication explicit, blocks it while dirty, and sends the saved revision", async () => {
+    const user = userEvent.setup();
+    vi.spyOn(window, "confirm").mockReturnValue(true);
+    const savedProfile = {
+        id: "profile-1", publicationStatus: "published", headline: "XR developer",
+        biography: "Accessible simulations", publicLocation: "", program: "Computer Science",
+        studentStatus: "current", showAvailability: false, showProfessionalLinks: false,
+        showPublicLocation: false, showEducation: false, showExperience: false,
+        skillIds: ["unity"], availability: [], linkedinUrl: "", githubUrl: "",
+        externalLinks: [], education: [], experience: [],
+        createdAt: "2026-10-12T12:00:00.000Z", updatedAt: "2026-10-12T13:00:00.000Z",
+        publishedAt: "2026-10-12T13:00:00.000Z",
+      } as const;
+    const fetchMock = vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(new Response(JSON.stringify({
+        profile: { ...savedProfile, publicationStatus: "unpublished", publishedAt: null },
+      }), { status: 200 }))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ profile: savedProfile }), { status: 200 }));
+    render(<ProfileEditor vocabulary={vocabulary}
+      githubIdentity={{ name: "Student", email: "student@example.test" }}
+      initialProfile={completeInitialProfile()} />);
+
+    expect(screen.getByRole("link", { name: "Preview saved public profile" }))
+      .toHaveAttribute("href", "/student/profile/preview");
+    const publish = screen.getByRole("button", { name: "Publish profile" });
+    await user.type(screen.getByLabelText("Professional headline"), " updated");
+    expect(publish).toBeDisabled();
+    await user.click(screen.getByRole("button", { name: "Save changes" }));
+    await user.click(screen.getByRole("button", { name: "Publish profile" }));
+
+    expect(window.confirm).toHaveBeenCalledOnce();
+    const publicationCall = fetchMock.mock.calls[1];
+    expect(publicationCall?.[0]).toBe("/api/v1/student/profile/publication");
+    expect(JSON.parse(String((publicationCall?.[1] as RequestInit).body))).toEqual({
+      action: "publish",
+      revision: "2026-10-12T13:00:00.000Z",
+    });
+    expect(await screen.findByText("Profile published. It is now available in public discovery."))
+      .toBeVisible();
+    expect(screen.getByRole("button", { name: "Unpublish profile" })).toBeEnabled();
+  });
+
+  test("shows server publication requirements without publishing", async () => {
+    vi.spyOn(window, "confirm").mockReturnValue(true);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify({
+      error: {
+        code: "PUBLICATION_VALIDATION",
+        message: "Complete the required public profile fields before publishing.",
+        details: [{ field: "program", message: "Add your program before publishing." }],
+      },
+    }), { status: 422 }));
+    const user = userEvent.setup();
+    render(<ProfileEditor vocabulary={vocabulary}
+      githubIdentity={{ name: "Student", email: "student@example.test" }}
+      initialProfile={{ ...completeInitialProfile(), program: "" }} />);
+    await user.click(screen.getByRole("button", { name: "Publish profile" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("Add your program");
+    expect(screen.getByText("Complete the required public profile fields before publishing."))
+      .toBeVisible();
+  });
 });
+
+function completeInitialProfile() {
+  return {
+    id: "profile-1", publicationStatus: "unpublished" as const, headline: "XR developer",
+    biography: "Accessible simulations", publicLocation: "", program: "Computer Science",
+    studentStatus: "current" as const, showAvailability: false, showProfessionalLinks: false,
+    showPublicLocation: false, showEducation: false, showExperience: false,
+    skillIds: ["unity"], availability: [], linkedinUrl: "", githubUrl: "", externalLinks: [],
+    education: [], experience: [], createdAt: "2026-10-12T12:00:00.000Z",
+    updatedAt: "2026-10-12T12:00:00.000Z", revision: "2026-10-12T12:00:00.000Z",
+    publishedAt: null,
+  };
+}

@@ -12,6 +12,9 @@ import {
   studentSkills,
   students,
 } from "@/db/schema";
+import { querySelfServiceProfileProjection } from "@/profile/public-projection";
+
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 export interface PublicLink {
   type: string;
@@ -33,11 +36,15 @@ export interface PublicStudentProfile {
   id: string;
   name: string;
   headline: string;
+  biography?: string;
   program: string;
-  status: "current" | "alumni";
-  availability: Array<"internship" | "full-time" | "contract">;
+  status: "current" | "alumni" | null;
+  location?: string;
+  availability?: Array<"internship" | "full-time" | "contract">;
   skills: string[];
-  links: PublicLink[];
+  links?: PublicLink[];
+  education?: string[];
+  experience?: string[];
   projects: StudentProjectEvidence[];
 }
 
@@ -57,7 +64,10 @@ export async function queryPublicStudentProfile(
     .where(and(eq(students.id, studentId), eq(students.profileStatus, "published")))
     .limit(1);
 
-  if (!student) return null;
+  if (!student) {
+    if (!UUID_PATTERN.test(studentId)) return null;
+    return querySelfServiceProfileProjection(db, { profileId: studentId }, true);
+  }
 
   const [skillRows, availabilityRows, linkRows, projectRows] = await Promise.all([
     db

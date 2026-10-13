@@ -421,6 +421,14 @@ export const studentProfiles = pgTable(
     headline: text("headline").default("").notNull(),
     biography: text("biography").default("").notNull(),
     publicLocation: text("public_location").default("").notNull(),
+    program: text("program").default("").notNull(),
+    studentStatus: studentStatusEnum("student_status"),
+    showAvailability: boolean("show_availability").default(false).notNull(),
+    showProfessionalLinks: boolean("show_professional_links").default(false).notNull(),
+    showPublicLocation: boolean("show_public_location").default(false).notNull(),
+    showEducation: boolean("show_education").default(false).notNull(),
+    showExperience: boolean("show_experience").default(false).notNull(),
+    publishedAt: timestamp("published_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
       .notNull(),
@@ -429,7 +437,10 @@ export const studentProfiles = pgTable(
       .$onUpdate(() => new Date())
       .notNull(),
   },
-  (table) => [index("student_profiles_owner_idx").on(table.ownerUserId)],
+  (table) => [
+    index("student_profiles_owner_idx").on(table.ownerUserId),
+    index("student_profiles_publication_idx").on(table.publicationStatus),
+  ],
 );
 
 export const studentProfileSkills = pgTable(

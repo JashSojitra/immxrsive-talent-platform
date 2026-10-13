@@ -71,7 +71,10 @@ test("verified student creates and returns to a private profile draft", async ({
     await expect(page.getByRole("heading", { name: "Shape your professional profile." })).toBeVisible();
     await page.getByLabel("Professional headline").fill("Browser-only private XR profile");
     await page.getByLabel("Biography").fill("A private profile draft created by the browser suite.");
-    await page.getByLabel("Public location").fill("Sault Ste. Marie, ON");
+    await page.getByRole("textbox", { name: "Public location", exact: true })
+      .fill("Sault Ste. Marie, ON");
+    await page.getByLabel("Program").fill("Computer Science");
+    await page.getByLabel("Student status").selectOption("current");
     await page.getByRole("checkbox", { name: "Unity" }).check();
     await page.getByRole("checkbox", { name: "Internship" }).check();
     const create = page.getByRole("button", { name: "Create private draft" });
@@ -113,6 +116,65 @@ test("verified student creates and returns to a private profile draft", async ({
     );
     expect(publicSearch.status()).toBe(200);
     expect(await publicSearch.json()).toMatchObject({ items: [], count: 0 });
+
+    await page.getByRole("checkbox", { name: /^Show availability/ }).check();
+    await page.getByRole("checkbox", { name: /^Show location/ }).check();
+    await page.getByRole("checkbox", { name: /^Show education/ }).check();
+    await page.getByRole("checkbox", { name: /^Show experience/ }).check();
+    await page.getByRole("button", { name: "Save changes" }).click();
+    await expect(page.getByText("Private draft saved.")).toBeVisible();
+
+    await page.getByRole("link", { name: "Preview saved public profile" }).click();
+    await expect(page.getByText("Private preview — not public")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Browser Profile Student", exact: true }))
+      .toBeVisible();
+    await expect(page.getByText("Sault Ste. Marie, ON")).toBeVisible();
+    await expect(page.getByText("BSc Computer Science - Algoma University")).toBeVisible();
+    const privateResponse = await page.request.get("/api/v1/student/profile/me");
+    const privateBody = await privateResponse.json() as { profile: { id: string } };
+    const publicId = privateBody.profile.id;
+    expect((await page.request.get(`/api/v1/students/${publicId}`)).status()).toBe(404);
+    await page.getByRole("link", { name: "Return to editor" }).click();
+
+    page.once("dialog", (dialog) => dialog.accept());
+    await page.getByRole("button", { name: "Publish profile" }).click();
+    await expect(page.getByText("Profile published. It is now available in public discovery."))
+      .toBeVisible();
+    const publishedSearch = await page.request.get(
+      "/api/v1/talent?q=%22Browser%20private%20XR%20profile%20updated%22",
+    );
+    expect(await publishedSearch.json()).toMatchObject({
+      items: [expect.objectContaining({ id: publicId })], count: 1,
+    });
+    await page.goto(`/students/${publicId}`);
+    await expect(page.getByRole("heading", { name: "Browser Profile Student", exact: true }))
+      .toBeVisible();
+    await expect(page.getByRole("link", { name: /employer inquiry for browser profile student/i }))
+      .toHaveAttribute("href", `/inquiry/student/${publicId}`);
+    await expect(page.getByText(/No canonical project evidence is connected/)).toBeVisible();
+    await page.getByRole("link", { name: /employer inquiry for browser profile student/i }).click();
+    await expect(page.getByRole("heading", {
+      level: 1, name: "Browser Profile Student", exact: true,
+    })).toBeVisible();
+    await expect(page.getByRole("form", { name: /employer inquiry about browser profile student/i }))
+      .toBeVisible();
+    await expect(page.getByLabel(/inquiry description/i))
+      .toHaveValue(/Browser private XR profile updated/);
+    await page.goBack();
+    await expect(page).toHaveURL(`/students/${publicId}`);
+
+    await page.goto("/student/profile/edit");
+    page.once("dialog", (dialog) => dialog.accept());
+    await page.getByRole("button", { name: "Unpublish profile" }).click();
+    await expect(page.getByText("Profile unpublished. Your maintained private data is preserved."))
+      .toBeVisible();
+    expect((await page.request.get(`/api/v1/students/${publicId}`)).status()).toBe(404);
+    const unpublishedSearch = await page.request.get(
+      "/api/v1/talent?q=%22Browser%20private%20XR%20profile%20updated%22",
+    );
+    expect(await unpublishedSearch.json()).toMatchObject({ items: [], count: 0 });
+    await expect(page.getByLabel("Education entry 1"))
+      .toHaveValue("BSc Computer Science - Algoma University");
     if (test.info().project.name === "mobile-390") {
       expect(await page.evaluate(() => document.documentElement.scrollWidth))
         .toBeLessThanOrEqual(390);

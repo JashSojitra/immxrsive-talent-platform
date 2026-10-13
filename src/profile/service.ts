@@ -14,6 +14,7 @@ import {
   studentProfileSkills,
 } from "@/db/schema";
 import type { StudentProfileDraftInput } from "@/validation/student-profile";
+import { publicProfileValidationDetails } from "@/validation/student-profile";
 
 export type ProfileEditorVocabulary = {
   skills: Array<{ id: string; name: string }>;
@@ -25,10 +26,17 @@ export type ProfileEditorVocabulary = {
 
 export type PrivateStudentProfile = {
   id: string;
-  publicationStatus: "unpublished";
+  publicationStatus: "published" | "unpublished";
   headline: string;
   biography: string;
   publicLocation: string;
+  program: string;
+  studentStatus: "current" | "alumni" | null;
+  showAvailability: boolean;
+  showProfessionalLinks: boolean;
+  showPublicLocation: boolean;
+  showEducation: boolean;
+  showExperience: boolean;
   skillIds: string[];
   availability: Array<"internship" | "full-time" | "contract">;
   linkedinUrl: string;
@@ -42,6 +50,7 @@ export type PrivateStudentProfile = {
   experience: string[];
   createdAt: Date;
   updatedAt: Date;
+  publishedAt: Date | null;
 };
 
 export type ProfileFailureCode =
@@ -49,13 +58,15 @@ export type ProfileFailureCode =
   | "PROFILE_NOT_FOUND"
   | "INVALID_SKILL"
   | "INVALID_AVAILABILITY"
-  | "EDIT_CONFLICT";
+  | "EDIT_CONFLICT"
+  | "PUBLICATION_VALIDATION";
 
 export class StudentProfileError extends Error {
   constructor(
     readonly code: ProfileFailureCode,
     readonly status: number,
     message: string,
+    readonly details: Array<{ field: string; code: string; message: string }> = [],
   ) {
     super(message);
     this.name = "StudentProfileError";
@@ -116,10 +127,17 @@ export async function getPrivateStudentProfile(
 
   return {
     id: profile.id,
-    publicationStatus: "unpublished",
+    publicationStatus: profile.publicationStatus,
     headline: profile.headline,
     biography: profile.biography,
     publicLocation: profile.publicLocation,
+    program: profile.program,
+    studentStatus: profile.studentStatus,
+    showAvailability: profile.showAvailability,
+    showProfessionalLinks: profile.showProfessionalLinks,
+    showPublicLocation: profile.showPublicLocation,
+    showEducation: profile.showEducation,
+    showExperience: profile.showExperience,
     skillIds: skillRows.map(({ skillId }) => skillId),
     availability: availabilityRows.map(({ value }) => value),
     linkedinUrl: linkRows.find(({ type }) => type === "linkedin")?.url ?? "",
@@ -133,6 +151,7 @@ export async function getPrivateStudentProfile(
     experience: experienceRows.map(({ description }) => description),
     createdAt: profile.createdAt,
     updatedAt: profile.updatedAt,
+    publishedAt: profile.publishedAt,
   };
 }
 
@@ -151,6 +170,13 @@ export async function createPrivateStudentProfile(input: {
         headline: input.draft.headline,
         biography: input.draft.biography,
         publicLocation: input.draft.publicLocation,
+        program: input.draft.program,
+        studentStatus: input.draft.studentStatus,
+        showAvailability: input.draft.showAvailability,
+        showProfessionalLinks: input.draft.showProfessionalLinks,
+        showPublicLocation: input.draft.showPublicLocation,
+        showEducation: input.draft.showEducation,
+        showExperience: input.draft.showExperience,
         createdAt,
         updatedAt: createdAt,
       }).returning({ id: studentProfiles.id });
@@ -186,18 +212,14 @@ export async function updatePrivateStudentProfile(input: {
   const updatedAt = new Date();
 
   await input.db.transaction(async (transaction) => {
-    const [updated] = await transaction.update(studentProfiles).set({
-      headline: input.draft.headline,
-      biography: input.draft.biography,
-      publicLocation: input.draft.publicLocation,
-      publicationStatus: "unpublished",
-      updatedAt,
-    }).where(and(
+    const [current] = await transaction.select({
+      id: studentProfiles.id,
+      publicationStatus: studentProfiles.publicationStatus,
+    }).from(studentProfiles).where(and(
       eq(studentProfiles.ownerUserId, input.ownerUserId),
       eq(studentProfiles.updatedAt, revision),
-    )).returning({ id: studentProfiles.id });
-
-    if (!updated) {
+    )).limit(1);
+    if (!current) {
       const [existing] = await transaction.select({ id: studentProfiles.id })
         .from(studentProfiles)
         .where(eq(studentProfiles.ownerUserId, input.ownerUserId))
@@ -210,9 +232,82 @@ export async function updatePrivateStudentProfile(input: {
           : "Create a private profile before updating it.",
       );
     }
+    if (current.publicationStatus === "published") {
+      assertPublishable(input.draft);
+    }
+    const [updated] = await transaction.update(studentProfiles).set({
+      headline: input.draft.headline,
+      biography: input.draft.biography,
+      publicLocation: input.draft.publicLocation,
+      program: input.draft.program,
+      studentStatus: input.draft.studentStatus,
+      showAvailability: input.draft.showAvailability,
+      showProfessionalLinks: input.draft.showProfessionalLinks,
+      showPublicLocation: input.draft.showPublicLocation,
+      showEducation: input.draft.showEducation,
+      showExperience: input.draft.showExperience,
+      updatedAt,
+    }).where(and(
+      eq(studentProfiles.id, current.id),
+      eq(studentProfiles.updatedAt, revision),
+    )).returning({ id: studentProfiles.id });
+
+    if (!updated) {
+      throw new StudentProfileError(
+        "EDIT_CONFLICT",
+        409,
+        "This profile changed in another session. Reload before saving.",
+      );
+    }
     await replaceAssociations(transaction, updated.id, input.draft);
   });
 
+  return getRequiredProfile(input.db, input.ownerUserId);
+}
+
+export async function changeProfilePublication(input: {
+  db: Database;
+  ownerUserId: string;
+  action: "publish" | "unpublish";
+  revision: string;
+}) {
+  const revision = new Date(input.revision);
+  const updatedAt = new Date();
+  await input.db.transaction(async (transaction) => {
+    const [profile] = await transaction.select().from(studentProfiles).where(and(
+      eq(studentProfiles.ownerUserId, input.ownerUserId),
+      eq(studentProfiles.updatedAt, revision),
+    )).limit(1);
+    if (!profile) {
+      const [existing] = await transaction.select({ id: studentProfiles.id })
+        .from(studentProfiles).where(eq(studentProfiles.ownerUserId, input.ownerUserId)).limit(1);
+      throw new StudentProfileError(
+        existing ? "EDIT_CONFLICT" : "PROFILE_NOT_FOUND",
+        existing ? 409 : 404,
+        existing ? "This profile changed in another session. Reload before changing publication."
+          : "Create and save a profile before publishing.",
+      );
+    }
+    if (input.action === "publish") {
+      const skillRows = await transaction.select({ skillId: studentProfileSkills.skillId })
+        .from(studentProfileSkills).where(eq(studentProfileSkills.profileId, profile.id));
+      assertPublishable({ ...profile, skillIds: skillRows.map(({ skillId }) => skillId) });
+    }
+    const publicationStatus = input.action === "publish" ? "published" : "unpublished";
+    const [updated] = await transaction.update(studentProfiles).set({
+      publicationStatus,
+      publishedAt: input.action === "publish" ? updatedAt : profile.publishedAt,
+      updatedAt,
+    }).where(and(
+      eq(studentProfiles.id, profile.id),
+      eq(studentProfiles.ownerUserId, input.ownerUserId),
+      eq(studentProfiles.updatedAt, revision),
+    )).returning({ id: studentProfiles.id });
+    if (!updated) {
+      throw new StudentProfileError("EDIT_CONFLICT", 409,
+        "This profile changed in another session. Reload before changing publication.");
+    }
+  });
   return getRequiredProfile(input.db, input.ownerUserId);
 }
 
@@ -309,4 +404,17 @@ function isUniqueViolation(error: unknown): boolean {
   if (typeof error !== "object" || error === null) return false;
   if ("code" in error && (error as { code?: unknown }).code === "23505") return true;
   return "cause" in error && isUniqueViolation((error as { cause?: unknown }).cause);
+}
+
+function assertPublishable(profile: Pick<StudentProfileDraftInput,
+  "headline" | "biography" | "program" | "studentStatus" | "skillIds">) {
+  const details = publicProfileValidationDetails(profile);
+  if (details.length > 0) {
+    throw new StudentProfileError(
+      "PUBLICATION_VALIDATION",
+      422,
+      "Complete the required public profile fields before publishing.",
+      details,
+    );
+  }
 }

@@ -642,7 +642,7 @@ function StudentCard({ student, index }: { student: TalentDirectoryItem; index: 
           {student.skills.slice(0, 4).map((skill) => <li key={skill}>{skill}</li>)}
         </ul>
         <div className={styles.cardEvidence}>
-          <div><span>Availability</span><strong>{student.availability.map(prettyValue).join(" / ") || "Not listed"}</strong></div>
+          <div><span>Availability</span><strong>{student.availability?.map(prettyValue).join(" / ") || "Not public"}</strong></div>
           <div><span>Project evidence</span><strong>{student.projectEvidenceCount.toString().padStart(2, "0")}</strong></div>
           <span className={styles.cardArrow} aria-hidden="true">↗</span>
         </div>

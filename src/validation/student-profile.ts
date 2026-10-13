@@ -47,6 +47,13 @@ export const studentProfileDraftSchema = z.object({
   headline: z.string().trim().max(140, "Headline must be 140 characters or fewer."),
   biography: z.string().trim().max(4_000, "Biography must be 4,000 characters or fewer."),
   publicLocation: z.string().trim().max(100, "Location must be 100 characters or fewer."),
+  program: z.string().trim().max(140, "Program must be 140 characters or fewer.").default(""),
+  studentStatus: z.enum(["current", "alumni"]).nullable().default(null),
+  showAvailability: z.boolean().default(false),
+  showProfessionalLinks: z.boolean().default(false),
+  showPublicLocation: z.boolean().default(false),
+  showEducation: z.boolean().default(false),
+  showExperience: z.boolean().default(false),
   skillIds: z.array(z.string().trim().min(1)).max(MAX_PROFILE_SKILLS)
     .transform(uniqueValues),
   availability: z.array(z.enum(["internship", "full-time", "contract"]))
@@ -81,6 +88,24 @@ export const studentProfileDraftSchema = z.object({
 
 export type StudentProfileDraftInput = z.infer<typeof studentProfileDraftSchema>;
 
+export const publicationChangeSchema = z.object({
+  action: z.enum(["publish", "unpublish"]),
+  revision: z.string().datetime({ offset: true }),
+}).strict();
+
+export type PublicationChangeInput = z.infer<typeof publicationChangeSchema>;
+
+export function publicProfileValidationDetails(profile: Pick<StudentProfileDraftInput,
+  "headline" | "biography" | "program" | "studentStatus" | "skillIds">) {
+  const details: Array<{ field: string; code: string; message: string }> = [];
+  if (!profile.headline) details.push(required("headline", "Add a professional headline before publishing."));
+  if (!profile.biography) details.push(required("biography", "Add a biography before publishing."));
+  if (!profile.program) details.push(required("program", "Add your program before publishing."));
+  if (!profile.studentStatus) details.push(required("studentStatus", "Choose current student or alumni status before publishing."));
+  if (profile.skillIds.length === 0) details.push(required("skillIds", "Choose at least one standardized skill before publishing."));
+  return details;
+}
+
 export function studentProfileValidationDetails(error: z.ZodError) {
   return error.issues.map((issue) => ({
     field: issue.path.join(".") || "request",
@@ -98,4 +123,8 @@ function normalizeUrl(value: string) {
   const url = new URL(value);
   url.hash = "";
   return url.toString().replace(/\/$/, "");
+}
+
+function required(field: string, message: string) {
+  return { field, code: "REQUIRED", message };
 }

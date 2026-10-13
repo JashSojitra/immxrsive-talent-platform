@@ -124,6 +124,27 @@ describe("public student profile", () => {
     expect(screen.getByRole("heading", { name: "Industrial Safety VR Trainer" })).toBeVisible();
     expect(screen.getByRole("link", { name: /employer inquiry for avery chen/i })).toBeVisible();
   });
+
+  it("renders the owner preview from the public projection and identifies omitted fields", () => {
+    const previewProfile: PublicStudentProfile = {
+      id: "profile-uuid", name: "Preview Student", headline: "XR developer",
+      biography: "<script>plain profile text</script>", program: "Computer Science",
+      status: "current", skills: ["Unity"], projects: [],
+    };
+    render(<StudentProfileView profile={previewProfile} preview={{
+      hiddenFields: ["Availability", "Professional links", "Location"],
+    }} />);
+
+    expect(screen.getByText("Private preview — not public")).toBeVisible();
+    expect(screen.getByText(/Private fields omitted: Availability, Professional links, Location/))
+      .toBeVisible();
+    expect(screen.getByText("<script>plain profile text</script>")).toBeVisible();
+    expect(document.querySelector("script")).toBeNull();
+    expect(screen.getByText(/No canonical project evidence is connected/)).toBeVisible();
+    expect(screen.queryByText("Available for")).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Return to editor" }))
+      .toHaveAttribute("href", "/student/profile/edit");
+  });
 });
 
 describe("student profile route states", () => {

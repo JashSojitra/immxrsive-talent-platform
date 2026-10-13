@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, type FormEvent } from "react";
+import Link from "next/link";
 
 import type { ProfileEditorVocabulary } from "@/profile/service";
 import { ResumeImporter } from "@/components/student-editor/ResumeImporter";
@@ -12,6 +13,13 @@ export type EditorValues = {
   headline: string;
   biography: string;
   publicLocation: string;
+  program: string;
+  studentStatus: "current" | "alumni" | null;
+  showAvailability: boolean;
+  showProfessionalLinks: boolean;
+  showPublicLocation: boolean;
+  showEducation: boolean;
+  showExperience: boolean;
   skillIds: string[];
   availability: Array<"internship" | "full-time" | "contract">;
   linkedinUrl: string;
@@ -24,9 +32,10 @@ export type EditorValues = {
 
 type SerializableProfile = EditorValues & {
   id: string;
-  publicationStatus: "unpublished";
+  publicationStatus: "published" | "unpublished";
   createdAt: string;
   updatedAt: string;
+  publishedAt: string | null;
 };
 
 type ProfileEditorProps = {
@@ -46,6 +55,13 @@ const EMPTY_VALUES: EditorValues = {
   headline: "",
   biography: "",
   publicLocation: "",
+  program: "",
+  studentStatus: null,
+  showAvailability: false,
+  showProfessionalLinks: false,
+  showPublicLocation: false,
+  showEducation: false,
+  showExperience: false,
   skillIds: [],
   availability: [],
   linkedinUrl: "",
@@ -62,6 +78,13 @@ function toEditorValues(profile: SerializableProfile | null): EditorValues {
     headline: profile.headline,
     biography: profile.biography,
     publicLocation: profile.publicLocation,
+    program: profile.program ?? "",
+    studentStatus: profile.studentStatus ?? null,
+    showAvailability: profile.showAvailability ?? false,
+    showProfessionalLinks: profile.showProfessionalLinks ?? false,
+    showPublicLocation: profile.showPublicLocation ?? false,
+    showEducation: profile.showEducation ?? false,
+    showExperience: profile.showExperience ?? false,
     skillIds: [...profile.skillIds],
     availability: [...profile.availability],
     linkedinUrl: profile.linkedinUrl,
@@ -83,6 +106,10 @@ export function ProfileEditor({
   const [lastSavedValues, setLastSavedValues] = useState<EditorValues>(() =>
     toEditorValues(initialProfile));
   const [saving, setSaving] = useState(false);
+  const [publicationStatus, setPublicationStatus] = useState<"published" | "unpublished">(
+    initialProfile?.publicationStatus ?? "unpublished",
+  );
+  const [publishedAt, setPublishedAt] = useState(initialProfile?.publishedAt ?? null);
   const [message, setMessage] = useState("");
   const [messageTone, setMessageTone] = useState<"neutral" | "success" | "error">("neutral");
   const [errors, setErrors] = useState<Array<{ field: string; message: string }>>([]);
@@ -123,15 +150,60 @@ export function ProfileEditor({
       }
       const savedValues = toEditorValues(body.profile);
       setProfileId(body.profile.id);
+      setPublicationStatus(body.profile.publicationStatus);
+      setPublishedAt(body.profile.publishedAt);
       setValues(savedValues);
       setLastSavedValues(savedValues);
-      setMessage("Private draft saved.");
+      setMessage(body.profile.publicationStatus === "published"
+        ? "Published profile changes saved."
+        : "Private draft saved.");
       setMessageTone("success");
       return true;
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Your profile could not be saved.");
       setMessageTone("error");
       return false;
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function changePublication(action: "publish" | "unpublish") {
+    if (!profileId || !values.revision || dirty) {
+      setMessage("Save your current changes before previewing or changing publication.");
+      setMessageTone("error");
+      return;
+    }
+    const confirmed = window.confirm(action === "publish"
+      ? "Publish this saved profile to the public talent directory now?"
+      : "Unpublish this profile now? Its maintained private data will be preserved.");
+    if (!confirmed) return;
+    setSaving(true);
+    setErrors([]);
+    setMessage("");
+    try {
+      const response = await fetch("/api/v1/student/profile/publication", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action, revision: values.revision }),
+      });
+      const body = await response.json() as ApiError & { profile?: SerializableProfile };
+      if (!response.ok || !body.profile) {
+        setErrors(body.error?.details ?? []);
+        throw new Error(body.error?.message || "Publication could not be changed.");
+      }
+      const savedValues = toEditorValues(body.profile);
+      setValues(savedValues);
+      setLastSavedValues(savedValues);
+      setPublicationStatus(body.profile.publicationStatus);
+      setPublishedAt(body.profile.publishedAt);
+      setMessage(body.profile.publicationStatus === "published"
+        ? "Profile published. It is now available in public discovery."
+        : "Profile unpublished. Your maintained private data is preserved.");
+      setMessageTone("success");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Publication could not be changed.");
+      setMessageTone("error");
     } finally {
       setSaving(false);
     }
@@ -171,17 +243,18 @@ export function ProfileEditor({
     <form className={styles.editor} onSubmit={save} noValidate>
       <header className={styles.editorHeader}>
         <div>
-          <p className={styles.kicker}>Private workspace</p>
+          <p className={styles.kicker}>Student profile workspace</p>
           <h1>Shape your professional profile.</h1>
           <p>
-            Build the structured draft employers will eventually discover.
-            Nothing entered here is public in this milestone.
+            Maintain your private profile data, choose which optional fields may be public,
+            and publish only when you are ready.
           </p>
         </div>
         <div className={styles.draftStatus}>
           <span className={styles.statusDot} aria-hidden="true" />
-          <strong>Private draft</strong>
+          <strong>{publicationStatus === "published" ? "Published profile" : "Private draft"}</strong>
           <small>{dirty ? "Unsaved changes" : profileId ? "All changes saved" : "Not created yet"}</small>
+          {publishedAt ? <small>Last published {new Date(publishedAt).toLocaleString()}</small> : null}
         </div>
       </header>
 
@@ -212,6 +285,27 @@ export function ProfileEditor({
               value={values.publicLocation}
               onChange={(event) => setValues({ ...values, publicLocation: event.target.value })}
             />
+          </Field>
+          <Field label="Program" field="program" errors={errors}>
+            <input
+              id="program"
+              maxLength={140}
+              placeholder="Computer Science"
+              value={values.program}
+              onChange={(event) => setValues({ ...values, program: event.target.value })}
+            />
+          </Field>
+          <Field label="Student status" field="studentStatus" errors={errors}>
+            <select id="studentStatus" value={values.studentStatus ?? ""}
+              onChange={(event) => setValues({
+                ...values,
+                studentStatus: event.target.value === "current" || event.target.value === "alumni"
+                  ? event.target.value : null,
+              })}>
+              <option value="">Choose status</option>
+              <option value="current">Current student</option>
+              <option value="alumni">Alumni</option>
+            </select>
           </Field>
           <div className={styles.identityCard}>
             <span>GitHub identity</span>
@@ -364,6 +458,51 @@ export function ProfileEditor({
         <FieldError field="externalLinks" errors={errors} />
       </EditorSection>
 
+      <EditorSection index="07" title="Privacy controls" description="Optional fields remain private unless you explicitly include them in the public projection.">
+        <fieldset className={styles.privacyFieldset}>
+          <legend>Public field visibility</legend>
+          <VisibilityChoice checked={values.showAvailability}
+            onChange={(showAvailability) => setValues({ ...values, showAvailability })}
+            title="Show availability" detail="Allows availability to appear publicly and participate in directory availability filters." />
+          <VisibilityChoice checked={values.showProfessionalLinks}
+            onChange={(showProfessionalLinks) => setValues({ ...values, showProfessionalLinks })}
+            title="Show professional links" detail="Includes maintained GitHub, LinkedIn, portfolio, and external links." />
+          <VisibilityChoice checked={values.showPublicLocation}
+            onChange={(showPublicLocation) => setValues({ ...values, showPublicLocation })}
+            title="Show location" detail="Includes your maintained public location text." />
+          <VisibilityChoice checked={values.showEducation}
+            onChange={(showEducation) => setValues({ ...values, showEducation })}
+            title="Show education" detail="Includes maintained education entries." />
+          <VisibilityChoice checked={values.showExperience}
+            onChange={(showExperience) => setValues({ ...values, showExperience })}
+            title="Show experience" detail="Includes maintained experience entries." />
+        </fieldset>
+      </EditorSection>
+
+      <EditorSection index="08" title="Preview and publication" description="Preview the saved public projection, then explicitly publish or unpublish it.">
+        <div className={styles.publicationPanel}>
+          <div>
+            <span>Current state</span>
+            <strong>{publicationStatus === "published" ? "Public and discoverable" : "Private and undiscoverable"}</strong>
+            <p>Saving, importing a resume, and previewing never publish automatically.</p>
+          </div>
+          <div className={styles.publicationActions}>
+            {profileId && !dirty ? (
+              <Link href="/student/profile/preview">Preview saved public profile</Link>
+            ) : (
+              <span aria-disabled="true">Save changes to enable preview</span>
+            )}
+            {publicationStatus === "published" ? (
+              <button type="button" className={styles.unpublishButton}
+                disabled={saving || dirty} onClick={() => changePublication("unpublish")}>Unpublish profile</button>
+            ) : (
+              <button type="button" className={styles.publishButton}
+                disabled={saving || dirty || !profileId} onClick={() => changePublication("publish")}>Publish profile</button>
+            )}
+          </div>
+        </div>
+      </EditorSection>
+
       <footer className={styles.saveBar}>
         <div
           aria-live="polite"
@@ -371,7 +510,9 @@ export function ProfileEditor({
           className={messageTone === "success" ? styles.success : styles.feedback}
           data-tone={messageTone}
         >
-          {message || (dirty ? "You have unsaved changes." : "Your draft is private.")}
+          {message || (dirty
+            ? "You have unsaved changes. Preview and publication use the last saved version."
+            : publicationStatus === "published" ? "Your saved profile is public." : "Your draft is private.")}
         </div>
         <button type="submit" disabled={saving || !dirty}>
           {saving ? "Saving…" : profileId ? "Save changes" : "Create private draft"}
@@ -418,6 +559,26 @@ function MaintainedEntries({
       </button>
       <FieldError field={field} errors={errors} />
     </fieldset>
+  );
+}
+
+function VisibilityChoice({
+  checked,
+  onChange,
+  title,
+  detail,
+}: {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  title: string;
+  detail: string;
+}) {
+  return (
+    <label className={styles.visibilityChoice}>
+      <input type="checkbox" checked={checked}
+        onChange={(event) => onChange(event.target.checked)} />
+      <span><strong>{title}</strong><small>{detail}</small></span>
+    </label>
   );
 }
 

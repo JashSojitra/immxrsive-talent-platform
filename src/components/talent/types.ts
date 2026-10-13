@@ -15,7 +15,7 @@ export interface TalentDirectoryItem {
   headline: string;
   status: "current" | "alumni";
   skills: string[];
-  availability: Array<"internship" | "full-time" | "contract">;
+  availability?: Array<"internship" | "full-time" | "contract">;
   projectEvidenceCount: number;
 }
 

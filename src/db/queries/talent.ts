@@ -12,9 +12,13 @@ import {
 import type { Database } from "@/db/client";
 import {
   availabilityOptions,
+  authUsers,
   projectContributors,
   skills,
   studentAvailability,
+  studentProfileAvailability,
+  studentProfiles,
+  studentProfileSkills,
   studentSkills,
   students,
 } from "@/db/schema";
@@ -41,7 +45,7 @@ export interface TalentDirectoryItem {
   headline: string;
   status: "current" | "alumni";
   skills: string[];
-  availability: Array<"internship" | "full-time" | "contract">;
+  availability?: Array<"internship" | "full-time" | "contract">;
   projectEvidenceCount: number;
 }
 
@@ -85,6 +89,16 @@ export async function queryTalentDirectory(
   db: Database,
   query: TalentQuery,
 ): Promise<TalentDirectoryResponse> {
+  const [legacyItems, selfServiceItems] = await Promise.all([
+    queryLegacyTalentDirectory(db, query),
+    querySelfServiceTalentDirectory(db, query),
+  ]);
+  const items = [...legacyItems, ...selfServiceItems].toSorted((a, b) =>
+    a.name.localeCompare(b.name, "en", { sensitivity: "base" }) || a.id.localeCompare(b.id));
+  return responseEnvelope(items, query);
+}
+
+async function queryLegacyTalentDirectory(db: Database, query: TalentQuery) {
   const conditions: SQL[] = [eq(students.profileStatus, "published")];
 
   for (const group of query.searchGroups) {
@@ -127,7 +141,7 @@ export async function queryTalentDirectory(
     .orderBy(asc(sql`lower(${students.name})`), asc(students.id));
 
   if (studentRows.length === 0) {
-    return responseEnvelope([], query);
+    return [];
   }
 
   const studentIds = studentRows.map((student) => student.id);
@@ -170,15 +184,81 @@ export async function queryTalentDirectory(
     projectCountRows.map((row) => [row.studentId, row.count]),
   );
 
-  return responseEnvelope(
-    studentRows.map((student) => ({
+  return studentRows.map((student) => ({
       ...student,
       skills: skillsByStudent.get(student.id) ?? [],
       availability: availabilityByStudent.get(student.id) ?? [],
       projectEvidenceCount: projectCounts.get(student.id) ?? 0,
-    })),
-    query,
-  );
+    }));
+}
+
+async function querySelfServiceTalentDirectory(
+  db: Database,
+  query: TalentQuery,
+): Promise<TalentDirectoryItem[]> {
+  const rows = await db.select({
+    id: studentProfiles.id,
+    name: authUsers.name,
+    headline: studentProfiles.headline,
+    status: studentProfiles.studentStatus,
+    showAvailability: studentProfiles.showAvailability,
+  }).from(studentProfiles)
+    .innerJoin(authUsers, eq(authUsers.id, studentProfiles.ownerUserId))
+    .where(eq(studentProfiles.publicationStatus, "published"));
+  const publishableRows = rows.filter((row): row is typeof row & {
+    status: "current" | "alumni";
+  } => row.status !== null);
+  if (publishableRows.length === 0) return [];
+
+  const profileIds = publishableRows.map(({ id }) => id);
+  const [skillRows, availabilityRows] = await Promise.all([
+    db.select({ profileId: studentProfileSkills.profileId, name: skills.name })
+      .from(studentProfileSkills)
+      .innerJoin(skills, eq(skills.id, studentProfileSkills.skillId))
+      .where(inArray(studentProfileSkills.profileId, profileIds))
+      .orderBy(asc(studentProfileSkills.displayOrder), asc(skills.name)),
+    db.select({
+      profileId: studentProfileAvailability.profileId,
+      value: studentProfileAvailability.availabilityValue,
+    }).from(studentProfileAvailability)
+      .where(inArray(studentProfileAvailability.profileId, profileIds))
+      .orderBy(asc(studentProfileAvailability.displayOrder)),
+  ]);
+  const skillsByProfile = groupValuesByKey(skillRows, "profileId", "name");
+  const availabilityByProfile = groupValuesByKey(availabilityRows, "profileId", "value");
+
+  return publishableRows.flatMap((profile) => {
+    const profileSkills = skillsByProfile.get(profile.id) ?? [];
+    const publicAvailability = profile.showAvailability
+      ? availabilityByProfile.get(profile.id) ?? []
+      : undefined;
+    if (!matchesSelfServiceQuery(profile, profileSkills, publicAvailability, query)) return [];
+    return [{
+      id: profile.id,
+      name: profile.name,
+      headline: profile.headline,
+      status: profile.status,
+      skills: profileSkills,
+      ...(publicAvailability ? { availability: publicAvailability } : {}),
+      projectEvidenceCount: 0,
+    }];
+  });
+}
+
+function matchesSelfServiceQuery(
+  profile: { name: string; headline: string; status: "current" | "alumni" },
+  profileSkills: string[],
+  availability: Array<"internship" | "full-time" | "contract"> | undefined,
+  query: TalentQuery,
+) {
+  const searchable = [profile.name, profile.headline, ...profileSkills].map((value) => value.toLowerCase());
+  if (!query.searchGroups.every((group) => group.some((term) =>
+    searchable.some((value) => value.includes(term.toLowerCase()))))) return false;
+  if (!query.skills.every((skill) => profileSkills.includes(skill))) return false;
+  if (query.availability.length > 0 && !query.availability.some((value) =>
+    availability?.includes(value))) return false;
+  if (query.status.length > 0 && !query.status.includes(profile.status)) return false;
+  return true;
 }
 
 function searchTermCondition(term: string): SQL {
@@ -221,6 +301,20 @@ function groupValues<T extends { studentId: string }, K extends keyof T>(
     const studentValues = values.get(row.studentId) ?? [];
     studentValues.push(row[valueKey]);
     values.set(row.studentId, studentValues);
+  }
+  return values;
+}
+
+function groupValuesByKey<
+  T extends Record<K, string>,
+  K extends keyof T,
+  V extends keyof T,
+>(rows: T[], key: K, value: V) {
+  const values = new Map<string, Array<T[V]>>();
+  for (const row of rows) {
+    const current = values.get(row[key]) ?? [];
+    current.push(row[value]);
+    values.set(row[key], current);
   }
   return values;
 }

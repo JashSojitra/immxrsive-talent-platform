@@ -30,6 +30,7 @@ export default async function StudentProfileEditorPage() {
     ...profile,
     createdAt: profile.createdAt.toISOString(),
     updatedAt: profile.updatedAt.toISOString(),
+    publishedAt: profile.publishedAt?.toISOString() ?? null,
     revision: profile.updatedAt.toISOString(),
   } : null;
 

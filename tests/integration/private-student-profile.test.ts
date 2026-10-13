@@ -11,8 +11,10 @@ import {
   AuthenticationRequiredError,
 } from "@/auth/server";
 import { createStudentProfileHandlers } from "@/app/api/v1/student/profile/me/route";
+import { createPublicationHandler } from "@/app/api/v1/student/profile/publication/route";
 import { createResumeExtractionHandler } from "@/app/api/v1/student/profile/resume/extract/route";
 import { createDatabase, type Database } from "@/db/client";
+import { queryPublicStudentProfile } from "@/db/queries/student-profile";
 import { queryTalentDirectory } from "@/db/queries/talent";
 import {
   authAccounts,
@@ -41,6 +43,7 @@ import { loadFixtureSource } from "@/fixtures/load";
 import { validateFixtureData } from "@/fixtures/schema";
 import {
   createPrivateStudentProfile,
+  changeProfilePublication,
   getPrivateStudentProfile,
   updatePrivateStudentProfile,
 } from "@/profile/service";
@@ -55,6 +58,7 @@ describeWithDatabase("private student profile", () => {
   let db: Database;
   let closeDatabase: (() => Promise<void>) | undefined;
   let skillId: string;
+  let skillName: string;
 
   beforeAll(async () => {
     if (!testDatabaseUrl) throw new Error("TEST_DATABASE_URL is required.");
@@ -67,9 +71,10 @@ describeWithDatabase("private student profile", () => {
   beforeEach(async () => {
     await clearTestData(db);
     await importFixtureData(db, validateFixtureData(await loadFixtureSource()));
-    const [skill] = await db.select({ id: skills.id }).from(skills).limit(1);
+    const [skill] = await db.select({ id: skills.id, name: skills.name }).from(skills).limit(1);
     if (!skill) throw new Error("Expected fixture skills.");
     skillId = skill.id;
+    skillName = skill.name;
   });
 
   afterAll(async () => {
@@ -147,6 +152,126 @@ describeWithDatabase("private student profile", () => {
     expect(await unknownSkill.json()).toMatchObject({ error: { code: "INVALID_SKILL" } });
   });
 
+  test("publishes only an explicit allowlisted projection and supports unpublish and republish", async () => {
+    const ownerUserId = await createVerifiedUser(db, "publication-owner");
+    const privateLocation = "Private location text";
+    const privateEducation = "Private education text";
+    const privateExperience = "Private experience text";
+    const profile = await createPrivateStudentProfile({
+      db,
+      ownerUserId,
+      draft: studentProfileDraftSchema.parse({
+        ...draft(skillId),
+        program: "Computer Science",
+        studentStatus: "current",
+        publicLocation: privateLocation,
+        education: [privateEducation],
+        experience: [privateExperience],
+        showAvailability: false,
+        showProfessionalLinks: false,
+        showPublicLocation: false,
+        showEducation: false,
+        showExperience: false,
+      }),
+    });
+    expect(await queryPublicStudentProfile(db, profile.id)).toBeNull();
+
+    const published = await changeProfilePublication({
+      db,
+      ownerUserId,
+      action: "publish",
+      revision: profile.updatedAt.toISOString(),
+    });
+    expect(published.publicationStatus).toBe("published");
+    expect(published.publishedAt).toBeInstanceOf(Date);
+
+    const publicProfile = await queryPublicStudentProfile(db, profile.id);
+    expect(publicProfile).toMatchObject({
+      id: profile.id,
+      name: "publication-owner",
+      headline: "XR developer",
+      program: "Computer Science",
+      status: "current",
+      projects: [],
+    });
+    expect(publicProfile).not.toHaveProperty("location");
+    expect(publicProfile).not.toHaveProperty("availability");
+    expect(publicProfile).not.toHaveProperty("links");
+    expect(publicProfile).not.toHaveProperty("education");
+    expect(publicProfile).not.toHaveProperty("experience");
+    expect(JSON.stringify(publicProfile)).not.toContain("@example.test");
+    expect(JSON.stringify(publicProfile)).not.toContain(ownerUserId);
+    expect(JSON.stringify(publicProfile)).not.toContain(privateLocation);
+
+    const directory = await queryTalentDirectory(db, {
+      q: "XR developer", searchGroups: [["XR", "developer"]], skills: [],
+      availability: [], status: ["current"],
+    });
+    expect(directory.items).toContainEqual(expect.objectContaining({ id: profile.id }));
+    const skillFilteredDirectory = await queryTalentDirectory(db, {
+      q: "", searchGroups: [], skills: [skillName], availability: [], status: [],
+    });
+    expect(skillFilteredDirectory.items).toContainEqual(expect.objectContaining({ id: profile.id }));
+    const privateAvailabilitySearch = await queryTalentDirectory(db, {
+      q: "", searchGroups: [], skills: [], availability: ["internship"], status: [],
+    });
+    expect(privateAvailabilitySearch.items).not.toContainEqual(
+      expect.objectContaining({ id: profile.id }),
+    );
+
+    const unpublished = await changeProfilePublication({
+      db,
+      ownerUserId,
+      action: "unpublish",
+      revision: published.updatedAt.toISOString(),
+    });
+    expect(await queryPublicStudentProfile(db, profile.id)).toBeNull();
+    expect((await getPrivateStudentProfile(db, ownerUserId))?.education).toEqual([privateEducation]);
+    const republished = await changeProfilePublication({
+      db,
+      ownerUserId,
+      action: "publish",
+      revision: unpublished.updatedAt.toISOString(),
+    });
+    expect(republished.publicationStatus).toBe("published");
+    expect(await queryPublicStudentProfile(db, profile.id)).not.toBeNull();
+  });
+
+  test("requires complete public fields and rejects stale or forged publication requests", async () => {
+    const ownerUserId = await createVerifiedUser(db, "publication-validation-owner");
+    const otherOwnerUserId = await createVerifiedUser(db, "other-publication-owner");
+    const profile = await createPrivateStudentProfile({
+      db, ownerUserId, draft: parsedDraft(skillId),
+    });
+    const other = await createPrivateStudentProfile({
+      db, ownerUserId: otherOwnerUserId, draft: parsedDraft(skillId),
+    });
+    const handler = publicationHandlerFor(ownerUserId);
+    const incomplete = await handler(publicationRequest({
+      action: "publish", revision: profile.updatedAt.toISOString(),
+    }));
+    expect(incomplete.status).toBe(422);
+    expect(await incomplete.json()).toMatchObject({
+      error: { code: "PUBLICATION_VALIDATION", details: expect.arrayContaining([
+        expect.objectContaining({ field: "program" }),
+        expect.objectContaining({ field: "studentStatus" }),
+      ]) },
+    });
+
+    const forged = await handler(publicationRequest({
+      action: "publish", revision: other.updatedAt.toISOString(), profileId: other.id,
+    }));
+    expect(forged.status).toBe(422);
+    expect((await getPrivateStudentProfile(db, otherOwnerUserId))?.publicationStatus)
+      .toBe("unpublished");
+
+    const stale = await handler(publicationRequest({
+      action: "unpublish", revision: new Date(0).toISOString(),
+    }));
+    expect(stale.status).toBe(409);
+    expect(await stale.json()).toMatchObject({ error: { code: "EDIT_CONFLICT" } });
+  });
+
   test("extracts a resume without modifying or publishing the owner's profile", async () => {
     const ownerUserId = await createVerifiedUser(db, "resume-owner");
     const profile = await createPrivateStudentProfile({
@@ -215,8 +340,31 @@ describeWithDatabase("private student profile", () => {
     expect(database).not.toHaveBeenCalled();
   });
 
+  test.each([
+    [new AuthenticationRequiredError(), 401, "AUTHENTICATION_REQUIRED"],
+    [new AffiliationVerificationRequiredError(), 403, "AFFILIATION_REQUIRED"],
+  ])("publication fails closed before opening the database", async (error, status, code) => {
+    const database = vi.fn(() => db);
+    const handler = createPublicationHandler({
+      authorize: async () => { throw error; }, database,
+    });
+    const response = await handler(publicationRequest({
+      action: "publish", revision: new Date().toISOString(),
+    }));
+    expect(response.status).toBe(status);
+    expect(await response.json()).toMatchObject({ error: { code } });
+    expect(database).not.toHaveBeenCalled();
+  });
+
   function handlersFor(ownerUserId: string) {
     return createStudentProfileHandlers({
+      authorize: async () => ({ user: { id: ownerUserId } }),
+      database: () => db,
+    });
+  }
+
+  function publicationHandlerFor(ownerUserId: string) {
+    return createPublicationHandler({
       authorize: async () => ({ user: { id: ownerUserId } }),
       database: () => db,
     });
@@ -244,6 +392,14 @@ function parsedDraft(skillId: string, headline = "XR developer", revision: strin
 function profileRequest(method: "POST" | "PUT", body: unknown) {
   return new Request("https://talent.example.test/api/v1/student/profile/me", {
     method,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+}
+
+function publicationRequest(body: unknown) {
+  return new Request("https://talent.example.test/api/v1/student/profile/publication", {
+    method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });

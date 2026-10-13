@@ -8,6 +8,8 @@ import {
 } from "@/auth/server";
 import { SignOutButton } from "@/components/auth/SignOutButton";
 import { BrandLogo } from "@/components/brand/BrandLogo";
+import { getRuntimeDatabase } from "@/db/runtime";
+import { getPrivateStudentProfile } from "@/profile/service";
 
 import styles from "../auth.module.css";
 
@@ -21,6 +23,9 @@ export const dynamic = "force-dynamic";
 export default async function StudentDashboardPage() {
   const user = await requireAuthenticatedUser("/student/dashboard");
   const verification = await getStudentVerificationStatus(user.id);
+  const profile = verification.status === "verified"
+    ? await getPrivateStudentProfile(getRuntimeDatabase(), user.id)
+    : null;
 
   return (
     <div className={styles.shell}>
@@ -35,8 +40,8 @@ export default async function StudentDashboardPage() {
             Welcome to<br /><em>your space.</em>
           </h1>
           <p className={styles.intro}>
-            This authenticated foundation will become the place to draft and
-            manage your student profile in later Release 2 milestones.
+            Maintain your private profile, preview its public projection, and
+            choose when it becomes discoverable.
           </p>
         </section>
 
@@ -53,8 +58,22 @@ export default async function StudentDashboardPage() {
               <strong>Algoma affiliation verified</strong>
               <p>{verification.institutionalEmail}</p>
               <Link className={styles.inlineLink} href="/student/profile/edit">
-                Edit private profile
+                {profile ? "Edit profile and publication" : "Create private profile"}
               </Link>
+              {profile ? (
+                <>
+                  <p>Publication: <strong>{profile.publicationStatus === "published"
+                    ? "Public and discoverable" : "Private and undiscoverable"}</strong></p>
+                  <Link className={styles.inlineLink} href="/student/profile/preview">
+                    Preview saved public profile
+                  </Link>
+                  {profile.publicationStatus === "published" ? (
+                    <Link className={styles.inlineLink} href={`/students/${profile.id}`}>
+                      View published profile
+                    </Link>
+                  ) : null}
+                </>
+              ) : null}
             </div>
           ) : (
             <div className={styles.notice}>

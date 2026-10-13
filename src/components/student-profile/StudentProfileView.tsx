@@ -6,7 +6,14 @@ import type { PublicStudentProfile } from "@/db/queries/student-profile";
 import { StudentProfileMotion } from "./StudentProfileMotion";
 import styles from "./student-profile.module.css";
 
-export function StudentProfileView({ profile }: { profile: PublicStudentProfile }) {
+export function StudentProfileView({
+  profile,
+  preview,
+}: {
+  profile: PublicStudentProfile;
+  preview?: { hiddenFields: string[] };
+}) {
+  const statusLabel = profile.status ? labelValue(profile.status) : "Status not selected";
   return (
     <StudentProfileMotion>
       <a className={styles.skipLink} href="#capabilities">Skip to profile details</a>
@@ -22,31 +29,44 @@ export function StudentProfileView({ profile }: { profile: PublicStudentProfile 
         </nav>
       </header>
 
+      {preview ? (
+        <aside className={styles.previewBanner} aria-label="Private public-profile preview">
+          <div>
+            <strong>Private preview — not public</strong>
+            <p>This uses your saved draft and the same server-side projection as the public profile.</p>
+            <p>{preview.hiddenFields.length > 0
+              ? `Private fields omitted: ${preview.hiddenFields.join(", ")}.`
+              : "No maintained optional fields are currently hidden."}</p>
+          </div>
+          <Link href="/student/profile/edit">Return to editor</Link>
+        </aside>
+      ) : null}
+
       <section className={styles.hero} aria-labelledby="student-name">
         <div className={styles.heroIndex} data-profile-index>
-          <span>Public profile</span>
+          <span>{preview ? "Public presentation preview" : "Public profile"}</span>
           <strong>{profile.id}</strong>
         </div>
         <div className={styles.heroBody}>
           <p className={styles.statusLine} data-profile-lead>
-            <span>{labelValue(profile.status)}</span>
-            <span>{profile.program}</span>
+            <span>{statusLabel}</span>
+            <span>{profile.program || "Program not added"}</span>
           </p>
           <h1 id="student-name" data-profile-name>{profile.name}</h1>
           <p className={styles.headline} data-profile-lead>{profile.headline}</p>
           <dl className={styles.heroMeta} data-profile-meta>
             <div>
               <dt>Status</dt>
-              <dd>{labelValue(profile.status)}</dd>
+              <dd>{statusLabel}</dd>
             </div>
             <div>
               <dt>Program</dt>
-              <dd>{profile.program}</dd>
+              <dd>{profile.program || "Not added"}</dd>
             </div>
-            <div>
-              <dt>Availability</dt>
-              <dd>{profile.availability.map(labelValue).join(" / ")}</dd>
-            </div>
+            {profile.location ? <div><dt>Location</dt><dd>{profile.location}</dd></div> : null}
+            {profile.availability ? (
+              <div><dt>Availability</dt><dd>{profile.availability.map(labelValue).join(" / ") || "Not listed"}</dd></div>
+            ) : null}
           </dl>
         </div>
       </section>
@@ -55,9 +75,8 @@ export function StudentProfileView({ profile }: { profile: PublicStudentProfile 
         <SectionHeading index="02" label="Capabilities" id="capabilities-title">
           Structured skills.<br /><em>Clear signal.</em>
         </SectionHeading>
-        <p className={styles.sectionLead} data-profile-reveal>
-          Standardized capabilities associated directly with {profile.name}&apos;s public profile.
-        </p>
+        <p className={styles.sectionLead} data-profile-reveal>{profile.biography
+          || `Standardized capabilities associated directly with ${profile.name}'s public profile.`}</p>
         <ul className={styles.skillMatrix} aria-label={`${profile.name}'s standardized skills`} data-profile-reveal>
           {profile.skills.map((skill, index) => (
             <li key={skill}><span>{String(index + 1).padStart(2, "0")}</span>{skill}</li>
@@ -70,12 +89,12 @@ export function StudentProfileView({ profile }: { profile: PublicStudentProfile 
           Ready for the<br /><em>right opportunity.</em>
         </SectionHeading>
         <div className={styles.availabilityPanel} data-profile-reveal>
-          <div><span>Academic status</span><strong>{labelValue(profile.status)}</strong></div>
-          <div><span>Program</span><strong>{profile.program}</strong></div>
-          <div>
+          <div><span>Academic status</span><strong>{statusLabel}</strong></div>
+          <div><span>Program</span><strong>{profile.program || "Not added"}</strong></div>
+          {profile.availability ? <div>
             <span>Available for</span>
-            <strong>{profile.availability.map(labelValue).join(" / ")}</strong>
-          </div>
+            <strong>{profile.availability.map(labelValue).join(" / ") || "Not listed"}</strong>
+          </div> : null}
         </div>
       </section>
 
@@ -83,9 +102,9 @@ export function StudentProfileView({ profile }: { profile: PublicStudentProfile 
         <SectionHeading index="04" label="Project evidence" id="projects-title">
           Work made<br /><em>visible.</em>
         </SectionHeading>
-        <p className={styles.sectionLead} data-profile-reveal>
-          Canonical project records connected through verified contributor roles.
-        </p>
+        <p className={styles.sectionLead} data-profile-reveal>{profile.projects.length > 0
+          ? "Canonical project records connected through verified contributor roles."
+          : "No canonical project evidence is connected to this self-service profile yet."}</p>
         <div className={styles.projectGrid}>
           {profile.projects.map((project, index) => (
             <article className={styles.projectCard} key={project.id} data-profile-reveal>
@@ -122,14 +141,28 @@ export function StudentProfileView({ profile }: { profile: PublicStudentProfile 
         </div>
       </section>
 
-      {profile.links.length > 0 ? (
+      {(profile.education?.length || profile.experience?.length) ? (
+        <section className={styles.linksSection} aria-labelledby="background-title" data-profile-section>
+          <SectionHeading index="05" label="Background" id="background-title">
+            Education and<br /><em>experience.</em>
+          </SectionHeading>
+          <div className={styles.backgroundColumns} data-profile-reveal>
+            {profile.education?.length ? <div><h3>Education</h3><ul>{profile.education.map((entry) =>
+              <li key={entry}>{entry}</li>)}</ul></div> : null}
+            {profile.experience?.length ? <div><h3>Experience</h3><ul>{profile.experience.map((entry) =>
+              <li key={entry}>{entry}</li>)}</ul></div> : null}
+          </div>
+        </section>
+      ) : null}
+
+      {profile.links && profile.links.length > 0 ? (
         <section className={styles.linksSection} aria-labelledby="links-title" data-profile-section>
           <SectionHeading index="05" label="Professional links" id="links-title">
             Continue the<br /><em>conversation.</em>
           </SectionHeading>
           <ul className={styles.professionalLinks} data-profile-reveal>
             {profile.links.map((link) => (
-              <li key={link.type}>
+              <li key={`${link.type}-${link.url}`}>
                 <a href={link.url} target="_blank" rel="noopener noreferrer">
                   <span>{link.label}</span><span aria-hidden="true">↗</span>
                   <span className={styles.visuallyHidden}>(opens in a new tab)</span>

@@ -111,6 +111,7 @@
 }
 
 .field input,
+.field select,
 .field textarea,
 .linkRow input {
   width: 100%;
@@ -123,6 +124,7 @@
 }
 
 .field input,
+.field select,
 .linkRow input {
   min-height: 52px;
   padding: 0 14px;
@@ -136,6 +138,7 @@
 }
 
 .field input:focus-visible,
+.field select:focus-visible,
 .field textarea:focus-visible,
 .linkRow input:focus-visible {
   border-color: var(--electric);
@@ -224,6 +227,113 @@
 .choice input:focus-visible + span {
   outline: 2px solid var(--electric);
   outline-offset: 3px;
+}
+
+.privacyFieldset {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.privacyFieldset legend {
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.visibilityChoice {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 13px;
+  padding: 16px;
+  align-items: start;
+  border: 1px solid var(--line);
+  cursor: pointer;
+}
+
+.visibilityChoice input {
+  margin-top: 4px;
+  accent-color: var(--electric);
+}
+
+.visibilityChoice strong,
+.visibilityChoice small,
+.publicationPanel strong,
+.publicationPanel span {
+  display: block;
+}
+
+.visibilityChoice small,
+.publicationPanel p,
+.publicationPanel span {
+  margin-top: 4px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.publicationPanel {
+  display: grid;
+  gap: 24px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  background: rgba(118, 247, 230, 0.04);
+}
+
+.publicationPanel p {
+  margin-bottom: 0;
+}
+
+.publicationActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+
+.publicationActions a,
+.publicationActions button,
+.publicationActions > span {
+  display: inline-flex;
+  min-height: 46px;
+  padding: 0 16px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  font: inherit;
+  font-weight: 750;
+}
+
+.publicationActions a {
+  color: var(--bone);
+  text-decoration: none;
+}
+
+.publicationActions > span {
+  opacity: 0.58;
+}
+
+.publishButton,
+.unpublishButton {
+  cursor: pointer;
+}
+
+.publishButton {
+  border-color: var(--electric) !important;
+  background: var(--electric);
+  color: var(--ink);
+}
+
+.unpublishButton {
+  background: transparent;
+  color: #f2a69f;
+}
+
+.publishButton:disabled,
+.unpublishButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
 }
 
 .linksHeader {

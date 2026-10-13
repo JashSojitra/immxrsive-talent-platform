@@ -19,6 +19,13 @@ const initialProfile = {
   headline: "Manually maintained headline",
   biography: "Manual biography",
   publicLocation: "Sault Ste. Marie, ON",
+  program: "Computer Science",
+  studentStatus: "current" as const,
+  showAvailability: false,
+  showProfessionalLinks: false,
+  showPublicLocation: false,
+  showEducation: false,
+  showExperience: false,
   skillIds: ["react"],
   availability: ["internship" as const],
   linkedinUrl: "",
@@ -28,6 +35,7 @@ const initialProfile = {
   experience: ["Existing experience"],
   createdAt: "2026-10-12T12:00:00.000Z",
   updatedAt: "2026-10-12T12:00:00.000Z",
+  publishedAt: null,
   revision: "2026-10-12T12:00:00.000Z",
 };
 

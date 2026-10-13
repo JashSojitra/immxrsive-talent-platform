@@ -32,7 +32,7 @@ export function studentProfileErrorResponse(error: unknown) {
     );
   }
   if (error instanceof StudentProfileError) {
-    return apiErrorResponse(error.status, error.code, error.message);
+    return apiErrorResponse(error.status, error.code, error.message, error.details);
   }
   if (error instanceof ProfileBodyError) {
     return error.status === 413
