@@ -77,14 +77,36 @@ test("verified student creates and returns to a private profile draft", async ({
     const create = page.getByRole("button", { name: "Create private draft" });
     await create.focus();
     await page.keyboard.press("Enter");
-    await expect(page.getByRole("status")).toContainText("Private draft saved");
+    await expect(page.getByText("Private draft saved.")).toBeVisible();
 
     await page.reload();
     await expect(page.getByLabel("Professional headline"))
       .toHaveValue("Browser-only private XR profile");
     await page.getByLabel("Professional headline").fill("Browser private XR profile updated");
     await page.getByRole("button", { name: "Save changes" }).click();
-    await expect(page.getByRole("status")).toContainText("Private draft saved");
+    await expect(page.getByText("Private draft saved.")).toBeVisible();
+
+    await page.getByLabel("PDF resume").setInputFiles(
+      "data/fixtures/r2/resume_clean_single_column.pdf",
+    );
+    await page.getByRole("button", { name: "Review resume" }).click();
+    await expect.poll(() => page.locator("textarea").evaluateAll((elements) =>
+      elements.map((element) => (element as HTMLTextAreaElement).value))).toContain(
+      "BSc Computer Science - Algoma University",
+    );
+    await expect.poll(() => page.locator("textarea").evaluateAll((elements) =>
+      elements.map((element) => (element as HTMLTextAreaElement).value))).toContain(
+      "XR Lab Assistant - Built and tested immersive training prototypes.",
+    );
+    const applyResume = page.getByRole("button", { name: "Apply approved changes" });
+    await applyResume.focus();
+    await page.keyboard.press("Enter");
+    await expect(page.getByText("Approved resume candidates were saved to your private draft.")).toBeVisible();
+    await page.reload();
+    await expect(page.getByLabel("Education entry 1"))
+      .toHaveValue("BSc Computer Science - Algoma University");
+    await expect(page.getByLabel("Experience entry 1"))
+      .toHaveValue("XR Lab Assistant - Built and tested immersive training prototypes.");
 
     const publicSearch = await page.request.get(
       "/api/v1/talent?q=%22Browser%20private%20XR%20profile%20updated%22",

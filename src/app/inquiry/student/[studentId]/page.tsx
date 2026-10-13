@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Employer inquiry",
-  description: "Contact ImmXrsive about a public student profile.",
+  description: "Contact NOT ImmXrsive about a public student profile.",
   robots: { index: false, follow: false },
 };
 

@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { BrandLogo } from "@/components/brand/BrandLogo";
 import { InquiryForm } from "./InquiryForm";
 import styles from "./inquiry.module.css";
 
@@ -18,9 +19,7 @@ export function InquiryPage({ source }: { source: InquirySourceView }) {
       <a className={styles.skipLink} href="#inquiry-form">Skip to inquiry form</a>
       <div className={styles.spatialBackdrop} aria-hidden="true"><span /><span /><span /></div>
       <header className={styles.siteHeader}>
-        <Link href="/talent" className={styles.brand} aria-label="ImmXrsive talent directory">
-          IMM<span>X</span>RSIVE
-        </Link>
+        <BrandLogo className={styles.brand} />
         <nav aria-label="Primary navigation">
           <Link href={source.sourceUrl}>{isStudent ? "Profile" : "Project"}</Link>
           <span aria-current="page">Inquiry</span>

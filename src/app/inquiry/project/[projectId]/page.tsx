@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Project inquiry",
-  description: "Contact ImmXrsive about a canonical project.",
+  description: "Contact NOT ImmXrsive about a canonical project.",
   robots: { index: false, follow: false },
 };
 

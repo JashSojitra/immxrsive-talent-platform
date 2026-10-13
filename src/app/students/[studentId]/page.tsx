@@ -17,14 +17,14 @@ export async function generateMetadata({ params }: StudentProfilePageProps): Pro
   if (!profile) {
     return {
       title: "Student profile not available",
-      description: "The requested ImmXrsive student profile is not publicly available.",
+      description: "The requested NOT ImmXrsive student profile is not publicly available.",
       robots: { index: false, follow: false },
     };
   }
 
   return {
     title: profile.name,
-    description: `${profile.headline} — ${profile.program}. View verified skills and project evidence on ImmXrsive.`,
+    description: `${profile.headline} — ${profile.program}. View verified skills and project evidence on NOT ImmXrsive.`,
   };
 }
 

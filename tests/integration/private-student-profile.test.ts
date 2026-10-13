@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { readFile } from "node:fs/promises";
 
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
@@ -10,6 +11,7 @@ import {
   AuthenticationRequiredError,
 } from "@/auth/server";
 import { createStudentProfileHandlers } from "@/app/api/v1/student/profile/me/route";
+import { createResumeExtractionHandler } from "@/app/api/v1/student/profile/resume/extract/route";
 import { createDatabase, type Database } from "@/db/client";
 import { queryTalentDirectory } from "@/db/queries/talent";
 import {
@@ -44,6 +46,7 @@ import {
 } from "@/profile/service";
 import type { TalentQuery } from "@/validation/talent-query";
 import { studentProfileDraftSchema } from "@/validation/student-profile";
+import { extractResumeCandidates } from "@/resume/extract";
 
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;
 const describeWithDatabase = testDatabaseUrl ? describe : describe.skip;
@@ -111,9 +114,15 @@ describeWithDatabase("private student profile", () => {
     const updated = await updatePrivateStudentProfile({
       db,
       ownerUserId: firstOwner,
-      draft: parsedDraft(skillId, "First profile updated", first.updatedAt.toISOString()),
+      draft: studentProfileDraftSchema.parse({
+        ...draft(skillId, "First profile updated", first.updatedAt.toISOString()),
+        education: ["BSc Computer Science - Algoma University"],
+        experience: ["XR Lab Assistant - Built immersive training prototypes."],
+      }),
     });
     expect(updated.headline).toBe("First profile updated");
+    expect(updated.education).toEqual(["BSc Computer Science - Algoma University"]);
+    expect(updated.experience).toEqual(["XR Lab Assistant - Built immersive training prototypes."]);
     expect((await getPrivateStudentProfile(db, secondOwner))?.headline).toBe("Second profile");
     await expect(updatePrivateStudentProfile({
       db,
@@ -136,6 +145,55 @@ describeWithDatabase("private student profile", () => {
     const unknownSkill = await handlers.POST(profileRequest("POST", draft("not-a-real-skill")));
     expect(unknownSkill.status).toBe(422);
     expect(await unknownSkill.json()).toMatchObject({ error: { code: "INVALID_SKILL" } });
+  });
+
+  test("extracts a resume without modifying or publishing the owner's profile", async () => {
+    const ownerUserId = await createVerifiedUser(db, "resume-owner");
+    const profile = await createPrivateStudentProfile({
+      db, ownerUserId, draft: parsedDraft(skillId, "Keep this manual headline"),
+    });
+    const handler = createResumeExtractionHandler({
+      authorize: async () => ({ user: { id: ownerUserId } }),
+      database: () => db,
+      extract: extractResumeCandidates,
+    });
+    const bytes = await readFile("data/fixtures/r2/resume_clean_single_column.pdf");
+    const form = new FormData();
+    form.set("resume", new File([bytes], "resume.pdf", { type: "application/pdf" }));
+    const response = await handler(new Request(
+      "https://talent.example.test/api/v1/student/profile/resume/extract",
+      { method: "POST", body: form },
+    ));
+    expect(response.status).toBe(200);
+    const body = await response.json() as { candidates: { education: unknown[]; experience: unknown[] } };
+    expect(body.candidates.education).toHaveLength(1);
+    expect(body.candidates.experience).toHaveLength(1);
+    expect(await getPrivateStudentProfile(db, ownerUserId)).toMatchObject({
+      id: profile.id,
+      headline: "Keep this manual headline",
+      publicationStatus: "unpublished",
+      education: [],
+      experience: [],
+    });
+  });
+
+  test.each([
+    [new AuthenticationRequiredError(), 401, "AUTHENTICATION_REQUIRED"],
+    [new AffiliationVerificationRequiredError(), 403, "AFFILIATION_REQUIRED"],
+  ])("resume extraction fails closed before reading storage", async (error, status, code) => {
+    const database = vi.fn(() => db);
+    const extract = vi.fn<typeof extractResumeCandidates>();
+    const handler = createResumeExtractionHandler({
+      authorize: async () => { throw error; }, database, extract,
+    });
+    const response = await handler(new Request(
+      "https://talent.example.test/api/v1/student/profile/resume/extract",
+      { method: "POST" },
+    ));
+    expect(response.status).toBe(status);
+    expect(await response.json()).toMatchObject({ error: { code } });
+    expect(database).not.toHaveBeenCalled();
+    expect(extract).not.toHaveBeenCalled();
   });
 
   test.each([

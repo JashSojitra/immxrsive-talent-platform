@@ -7,7 +7,7 @@ test("student sign-in is accessible and keyboard-operable", async ({ page }, tes
   const signIn = page.getByRole("button", { name: "Continue with GitHub" });
   await expect(signIn).toBeEnabled();
   await page.keyboard.press("Tab");
-  await expect(page.getByRole("link", { name: "IMMXRSIVE" })).toBeFocused();
+  await expect(page.getByRole("link", { name: /NOT ImmXrsive talent directory home/i })).toBeFocused();
   await page.keyboard.press("Tab");
   await expect(page.getByRole("link", { name: "Explore public talent" })).toBeFocused();
   await page.keyboard.press("Tab");

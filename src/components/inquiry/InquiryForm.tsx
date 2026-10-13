@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 
 import {
   createInquiryTemplate,
@@ -42,6 +42,10 @@ export function InquiryForm({ source }: { source: SourceContext }) {
   const successRef = useRef<HTMLDivElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
+  useEffect(() => {
+    if (confirmationId) successRef.current?.focus();
+  }, [confirmationId]);
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (submittingRef.current) return;
@@ -79,7 +83,6 @@ export function InquiryForm({ source }: { source: SourceContext }) {
 
       if (response.status === 201 && body.id) {
         setConfirmationId(body.id);
-        requestAnimationFrame(() => successRef.current?.focus());
         return;
       }
 

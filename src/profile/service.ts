@@ -7,6 +7,8 @@ import {
   availabilityOptions,
   skills,
   studentProfileAvailability,
+  studentProfileEducation,
+  studentProfileExperience,
   studentProfileLinks,
   studentProfiles,
   studentProfileSkills,
@@ -36,6 +38,8 @@ export type PrivateStudentProfile = {
     url: string;
     type: "portfolio" | "other";
   }>;
+  education: string[];
+  experience: string[];
   createdAt: Date;
   updatedAt: Date;
 };
@@ -84,7 +88,7 @@ export async function getPrivateStudentProfile(
     .where(eq(studentProfiles.ownerUserId, ownerUserId)).limit(1);
   if (!profile) return null;
 
-  const [skillRows, availabilityRows, linkRows] = await Promise.all([
+  const [skillRows, availabilityRows, linkRows, educationRows, experienceRows] = await Promise.all([
     db.select({ skillId: studentProfileSkills.skillId })
       .from(studentProfileSkills)
       .where(eq(studentProfileSkills.profileId, profile.id))
@@ -100,6 +104,14 @@ export async function getPrivateStudentProfile(
     }).from(studentProfileLinks)
       .where(eq(studentProfileLinks.profileId, profile.id))
       .orderBy(asc(studentProfileLinks.displayOrder)),
+    db.select({ description: studentProfileEducation.description })
+      .from(studentProfileEducation)
+      .where(eq(studentProfileEducation.profileId, profile.id))
+      .orderBy(asc(studentProfileEducation.displayOrder)),
+    db.select({ description: studentProfileExperience.description })
+      .from(studentProfileExperience)
+      .where(eq(studentProfileExperience.profileId, profile.id))
+      .orderBy(asc(studentProfileExperience.displayOrder)),
   ]);
 
   return {
@@ -117,6 +129,8 @@ export async function getPrivateStudentProfile(
         ? [{ label: link.label, url: link.url, type: link.type }]
         : [],
     ),
+    education: educationRows.map(({ description }) => description),
+    experience: experienceRows.map(({ description }) => description),
     createdAt: profile.createdAt,
     updatedAt: profile.updatedAt,
   };
@@ -243,6 +257,8 @@ async function replaceAssociations(
   await db.delete(studentProfileAvailability)
     .where(eq(studentProfileAvailability.profileId, profileId));
   await db.delete(studentProfileLinks).where(eq(studentProfileLinks.profileId, profileId));
+  await db.delete(studentProfileEducation).where(eq(studentProfileEducation.profileId, profileId));
+  await db.delete(studentProfileExperience).where(eq(studentProfileExperience.profileId, profileId));
   if (draft.skillIds.length > 0) {
     await db.insert(studentProfileSkills).values(draft.skillIds.map((skillId, displayOrder) => ({
       profileId, skillId, displayOrder,
@@ -268,6 +284,20 @@ async function replaceAssociations(
     await db.insert(studentProfileLinks).values(links.map((link, displayOrder) => ({
       profileId, ...link, displayOrder,
     })));
+  }
+  if (draft.education.length > 0) {
+    await db.insert(studentProfileEducation).values(
+      draft.education.map((description, displayOrder) => ({
+        profileId, description, displayOrder,
+      })),
+    );
+  }
+  if (draft.experience.length > 0) {
+    await db.insert(studentProfileExperience).values(
+      draft.experience.map((description, displayOrder) => ({
+        profileId, description, displayOrder,
+      })),
+    );
   }
 }
 

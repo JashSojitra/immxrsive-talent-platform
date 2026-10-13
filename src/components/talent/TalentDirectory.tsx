@@ -4,6 +4,8 @@ import Link from "next/link";
 import { createPortal } from "react-dom";
 import { FormEvent, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
+import { BrandLogo } from "@/components/brand/BrandLogo";
+
 import { ImmersiveField } from "./ImmersiveField";
 import styles from "./talent.module.css";
 import {
@@ -241,9 +243,7 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
       </div>
 
       <header className={styles.siteHeader} data-nav>
-        <Link href="/talent" className={styles.brand} aria-label="ImmXrsive talent directory home">
-          IMM<span>X</span>RSIVE
-        </Link>
+        <BrandLogo className={styles.brand} />
         <nav aria-label="Primary navigation">
           <a href="#directory" className={styles.navLink}>Talent <span>Index</span></a>
         </nav>
@@ -280,7 +280,7 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
             <h2 id="field-title">One field.<br /><em>Many dimensions.</em></h2>
             <p>Real disciplines intersect here. These are signals in the talent landscape, not artificial categories.</p>
           </div>
-          <ul className={styles.disciplineField} aria-label="Talent disciplines represented in ImmXrsive">
+          <ul className={styles.disciplineField} aria-label="Talent disciplines represented in NOT ImmXrsive">
             <li data-field-word="far">Spatial Computing</li>
             <li data-field-word="near">XR</li>
             <li data-field-word="far">Accessibility</li>
@@ -446,8 +446,8 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
       </section>
 
       <footer className={styles.footer}>
-        <span>ImmXrsive</span>
-        <p>Algoma University-connected talent, built for what comes next.</p>
+        <span>NOT ImmXrsive</span>
+        <p>Independent student-built course project for Algoma-connected talent.</p>
       </footer>
     </main>
   );

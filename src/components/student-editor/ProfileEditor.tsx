@@ -1,13 +1,14 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 
 import type { ProfileEditorVocabulary } from "@/profile/service";
+import { ResumeImporter } from "@/components/student-editor/ResumeImporter";
 
 import styles from "./student-profile-editor.module.css";
 
-type ExternalLink = { label: string; url: string; type: "portfolio" | "other" };
-type EditorValues = {
+export type ExternalLink = { label: string; url: string; type: "portfolio" | "other" };
+export type EditorValues = {
   headline: string;
   biography: string;
   publicLocation: string;
@@ -16,6 +17,8 @@ type EditorValues = {
   linkedinUrl: string;
   githubUrl: string;
   externalLinks: ExternalLink[];
+  education: string[];
+  experience: string[];
   revision: string | null;
 };
 
@@ -48,6 +51,8 @@ const EMPTY_VALUES: EditorValues = {
   linkedinUrl: "",
   githubUrl: "",
   externalLinks: [],
+  education: [],
+  experience: [],
   revision: null,
 };
 
@@ -62,6 +67,8 @@ function toEditorValues(profile: SerializableProfile | null): EditorValues {
     linkedinUrl: profile.linkedinUrl,
     githubUrl: profile.githubUrl,
     externalLinks: profile.externalLinks.map((link) => ({ ...link })),
+    education: [...(profile.education ?? [])],
+    experience: [...(profile.experience ?? [])],
     revision: profile.updatedAt,
   };
 }
@@ -95,6 +102,10 @@ export function ProfileEditor({
 
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    await persistValues(values);
+  }
+
+  async function persistValues(nextValues: EditorValues) {
     setSaving(true);
     setMessage("");
     setMessageTone("neutral");
@@ -103,7 +114,7 @@ export function ProfileEditor({
       const response = await fetch("/api/v1/student/profile/me", {
         method: profileId ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+        body: JSON.stringify(nextValues),
       });
       const body = await response.json() as ApiError & { profile?: SerializableProfile };
       if (!response.ok || !body.profile) {
@@ -116,9 +127,11 @@ export function ProfileEditor({
       setLastSavedValues(savedValues);
       setMessage("Private draft saved.");
       setMessageTone("success");
+      return true;
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Your profile could not be saved.");
       setMessageTone("error");
+      return false;
     } finally {
       setSaving(false);
     }
@@ -172,6 +185,13 @@ export function ProfileEditor({
         </div>
       </header>
 
+      <ResumeImporter
+        values={values}
+        vocabulary={vocabulary}
+        disabled={saving}
+        onApply={persistValues}
+      />
+
       <EditorSection index="01" title="Profile identity" description="The concise professional context at the top of your future profile.">
         <div className={styles.fieldGrid}>
           <Field label="Professional headline" field="headline" errors={errors} wide>
@@ -217,7 +237,26 @@ export function ProfileEditor({
         </Field>
       </EditorSection>
 
-      <EditorSection index="03" title="Capabilities" description="Choose from the same standardized vocabulary used by talent discovery.">
+      <EditorSection index="03" title="Education and experience" description="Maintain the grounded history employers may later review on your public profile.">
+        <div className={styles.maintainedGrid}>
+          <MaintainedEntries
+            field="education"
+            title="Education"
+            values={values.education}
+            errors={errors}
+            onChange={(education) => setValues({ ...values, education })}
+          />
+          <MaintainedEntries
+            field="experience"
+            title="Experience"
+            values={values.experience}
+            errors={errors}
+            onChange={(experience) => setValues({ ...values, experience })}
+          />
+        </div>
+      </EditorSection>
+
+      <EditorSection index="04" title="Capabilities" description="Choose from the same standardized vocabulary used by talent discovery.">
         <fieldset className={styles.choiceFieldset}>
           <legend>Standardized skills</legend>
           <div className={styles.choiceGrid}>
@@ -237,7 +276,7 @@ export function ProfileEditor({
         </fieldset>
       </EditorSection>
 
-      <EditorSection index="04" title="Opportunities" description="Select every engagement type you are currently open to.">
+      <EditorSection index="05" title="Opportunities" description="Select every engagement type you are currently open to.">
         <fieldset className={styles.choiceFieldset}>
           <legend>Availability</legend>
           <div className={styles.availabilityGrid}>
@@ -256,7 +295,7 @@ export function ProfileEditor({
         </fieldset>
       </EditorSection>
 
-      <EditorSection index="05" title="Professional presence" description="Add secure HTTPS links that support your work and identity.">
+      <EditorSection index="06" title="Professional presence" description="Add secure HTTPS links that support your work and identity.">
         <div className={styles.fieldGrid}>
           <Field label="LinkedIn URL" field="linkedinUrl" errors={errors}>
             <input
@@ -339,6 +378,46 @@ export function ProfileEditor({
         </button>
       </footer>
     </form>
+  );
+}
+
+function MaintainedEntries({
+  field,
+  title,
+  values,
+  errors,
+  onChange,
+}: {
+  field: "education" | "experience";
+  title: string;
+  values: string[];
+  errors: Array<{ field: string; message: string }>;
+  onChange: (values: string[]) => void;
+}) {
+  return (
+    <fieldset className={styles.entryFieldset}>
+      <legend>{title}</legend>
+      {values.map((value, index) => (
+        <div className={styles.entryRow} key={`${field}-${index}`}>
+          <label htmlFor={`${field}-${index}`}>{title} entry {index + 1}</label>
+          <textarea
+            id={`${field}-${index}`}
+            maxLength={500}
+            rows={3}
+            value={value}
+            onChange={(event) => onChange(values.map((entry, entryIndex) =>
+              entryIndex === index ? event.target.value : entry))}
+          />
+          <button type="button" onClick={() => onChange(values.filter((_, entryIndex) => entryIndex !== index))}>
+            Remove
+          </button>
+        </div>
+      ))}
+      <button type="button" className={styles.secondaryButton} onClick={() => onChange([...values, ""])}>
+        Add {title.toLowerCase()}
+      </button>
+      <FieldError field={field} errors={errors} />
+    </fieldset>
   );
 }
 

@@ -72,9 +72,12 @@ describe("affiliation verification primitives", () => {
       expiresMinutes: 30,
       idempotencyKey: "challenge-id",
     };
-    expect(verificationEmailText(message)).toContain("expires in 30 minutes");
+    const text = verificationEmailText(message);
+    expect(text).toContain("expires in 30 minutes");
     const html = verificationEmailHtml(message);
-    expect(html).toContain("IMMXRSIVE");
+    expect(html).toContain("NOT IMMXRSIVE");
+    expect(html).toContain("Independent student-built course project");
+    expect(text).toContain("Not an official ImmXrsive or Algoma University service");
     expect(html).toContain("&amp;next=&quot;bad&quot;");
     expect(html).not.toContain('next="bad"');
   });

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { TalentDirectory } from "@/components/talent/TalentDirectory";
 
 export const metadata: Metadata = {
-  title: "Discover Talent | ImmXrsive",
+  title: "Discover talent",
   description: "Discover student and alumni talent building the future of immersive technology.",
 };
 

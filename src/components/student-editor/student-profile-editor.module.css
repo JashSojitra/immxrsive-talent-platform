@@ -239,6 +239,56 @@
   font-size: 1rem;
 }
 
+.maintainedGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+}
+
+.entryFieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.entryFieldset legend {
+  margin-bottom: 16px;
+  font-weight: 750;
+}
+
+.entryRow {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.entryRow label {
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.entryRow textarea {
+  width: 100%;
+  min-height: 96px;
+  padding: 13px;
+  resize: vertical;
+  border: 1px solid var(--line);
+  background: rgba(5, 7, 10, 0.78);
+  color: var(--bone);
+  font: inherit;
+  line-height: 1.5;
+}
+
+.entryRow button {
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #f2a69f;
+  cursor: pointer;
+}
+
 .secondaryButton,
 .removeButton {
   border: 1px solid var(--line);
@@ -346,6 +396,7 @@
   }
 
   .fieldGrid,
+  .maintainedGrid,
   .choiceGrid,
   .availabilityGrid,
   .linkRow {

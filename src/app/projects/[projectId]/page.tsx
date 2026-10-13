@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
   if (!project) {
     return {
       title: "Project not available",
-      description: "The requested ImmXrsive project is not available.",
+      description: "The requested NOT ImmXrsive project is not available.",
       robots: { index: false, follow: false },
     };
   }

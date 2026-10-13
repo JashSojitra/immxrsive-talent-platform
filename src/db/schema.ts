@@ -493,6 +493,44 @@ export const studentProfileLinks = pgTable(
   ],
 );
 
+export const studentProfileEducation = pgTable(
+  "student_profile_education",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    profileId: uuid("profile_id")
+      .notNull()
+      .references(() => studentProfiles.id, { onDelete: "cascade" }),
+    description: text("description").notNull(),
+    displayOrder: integer("display_order").notNull(),
+  },
+  (table) => [
+    uniqueIndex("student_profile_education_order_unique").on(
+      table.profileId,
+      table.displayOrder,
+    ),
+    index("student_profile_education_profile_idx").on(table.profileId),
+  ],
+);
+
+export const studentProfileExperience = pgTable(
+  "student_profile_experience",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    profileId: uuid("profile_id")
+      .notNull()
+      .references(() => studentProfiles.id, { onDelete: "cascade" }),
+    description: text("description").notNull(),
+    displayOrder: integer("display_order").notNull(),
+  },
+  (table) => [
+    uniqueIndex("student_profile_experience_order_unique").on(
+      table.profileId,
+      table.displayOrder,
+    ),
+    index("student_profile_experience_profile_idx").on(table.profileId),
+  ],
+);
+
 export type Student = typeof students.$inferSelect;
 export type Project = typeof projects.$inferSelect;
 export type AuthUser = typeof authUsers.$inferSelect;

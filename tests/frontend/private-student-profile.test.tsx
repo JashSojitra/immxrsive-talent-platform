@@ -51,7 +51,7 @@ describe("private student profile editor", () => {
       method: "POST",
       body: expect.not.stringContaining("ownerUserId"),
     }));
-    expect(await screen.findByRole("status")).toHaveTextContent("Private draft saved");
+    expect(await screen.findByText("Private draft saved.")).toBeVisible();
     expect(screen.getByRole("button", { name: "Save changes" })).toBeDisabled();
   });
 
@@ -73,7 +73,7 @@ describe("private student profile editor", () => {
 
     expect(await screen.findByRole("alert")).toHaveTextContent("github.com");
     expect(headline).toHaveValue("Keep this edit");
-    expect(screen.getByRole("status")).toHaveAttribute("data-tone", "error");
+    expect(document.querySelector('[data-tone="error"]')).toHaveTextContent("Review the highlighted profile fields.");
   });
 
   test("renders biography markup as textarea text and sends only editable fields", async () => {
@@ -82,6 +82,7 @@ describe("private student profile editor", () => {
         id: "profile-1", publicationStatus: "unpublished", headline: "Updated",
         biography: "<script>safe text</script>", publicLocation: "", skillIds: [],
         availability: [], linkedinUrl: "", githubUrl: "", externalLinks: [],
+        education: [], experience: [],
         createdAt: "2026-10-12T12:00:00.000Z", updatedAt: "2026-10-12T13:00:00.000Z",
       },
     }), { status: 200 }));
@@ -91,6 +92,7 @@ describe("private student profile editor", () => {
         id: "profile-1", publicationStatus: "unpublished", headline: "Before",
         biography: "<script>safe text</script>", publicLocation: "", skillIds: [],
         availability: [], linkedinUrl: "", githubUrl: "", externalLinks: [],
+        education: [], experience: [],
         createdAt: "2026-10-12T12:00:00.000Z", updatedAt: "2026-10-12T12:00:00.000Z",
         revision: "2026-10-12T12:00:00.000Z",
       }} />);

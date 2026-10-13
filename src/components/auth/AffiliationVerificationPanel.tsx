@@ -92,7 +92,7 @@ export function AffiliationVerificationPanel({
         <h2>Affiliation confirmed</h2>
         <p className={styles.identityEmail}>{status.institutionalEmail}</p>
         <p className={styles.cardText}>
-          Your verified status is stored with your ImmXrsive account and does
+          Your verified status is stored with your NOT ImmXrsive account and does
           not need to be repeated when your GitHub session changes.
         </p>
         {feedback ? <FeedbackMessage feedback={feedback} /> : null}
@@ -110,7 +110,7 @@ export function AffiliationVerificationPanel({
           <p className={styles.statusBadge}>Secure link detected</p>
           <h2 id="confirm-link-title">Confirm this affiliation</h2>
           <p className={styles.cardText}>
-            Continue while signed in to the same ImmXrsive account that
+            Continue while signed in to the same NOT ImmXrsive account that
             requested this link. Links expire and work only once.
           </p>
           <button type="button" disabled={pending !== null} onClick={confirmLink}>

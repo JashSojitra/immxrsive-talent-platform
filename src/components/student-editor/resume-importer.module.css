@@ -1,0 +1,240 @@
+.importer {
+  margin: 58px 0 0;
+  padding: clamp(24px, 5vw, 48px);
+  border: 1px solid rgba(255, 77, 61, 0.42);
+  background:
+    linear-gradient(135deg, rgba(255, 77, 61, 0.08), transparent 45%),
+    rgba(255, 255, 255, 0.025);
+  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.28);
+}
+
+.importer > header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.importer header p {
+  margin: 0 0 8px;
+  color: var(--signal);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.importer h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 3.2rem);
+  letter-spacing: -0.055em;
+}
+
+.importer > header > span,
+.intro,
+.status,
+.group > p,
+.candidate small {
+  color: var(--muted);
+}
+
+.importer > header > span {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.intro {
+  max-width: 760px;
+  margin: 22px 0 30px;
+  line-height: 1.65;
+}
+
+.uploadRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+}
+
+.uploadRow label {
+  font-weight: 750;
+}
+
+.uploadRow input {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  background: rgba(5, 7, 10, 0.8);
+}
+
+.uploadRow button,
+.reviewActions button {
+  min-height: 48px;
+  padding: 0 18px;
+  border: 0;
+  background: var(--signal);
+  color: white;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.uploadRow button:disabled,
+.reviewActions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.status,
+.error {
+  min-height: 24px;
+  margin-top: 14px;
+  font-size: 0.82rem;
+}
+
+.error {
+  color: #f2a69f;
+}
+
+.review {
+  display: grid;
+  gap: 28px;
+  margin-top: 34px;
+  padding-top: 34px;
+  border-top: 1px solid var(--line);
+}
+
+.compare {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.compare strong,
+.compare span {
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  font-size: 0.75rem;
+}
+
+.compare strong {
+  border-color: var(--electric);
+  color: var(--electric);
+}
+
+.group {
+  display: grid;
+  gap: 12px;
+}
+
+.group h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.candidate {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 12px 20px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  background: rgba(5, 7, 10, 0.58);
+}
+
+.candidate[data-decision="accept"] {
+  border-color: rgba(118, 247, 230, 0.44);
+}
+
+.candidate[data-decision="reject"] {
+  opacity: 0.68;
+}
+
+.decision {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.candidateField {
+  display: grid;
+  gap: 7px;
+}
+
+.candidateField label {
+  font-size: 0.75rem;
+  font-weight: 750;
+}
+
+.candidateField textarea,
+.candidateField select {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  background: var(--ink);
+  color: var(--bone);
+  font: inherit;
+}
+
+.candidate small {
+  grid-column: 2;
+  overflow-wrap: anywhere;
+  line-height: 1.45;
+}
+
+.mergeChoice {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 20px;
+  border: 1px solid var(--line);
+}
+
+.mergeChoice legend {
+  padding: 0 8px;
+  font-weight: 750;
+}
+
+.reviewActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.reviewActions .cancel {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--bone);
+}
+
+@media (max-width: 700px) {
+  .importer > header,
+  .reviewActions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .uploadRow,
+  .candidate {
+    grid-template-columns: 1fr;
+  }
+
+  .candidate small {
+    grid-column: auto;
+  }
+
+  .decision {
+    flex-direction: row;
+    gap: 22px;
+  }
+
+  .reviewActions button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .candidate {
+    transition: none;
+  }
+}

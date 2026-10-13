@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { BrandLogo } from "@/components/brand/BrandLogo";
 import type { PublicStudentProfile } from "@/db/queries/student-profile";
 
 import { StudentProfileMotion } from "./StudentProfileMotion";
@@ -14,9 +15,7 @@ export function StudentProfileView({ profile }: { profile: PublicStudentProfile 
       </div>
 
       <header className={styles.siteHeader} data-profile-nav>
-        <Link href="/talent" className={styles.brand} aria-label="ImmXrsive talent directory">
-          IMM<span>X</span>RSIVE
-        </Link>
+        <BrandLogo className={styles.brand} />
         <nav aria-label="Primary navigation">
           <Link href="/talent">Talent</Link>
           <span aria-current="page">Profile</span>
@@ -155,7 +154,7 @@ export function StudentProfileView({ profile }: { profile: PublicStudentProfile 
       </section>
 
       <footer className={styles.footer}>
-        <span>ImmXrsive</span>
+        <span>NOT ImmXrsive</span>
         <Link href="/talent">Return to talent index</Link>
       </footer>
     </StudentProfileMotion>

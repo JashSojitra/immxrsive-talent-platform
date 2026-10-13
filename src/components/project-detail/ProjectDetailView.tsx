@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { BrandLogo } from "@/components/brand/BrandLogo";
 import type { PublicProjectDetail } from "@/db/queries/project-detail";
 
 import { ProjectDetailMotion } from "./ProjectDetailMotion";
@@ -12,9 +13,7 @@ export function ProjectDetailView({ project }: { project: PublicProjectDetail })
       <div className={styles.spatialBackdrop} aria-hidden="true"><span /><span /><span /></div>
 
       <header className={styles.siteHeader} data-project-nav>
-        <Link href="/talent" className={styles.brand} aria-label="ImmXrsive talent directory">
-          IMM<span>X</span>RSIVE
-        </Link>
+        <BrandLogo className={styles.brand} />
         <nav aria-label="Primary navigation">
           <Link href="/talent">Talent</Link>
           <span aria-current="page">Project</span>
@@ -129,7 +128,7 @@ export function ProjectDetailView({ project }: { project: PublicProjectDetail })
       </section>
 
       <footer className={styles.footer}>
-        <span>ImmXrsive</span>
+        <span>NOT ImmXrsive</span>
         <Link href="/talent">Return to talent index</Link>
       </footer>
     </ProjectDetailMotion>

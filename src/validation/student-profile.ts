@@ -3,6 +3,10 @@ import { z } from "zod";
 export const MAX_PROFILE_BODY_BYTES = 32 * 1024;
 export const MAX_PROFILE_SKILLS = 20;
 export const MAX_PROFILE_LINKS = 5;
+export const MAX_PROFILE_EDUCATION_ENTRIES = 10;
+export const MAX_PROFILE_EXPERIENCE_ENTRIES = 15;
+
+const maintainedEntrySchema = z.string().trim().min(1).max(500);
 
 const httpsUrlSchema = z.string().trim().max(2_048).superRefine((value, context) => {
   if (!value) return;
@@ -60,6 +64,10 @@ export const studentProfileDraftSchema = z.object({
         });
       }
     }),
+  education: z.array(maintainedEntrySchema).max(MAX_PROFILE_EDUCATION_ENTRIES)
+    .transform(uniqueValues).default([]),
+  experience: z.array(maintainedEntrySchema).max(MAX_PROFILE_EXPERIENCE_ENTRIES)
+    .transform(uniqueValues).default([]),
   revision: z.string().datetime({ offset: true }).nullable(),
 }).strict().transform((profile) => ({
   ...profile,

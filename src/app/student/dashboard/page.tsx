@@ -7,12 +7,13 @@ import {
   requireAuthenticatedUser,
 } from "@/auth/server";
 import { SignOutButton } from "@/components/auth/SignOutButton";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 
 import styles from "../auth.module.css";
 
 export const metadata: Metadata = {
   title: "Student dashboard",
-  description: "Private student account foundation for ImmXrsive.",
+  description: "Private student workspace for NOT ImmXrsive.",
 };
 
 export const dynamic = "force-dynamic";
@@ -24,7 +25,7 @@ export default async function StudentDashboardPage() {
   return (
     <div className={styles.shell}>
       <nav className={styles.nav} aria-label="Student dashboard">
-        <Link className={styles.brand} href="/talent">IMMXRSIVE</Link>
+        <BrandLogo className={styles.brand} />
         <Link className={styles.backLink} href="/talent">View public talent</Link>
       </nav>
       <main className={styles.main}>

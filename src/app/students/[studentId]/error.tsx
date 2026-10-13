@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import { BrandLogo } from "@/components/brand/BrandLogo";
 import styles from "@/components/student-profile/student-profile.module.css";
 
 export default function StudentProfileError({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
@@ -9,9 +10,7 @@ export default function StudentProfileError({ reset }: { error: Error & { digest
     <main className={styles.page}>
       <div className={styles.spatialBackdrop} aria-hidden="true"><span /><span /><span /></div>
       <header className={styles.siteHeader}>
-        <Link href="/talent" className={styles.brand} aria-label="ImmXrsive talent directory">
-          IMM<span>X</span>RSIVE
-        </Link>
+        <BrandLogo className={styles.brand} />
         <nav aria-label="Primary navigation"><Link href="/talent">Talent</Link></nav>
       </header>
       <section className={styles.inquirySection} aria-labelledby="profile-error-title" role="alert">
