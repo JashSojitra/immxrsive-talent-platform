@@ -14,6 +14,9 @@ export const MAX_RESUME_PAGES = 10;
 export const MAX_RESUME_TEXT_CHARS = 100_000;
 export const RESUME_PARSE_TIMEOUT_MS = 5_000;
 
+type PdfJsRuntime = typeof import("pdfjs-dist/legacy/build/pdf.mjs");
+export type PdfJsRuntimeLoader = () => Promise<PdfJsRuntime>;
+
 export type PositionedText = { text: string; x: number; y: number; width: number };
 
 type ResumeSection = "SKILLS" | "EDUCATION" | "EXPERIENCE";
@@ -63,18 +66,22 @@ export async function extractResumeCandidates(
   bytes: Uint8Array,
   vocabulary: ProfileEditorVocabulary,
   timeoutMs = RESUME_PARSE_TIMEOUT_MS,
+  runtimeLoader: PdfJsRuntimeLoader = () => import("pdfjs-dist/legacy/build/pdf.mjs"),
 ): Promise<ResumeCandidates> {
   validatePdfEnvelope(bytes);
-  const { getDocument } = await import("pdfjs-dist/legacy/build/pdf.mjs");
-  const loadingTask = getDocument({
-    data: new Uint8Array(bytes),
-    disableFontFace: true,
-    useSystemFonts: true,
-    stopAtErrors: true,
-    useWorkerFetch: false,
-  });
+  let loadingTask: ReturnType<PdfJsRuntime["getDocument"]> | undefined;
   let timeout: ReturnType<typeof setTimeout> | undefined;
+  let stage = "runtime-import";
   try {
+    const { getDocument } = await runtimeLoader();
+    stage = "document-load";
+    loadingTask = getDocument({
+      data: new Uint8Array(bytes),
+      disableFontFace: true,
+      useSystemFonts: true,
+      stopAtErrors: true,
+      useWorkerFetch: false,
+    });
     const document = await Promise.race([
       loadingTask.promise,
       new Promise<never>((_, reject) => {
@@ -85,6 +92,7 @@ export async function extractResumeCandidates(
         )), timeoutMs);
       }),
     ]);
+    stage = "text-extraction";
     if (document.numPages > MAX_RESUME_PAGES) {
       throw new ResumeExtractionError(
         "PDF_TOO_LONG",
@@ -129,15 +137,38 @@ export async function extractResumeCandidates(
     return extractCandidatesFromTextColumns(columns, vocabulary);
   } catch (error) {
     if (error instanceof ResumeExtractionError) throw error;
-    throw new ResumeExtractionError(
-      "INVALID_PDF",
-      422,
-      "The uploaded file is not a readable PDF resume.",
-    );
+    if (isPdfContentFailure(error)) {
+      throw new ResumeExtractionError(
+        "INVALID_PDF",
+        422,
+        "The uploaded file is not a readable PDF resume.",
+      );
+    }
+    console.error("Resume PDF runtime failure.", {
+      stage,
+      errorName: error instanceof Error ? error.name : typeof error,
+      errorCode: errorCode(error),
+    });
+    throw error;
   } finally {
     if (timeout) clearTimeout(timeout);
-    await loadingTask.destroy();
+    await loadingTask?.destroy();
   }
+}
+
+function isPdfContentFailure(error: unknown) {
+  return error instanceof Error && new Set([
+    "FormatError",
+    "InvalidPDFException",
+    "MissingPDFException",
+    "PasswordException",
+    "ResponseException",
+  ]).has(error.name);
+}
+
+function errorCode(error: unknown) {
+  if (!error || typeof error !== "object" || !("code" in error)) return undefined;
+  return typeof error.code === "string" ? error.code : undefined;
 }
 
 function validatePdfEnvelope(bytes: Uint8Array) {

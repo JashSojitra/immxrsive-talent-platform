@@ -9,6 +9,7 @@ import {
   extractCandidatesFromTextColumns,
   extractResumeCandidates,
   MAX_RESUME_BYTES,
+  type PdfJsRuntimeLoader,
   reconstructResumeTextColumns,
 } from "@/resume/extract";
 
@@ -86,6 +87,37 @@ describe("deterministic resume extraction", () => {
     const corrupt = new TextEncoder().encode("%PDF-1.7\ncorrupt body\n%%EOF");
     await expect(extractResumeCandidates(corrupt, vocabulary))
       .rejects.toMatchObject({ code: "INVALID_PDF" });
+  });
+
+  test("does not misreport a missing deployed PDF.js worker as an unreadable resume", async () => {
+    const runtimeError = Object.assign(
+      new Error("Setting up fake worker failed."),
+      { code: "ERR_MODULE_NOT_FOUND" },
+    );
+    const destroy = vi.fn().mockResolvedValue(undefined);
+    const runtimeLoader = vi.fn().mockResolvedValue({
+      getDocument: () => ({
+        promise: Promise.reject(runtimeError),
+        destroy,
+      }),
+    }) as unknown as PdfJsRuntimeLoader;
+    const log = vi.spyOn(console, "error").mockImplementation(() => undefined);
+
+    await expect(extractResumeCandidates(
+      requiredFixture(fixtures, "resume_clean_single_column.pdf"),
+      vocabulary,
+      5_000,
+      runtimeLoader,
+    )).rejects.toBe(runtimeError);
+
+    expect(destroy).toHaveBeenCalledOnce();
+    expect(log).toHaveBeenCalledWith("Resume PDF runtime failure.", {
+      stage: "document-load",
+      errorName: "Error",
+      errorCode: "ERR_MODULE_NOT_FOUND",
+    });
+    expect(log.mock.calls.flat().join(" ")).not.toMatch(/BSc|Computer Science|Algoma/i);
+    log.mockRestore();
   });
 
   test("parses Word-style heading variants, distinct experience entries, and split links", () => {
