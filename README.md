@@ -1,6 +1,11 @@
 # ImmXrsive Talent & Industry Platform
 
-Release 1 is a public, data-backed talent and project evidence platform. The current implementation includes the M1 foundation and persistent-data layer plus the M2 public directory APIs. Frontend directory, profile, project, and inquiry workflows are intentionally not implemented yet.
+NOT ImmXrsive is a data-backed talent and project evidence platform. Release 1
+provides the public directory, profiles, projects, advanced search, and contextual
+employer inquiries. The Release 2 development branch adds GitHub authentication,
+Algoma affiliation verification, private student profile editing, reviewed PDF
+resume import, privacy-controlled publication, and allowlisted portfolio
+customization.
 
 ## Requirements
 
@@ -21,6 +26,7 @@ Copy `.env.example` to `.env.local`. The database npm scripts load `.env.local` 
 | Command | Purpose |
 | --- | --- |
 | `npm run dev` | Start local Next.js development |
+| `npm run env:check` | Validate local database isolation and email readiness without printing credentials |
 | `npm run build` | Create a production build |
 | `npm run lint` | Run ESLint |
 | `npm run typecheck` | Run strict TypeScript checks |
@@ -35,7 +41,20 @@ Copy `.env.example` to `.env.local`. The database npm scripts load `.env.local` 
 
 ## Safe database workflow
 
-1. Set `DATABASE_MIGRATION_URL` to a direct PostgreSQL connection and run `npm run db:migrate`.
+Run `npm run env:check` before any local application session. `npm run dev`
+runs it automatically and refuses to start if the runtime or migration URL
+targets the protected production Supabase project, if runtime and migration
+identify different logical databases, or if the configured test target overlaps
+development.
+
+Do not run `vercel env pull .env.local`: that command replaces the whole file
+and can silently substitute Production-scoped values. Pull into a separate,
+explicitly named review file when needed, then copy only reviewed variables and
+rerun `npm run env:check`.
+
+1. Set `DATABASE_MIGRATION_URL` to the reviewed migration-capable PostgreSQL
+   connection for the same logical database as `DATABASE_URL` and run
+   `npm run db:migrate`.
 2. Run `npm run fixtures:validate`.
 3. Set `DATABASE_URL` to the application/runtime connection and run `npm run fixtures:import`.
 

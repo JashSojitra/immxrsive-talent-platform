@@ -14,5 +14,22 @@
   "id_field": "id",
   "skills_field": "skills",
   "contributors_field": "contributors",
-  "optional_broken_project_id": "P07"
+  "optional_broken_project_id": "P07",
+  "release_2": {
+    "student_entry_route": "/student",
+    "student_sign_in_route": "/student/sign-in",
+    "student_verification_route": "/student/verify",
+    "student_dashboard_route": "/student/dashboard",
+    "student_profile_editor_route": "/student/profile/edit",
+    "student_profile_preview_route": "/student/profile/preview",
+    "student_profile_api": "/api/v1/student/profile/me",
+    "student_profile_publication_api": "/api/v1/student/profile/publication",
+    "resume_extraction_api": "/api/v1/student/profile/resume/extract",
+    "verification_status_api": "/api/v1/student/verification/status",
+    "verification_request_api": "/api/v1/student/verification/request",
+    "verification_confirm_api": "/api/v1/student/verification/confirm",
+    "published_profile_route": "/students/{id}",
+    "approved_email_domain": "algomau.ca",
+    "resume_fixture_directory": "data/fixtures/r2"
+  }
 }
