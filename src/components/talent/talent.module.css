@@ -101,6 +101,17 @@
 
 .navLink span { color: var(--signal); font-variant-numeric: tabular-nums; }
 
+.siteHeader nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2.4vw, 34px);
+}
+
+.studentAccessLink {
+  color: var(--electric);
+  text-align: right;
+}
+
 .hero {
   position: relative;
   z-index: 2;
@@ -966,6 +977,8 @@
 @media (max-width: 420px) {
   .brand { font-size: 0.8rem; }
   .navLink { font-size: 0.66rem; }
+  .directoryNavLink { display: none; }
+  .studentAccessLink { max-width: 158px; line-height: 1.35; }
   .heroTitle { font-size: clamp(3.05rem, 15vw, 3.75rem); }
   .heroFoot p { font-size: 0.93rem; }
   .directory { padding-bottom: 70px; }

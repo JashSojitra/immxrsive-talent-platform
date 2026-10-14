@@ -196,6 +196,19 @@ export function ResumeImporter({ values, vocabulary, disabled, onApply }: Resume
             ))}
           </ReviewGroup>
 
+          {candidates.unsupportedSkills.length > 0 ? (
+            <section className={styles.group} aria-labelledby="unsupported-resume-skills">
+              <h3 id="unsupported-resume-skills">Unsupported resume skills</h3>
+              <p>
+                These values were present in the PDF but do not exactly match the current
+                standardized skill list, so they will not be added automatically.
+              </p>
+              <ul>
+                {candidates.unsupportedSkills.map((skill) => <li key={skill}>{skill}</li>)}
+              </ul>
+            </section>
+          ) : null}
+
           <ReviewGroup title="Education" empty="No education details found.">
             {candidates.education.map((candidate) => (
               <EditableCandidate key={candidate.id} candidate={candidate} accepted={accepted}

@@ -1,5 +1,7 @@
 import { tmpdir } from "node:os";
 
+import "./setup";
+
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 

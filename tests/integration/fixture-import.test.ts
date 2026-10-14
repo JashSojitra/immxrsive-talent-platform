@@ -1,3 +1,5 @@
+import "./setup";
+
 import { asc, count, eq } from "drizzle-orm";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import { afterAll, beforeAll, beforeEach, describe, expect, test } from "vitest";

@@ -1,6 +1,7 @@
 import "dotenv/config";
 
 import { createDatabase } from "../src/db/client";
+import { assertSafeMigrationTarget } from "../src/db/safety";
 import { importFixtureData } from "../src/fixtures/import";
 import { loadAndValidateFixtures } from "../src/fixtures/load";
 
@@ -12,6 +13,11 @@ if (!databaseUrl) {
     "DATABASE_URL is required to import fixtures. Validation completed before this check.",
   );
 }
+
+assertSafeMigrationTarget({
+  migrationDatabaseUrl: process.env.DATABASE_MIGRATION_URL ?? databaseUrl,
+  runtimeDatabaseUrl: databaseUrl,
+});
 
 const { client, db } = createDatabase(databaseUrl);
 

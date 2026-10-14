@@ -253,6 +253,8 @@ describe("talent directory", () => {
     await user.tab();
     expect(screen.getByRole("link", { name: /^talent index$/i })).toHaveFocus();
     await user.tab();
+    expect(screen.getByRole("link", { name: /student login \/ create profile/i })).toHaveFocus();
+    await user.tab();
     expect(screen.getByRole("link", { name: /enter the field/i })).toHaveFocus();
     await user.tab();
     expect(screen.getByRole("button", { name: "Search tips" })).toHaveFocus();

@@ -1,15 +1,22 @@
 import { defineConfig, devices } from "@playwright/test";
 import { existsSync } from "node:fs";
 
+import { assertSafeTestDatabaseTarget } from "./src/db/safety";
+
 if (existsSync(".env.local")) process.loadEnvFile(".env.local");
 
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;
+const developmentDatabaseUrl = process.env.DATABASE_URL;
 if (!testDatabaseUrl) {
   throw new Error("TEST_DATABASE_URL is required for browser tests.");
 }
-if (testDatabaseUrl === process.env.DATABASE_URL) {
-  throw new Error("Browser tests require TEST_DATABASE_URL to differ from DATABASE_URL.");
+if (!developmentDatabaseUrl) {
+  throw new Error("DATABASE_URL is required to verify browser test isolation.");
 }
+assertSafeTestDatabaseTarget({
+  testDatabaseUrl,
+  runtimeDatabaseUrl: developmentDatabaseUrl,
+});
 
 export default defineConfig({
   testDir: "./tests/browser",
@@ -25,6 +32,7 @@ export default defineConfig({
     env: {
       DATABASE_URL: testDatabaseUrl,
       TEST_DATABASE_URL: testDatabaseUrl,
+      DEVELOPMENT_DATABASE_URL: developmentDatabaseUrl,
       IMMXRSIVE_BROWSER_TEST_RUNTIME: "1",
       BETTER_AUTH_URL: "http://127.0.0.1:3100",
       BETTER_AUTH_SECRET: "browser-test-secret-with-at-least-thirty-two-characters",

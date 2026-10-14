@@ -74,6 +74,18 @@ test("directory workflow remains functional and URL-addressable", async ({ page 
   await expect(page.getByRole("link", { name: /view maya patel/i })).toBeVisible();
 });
 
+test("student access is discoverable and keyboard-operable in public navigation", async ({ page }) => {
+  await page.goto("/talent");
+  const studentAccess = page.getByRole("link", { name: "Student Login / Create Profile" });
+  await expect(studentAccess).toBeVisible();
+  await expect(studentAccess).toHaveAttribute("href", "/student");
+  await studentAccess.focus();
+  await expect(studentAccess).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/student\/sign-in$/);
+  await expect(page.getByRole("button", { name: "Continue with GitHub" })).toBeVisible();
+});
+
 test("advanced expressions remain URL-addressable and browser history restores them", async ({ page }) => {
   await page.goto("/talent");
   const search = page.getByRole("searchbox", { name: /search talent/i });

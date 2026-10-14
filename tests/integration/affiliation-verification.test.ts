@@ -1,6 +1,8 @@
 import { randomUUID } from "node:crypto";
 
-import { sql } from "drizzle-orm";
+import "./setup";
+
+import { eq, sql } from "drizzle-orm";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
 
@@ -155,7 +157,11 @@ describeWithDatabase("student affiliation verification", () => {
     }
     await expect(requestAffiliationVerification({
       db, userId, email: "limited4@algomau.ca", mailer, config,
-    })).rejects.toMatchObject({ code: "RATE_LIMITED" });
+    })).rejects.toMatchObject({
+      code: "RATE_LIMITED",
+      status: 429,
+      message: "Too many verification attempts. Try again in 15 minutes.",
+    });
   });
 
   test("rate limits invalid confirmations by user and network address", async () => {
@@ -211,6 +217,38 @@ describeWithDatabase("student affiliation verification", () => {
     ));
     expect(response.status).toBe(503);
     expect(await response.json()).toMatchObject({ error: { code: "EMAIL_NOT_CONFIGURED" } });
+  });
+
+  test("sanitizes delivery failures and invalidates the unsent challenge", async () => {
+    const userId = await createUser(db, "delivery-failure");
+    const secret = "smtp-app-password-that-must-not-leak";
+    const failingMailer: VerificationMailer = {
+      async sendVerificationEmail() {
+        throw new Error(`SMTP authentication failed with ${secret}`);
+      },
+    };
+    const handler = createVerificationRequestHandler({
+      authenticate: async () => ({ id: userId }),
+      database: () => db,
+      mailer: () => failingMailer,
+    });
+    const response = await handler(new Request(
+      "https://talent.example.test/api/v1/student/verification/request",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: "failed-delivery@algomau.ca" }),
+      },
+    ));
+
+    expect(response.status).toBe(503);
+    const responseText = JSON.stringify(await response.json());
+    expect(responseText).toContain("EMAIL_DELIVERY_FAILED");
+    expect(responseText).not.toContain(secret);
+    expect(responseText).not.toContain("failed-delivery@algomau.ca");
+    const [challenge] = await db.select().from(affiliationVerificationChallenges)
+      .where(eq(affiliationVerificationChallenges.userId, userId));
+    expect(challenge.supersededAt).toBeInstanceOf(Date);
   });
 });
 

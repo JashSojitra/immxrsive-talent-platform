@@ -18,6 +18,14 @@ test("supplied NOT ImmXrsive identity spans public, inquiry, and student access 
       width: image.naturalWidth,
       height: image.naturalHeight,
     }))).toEqual({ width: 2_000, height: 2_000 });
+    const logoLink = page.getByRole("link", {
+      name: "NOT ImmXrsive talent directory home",
+    }).first();
+    const logoBounds = await logoLink.boundingBox();
+    expect(logoBounds).not.toBeNull();
+    expect(logoBounds!.width).toBeGreaterThanOrEqual(
+      test.info().project.name === "mobile-390" ? 150 : 210,
+    );
     await expect(page.getByLabel("Project status")).toContainText(
       "Not an official ImmXrsive or Algoma University service",
     );

@@ -16,6 +16,7 @@ export type ResumeLinkCandidate = ResumeTextCandidate & {
 
 export type ResumeCandidates = {
   skills: ResumeSkillCandidate[];
+  unsupportedSkills: string[];
   education: ResumeTextCandidate[];
   experience: ResumeTextCandidate[];
   links: ResumeLinkCandidate[];

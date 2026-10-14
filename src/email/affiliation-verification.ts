@@ -1,5 +1,7 @@
 import "server-only";
 
+import { createTransport, type SendMailOptions } from "nodemailer";
+import type SMTPTransport from "nodemailer/lib/smtp-transport";
 import { Resend } from "resend";
 
 export type VerificationEmail = {
@@ -13,14 +15,50 @@ export interface VerificationMailer {
   sendVerificationEmail(message: VerificationEmail): Promise<void>;
 }
 
+type MailerFactories = {
+  createGmailTransport: (options: SMTPTransport.Options) => GmailTransport;
+  createResendClient: (apiKey: string) => ResendDeliveryClient;
+};
+
+type GmailTransport = {
+  sendMail: (message: SendMailOptions) => Promise<{
+    accepted?: Array<string | { address?: string }>;
+  }>;
+};
+
+type ResendDeliveryClient = {
+  emails: {
+    send: (
+      message: { from: string; to: string; subject: string; text: string; html: string },
+      options: { idempotencyKey: string },
+    ) => Promise<{ error: unknown | null }>;
+  };
+};
+
+const DEFAULT_FACTORIES: MailerFactories = {
+  createGmailTransport: (options) => createTransport(options),
+  createResendClient: (apiKey) => new Resend(apiKey) as ResendDeliveryClient,
+};
+
+const GMAIL_SMTP_HOST = "smtp.gmail.com";
+const GMAIL_SMTP_PORT = 465;
+const GMAIL_CONNECTION_TIMEOUT_MS = 10_000;
+const GMAIL_GREETING_TIMEOUT_MS = 10_000;
+const GMAIL_SOCKET_TIMEOUT_MS = 20_000;
+
 export function getConfiguredVerificationMailer(
   environment: Record<string, string | undefined> = process.env,
+  factories: MailerFactories = DEFAULT_FACTORIES,
 ): VerificationMailer | null {
+  const provider = environment.EMAIL_PROVIDER?.trim().toLowerCase() || "resend";
+  if (provider === "gmail") return createGmailMailer(environment, factories);
+  if (provider !== "resend") return null;
+
   const apiKey = environment.RESEND_API_KEY?.trim();
   const from = environment.AFFILIATION_EMAIL_FROM?.trim();
-  if (!apiKey || !from || apiKey.startsWith("REPLACE_WITH_")) return null;
+  if (!isConfiguredSecret(apiKey) || !from) return null;
 
-  const resend = new Resend(apiKey);
+  const resend = factories.createResendClient(apiKey);
   return {
     async sendVerificationEmail(message) {
       const { error } = await resend.emails.send(
@@ -34,6 +72,50 @@ export function getConfiguredVerificationMailer(
         { idempotencyKey: message.idempotencyKey },
       );
       if (error) throw new Error("The verification email provider rejected the request.");
+    },
+  };
+}
+
+function createGmailMailer(
+  environment: Record<string, string | undefined>,
+  factories: MailerFactories,
+): VerificationMailer | null {
+  const user = environment.GMAIL_SMTP_USER?.trim();
+  const password = environment.GMAIL_SMTP_APP_PASSWORD?.trim();
+  if (!isEmailAddress(user) || !isConfiguredSecret(password)) return null;
+
+  const transport = factories.createGmailTransport({
+    host: GMAIL_SMTP_HOST,
+    port: GMAIL_SMTP_PORT,
+    secure: true,
+    auth: { user, pass: password },
+    connectionTimeout: GMAIL_CONNECTION_TIMEOUT_MS,
+    greetingTimeout: GMAIL_GREETING_TIMEOUT_MS,
+    socketTimeout: GMAIL_SOCKET_TIMEOUT_MS,
+    tls: { minVersion: "TLSv1.2", servername: GMAIL_SMTP_HOST },
+  });
+
+  return {
+    async sendVerificationEmail(message) {
+      const mail: SendMailOptions = {
+        from: { name: "NOT ImmXrsive", address: user },
+        to: message.to,
+        envelope: { from: user, to: message.to },
+        subject: "Verify your Algoma University affiliation",
+        text: verificationEmailText(message),
+        html: verificationEmailHtml(message),
+        messageId: `<${safeMessageId(message.idempotencyKey)}@not-immxrsive.local>`,
+        disableFileAccess: true,
+        disableUrlAccess: true,
+      };
+      try {
+        const result = await transport.sendMail(mail);
+        if (!acceptedRecipient(result.accepted, message.to)) {
+          throw new Error("Recipient was not accepted.");
+        }
+      } catch {
+        throw new Error("Gmail SMTP did not accept the verification email.");
+      }
     },
   };
 }
@@ -75,4 +157,25 @@ function escapeHtml(value: string) {
     '"': "&quot;",
     "'": "&#39;",
   })[character] ?? character);
+}
+
+function isConfiguredSecret(value: string | undefined): value is string {
+  return Boolean(value && !value.startsWith("REPLACE_WITH_"));
+}
+
+function isEmailAddress(value: string | undefined): value is string {
+  return Boolean(value && /^[^\s@]+@[^\s@]+$/.test(value));
+}
+
+function safeMessageId(value: string) {
+  return value.replace(/[^a-zA-Z0-9._-]/g, "").slice(0, 120) || "verification";
+}
+
+function acceptedRecipient(
+  accepted: Array<string | { address?: string }> | undefined,
+  recipient: string,
+) {
+  return accepted?.some((entry) => (
+    typeof entry === "string" ? entry : entry.address
+  )?.toLowerCase() === recipient.toLowerCase()) ?? false;
 }

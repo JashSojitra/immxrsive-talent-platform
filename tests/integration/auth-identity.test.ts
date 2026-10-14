@@ -1,5 +1,7 @@
 import { randomUUID } from "node:crypto";
 
+import "./setup";
+
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import { eq, sql } from "drizzle-orm";
 import { migrate } from "drizzle-orm/postgres-js/migrator";

@@ -245,7 +245,12 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
       <header className={styles.siteHeader} data-nav>
         <BrandLogo className={styles.brand} />
         <nav aria-label="Primary navigation">
-          <a href="#directory" className={styles.navLink}>Talent <span>Index</span></a>
+          <a href="#directory" className={`${styles.navLink} ${styles.directoryNavLink}`}>
+            Talent <span>Index</span>
+          </a>
+          <Link href="/student" className={`${styles.navLink} ${styles.studentAccessLink}`}>
+            Student Login / Create Profile
+          </Link>
         </nav>
         <div className={styles.chapterProgress} aria-hidden="true">
           <span /><span /><span /><span /><span /><span />

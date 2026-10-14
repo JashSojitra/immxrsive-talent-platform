@@ -42,6 +42,7 @@ const initialProfile = {
 const extracted = {
   candidates: {
     skills: [{ id: "skill-0", skillId: "unity", value: "Unity", source: "Unity" }],
+    unsupportedSkills: ["Tailwind CSS"],
     education: [{ id: "education-0", value: "Algoma University", source: "Education source" }],
     experience: [{ id: "experience-0", value: "XR assistant", source: "Experience source" }],
     links: [{
@@ -73,6 +74,9 @@ describe("resume import review", () => {
     await user.click(screen.getByRole("button", { name: "Review resume" }));
 
     expect(await screen.findByText("Review every candidate before applying changes.")).toBeVisible();
+    expect(screen.getByRole("heading", { name: "Unsupported resume skills" })).toBeVisible();
+    expect(screen.getByText("Tailwind CSS")).toBeVisible();
+    expect(screen.getByText(/will not be added automatically/i)).toBeVisible();
     expect(screen.getByLabelText("Professional headline")).toHaveValue("Manually maintained headline");
     expect(screen.getByLabelText("Education entry 1")).toHaveValue("Existing education");
 
@@ -122,6 +126,7 @@ describe("resume import review", () => {
     const minimalCandidates = {
       candidates: {
         skills: [],
+        unsupportedSkills: [],
         education: [{ id: "education-0", value: "New education", source: "Education source" }],
         experience: [],
         links: [],

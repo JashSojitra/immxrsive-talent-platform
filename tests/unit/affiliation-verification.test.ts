@@ -3,6 +3,7 @@ import { describe, expect, test, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 import {
+  getConfiguredVerificationMailer,
   verificationEmailHtml,
   verificationEmailText,
 } from "@/email/affiliation-verification";
@@ -80,5 +81,125 @@ describe("affiliation verification primitives", () => {
     expect(text).toContain("Not an official ImmXrsive or Algoma University service");
     expect(html).toContain("&amp;next=&quot;bad&quot;");
     expect(html).not.toContain('next="bad"');
+  });
+
+  test("selects Gmail without falling through and sends from the configured account", async () => {
+    const sendMail = vi.fn(async () => ({ accepted: ["student@algomau.ca"], rejected: [] }));
+    const createGmailTransport = vi.fn(() => ({ sendMail }));
+    const createResendClient = vi.fn(() => ({
+      emails: { send: vi.fn(async () => ({ error: null })) },
+    }));
+    const mailer = getConfiguredVerificationMailer({
+      EMAIL_PROVIDER: "gmail",
+      GMAIL_SMTP_USER: "sender@gmail.com",
+      GMAIL_SMTP_APP_PASSWORD: "test-app-password",
+      RESEND_API_KEY: "unused-resend-key",
+      AFFILIATION_EMAIL_FROM: "Unused <unused@example.test>",
+    }, { createGmailTransport, createResendClient });
+
+    expect(mailer).not.toBeNull();
+    expect(createGmailTransport).toHaveBeenCalledWith(expect.objectContaining({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: { user: "sender@gmail.com", pass: "test-app-password" },
+      connectionTimeout: 10_000,
+      greetingTimeout: 10_000,
+      socketTimeout: 20_000,
+    }));
+    expect(createResendClient).not.toHaveBeenCalled();
+
+    await mailer?.sendVerificationEmail({
+      to: "student@algomau.ca",
+      verifyUrl: "https://talent.example.test/student/verify?token=test-token",
+      expiresMinutes: 30,
+      idempotencyKey: "challenge-id",
+    });
+    expect(sendMail).toHaveBeenCalledWith(expect.objectContaining({
+      from: { name: "NOT ImmXrsive", address: "sender@gmail.com" },
+      to: "student@algomau.ca",
+      envelope: { from: "sender@gmail.com", to: "student@algomau.ca" },
+      subject: "Verify your Algoma University affiliation",
+      text: expect.stringContaining("expires in 30 minutes"),
+      html: expect.stringContaining("NOT IMMXRSIVE"),
+      disableFileAccess: true,
+      disableUrlAccess: true,
+    }));
+  });
+
+  test("fails closed for missing or unknown provider configuration", () => {
+    const factories = {
+      createGmailTransport: vi.fn(() => ({ sendMail: vi.fn() })),
+      createResendClient: vi.fn(() => ({
+        emails: { send: vi.fn(async () => ({ error: null })) },
+      })),
+    };
+    expect(getConfiguredVerificationMailer({
+      EMAIL_PROVIDER: "gmail",
+      GMAIL_SMTP_USER: "sender@gmail.com",
+    }, factories)).toBeNull();
+    expect(getConfiguredVerificationMailer({
+      EMAIL_PROVIDER: "unsupported",
+      GMAIL_SMTP_USER: "sender@gmail.com",
+      GMAIL_SMTP_APP_PASSWORD: "secret",
+      RESEND_API_KEY: "resend-key",
+      AFFILIATION_EMAIL_FROM: "Sender <sender@example.test>",
+    }, factories)).toBeNull();
+    expect(factories.createGmailTransport).not.toHaveBeenCalled();
+    expect(factories.createResendClient).not.toHaveBeenCalled();
+  });
+
+  test("uses Resend only when selected and preserves its configured sender", async () => {
+    const resendSend = vi.fn(async () => ({ error: null }));
+    const createGmailTransport = vi.fn(() => ({ sendMail: vi.fn() }));
+    const createResendClient = vi.fn(() => ({ emails: { send: resendSend } }));
+    const mailer = getConfiguredVerificationMailer({
+      EMAIL_PROVIDER: "resend",
+      RESEND_API_KEY: "resend-key",
+      AFFILIATION_EMAIL_FROM: "NOT ImmXrsive <verify@example.test>",
+      GMAIL_SMTP_USER: "unused@gmail.com",
+      GMAIL_SMTP_APP_PASSWORD: "unused-password",
+    }, { createGmailTransport, createResendClient });
+
+    await mailer?.sendVerificationEmail({
+      to: "student@algomau.ca",
+      verifyUrl: "https://talent.example.test/student/verify?token=test-token",
+      expiresMinutes: 30,
+      idempotencyKey: "challenge-id",
+    });
+    expect(createResendClient).toHaveBeenCalledWith("resend-key");
+    expect(createGmailTransport).not.toHaveBeenCalled();
+    expect(resendSend).toHaveBeenCalledWith(expect.objectContaining({
+      from: "NOT ImmXrsive <verify@example.test>",
+      to: "student@algomau.ca",
+    }), { idempotencyKey: "challenge-id" });
+  });
+
+  test("returns a sanitized error when Gmail rejects or times out", async () => {
+    const secret = "private-app-password";
+    const mailer = getConfiguredVerificationMailer({
+      EMAIL_PROVIDER: "gmail",
+      GMAIL_SMTP_USER: "sender@gmail.com",
+      GMAIL_SMTP_APP_PASSWORD: secret,
+    }, {
+      createGmailTransport: () => ({
+        sendMail: vi.fn(async () => {
+          throw new Error(`Authentication failed for ${secret} at smtp.gmail.com`);
+        }),
+      }),
+      createResendClient: vi.fn(() => ({
+        emails: { send: vi.fn(async () => ({ error: null })) },
+      })),
+    });
+
+    const delivery = mailer?.sendVerificationEmail({
+      to: "student@algomau.ca",
+      verifyUrl: "https://talent.example.test/student/verify?token=raw-token",
+      expiresMinutes: 30,
+      idempotencyKey: "challenge-id",
+    });
+    await expect(delivery).rejects.toThrow("Gmail SMTP did not accept");
+    await expect(delivery).rejects.not.toThrow(secret);
+    await expect(delivery).rejects.not.toThrow("raw-token");
   });
 });

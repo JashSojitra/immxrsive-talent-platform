@@ -318,7 +318,7 @@ async function enforceRateLimit(
     throw new AffiliationVerificationError(
       "RATE_LIMITED",
       429,
-      "Too many verification attempts. Please wait before trying again.",
+      "Too many verification attempts. Try again in 15 minutes.",
     );
   }
 }
