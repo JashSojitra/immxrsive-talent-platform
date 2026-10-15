@@ -33,3 +33,9 @@
 - No production data is copied to development or tests.
 - The evaluator supplies a GitHub account and approved institutional mailbox;
   repository fixtures contain synthetic data only.
+- Application data is accessed only by Next.js through the protected `DATABASE_URL`
+  role. Supabase `anon` and `authenticated` Data API roles have no privileges or
+  RLS policies on the 24 application-owned tables.
+- Production migration `0007_harden_data_api` is applied with the reviewed SQL
+  Editor script, which atomically records the exact migration hash in Drizzle's
+  journal. The read-only postcheck must pass before application deployment.

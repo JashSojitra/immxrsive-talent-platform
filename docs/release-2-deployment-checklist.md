@@ -5,16 +5,16 @@ continue when an identity, target, command result, or backup state is uncertain.
 
 ## 1. Pre-release evidence
 
-- [ ] Replace and review both corrupted final course PDFs.
-- [ ] Reconcile every row in `release-2-requirements-evidence.md` with the final
+- [x] Replace and review both final course PDFs.
+- [x] Reconcile every row in `release-2-requirements-evidence.md` with the final
       R2.01–R2.32 language and Peer QA A–K plan.
-- [ ] Review `git diff`, confirm Git author, and scan the exact staged set for
+- [x] Review `git diff`, confirm Git author, and scan the exact staged set for
       credentials, `.env` files, test artifacts, PDFs not intended for submission,
       and generated build output.
-- [ ] Run `npm run env:check`, all quality gates, full browser suite, production
+- [x] Run `npm run env:check`, all quality gates, full browser suite, production
       build, dependency audit, and tracked-file secret scan.
-- [ ] Perform the manual Gmail test in a non-production environment and record
-      sanitized evidence; restart/redeploy after environment changes.
+- [x] Record the user's production confirmation of the profile workflow without
+      including addresses, tokens, resume contents, or credentials.
 
 ## 2. Configuration review
 
@@ -29,21 +29,22 @@ continue when an identity, target, command result, or backup state is uncertain.
 ## 3. Database rollout
 
 - [ ] Take/confirm a recoverable production backup according to Supabase policy.
-- [ ] Inspect migrations `0000` through `0006` and the current production journal.
-- [ ] Select and approve a production migration mechanism. The checked-in
-      `npm run db:migrate` command intentionally refuses the production Supabase
-      project and must not be bypassed. Until a separately guarded production
-      runner or a reviewed Supabase SQL migration procedure is approved, this is
-      a release blocker rather than a command to improvise.
-- [ ] Apply only pending migrations once. Verify tables, constraints, indexes, and
-      migration journal. Do not import synthetic fixtures unless explicitly
-      required and approved for production.
+- [x] Run `release-2-production-security-audit.sql` in the confirmed production
+      project and review the read-only results.
+- [x] Run `release-2-production-security-hardening.sql`. It applies the idempotent
+      `0007_harden_data_api` behavior and atomically records the exact migration
+      hash/timestamp in `drizzle.__drizzle_migrations`.
+- [x] Run `release-2-production-security-postcheck.sql`. Require 24 protected and
+      RLS-enabled tables, zero client-role exposure, zero default-ACL exposure,
+      one matching migration row, and zero conflicts.
+- [x] Do not import fixtures, rerun migrations `0000`–`0006`, or modify application
+      records.
 
 ## 4. Application release
 
-- [ ] Push the reviewed release commits normally; never force-push. Keep the
-      `PENDING` values in `release_submission.md` until final URLs/SHAs are known,
-      then commit the truthful submission metadata update.
+- [ ] Push the reviewed release commit normally; never force-push. The immutable
+      tag target and Moodle submission text record the full final SHA without an
+      impossible self-referential commit hash inside that same commit.
 - [ ] Deploy the exact reviewed commit. Record deployment URL and commit SHA.
 - [ ] Run production smoke tests: public R1 journeys, sign-in start, verified
       affiliation email, private draft, privacy preview, publish, directory search,
@@ -54,7 +55,7 @@ continue when an identity, target, command result, or backup state is uncertain.
 
 ## 5. Submission and tag
 
-- [ ] Replace all `PENDING` values in `release_submission.md` and record known
+- [ ] Confirm `release_submission.md` contains no placeholders and records known
       issues and test evidence truthfully.
 - [ ] Verify `evaluation_adapter.json` routes against the deployed application.
 - [ ] Create the course-specified Release 2 tag on the exact deployed commit only

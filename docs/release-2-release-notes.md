@@ -28,6 +28,10 @@ employer inquiries.
   student workflow at 390 CSS pixels.
 - Fail-closed logical database identity checks for migrations, destructive tests,
   fixture imports, and local application startup.
+- Deny-by-default Supabase Data API protection for all 24 server-owned tables:
+  RLS is enabled, `anon` and `authenticated` privileges are revoked, future
+  `postgres`-owned objects inherit private defaults, and the privileged Next.js
+  database connection remains unchanged.
 
 ## Changed after Release 1
 
@@ -40,11 +44,13 @@ employer inquiries.
 Release 1 remains archived at tag `R1-submission` and commit
 `9caf0fe58b60982e356c6802bb21a332f04136e7`.
 
-## Verified local release gates
+## Verified release evidence
 
-On October 13, 2026, typecheck and lint passed, along with 153 unit tests, 64
+On October 15, 2026, typecheck and lint passed, along with 95 unit tests, 64
 frontend tests, 91 API tests, 98 integration tests, and 117 Playwright tests; 5
 desktop-project duplicates of mobile-only assertions were intentionally skipped.
-The standalone production build also passed. Live GitHub OAuth, Gmail inbox
-delivery, production migration, and production deployment remain human release
-steps.
+The standalone production build also passed. The production profile workflow,
+resume import, and public profile visibility were user-verified on deployed commit
+`21a75517ae7e637b8f5ab8d9967ab4ec5e150daf`. Production security migration `0007`
+then passed its complete read-only postcheck: 24 of 24 tables protected, no client
+role exposure, safe future-object defaults, and one matching Drizzle journal row.

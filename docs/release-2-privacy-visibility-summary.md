@@ -12,6 +12,13 @@ identifiers are rejected. A private draft can be previewed by its owner without
 making it publicly addressable. Publishing and unpublishing are explicit actions.
 The public directory and profile endpoints query only published records.
 
+All application tables are server-only. Migration `0007_harden_data_api` enables
+RLS without client policies and revokes table, sequence, and function access from
+`PUBLIC`, `anon`, and `authenticated`. Future objects created by the application's
+`postgres` migration role inherit the same private defaults. The Next.js server
+uses its protected direct PostgreSQL connection; browser clients never receive
+database credentials or direct table access.
+
 The public projection is assembled server-side from an allowlist. Name, headline,
 biography, program, student status, standardized skills, and permitted portfolio
 presentation fields form the public professional profile. Availability, location,
