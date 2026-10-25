@@ -23,12 +23,13 @@ test("canonical project shows ordered contributor roles and public profile links
   await expect(page.getByText(/technologies used by the project.*not the skills/i)).toBeVisible();
 });
 
-test("unpublished contributor role remains while private details and link stay hidden", async ({ page }) => {
+test("unpublished contributor identifier and role stay out of the public project", async ({ page }) => {
   await page.goto("/projects/P03");
-  await expect(page.getByText("QA Tester")).toBeVisible();
-  await expect(page.getByText("Public profile unavailable")).toBeVisible();
+  await expect(page.getByText("QA Tester")).toHaveCount(0);
   await expect(page.getByText("Nora Evans")).toHaveCount(0);
   await expect(page.locator('a[href="/students/S16"]')).toHaveCount(0);
+  await expect(page.getByLabel("Museum Quest Experience contributors").getByRole("listitem"))
+    .toHaveCount(2);
 });
 
 test("broken optional asset remains an ordinary safe link without breaking the page", async ({ page }) => {
