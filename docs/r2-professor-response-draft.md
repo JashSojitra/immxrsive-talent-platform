@@ -29,17 +29,26 @@ Repair/build input SHA: `1e7ab8c75693ddc7b39fb798350433c1d8939548`
   LinkedIn URL, and no project-text bleed. Because the issue did not reproduce,
   I made no parser change. No private resume was committed or transmitted.
 
-Retest results: 160/160 non-integration tests passed; the focused 28/28 resume/UI
-tests passed; typecheck, lint, and the production build passed. The configured
-isolated PostgreSQL test tenant currently returns `tenant/user ... not found`,
-so the database-backed integration and desktop/mobile Playwright executions
-could not reach their assertions. I did not substitute the production database
-or reset any records. Exact retest commands and before/after criteria are in
+Retest results: 160/160 non-integration tests and 98/98 integration tests passed;
+the focused public-project integration file passed 7/7. The targeted desktop
+and 390 px Playwright run completed with 23 passes and one intentional desktop
+skip. The full matrix completed all 122 configured entries with no test failure
+(117 passed and five intentional desktop skips). On Windows, the Playwright
+process required interruption after the last entry because the configured
+Next.js web-server child did not exit, so its final reporter exit status was
+unavailable. Typecheck, lint, and the production build also passed.
+
+The configured hosted test tenant was unavailable, so I restored verification
+with two separate ephemeral PostgreSQL databases on localhost. I did not edit
+the hosted environment configuration, substitute the production database, or
+reset any production records; the local server and temporary data were removed
+after testing. Exact evidence, limitations, and deployed retest criteria are in
 `docs/r2-peer-qa-repair-and-retest.md`.
 
-I am requesting a deployed retest of issue #1 and the public `P03` response once
-the isolated test database/preview is available. I will not close the peer issue
-without documented retest evidence.
+I am requesting a deployed retest of issue #1 and the public `P03` response from
+the PR preview or an approved post-merge deployment. I will record desktop and
+390 px screenshots with the deployed commit/build SHA and will not close a peer
+issue without documented retest evidence.
 
 Regards,  
 Jash Sojitra

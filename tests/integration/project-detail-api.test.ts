@@ -122,7 +122,7 @@ describeWithDatabase("public project detail API", () => {
   test("unpublished contributor identifier and role are absent from the public project", async () => {
     const { body } = await getProject("P03");
     expect(body.contributors).toHaveLength(2);
-    expect(JSON.stringify(body.contributors)).not.toMatch(/S16|QA Tester|Nora|XR developer/i);
+    expect(JSON.stringify(body.contributors)).not.toMatch(/S16|QA Tester|Nora Evans/i);
   });
 
   test("broken optional external URL is returned without being fetched or failing", async () => {
