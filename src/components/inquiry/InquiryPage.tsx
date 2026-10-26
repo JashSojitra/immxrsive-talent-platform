@@ -28,7 +28,13 @@ export function InquiryPage({ source }: { source: InquirySourceView }) {
 
       <section className={styles.context} aria-labelledby="inquiry-title">
         <div className={styles.contextIndex}>
-          <span>Employer inquiry</span><strong>{source.id}</strong>
+          <span>Employer inquiry</span>
+          <strong
+            className={source.id.length > 12 ? styles.longContextId : undefined}
+            data-id-format={source.id.length > 12 ? "long" : "short"}
+          >
+            {source.id}
+          </strong>
         </div>
         <div>
           <p className={styles.eyebrow}>{isStudent ? "Interested in working with" : "Inquiry about"}</p>

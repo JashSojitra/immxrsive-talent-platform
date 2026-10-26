@@ -173,6 +173,23 @@ test("verified student creates and returns to a private profile draft", async ({
       .toBeVisible();
     await expect(page.getByLabel(/inquiry description/i))
       .toHaveValue(/Browser private XR profile updated/);
+    const contextId = page.getByText(publicId, { exact: true });
+    const candidateName = page.getByRole("heading", {
+      level: 1, name: "Browser Profile Student", exact: true,
+    });
+    await expect(contextId).toBeVisible();
+    await expect.poll(async () => {
+      const [idBox, nameBox] = await Promise.all([
+        contextId.boundingBox(),
+        candidateName.boundingBox(),
+      ]);
+      if (!idBox || !nameBox) return false;
+      const separatedHorizontally = idBox.x + idBox.width <= nameBox.x;
+      const separatedVertically = idBox.y + idBox.height <= nameBox.y;
+      return separatedHorizontally || separatedVertically;
+    }).toBe(true);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth))
+      .toBeLessThanOrEqual(page.viewportSize()?.width ?? 0);
     await page.goBack();
     await expect(page).toHaveURL(`/students/${publicId}`);
 

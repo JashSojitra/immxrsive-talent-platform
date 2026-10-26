@@ -30,8 +30,9 @@
 .siteHeader nav span { color: var(--electric); }
 
 .context { display: grid; min-height: min(720px, calc(100svh - 88px)); padding: 100px 0; grid-template-columns: minmax(150px, 0.28fr) minmax(0, 1fr); gap: clamp(42px, 8vw, 150px); align-items: center; border-bottom: 1px solid var(--hairline); animation: inquiry-enter 0.7s var(--ease-out) both; }
-.contextIndex { align-self: start; display: grid; gap: 12px; color: var(--muted); text-transform: uppercase; font-size: 0.63rem; letter-spacing: 0.15em; }
+.contextIndex { min-width: 0; align-self: start; display: grid; gap: 12px; color: var(--muted); text-transform: uppercase; font-size: 0.63rem; letter-spacing: 0.15em; }
 .contextIndex strong { color: var(--signal); font-size: clamp(3rem, 6vw, 6rem); font-weight: 350; line-height: 0.9; letter-spacing: -0.07em; }
+.contextIndex .longContextId { max-width: 100%; font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace; font-size: clamp(0.78rem, 1.25vw, 1rem); font-weight: 600; line-height: 1.45; letter-spacing: 0.035em; overflow-wrap: anywhere; word-break: break-word; }
 .eyebrow { margin: 0 0 26px; color: var(--electric); text-transform: uppercase; font-size: 0.66rem; letter-spacing: 0.16em; }
 .context h1 { max-width: 1100px; margin: 0; font-size: clamp(4.5rem, 9vw, 9rem); font-weight: 350; line-height: 0.88; letter-spacing: -0.07em; text-wrap: balance; overflow-wrap: anywhere; }
 .contextDetail { max-width: 720px; margin: 42px 0 0; color: var(--bone); font-size: clamp(1.15rem, 2vw, 1.75rem); line-height: 1.5; }

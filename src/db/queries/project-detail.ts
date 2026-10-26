@@ -1,4 +1,4 @@
-import { asc, eq } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
 
 import type { Database } from "@/db/client";
 import {
@@ -11,10 +11,10 @@ import {
 
 export interface PublicProjectContributor {
   studentId: string;
-  name: string | null;
-  headline: string | null;
+  name: string;
+  headline: string;
   role: string;
-  profileUrl: string | null;
+  profileUrl: string;
 }
 
 export interface PublicProjectAsset {
@@ -65,11 +65,13 @@ export async function queryPublicProject(
         role: projectContributors.role,
         name: students.name,
         headline: students.headline,
-        profileStatus: students.profileStatus,
       })
       .from(projectContributors)
       .innerJoin(students, eq(students.id, projectContributors.studentId))
-      .where(eq(projectContributors.projectId, projectId))
+      .where(and(
+        eq(projectContributors.projectId, projectId),
+        eq(students.profileStatus, "published"),
+      ))
       .orderBy(
         asc(projectContributors.displayOrder),
         asc(projectContributors.studentId),
@@ -88,15 +90,10 @@ export async function queryPublicProject(
   return {
     ...project,
     technologies: technologyRows.map(({ name }) => name),
-    contributors: contributorRows.map(({ profileStatus, ...contributor }) => {
-      const isPublished = profileStatus === "published";
-      return {
-        ...contributor,
-        name: isPublished ? contributor.name : null,
-        headline: isPublished ? contributor.headline : null,
-        profileUrl: isPublished ? `/students/${contributor.studentId}` : null,
-      };
-    }),
+    contributors: contributorRows.map((contributor) => ({
+      ...contributor,
+      profileUrl: `/students/${contributor.studentId}`,
+    })),
     assets: assetRows,
   };
 }

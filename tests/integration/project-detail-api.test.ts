@@ -119,17 +119,10 @@ describeWithDatabase("public project detail API", () => {
     expect(leila.skills).not.toContain("React");
   });
 
-  test("unpublished contributor relationship and role remain without hidden profile details", async () => {
+  test("unpublished contributor identifier and role are absent from the public project", async () => {
     const { body } = await getProject("P03");
-    expect(body.contributors).toHaveLength(3);
-    expect(body.contributors[2]).toEqual({
-      studentId: "S16",
-      name: null,
-      headline: null,
-      role: "QA Tester",
-      profileUrl: null,
-    });
-    expect(JSON.stringify(body.contributors[2])).not.toMatch(/Nora|XR developer/i);
+    expect(body.contributors).toHaveLength(2);
+    expect(JSON.stringify(body.contributors)).not.toMatch(/S16|QA Tester|Nora Evans/i);
   });
 
   test("broken optional external URL is returned without being fetched or failing", async () => {

@@ -49,6 +49,15 @@ describe("contextual inquiry experience", () => {
     expect((screen.getByLabelText(/inquiry description/i) as HTMLTextAreaElement).value).toContain("(P01)");
   });
 
+  it("uses compact metadata typography only for generated profile UUIDs", () => {
+    const { rerender } = render(<InquiryPage source={studentSource} />);
+    expect(screen.getByText("S01", { exact: true })).toHaveAttribute("data-id-format", "short");
+
+    const profileId = "b533f0c0-df6b-4fac-9656-2160a1a14dfb";
+    rerender(<InquiryPage source={{ ...studentSource, id: profileId }} />);
+    expect(screen.getByText(profileId, { exact: true })).toHaveAttribute("data-id-format", "long");
+  });
+
   it("keeps edits across rerenders and resets substantial edits only after confirmation", async () => {
     const user = userEvent.setup();
     const confirm = vi.spyOn(window, "confirm").mockReturnValueOnce(false).mockReturnValueOnce(true);

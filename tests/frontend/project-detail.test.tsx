@@ -57,19 +57,10 @@ describe("public project detail", () => {
     expect(screen.getByText(/individual skills live only on each published student profile/i)).toBeInTheDocument();
   });
 
-  it("links published contributors and preserves an unavailable relationship without a link", () => {
-    const privateContributor: PublicProjectDetail = {
-      ...project,
-      contributors: [
-        ...project.contributors,
-        { studentId: "S16", name: null, headline: null, role: "QA Tester", profileUrl: null },
-      ],
-    };
-    render(<ProjectDetailView project={privateContributor} />);
+  it("links every contributor in the public projection", () => {
+    render(<ProjectDetailView project={project} />);
     expect(screen.getByRole("link", { name: /avery chen/i })).toHaveAttribute("href", "/students/S01");
-    expect(screen.getByText("QA Tester")).toBeInTheDocument();
-    expect(screen.getByText("Public profile unavailable")).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: /public profile unavailable/i })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /maya patel/i })).toHaveAttribute("href", "/students/S02");
   });
 
   it("renders a broken optional URL as a safe accessible external link", () => {
