@@ -3,14 +3,17 @@ import Link from "next/link";
 import { BrandLogo } from "@/components/brand/BrandLogo";
 import type { PublicProjectDetail } from "@/db/queries/project-detail";
 
+import { ProjectDemo } from "./ProjectDemo";
 import { ProjectDetailMotion } from "./ProjectDetailMotion";
 import styles from "./project-detail.module.css";
+const mediaTypeLabels: Record<string, string> = { playable: "Playable web URL", video: "Video / demo", source: "Source", fallback_image: "Fallback image", fallback_video: "Fallback video", fallback_link: "Fallback link", link: "Project link" };
 
-export function ProjectDetailView({ project }: { project: PublicProjectDetail }) {
+export function ProjectDetailView({ project, preview = false }: { project: PublicProjectDetail; preview?: boolean }) {
   return (
     <ProjectDetailMotion>
       <a className={styles.skipLink} href="#project-evidence">Skip to project evidence</a>
       <div className={styles.spatialBackdrop} aria-hidden="true"><span /><span /><span /></div>
+      {preview ? <aside className={styles.preview}><strong>Private preview — saved project</strong><p>This preview does not publish the project. Only published profiles appear as public contributors.</p><Link href={`/student/projects/${project.id}/edit`}>Return to editor</Link></aside> : null}
 
       <header className={styles.siteHeader} data-project-nav>
         <BrandLogo className={styles.brand} />
@@ -23,7 +26,7 @@ export function ProjectDetailView({ project }: { project: PublicProjectDetail })
       <section className={styles.hero} aria-labelledby="project-title">
         <div className={styles.heroIndex} data-project-index>
           <span>Project evidence</span>
-          <strong>{project.id}</strong>
+          <strong className={project.id.length > 12 ? styles.longId : undefined}>{project.id}</strong>
         </div>
         <div className={styles.heroBody}>
           <p className={styles.domain} data-project-lead>{project.domain}</p>
@@ -33,11 +36,14 @@ export function ProjectDetailView({ project }: { project: PublicProjectDetail })
             <div><dt>Project</dt><dd>{project.id}</dd></div>
             <div><dt>Contributors</dt><dd>{project.contributors.length}</dd></div>
             <div><dt>Technologies</dt><dd>{project.technologies.length}</dd></div>
+            {project.projectStatus ? <div><dt>Status</dt><dd>{({ in_progress: "In progress", completed: "Completed", on_hold: "On hold" } as Record<string, string>)[project.projectStatus] ?? project.projectStatus}</dd></div> : null}
+            {project.projectDate ? <div><dt>Project date</dt><dd>{project.projectDate}</dd></div> : null}
           </dl>
         </div>
       </section>
 
       <div id="project-evidence">
+        <ProjectDemo key={`${project.id}-${JSON.stringify(project.assets)}`} title={project.title} assets={project.assets} />
         <section className={styles.technologySection} aria-labelledby="technologies-title" data-project-section>
           <SectionHeading index="02" label="Technology system" id="technologies-title">
             Built with a<br /><em>project stack.</em>
@@ -71,6 +77,7 @@ export function ProjectDetailView({ project }: { project: PublicProjectDetail })
                 <div>
                   <span className={styles.roleLabel}>Contributor role</span>
                   <strong className={styles.role}>{contributor.role}</strong>
+                  {contributor.statement ? <p>{contributor.statement}</p> : null}
                 </div>
                 <div className={styles.contributorIdentity}>
                   {contributor.profileUrl && contributor.name ? (
@@ -99,10 +106,10 @@ export function ProjectDetailView({ project }: { project: PublicProjectDetail })
             <p>External evidence is provided as supplied and is not fetched or validated during page rendering.</p>
             {project.assets.length > 0 ? (
               <ul className={styles.assetList} aria-label={`${project.title} public assets`}>
-                {project.assets.map((asset) => (
-                  <li key={`${asset.type}-${asset.url}`}>
+                {project.assets.map((asset, index) => (
+                  <li key={`${asset.type}-${asset.url}-${index}`}>
                     <a href={asset.url} target="_blank" rel="noopener noreferrer">
-                      <span><small>{asset.type}</small>{asset.label}</span>
+                      <span><small>{mediaTypeLabels[asset.type] ?? asset.type}</small>{asset.label}</span>
                       <span aria-hidden="true">↗</span>
                       <span className={styles.visuallyHidden}>(opens in a new tab)</span>
                     </a>
@@ -114,7 +121,7 @@ export function ProjectDetailView({ project }: { project: PublicProjectDetail })
         </section>
       </div>
 
-      <section className={styles.inquirySection} aria-labelledby="inquiry-title" data-project-section>
+      {!preview ? <section className={styles.inquirySection} aria-labelledby="inquiry-title" data-project-section>
         <p className={styles.chapter} data-project-reveal>05 / Employer action</p>
         <h2 id="inquiry-title" data-project-reveal>
           Interested in collaborating<br />around <em>this project?</em>
@@ -125,7 +132,7 @@ export function ProjectDetailView({ project }: { project: PublicProjectDetail })
         <Link className={styles.inquiryCta} href={`/inquiry/project/${project.id}`} data-project-reveal>
           Project inquiry for {project.title} <span aria-hidden="true">↗</span>
         </Link>
-      </section>
+      </section> : null}
 
       <footer className={styles.footer}>
         <span>NOT ImmXrsive</span>

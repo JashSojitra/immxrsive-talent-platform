@@ -54,6 +54,12 @@
 .hero { display: grid; min-height: calc(100svh - 88px); padding: 76px 0 90px; grid-template-columns: minmax(150px, 0.27fr) minmax(0, 1fr); gap: clamp(40px, 8vw, 150px); align-items: end; }
 .heroIndex { align-self: start; display: grid; gap: 10px; text-transform: uppercase; font-size: 0.64rem; letter-spacing: 0.14em; color: var(--muted); }
 .heroIndex strong { color: var(--signal); font-size: clamp(3rem, 6vw, 6.8rem); font-weight: 350; letter-spacing: -0.07em; line-height: 0.9; }
+.heroIndex .longId { max-width: 100%; font-family: monospace; font-size: clamp(.8rem, 1.25vw, 1rem); line-height: 1.6; letter-spacing: .02em; overflow-wrap: anywhere; }
+.heroMeta dd { overflow-wrap: anywhere; }
+.hero h1, .description, .contributorList p { overflow-wrap: anywhere; }
+.preview { position: relative; z-index: 3; width: var(--content); margin: 0 auto; padding: 28px 0; border-bottom: 1px solid var(--electric); line-height: 1.6; }
+.preview strong { color: var(--electric); }
+.preview a { text-underline-offset: 5px; }
 .domain { margin: 0 0 28px; color: var(--electric); text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.16em; }
 .hero h1 { max-width: 1160px; margin: 0; font-size: clamp(4.2rem, 9.4vw, 10.5rem); font-weight: 340; line-height: 0.83; letter-spacing: -0.075em; text-wrap: balance; }
 .description { max-width: 730px; margin: 54px 0 64px; color: var(--muted); font-size: clamp(1.1rem, 1.65vw, 1.55rem); line-height: 1.6; }

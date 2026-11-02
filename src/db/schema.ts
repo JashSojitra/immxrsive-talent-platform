@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import {
   boolean,
+  date,
   check,
   index,
   integer,
@@ -148,7 +149,112 @@ export const projects = pgTable("projects", {
   title: text("title").notNull(),
   description: text("description").notNull(),
   domain: text("domain").notNull(),
-});
+  origin: text("origin", { enum: ["legacy_fixture", "student"] }).default("legacy_fixture").notNull(),
+  maintainerUserId: text("maintainer_user_id").references(() => authUsers.id, { onDelete: "restrict" }),
+  publicationStatus: profileStatusEnum("publication_status").default("unpublished").notNull(),
+  projectStatus: text("project_status", { enum: ["in_progress", "completed", "on_hold"] }).default("in_progress").notNull(),
+  projectDate: date("project_date"),
+  version: integer("version").default(1).notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  publishedAt: timestamp("published_at", { withTimezone: true }),
+}, (table) => [
+  check("projects_origin_owner_check", sql`(${table.origin} = 'legacy_fixture' AND ${table.maintainerUserId} IS NULL) OR (${table.origin} = 'student' AND ${table.maintainerUserId} IS NOT NULL)`),
+  check("projects_status_check", sql`${table.projectStatus} IN ('in_progress', 'completed', 'on_hold')`),
+  check("projects_version_positive", sql`${table.version} > 0`),
+  index("projects_maintainer_idx").on(table.maintainerUserId),
+  index("projects_publication_idx").on(table.publicationStatus),
+]);
+
+export const projectRoles = pgTable("project_roles", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull().unique(),
+  displayOrder: integer("display_order").notNull().unique(),
+}).enableRLS();
+
+export const projectRepositories = pgTable("project_repositories", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  projectId: text("project_id").notNull().references(() => projects.id, { onDelete: "restrict" }),
+  url: text("url").notNull(),
+  normalizedKey: text("normalized_key").notNull(),
+  displayOrder: integer("display_order").notNull(),
+}, (table) => [
+  uniqueIndex("project_repositories_project_key_unique").on(table.projectId, table.normalizedKey),
+  index("project_repositories_key_idx").on(table.normalizedKey),
+]).enableRLS();
+
+export const projectLinks = pgTable("project_links", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  projectId: text("project_id").notNull().references(() => projects.id, { onDelete: "restrict" }),
+  label: text("label").notNull(),
+  url: text("url").notNull(),
+  displayOrder: integer("display_order").notNull(),
+}, (table) => [index("project_links_project_idx").on(table.projectId)]).enableRLS();
+
+export const projectMemberships = pgTable("project_memberships", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  projectId: text("project_id").notNull().references(() => projects.id, { onDelete: "restrict" }),
+  profileId: uuid("profile_id").notNull().references(() => studentProfiles.id, { onDelete: "restrict" }),
+  state: text("state", { enum: ["pending", "accepted", "declined", "removed"] }).default("pending").notNull(),
+  proposedRoleId: text("proposed_role_id").notNull().references(() => projectRoles.id, { onDelete: "restrict" }),
+  invitedByUserId: text("invited_by_user_id").notNull().references(() => authUsers.id, { onDelete: "restrict" }),
+  acceptedAt: timestamp("accepted_at", { withTimezone: true }),
+  respondedAt: timestamp("responded_at", { withTimezone: true }),
+  removedAt: timestamp("removed_at", { withTimezone: true }),
+  removedByUserId: text("removed_by_user_id").references(() => authUsers.id, { onDelete: "restrict" }),
+  removalReason: text("removal_reason").default("").notNull(),
+  restoredAt: timestamp("restored_at", { withTimezone: true }),
+  version: integer("version").default(1).notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+}, (table) => [
+  uniqueIndex("project_memberships_project_profile_unique").on(table.projectId, table.profileId),
+  index("project_memberships_profile_idx").on(table.profileId),
+  check("project_memberships_state_check", sql`${table.state} IN ('pending', 'accepted', 'declined', 'removed')`),
+  check("project_memberships_acceptance_check", sql`(${table.state} IN ('accepted', 'removed') AND ${table.acceptedAt} IS NOT NULL) OR (${table.state} IN ('pending', 'declined') AND ${table.acceptedAt} IS NULL)`),
+  check("project_memberships_removal_check", sql`${table.state} <> 'removed' OR (${table.removedAt} IS NOT NULL AND ${table.removedByUserId} IS NOT NULL)`),
+  check("project_memberships_version_positive", sql`${table.version} > 0`),
+]).enableRLS();
+
+export const projectContributions = pgTable("project_contributions", {
+  membershipId: uuid("membership_id").primaryKey().references(() => projectMemberships.id, { onDelete: "restrict" }),
+  roleId: text("role_id").notNull().references(() => projectRoles.id, { onDelete: "restrict" }),
+  statement: text("statement").default("").notNull(),
+  featured: boolean("featured").default(true).notNull(),
+  publicVisible: boolean("public_visible").default(true).notNull(),
+  version: integer("version").default(1).notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+}, (table) => [check("project_contributions_version_positive", sql`${table.version} > 0`)]).enableRLS();
+
+export const projectMaintainerTransfers = pgTable("project_maintainer_transfers", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  projectId: text("project_id").notNull().references(() => projects.id, { onDelete: "restrict" }),
+  fromUserId: text("from_user_id").notNull().references(() => authUsers.id, { onDelete: "restrict" }),
+  toMembershipId: uuid("to_membership_id").notNull().references(() => projectMemberships.id, { onDelete: "restrict" }),
+  projectVersion: integer("project_version").notNull(),
+  state: text("state", { enum: ["pending", "accepted", "declined", "cancelled"] }).default("pending").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  respondedAt: timestamp("responded_at", { withTimezone: true }),
+}, (table) => [
+  uniqueIndex("project_transfer_pending_unique").on(table.projectId).where(sql`${table.state} = 'pending'`),
+  check("project_transfer_state_check", sql`${table.state} IN ('pending', 'accepted', 'declined', 'cancelled')`),
+  check("project_transfer_version_positive", sql`${table.projectVersion} > 0`),
+]).enableRLS();
+
+export const PROJECT_MEDIA_KINDS = ["playable", "video", "source", "fallback_image", "fallback_video", "fallback_link"] as const;
+export const projectMedia = pgTable("project_media", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  projectId: text("project_id").notNull().references(() => projects.id, { onDelete: "restrict" }),
+  kind: text("kind", { enum: PROJECT_MEDIA_KINDS }).notNull(),
+  url: text("url").notNull(),
+  label: text("label").notNull(),
+  altText: text("alt_text").default("").notNull(),
+  displayOrder: integer("display_order").notNull(),
+}, (table) => [
+  index("project_media_project_idx").on(table.projectId),
+  uniqueIndex("project_media_primary_unique").on(table.projectId, table.kind).where(sql`${table.kind} IN ('playable', 'video')`),
+  check("project_media_kind_check", sql`${table.kind} IN ('playable', 'video', 'source', 'fallback_image', 'fallback_video', 'fallback_link')`),
+]).enableRLS();
 
 export const projectContributors = pgTable(
   "project_contributors",
@@ -222,6 +328,9 @@ export const inquiries = pgTable(
     studentId: text("student_id").references(() => students.id, {
       onDelete: "restrict",
     }),
+    studentProfileId: uuid("student_profile_id").references(() => studentProfiles.id, {
+      onDelete: "restrict",
+    }),
     projectId: text("project_id").references(() => projects.id, {
       onDelete: "restrict",
     }),
@@ -240,9 +349,13 @@ export const inquiries = pgTable(
     check(
       "inquiries_source_fk_matches_type",
       sql`(
-        (${table.sourceType} = 'student' AND ${table.studentId} IS NOT NULL AND ${table.projectId} IS NULL AND ${table.sourceId} = ${table.studentId})
+        (${table.sourceType} = 'student' AND ${table.projectId} IS NULL AND (
+          (${table.studentId} IS NOT NULL AND ${table.studentProfileId} IS NULL AND ${table.sourceId} = ${table.studentId})
+          OR
+          (${table.studentId} IS NULL AND ${table.studentProfileId} IS NOT NULL AND ${table.sourceId} = ${table.studentProfileId}::text)
+        ))
         OR
-        (${table.sourceType} = 'project' AND ${table.projectId} IS NOT NULL AND ${table.studentId} IS NULL AND ${table.sourceId} = ${table.projectId})
+        (${table.sourceType} = 'project' AND ${table.projectId} IS NOT NULL AND ${table.studentId} IS NULL AND ${table.studentProfileId} IS NULL AND ${table.sourceId} = ${table.projectId})
       )`,
     ),
     index("inquiries_created_at_idx").on(table.createdAt),
@@ -550,6 +663,23 @@ export const studentProfileExperience = pgTable(
 );
 
 export type Student = typeof students.$inferSelect;
+export const projectJoinRequests = pgTable("project_join_requests", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  projectId: text("project_id").notNull().references(() => projects.id, { onDelete: "restrict" }),
+  profileId: uuid("profile_id").notNull().references(() => studentProfiles.id, { onDelete: "restrict" }),
+  state: text("state", { enum: ["pending", "approved", "declined"] }).default("pending").notNull(),
+  membershipId: uuid("membership_id").references(() => projectMemberships.id, { onDelete: "restrict" }),
+  respondedByUserId: text("responded_by_user_id").references(() => authUsers.id, { onDelete: "restrict" }),
+  version: integer("version").default(1).notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  respondedAt: timestamp("responded_at", { withTimezone: true }),
+}, table => [
+  uniqueIndex("project_join_requests_project_profile_unique").on(table.projectId, table.profileId),
+  index("project_join_requests_profile_idx").on(table.profileId),
+  check("project_join_requests_state_check", sql`${table.state} IN ('pending','approved','declined')`),
+  check("project_join_requests_version_positive", sql`${table.version} > 0`),
+  check("project_join_requests_response_check", sql`(${table.state} = 'pending' AND ${table.respondedAt} IS NULL AND ${table.respondedByUserId} IS NULL AND ${table.membershipId} IS NULL) OR (${table.state} IN ('approved','declined') AND ${table.respondedAt} IS NOT NULL AND ${table.respondedByUserId} IS NOT NULL AND ((${table.state} = 'approved' AND ${table.membershipId} IS NOT NULL) OR (${table.state} = 'declined' AND ${table.membershipId} IS NULL)))`),
+]).enableRLS();
 export type Project = typeof projects.$inferSelect;
 export type AuthUser = typeof authUsers.$inferSelect;
 export type StudentAffiliation = typeof studentAffiliations.$inferSelect;

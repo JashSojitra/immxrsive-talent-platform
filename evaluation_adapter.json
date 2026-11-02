@@ -31,5 +31,242 @@
     "published_profile_route": "/students/{id}",
     "approved_email_domain": "algomau.ca",
     "resume_fixture_directory": "data/fixtures/r2"
+  },
+  "release_3": {
+    "adapter_status": "PROVISIONAL_OFFICIAL_R3_TEMPLATE_MISSING",
+    "contract_document": "docs/release-3-evaluation-adapter-contract.md",
+    "available_official_template": "evaluation_adapter_r1_template.json",
+    "required_official_template": "evaluation_adapter_template.json",
+    "pages": {
+      "dashboard": "/student/dashboard",
+      "my_projects": "/student/projects",
+      "add_project": "/student/projects/new",
+      "project_editor": "/student/projects/{projectId}/edit",
+      "draft_preview": "/student/projects/{projectId}/preview",
+      "project_team": "/student/projects/{projectId}/team",
+      "invitation_and_transfer_inbox": "/student/project-invitations",
+      "public_project": "/projects/{projectId}",
+      "public_profile": "/students/{studentId}"
+    },
+    "apis": {
+      "projects": {
+        "path": "/api/v1/student/projects",
+        "methods": [
+          "GET",
+          "POST"
+        ]
+      },
+      "project": {
+        "path": "/api/v1/student/projects/{projectId}",
+        "methods": [
+          "GET",
+          "PATCH"
+        ]
+      },
+      "publication": {
+        "path": "/api/v1/student/projects/{projectId}/publication",
+        "methods": [
+          "POST"
+        ]
+      },
+      "project_team_and_roles": {
+        "path": "/api/v1/student/projects/{projectId}/team",
+        "methods": [
+          "GET"
+        ]
+      },
+      "eligible_teammates": {
+        "path": "/api/v1/student/projects/{projectId}/teammates",
+        "methods": [
+          "GET"
+        ]
+      },
+      "invite_contributor": {
+        "path": "/api/v1/student/projects/{projectId}/invitations",
+        "methods": [
+          "POST"
+        ]
+      },
+      "private_inbox": {
+        "path": "/api/v1/student/project-invitations",
+        "methods": [
+          "GET"
+        ]
+      },
+      "invitation_response": {
+        "path": "/api/v1/student/project-memberships/{membershipId}/response",
+        "methods": [
+          "POST"
+        ]
+      },
+      "personal_contribution": {
+        "path": "/api/v1/student/project-memberships/{membershipId}/contribution",
+        "methods": [
+          "PATCH"
+        ]
+      },
+      "soft_removal": {
+        "path": "/api/v1/student/project-memberships/{membershipId}/removal",
+        "methods": [
+          "POST"
+        ]
+      },
+      "restore_membership": {
+        "path": "/api/v1/student/project-memberships/{membershipId}/restore",
+        "methods": [
+          "POST"
+        ]
+      },
+      "offer_maintenance": {
+        "path": "/api/v1/student/projects/{projectId}/maintainer-transfer",
+        "methods": [
+          "POST"
+        ]
+      },
+      "maintenance_response": {
+        "path": "/api/v1/student/project-transfers/{transferId}/response",
+        "methods": [
+          "POST"
+        ]
+      },
+      "github_suggestions": {
+        "path": "/api/v1/student/project-imports/github",
+        "methods": [
+          "POST"
+        ]
+      },
+      "duplicate_lookup": {
+        "path": "/api/v1/student/project-duplicates",
+        "methods": [
+          "POST"
+        ]
+      },
+      "request_to_join": {
+        "path": "/api/v1/student/projects/{projectId}/join-requests",
+        "methods": [
+          "POST"
+        ]
+      },
+      "own_join_requests": {
+        "path": "/api/v1/student/project-join-requests",
+        "methods": [
+          "GET"
+        ]
+      },
+      "join_request_response": {
+        "path": "/api/v1/student/project-join-requests/{joinRequestId}/response",
+        "methods": [
+          "POST"
+        ]
+      }
+    },
+    "workflows": {
+      "creation": {
+        "entry": "add_project",
+        "manual_fields": [
+          "title",
+          "short description",
+          "domain/type",
+          "project technologies",
+          "project date/status",
+          "public links",
+          "repositories",
+          "typed media"
+        ],
+        "initial_state": "private draft; creator is maintainer and accepted contributor"
+      },
+      "github_import": {
+        "entry": "add_project",
+        "api": "github_suggestions",
+        "behavior": "Review then explicitly apply editable suggestions; no project persisted by import; manual creation remains available"
+      },
+      "collaboration": {
+        "entry": "project_team",
+        "invitation_inbox": "invitation_and_transfer_inbox",
+        "behavior": "Maintainer invites existing eligible student with one official role; intended recipient accepts/declines"
+      },
+      "claiming": {
+        "entry": "add_project",
+        "behavior": "Duplicate warning Request to Join -> maintainer approval -> pending invitation -> independent recipient acceptance; never legacy ownership claiming"
+      },
+      "contributor_roles": {
+        "fixture": "Release 3 Fixtures-20261030/standard_roles.json",
+        "count": 12,
+        "api": "project_team_and_roles",
+        "response_field": "roles",
+        "editing": "Accepted contributor controls own role/statement/description via personal_contribution; no standalone roles endpoint"
+      },
+      "duplicate_warning": {
+        "entry": "add_project",
+        "api": "duplicate_lookup",
+        "fixture": "Release 3 Fixtures-20261030/project_duplicate_cases.json",
+        "actions": [
+          "View Project",
+          "Request to Join",
+          "Continue with a distinct project"
+        ],
+        "privacy": "Only eligible public matches expose identifiers; private matches disclose no protected details; no merging"
+      },
+      "personal_visibility": {
+        "entry": "project_team",
+        "api": "personal_contribution",
+        "controls": [
+          "portfolio featuring",
+          "public attribution"
+        ],
+        "relationship": "Toggles preserve accepted relationship"
+      },
+      "maintainer_transfer": {
+        "entry": "project_team",
+        "offer_api": "offer_maintenance",
+        "response_api": "maintenance_response",
+        "behavior": "Accepted eligible target consents; unchanged project ID and URL; outgoing maintainer loses shared editing"
+      },
+      "playable_demo": {
+        "entry": "public_project",
+        "actions": [
+          "Play Demo / Launch Experience",
+          "Open Externally",
+          "Retry demo",
+          "Stop / Close demo"
+        ],
+        "fixture_path": "/fixtures/r3/working_demo.html",
+        "proof": "Interact twice inside actual supplied HTML; status Interactions: 2"
+      },
+      "fallback": {
+        "entry": "public_project",
+        "action": "View Fallback",
+        "fixture_path": "/fixtures/r3/fallback.svg",
+        "behavior": "Independent image/video/link evidence remains reachable after demo failure"
+      }
+    },
+    "authorization": {
+      "verified_student_required": true,
+      "shared_editors": "maintainer_only",
+      "personal_contribution_owner": "session-derived accepted contributor",
+      "removal": "maintainer_reversible_soft_removal",
+      "concurrency": "integer revision; stale mutation returns structured 409"
+    },
+    "qa": {
+      "setup_guide": "docs/release-3-qa-setup.md",
+      "results": "docs/release-3-qa-results.json",
+      "traceability": "docs/release-3-final-traceability.md",
+      "disposable_command": "node scripts/verify-release-3-final.mjs --run-disposable",
+      "test_accounts": "Synthetic disposable only; evaluator human account access not established; no credentials committed"
+    },
+    "production_evidence": {
+      "status": "NOT_ESTABLISHED",
+      "deployment_url": null,
+      "deployed_commit": null,
+      "assessed_commit": null,
+      "release_tag": null,
+      "shared_project_url": null,
+      "contributor_profile_urls": [],
+      "playable_url": null,
+      "fallback_url": null,
+      "public_import_repository_url": null,
+      "screenshots": "docs/evidence/release-3/ (local synthetic QA only)"
+    },
+    "planned_release_tag": "R3-submission"
   }
 }

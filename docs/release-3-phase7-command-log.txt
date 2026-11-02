@@ -1,0 +1,1013 @@
+COMMAND docker run --detach --name immx-phase7-65680adbaeb3 --label immx.phase7.run=65680adbaeb3 --publish 127.0.0.1::5432 --tmpfs /var/lib/postgresql -e POSTGRES_USER -e POSTGRES_PASSWORD -e POSTGRES_DB postgres:18 -c cluster_name=immx-phase7-65680adbaeb3
+IDENTITY VERIFIED {"container":"548e8a26662bcf4f1ed594d1a275a8509a39e9c737ae55ac5771ac50ed32caf4","database":"phase7_65680adbaeb3_fresh","user":"phase7_65680adbaeb3","published":"127.0.0.1:56710","serverPort":5432,"cluster":"immx-phase7-65680adbaeb3","version":"PostgreSQL 18.6 (Debian 18.6-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit"}
+IMAGE sha256:979bccfde35445db618c65107d27d08c6c21339d8dc3ad4c830c6633947be0e4
+IDENTITY VERIFIED {"container":"548e8a26662bcf4f1ed594d1a275a8509a39e9c737ae55ac5771ac50ed32caf4","database":"phase7_65680adbaeb3_fresh","user":"phase7_65680adbaeb3","published":"127.0.0.1:56710","serverPort":5432,"cluster":"immx-phase7-65680adbaeb3","version":"PostgreSQL 18.6 (Debian 18.6-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit"}
+MIGRATIONS phase7_65680adbaeb3_fresh: [{"applied":11}]
+IDENTITY VERIFIED {"container":"548e8a26662bcf4f1ed594d1a275a8509a39e9c737ae55ac5771ac50ed32caf4","database":"phase7_65680adbaeb3_upgrade","user":"phase7_65680adbaeb3","published":"127.0.0.1:56710","serverPort":5432,"cluster":"immx-phase7-65680adbaeb3","version":"PostgreSQL 18.6 (Debian 18.6-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit"}
+MIGRATIONS phase7_65680adbaeb3_upgrade: [{"applied":8}]
+IDENTITY VERIFIED {"container":"548e8a26662bcf4f1ed594d1a275a8509a39e9c737ae55ac5771ac50ed32caf4","database":"phase7_65680adbaeb3_upgrade","user":"phase7_65680adbaeb3","published":"127.0.0.1:56710","serverPort":5432,"cluster":"immx-phase7-65680adbaeb3","version":"PostgreSQL 18.6 (Debian 18.6-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit"}
+IDENTITY VERIFIED {"container":"548e8a26662bcf4f1ed594d1a275a8509a39e9c737ae55ac5771ac50ed32caf4","database":"phase7_65680adbaeb3_upgrade","user":"phase7_65680adbaeb3","published":"127.0.0.1:56710","serverPort":5432,"cluster":"immx-phase7-65680adbaeb3","version":"PostgreSQL 18.6 (Debian 18.6-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit"}
+MIGRATIONS phase7_65680adbaeb3_upgrade: [{"applied":11}]
+UPGRADE LEGACY DEFAULTS VERIFIED: published, unmanaged, version 1
+R2 BASELINE UPGRADE PASSED: 0000-0007 populated legacy/student/project inquiries, account/profile/verification rows unchanged after 0008-0010; legacy ownership remains null
+CONSTRAINTS [{"conname":"inquiries_company_name_not_null","contype":"n","confdeltype":" ","convalidated":true,"definition":"NOT NULL company_name"},{"conname":"inquiries_contact_email_not_null","contype":"n","confdeltype":" ","convalidated":true,"definition":"NOT NULL contact_email"},{"conname":"inquiries_contact_name_not_null","contype":"n","confdeltype":" ","convalidated":true,"definition":"NOT NULL contact_name"},{"conname":"inquiries_created_at_not_null","contype":"n","confdeltype":" ","convalidated":true,"definition":"NOT NULL created_at"},{"conname":"inquiries_description_not_null","contype":"n","confdeltype":" ","convalidated":true,"definition":"NOT NULL description"},{"conname":"inquiries_id_not_null","contype":"n","confdeltype":" ","convalidated":true,"definition":"NOT NULL id"},{"conname":"inquiries_pkey","contype":"p","confdeltype":" ","convalidated":true,"definition":"PRIMARY KEY (id)"},{"conname":"inquiries_project_id_projects_id_fk","contype":"f","confdeltype":"r","convalidated":true,"definition":"FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE RESTRICT"},{"conname":"inquiries_source_fk_matches_type","contype":"c","confdeltype":" ","convalidated":true,"definition":"CHECK ((((source_type = 'student'::inquiry_source_type) AND (project_id IS NULL) AND (((student_id IS NOT NULL) AND (student_profile_id IS NULL) AND (source_id = student_id)) OR ((student_id IS NULL) AND (student_profile_id IS NOT NULL) AND (source_id = (student_profile_id)::text)))) OR ((source_type = 'project'::inquiry_source_type) AND (project_id IS NOT NULL) AND (student_id IS NULL) AND (student_profile_id IS NULL) AND (source_id = project_id))))"},{"conname":"inquiries_source_id_not_null","contype":"n","confdeltype":" ","convalidated":true,"definition":"NOT NULL source_id"},{"conname":"inquiries_source_name_not_null","contype":"n","confdeltype":" ","convalidated":true,"definition":"NOT NULL source_name"},{"conname":"inquiries_source_type_not_null","contype":"n","confdeltype":" ","convalidated":true,"definition":"NOT NULL source_type"},{"conname":"inquiries_source_url_not_null","contype":"n","confdeltype":" ","convalidated":true,"definition":"NOT NULL source_url"},{"conname":"inquiries_student_id_students_id_fk","contype":"f","confdeltype":"r","convalidated":true,"definition":"FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE RESTRICT"},{"conname":"inquiries_student_profile_id_student_profiles_id_fk","contype":"f","confdeltype":"r","convalidated":true,"definition":"FOREIGN KEY (student_profile_id) REFERENCES student_profiles(id) ON DELETE RESTRICT"}]
+PROJECT-ONLY INQUIRY AFTER UPGRADE PASSED
+UUID PROFILE INQUIRY AFTER R2 UPGRADE PASSED
+LIVE SECURITY: 32/32 public application tables RLS enabled; anon/authenticated table privileges denied; zero public policies
+LIVE MIGRATION INTEGRITY: all 11 journal hashes/timestamps match original SQL
+IDENTITY VERIFIED {"container":"548e8a26662bcf4f1ed594d1a275a8509a39e9c737ae55ac5771ac50ed32caf4","database":"phase7_65680adbaeb3_fresh","user":"phase7_65680adbaeb3","published":"127.0.0.1:56710","serverPort":5432,"cluster":"immx-phase7-65680adbaeb3","version":"PostgreSQL 18.6 (Debian 18.6-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit"}
+COMMAND entire integration/API suite: node node_modules/vitest/vitest.mjs run tests/integration --maxWorkers=1 --reporter=verbose --reporter=json --outputFile=tmp/phase7-integration-results.json [all database variables explicitly scoped to disposable container]
+RESULT entire integration/API suite: exit=0, timeout=false
+
+ RUN  v5.0.2 C:/Coding Assignments/immxrsive-talent-platform
+
+stdout | tests/integration/shared-projects.test.ts > shared project domain and database security
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+
+stdout | tests/integration/shared-projects.test.ts > shared project domain and database security
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '208',
+  routine: 'transformCreateStmt'
+}
+
+ ✓ tests/integration/shared-projects.test.ts > shared project domain and database security > roles match the official fixture exactly and legacy labels are not rewritten 40ms
+ ✓ tests/integration/shared-projects.test.ts > shared project domain and database security > creation is atomic, private, creator-maintained and accepted without changing personal skills 77ms
+ ✓ tests/integration/shared-projects.test.ts > shared project domain and database security > invalid role, forged fields and unverified creation fail without partial projects 36ms
+ ✓ tests/integration/shared-projects.test.ts > shared project domain and database security > only maintainer edits shared fields; repositories disconnect without changing identity 153ms
+ ✓ tests/integration/shared-projects.test.ts > shared project domain and database security > published project remains accessible, unpublication hides it 99ms
+ ✓ tests/integration/shared-projects.test.ts > shared project domain and database security > invitations are recipient-only, proposed-role-bearing and never accepted silently 164ms
+ ✓ tests/integration/shared-projects.test.ts > shared project domain and database security > declined invitations retain history but cannot become contributions 107ms
+ ✓ tests/integration/shared-projects.test.ts > shared project domain and database security > contributor alone owns statement/role/visibility; hiding does not remove acceptance 130ms
+ ✓ tests/integration/shared-projects.test.ts > shared project domain and database security > soft removal and restoration retain relationship ID, acceptance and personal data 145ms
+ ✓ tests/integration/shared-projects.test.ts > shared project domain and database security > current maintainer cannot remove their own accepted relationship 64ms
+ ✓ tests/integration/shared-projects.test.ts > shared project domain and database security > transfer requires accepted target and consent, preserves ID, revokes old edit authority 151ms
+ ✓ tests/integration/shared-projects.test.ts > shared project domain and database security > edits after transfer offer invalidate stale transfer, and decline preserves maintainer 159ms
+ ✓ tests/integration/shared-projects.test.ts > shared project domain and database security > concurrent stale shared saves have one winner and atomic child collections 103ms
+ ✓ tests/integration/shared-projects.test.ts > shared project domain and database security > legacy ownership fails closed and fixture reimport skips colliding user-managed projects 194ms
+ ✓ tests/integration/shared-projects.test.ts > shared project domain and database security > typed media and repository identity are independent, and duplicate primary media fail 78ms
+ ✓ tests/integration/shared-projects.test.ts > shared project domain and database security > all new tables deny direct client privileges with RLS and no permissive policies 71ms
+ ✓ tests/integration/shared-projects.test.ts > shared project domain and database security > database rejects invalid origin-owner, state and revision values 80ms
+stdout | tests/integration/project-team-api.test.ts > project team private HTTP journey
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+
+stdout | tests/integration/project-team-api.test.ts > project team private HTTP journey
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '208',
+  routine: 'transformCreateStmt'
+}
+
+ ✓ tests/integration/project-team-api.test.ts > project team private HTTP journey > private inbox and pending/declined roles never imply public acceptance 216ms
+ ✓ tests/integration/project-team-api.test.ts > project team private HTTP journey > eligible search excludes private/unverified directories and invitations reject unverified targets 151ms
+ ✓ tests/integration/project-team-api.test.ts > project team private HTTP journey > two accepted profiles share one URL and only the contributor controls their evidence 289ms
+ ✓ tests/integration/project-team-api.test.ts > project team private HTTP journey > soft removal and restore preserve contribution, original acceptance, ID and visibility 205ms
+ ✓ tests/integration/project-team-api.test.ts > project team private HTTP journey > transfer requires recipient consent and invalidates outgoing maintainer authority 259ms
+ ✓ tests/integration/project-team-api.test.ts > project team private HTTP journey > stale transfer cannot be accepted but can be declined; replacement cancels prior offer 273ms
+ ✓ tests/integration/project-team-api.test.ts > project team private HTTP journey > strict schemas, cross-site, anonymous, unverified and outsider requests fail closed 78ms
+stdout | tests/integration/private-student-profile.test.ts > private student profile
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+
+stdout | tests/integration/private-student-profile.test.ts > private student profile
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '208',
+  routine: 'transformCreateStmt'
+}
+
+ ✓ tests/integration/private-student-profile.test.ts > private student profile > verified owner creates one unpublished draft and receives it on return 195ms
+ ✓ tests/integration/private-student-profile.test.ts > private student profile > updates only the acting owner's draft and rejects stale revisions 193ms
+ ✓ tests/integration/private-student-profile.test.ts > private student profile > rejects forged identity fields and unknown standardized skills 64ms
+ ✓ tests/integration/private-student-profile.test.ts > private student profile > publishes only an explicit allowlisted projection and supports unpublish and republish 273ms
+ ✓ tests/integration/private-student-profile.test.ts > private student profile > requires complete public fields and rejects stale or forged publication requests 151ms
+ ✓ tests/integration/private-student-profile.test.ts > private student profile > extracts a resume without modifying or publishing the owner's profile 838ms
+ ✓ tests/integration/private-student-profile.test.ts > private student profile > resume extraction fails closed before reading storage 61ms
+ ✓ tests/integration/private-student-profile.test.ts > private student profile > resume extraction fails closed before reading storage 60ms
+ ✓ tests/integration/private-student-profile.test.ts > private student profile > fails closed before opening the database 54ms
+ ✓ tests/integration/private-student-profile.test.ts > private student profile > fails closed before opening the database 62ms
+ ✓ tests/integration/private-student-profile.test.ts > private student profile > publication fails closed before opening the database 65ms
+ ✓ tests/integration/private-student-profile.test.ts > private student profile > publication fails closed before opening the database 65ms
+stdout | tests/integration/project-import-api.test.ts > GitHub duplicate and join API
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+
+stdout | tests/integration/project-import-api.test.ts > GitHub duplicate and join API
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '208',
+  routine: 'transformCreateStmt'
+}
+
+ ✓ tests/integration/project-import-api.test.ts > GitHub duplicate and join API > all official duplicate fixtures produce distinct expected outcomes 212ms
+ ✓ tests/integration/project-import-api.test.ts > GitHub duplicate and join API > normalized multiple repository matches require account-bound acknowledgement and retain stable IDs 194ms
+ ✓ tests/integration/project-import-api.test.ts > GitHub duplicate and join API > concurrent same-repository creates serialize and only one proceeds without fresh confirmation 84ms
+ ✓ tests/integration/project-import-api.test.ts > GitHub duplicate and join API > changed candidate sets invalidate previous acknowledgement without revealing private projects 98ms
+ ✓ tests/integration/project-import-api.test.ts > GitHub duplicate and join API > public join requests need maintainer approval and then independent invitation acceptance 208ms
+ ✓ tests/integration/project-import-api.test.ts > GitHub duplicate and join API > join decline/stale/invalid role/replay and unpublished/legacy/unverified targets fail closed 175ms
+ ✓ tests/integration/project-import-api.test.ts > GitHub duplicate and join API > deterministic GitHub HTTP import stays suggestion-only with strict auth/body/origin checks 36ms
+ ✓ tests/integration/project-import-api.test.ts > GitHub duplicate and join API > legacy fixture repository assets warn without granting legacy ownership or join access 45ms
+ ✓ tests/integration/project-import-api.test.ts > GitHub duplicate and join API > new request table denies client roles and validates state and revision 95ms
+stdout | tests/integration/manual-project-api.test.ts > manual project HTTP and public projection
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+
+stdout | tests/integration/manual-project-api.test.ts > manual project HTTP and public projection
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '208',
+  routine: 'transformCreateStmt'
+}
+
+ ✓ tests/integration/manual-project-api.test.ts > manual project HTTP and public projection > verified student creates, edits, publishes and unpublishes one canonical project 269ms
+ ✓ tests/integration/manual-project-api.test.ts > manual project HTTP and public projection > zero/multiple/replaced repositories preserve the permanent ID and every shared field 205ms
+ ✓ tests/integration/manual-project-api.test.ts > manual project HTTP and public projection > anonymous, unverified, outsider and legacy mutations are denied 117ms
+ ✓ tests/integration/manual-project-api.test.ts > manual project HTTP and public projection > configured public origin accepts proxy reconstruction without trusting an internal host 70ms
+ ✓ tests/integration/manual-project-api.test.ts > manual project HTTP and public projection > strict body schemas, origin checks and bounded JSON reject unsafe requests 21ms
+ ✓ tests/integration/manual-project-api.test.ts > manual project HTTP and public projection > stale update/publication returns a structured 409 and preserves newer database values 125ms
+ ✓ tests/integration/manual-project-api.test.ts > manual project HTTP and public projection > public associations require accepted, visible, published profiles and personal featuring 181ms
+stdout | tests/integration/project-demo-api.test.ts > typed project demo and public privacy
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+
+stdout | tests/integration/project-demo-api.test.ts > typed project demo and public privacy
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '208',
+  routine: 'transformCreateStmt'
+}
+
+ ✓ tests/integration/project-demo-api.test.ts > typed project demo and public privacy > all typed evidence persists separately, including hosted fixture paths and public descriptions 124ms
+ ✓ tests/integration/project-demo-api.test.ts > typed project demo and public privacy > playable-only projects remain valid without inventing other media 90ms
+ ✓ tests/integration/project-demo-api.test.ts > typed project demo and public privacy > video-only projects remain valid without inventing other media 82ms
+ ✓ tests/integration/project-demo-api.test.ts > typed project demo and public privacy > source-only projects remain valid without inventing other media 73ms
+ ✓ tests/integration/project-demo-api.test.ts > typed project demo and public privacy > fallback_image-only projects remain valid without inventing other media 74ms
+ ✓ tests/integration/project-demo-api.test.ts > typed project demo and public privacy > fallback_video-only projects remain valid without inventing other media 77ms
+ ✓ tests/integration/project-demo-api.test.ts > typed project demo and public privacy > fallback_link-only projects remain valid without inventing other media 73ms
+ ✓ tests/integration/project-demo-api.test.ts > typed project demo and public privacy > unsafe/local/arbitrary-relative and raw embed inputs never persist 23ms
+ ✓ tests/integration/project-demo-api.test.ts > typed project demo and public privacy > unpublished projects and removed personal relationships never leak typed evidence 147ms
+stdout | tests/integration/fixture-import.test.ts > fixture import with PostgreSQL
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+
+stdout | tests/integration/fixture-import.test.ts > fixture import with PostgreSQL
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '208',
+  routine: 'transformCreateStmt'
+}
+
+ ✓ tests/integration/fixture-import.test.ts > fixture import with PostgreSQL > multiple student availability values import in source order 69ms
+ ✓ tests/integration/fixture-import.test.ts > fixture import with PostgreSQL > student skills remain independent from project technologies 53ms
+ ✓ tests/integration/fixture-import.test.ts > fixture import with PostgreSQL > a shared project is one project with multiple contributor rows 54ms
+ ✓ tests/integration/fixture-import.test.ts > fixture import with PostgreSQL > contributor roles are preserved 54ms
+ ✓ tests/integration/fixture-import.test.ts > fixture import with PostgreSQL > importing the same fixtures twice is idempotent 93ms
+ ✓ tests/integration/fixture-import.test.ts > fixture import with PostgreSQL > fixture validation failure cannot partially mutate the database 56ms
+ ✓ tests/integration/fixture-import.test.ts > fixture import with PostgreSQL > a database failure rolls back the entire import transaction 101ms
+stdout | tests/integration/talent-api.test.ts > public directory API
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+
+stdout | tests/integration/talent-api.test.ts > public directory API
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '208',
+  routine: 'transformCreateStmt'
+}
+
+ ✓ tests/integration/talent-api.test.ts > public directory API > no filters returns every published student and excludes S16 72ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > text search matches a student name 11ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > text search matches a professional headline 7ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > text search matches standardized skill names 7ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > text search is case-insensitive 8ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > text search uses literal substring semantics 8ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > SQL wildcard characters are treated literally 9ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > comma groups use AND and may match different searchable fields 8ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > pipe terms use OR semantics 8ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > mixed expressions apply OR within AND groups 8ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > quoted phrases retain literal multiword behavior 6ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > free-text search does not inspect project evidence 4ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > one skill filter matches explicit student skills 6ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > two skill filters use AND semantics 7ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > project technologies do not influence skill matching 8ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > one availability filter uses structured availability 7ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > multiple availability values use OR semantics 8ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > one status filter matches the selected status 6ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > both status values use OR semantics 7ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > filter categories combine with AND 8ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > duplicate filter values are harmless and normalized 13ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > invalid skill=Unknown returns a structured 400 2ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > invalid availability=temporary returns a structured 400 2ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > invalid status=staff returns a structured 400 2ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > invalid search q=React%2C returns a useful structured 400 2ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > invalid search q=%22React returns a useful structured 400 2ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > invalid search q=%7C%20React returns a useful structured 400 2ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > an empty match returns 200 with an empty envelope 4ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > student ordering is deterministic by lower-case name then ID 15ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > nested skills and availability preserve fixture display order 7ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > project evidence count is based on canonical contributor rows 6ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > skills endpoint returns DB-backed standardized skills in display order 2ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > skills endpoint returns availability and status metadata 2ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > directory and filter metadata requests complete concurrently 8ms
+ ✓ tests/integration/talent-api.test.ts > public directory API > runtime APIs work without access to the fixture directory 14ms
+stdout | tests/integration/inquiry-api.test.ts > contextual employer inquiry API
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+
+stdout | tests/integration/inquiry-api.test.ts > contextual employer inquiry API
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '208',
+  routine: 'transformCreateStmt'
+}
+
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > valid student inquiry returns 201 and persists trusted student context only 52ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > valid project inquiry returns 201 and persists trusted project context only 9ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > published UUID profile inquiry persists only the trusted profile foreign key and snapshot 12ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > rejects unpublished UUID profile without inserting an inquiry 19ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > rejects unverified UUID profile without inserting an inquiry 14ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > rejects missing-status UUID profile without inserting an inquiry 16ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > database enforces null-safe exact source combinations, including project-only inquiries 36ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > database rejects mismatched legacy source ID 2ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > database rejects mismatched profile source ID 2ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > database rejects mismatched project source ID 3ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > profile foreign key rejects nonexistent profiles and restricts deletion of referenced profiles 7ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > client cannot submit spoofed sourceName 1ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > client cannot submit spoofed sourceUrl 0ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > unavailable student source S16 returns a non-disclosing 404 4ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > unavailable student source INVALID returns a non-disclosing 404 4ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > unavailable student source 00000000-0000-4000-8000-000000000000 returns a non-disclosing 404 6ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > unavailable student source ' OR 1=1 -- returns a non-disclosing 404 4ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > unavailable project source INVALID returns a non-disclosing 404 4ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > invalid companyName returns structured field feedback 1ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > invalid contactName returns structured field feedback 0ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > invalid contactEmail returns structured field feedback 0ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > invalid description returns structured field feedback 0ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > invalid sourceType returns structured field feedback 0ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > rejects unresolved template prompts without persisting them 3ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > persists a final personalized message with unrelated bracket text 8ms
+ ✓ tests/integration/inquiry-api.test.ts > contextual employer inquiry API > oversized and malformed bodies are rejected before persistence 1ms
+stdout | tests/integration/student-profile-api.test.ts > public student profile API
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+
+stdout | tests/integration/student-profile-api.test.ts > public student profile API
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '208',
+  routine: 'transformCreateStmt'
+}
+
+ ✓ tests/integration/student-profile-api.test.ts > public student profile API > published student returns 200 with the professional shell 52ms
+ ✓ tests/integration/student-profile-api.test.ts > public student profile API > multiple availability values preserve database display order 8ms
+ ✓ tests/integration/student-profile-api.test.ts > public student profile API > standardized student skills preserve their own display order 7ms
+ ✓ tests/integration/student-profile-api.test.ts > public student profile API > project technologies never populate student skills 8ms
+ ✓ tests/integration/student-profile-api.test.ts > public student profile API > project evidence includes descriptions, domains, technologies, links, and contributor roles 8ms
+ ✓ tests/integration/student-profile-api.test.ts > public student profile API > shared projects stay canonical while preserving each student's role 14ms
+ ✓ tests/integration/student-profile-api.test.ts > public student profile API > professional links are returned in deterministic order 7ms
+ ✓ tests/integration/student-profile-api.test.ts > public student profile API > unknown and unpublished students return indistinguishable 404 responses 5ms
+ ✓ tests/integration/student-profile-api.test.ts > public student profile API > runtime endpoint does not depend on fixture files 11ms
+stdout | tests/integration/project-detail-api.test.ts > public project detail API
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+
+stdout | tests/integration/project-detail-api.test.ts > public project detail API
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '208',
+  routine: 'transformCreateStmt'
+}
+
+ ✓ tests/integration/project-detail-api.test.ts > public project detail API > valid project returns its complete stable contract in database order 61ms
+ ✓ tests/integration/project-detail-api.test.ts > public project detail API > shared profile evidence resolves to one canonical project identity 16ms
+ ✓ tests/integration/project-detail-api.test.ts > public project detail API > project technologies remain distinct from contributor skills 15ms
+ ✓ tests/integration/project-detail-api.test.ts > public project detail API > unpublished contributor identifier and role are absent from the public project 7ms
+ ✓ tests/integration/project-detail-api.test.ts > public project detail API > broken optional external URL is returned without being fetched or failing 7ms
+ ✓ tests/integration/project-detail-api.test.ts > public project detail API > unknown project returns a structured project-specific 404 2ms
+ ✓ tests/integration/project-detail-api.test.ts > public project detail API > runtime endpoint does not depend on fixture files 8ms
+stdout | tests/integration/auth-identity.test.ts > authentication identity and session integration
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+
+stdout | tests/integration/auth-identity.test.ts > authentication identity and session integration
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '208',
+  routine: 'transformCreateStmt'
+}
+
+ ✓ tests/integration/auth-identity.test.ts > authentication identity and session integration > repeat provider lookup survives a GitHub username change 19ms
+ ✓ tests/integration/auth-identity.test.ts > authentication identity and session integration > database rejects a duplicate provider and immutable provider account ID 9ms
+ ✓ tests/integration/auth-identity.test.ts > authentication identity and session integration > database-backed sessions sign out and do not expose credentials 148ms
+ ✓ tests/integration/auth-identity.test.ts > authentication identity and session integration > production GitHub start flow emits only the intended scope and no secret 33ms
+ ✓ tests/integration/auth-identity.test.ts > authentication identity and session integration > an unauthenticated session lookup fails closed 1ms
+stdout | tests/integration/affiliation-verification.test.ts > student affiliation verification
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+
+stdout | tests/integration/affiliation-verification.test.ts > student affiliation verification
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '208',
+  routine: 'transformCreateStmt'
+}
+
+ ✓ tests/integration/affiliation-verification.test.ts > student affiliation verification > stores only a token hash and atomically verifies once 59ms
+ ✓ tests/integration/affiliation-verification.test.ts > student affiliation verification > rejects wrong-account, expired, and superseded links without claiming identity 56ms
+ ✓ tests/integration/affiliation-verification.test.ts > student affiliation verification > prevents a verified university email from being claimed by another account 37ms
+ ✓ tests/integration/affiliation-verification.test.ts > student affiliation verification > rate limits repeated requests by internal user across addresses 45ms
+ ✓ tests/integration/affiliation-verification.test.ts > student affiliation verification > rate limits invalid confirmations by user and network address 62ms
+ ✓ tests/integration/affiliation-verification.test.ts > student affiliation verification > API fails closed when unauthenticated and does not invoke storage 11ms
+ ✓ tests/integration/affiliation-verification.test.ts > student affiliation verification > does not report delivery success when the provider is unconfigured 10ms
+ ✓ tests/integration/affiliation-verification.test.ts > student affiliation verification > sanitizes delivery failures and invalidates the unsent challenge 24ms
+
+ Test Files  13 passed (13)
+      Tests  158 passed (158)
+   Start at  11:37:34
+   Duration  29.65s (import 55%, tests 41%, transform 3%)
+
+    Isolate  13 workers spawned · ~164ms startup each (spawn + environment, per file)
+             at least ~1.97s faster with isolate: false — reuses workers across files instead of one per file
+
+JSON report written to C:/Coding Assignments/immxrsive-talent-platform/tmp/phase7-integration-results.json
+
+IDENTITY VERIFIED {"container":"548e8a26662bcf4f1ed594d1a275a8509a39e9c737ae55ac5771ac50ed32caf4","database":"phase7_65680adbaeb3_fresh","user":"phase7_65680adbaeb3","published":"127.0.0.1:56710","serverPort":5432,"cluster":"immx-phase7-65680adbaeb3","version":"PostgreSQL 18.6 (Debian 18.6-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit"}
+COMMAND production build: node node_modules/next/dist/bin/next build [all database variables explicitly scoped to disposable container]
+RESULT production build: exit=0, timeout=false
+▲ Next.js 16.3.8 (Turbopack)
+- Environments: .env.local
+✓ Running next.config.ts took 111ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 2.0s
+  Running TypeScript ...
+  Finished TypeScript in 5.2s ...
+  Collecting page data using 31 workers ...
+  Generating static pages using 31 workers (0/21) ...
+  Generating static pages using 31 workers (5/21)
+  Generating static pages using 31 workers (10/21)
+  Generating static pages using 31 workers (15/21)
+✓ Generating static pages using 31 workers (21/21) in 648ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/auth/[...all]
+├ ƒ /api/v1/inquiries
+├ ƒ /api/v1/projects/[projectId]
+├ ƒ /api/v1/skills
+├ ƒ /api/v1/student/profile/me
+├ ƒ /api/v1/student/profile/publication
+├ ƒ /api/v1/student/profile/resume/extract
+├ ƒ /api/v1/student/project-duplicates
+├ ƒ /api/v1/student/project-imports/github
+├ ƒ /api/v1/student/project-invitations
+├ ƒ /api/v1/student/project-join-requests
+├ ƒ /api/v1/student/project-join-requests/[joinRequestId]/response
+├ ƒ /api/v1/student/project-memberships/[membershipId]/contribution
+├ ƒ /api/v1/student/project-memberships/[membershipId]/removal
+├ ƒ /api/v1/student/project-memberships/[membershipId]/response
+├ ƒ /api/v1/student/project-memberships/[membershipId]/restore
+├ ƒ /api/v1/student/project-transfers/[transferId]/response
+├ ƒ /api/v1/student/projects
+├ ƒ /api/v1/student/projects/[projectId]
+├ ƒ /api/v1/student/projects/[projectId]/invitations
+├ ƒ /api/v1/student/projects/[projectId]/join-requests
+├ ƒ /api/v1/student/projects/[projectId]/maintainer-transfer
+├ ƒ /api/v1/student/projects/[projectId]/publication
+├ ƒ /api/v1/student/projects/[projectId]/team
+├ ƒ /api/v1/student/projects/[projectId]/teammates
+├ ƒ /api/v1/student/verification/confirm
+├ ƒ /api/v1/student/verification/request
+├ ƒ /api/v1/student/verification/status
+├ ƒ /api/v1/students/[studentId]
+├ ƒ /api/v1/talent
+├ ƒ /inquiry/project/[projectId]
+├ ƒ /inquiry/student/[studentId]
+├ ƒ /projects/[projectId]
+├ ƒ /student
+├ ƒ /student/dashboard
+├ ○ /student/profile
+├ ƒ /student/profile/edit
+├ ƒ /student/profile/preview
+├ ƒ /student/project-invitations
+├ ƒ /student/projects
+├ ƒ /student/projects/[projectId]/edit
+├ ƒ /student/projects/[projectId]/preview
+├ ƒ /student/projects/[projectId]/team
+├ ƒ /student/projects/new
+├ ƒ /student/sign-in
+├ ƒ /student/verify
+├ ƒ /students/[studentId]
+└ ƒ /talent
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+IDENTITY VERIFIED {"container":"548e8a26662bcf4f1ed594d1a275a8509a39e9c737ae55ac5771ac50ed32caf4","database":"phase7_65680adbaeb3_fresh","user":"phase7_65680adbaeb3","published":"127.0.0.1:56710","serverPort":5432,"cluster":"immx-phase7-65680adbaeb3","version":"PostgreSQL 18.6 (Debian 18.6-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit"}
+COMMAND unit and frontend suites: node node_modules/vitest/vitest.mjs run --exclude tests/integration/** --maxWorkers=1 --reporter=verbose --reporter=json --outputFile=tmp/phase7-unit-results.json [all database variables explicitly scoped to disposable container]
+RESULT unit and frontend suites: exit=0, timeout=false
+
+ RUN  v5.0.2 C:/Coding Assignments/immxrsive-talent-platform
+
+ ✓ tests/frontend/inquiry.test.tsx > contextual inquiry experience > renders student context and a locked four-field employer form 151ms
+ ✓ tests/frontend/inquiry.test.tsx > contextual inquiry experience > renders project context without selecting a contributor 19ms
+ ✓ tests/frontend/inquiry.test.tsx > contextual inquiry experience > uses compact metadata typography only for generated profile UUIDs 14ms
+ ✓ tests/frontend/inquiry.test.tsx > contextual inquiry experience > keeps edits across rerenders and resets substantial edits only after confirmation 1603ms
+ ✓ tests/frontend/inquiry.test.tsx > contextual inquiry experience > blocks unresolved canonical prompts locally but permits unrelated brackets 976ms
+ ✓ tests/frontend/inquiry.test.tsx > contextual inquiry experience > shows accessible field errors and retains employer values 1489ms
+ ✓ tests/frontend/inquiry.test.tsx > contextual inquiry experience > prevents duplicate submission while the request is pending 14ms
+ ✓ tests/frontend/inquiry.test.tsx > contextual inquiry experience > renders and focuses a successful confirmation 1650ms
+ ✓ tests/frontend/inquiry.test.tsx > contextual inquiry experience > shows backend failure separately and preserves values for retry 1731ms
+ ✓ tests/frontend/inquiry.test.tsx > inquiry route states > renders a useful non-disclosing unavailable state 12ms
+ ✓ tests/frontend/inquiry.test.tsx > inquiry route states > renders a recoverable route failure 61ms
+ ✓ tests/frontend/private-student-profile.test.tsx > private student profile editor > creates a structured private draft from keyboard-accessible controls 1431ms
+ ✓ tests/frontend/private-student-profile.test.tsx > private student profile editor > preserves edits and exposes server validation after a failed save 835ms
+ ✓ tests/frontend/private-student-profile.test.tsx > private student profile editor > renders biography markup as textarea text and sends only editable fields 309ms
+ ✓ tests/frontend/private-student-profile.test.tsx > private student profile editor > keeps publication explicit, blocks it while dirty, and sends the saved revision 392ms
+ ✓ tests/frontend/private-student-profile.test.tsx > private student profile editor > shows server publication requirements without publishing 111ms
+ ✓ tests/frontend/private-student-profile.test.tsx > private student profile editor > persists allowlisted presentation, media, and keyboard-operable section ordering 292ms
+ ✓ tests/frontend/talent-directory.test.tsx > talent directory > renders API results, count, required card evidence, and stable profile links 243ms
+ ✓ tests/frontend/talent-directory.test.tsx > talent directory > submits search to the API and serializes it into the URL 186ms
+ ✓ tests/frontend/talent-directory.test.tsx > talent directory > keeps advanced expressions shareable through the existing q parameter 708ms
+ ✓ tests/frontend/talent-directory.test.tsx > talent directory > opens accessible search tips by hover, click, keyboard, Escape, and outside click 415ms
+ ✓ tests/frontend/talent-directory.test.tsx > talent directory > shows malformed search feedback inline and preserves valid results 260ms
+ ✓ tests/frontend/talent-directory.test.tsx > talent directory > supports multiple API-backed filters, individual removal, and Clear All 383ms
+ ✓ tests/frontend/talent-directory.test.tsx > talent directory > restores repeated filter values from a reload-safe query 50ms
+ ✓ tests/frontend/talent-directory.test.tsx > talent directory > shows a deliberate empty state while retaining filters, then clears them 104ms
+ ✓ tests/frontend/talent-directory.test.tsx > talent directory > shows a recoverable backend error instead of an empty directory 83ms
+ ✓ tests/frontend/talent-directory.test.tsx > talent directory > keeps search and filters keyboard operable when Three.js is unavailable 400ms
+ ✓ tests/frontend/talent-directory.test.tsx > talent directory > keeps every chapter and the directory functional when GSAP does not initialize 108ms
+ ✓ tests/frontend/talent-directory.test.tsx > talent directory > moves focus to the stable result summary when a focused card disappears 74ms
+ ✓ tests/frontend/talent-directory.test.tsx > talent directory > settles all content immediately when reduced motion is requested 36ms
+ ✓ tests/frontend/talent-directory.test.tsx > talent URL helpers > round-trips multi-valued filters without collapsing them 1ms
+ ✓ tests/frontend/talent-directory.test.tsx > talent URL helpers > round-trips commas, pipes, and quotes in q 0ms
+ ✓ tests/frontend/resume-import.test.tsx > resume import review > does not change manual data until approved candidates are explicitly applied 990ms
+ ✓ tests/frontend/resume-import.test.tsx > resume import review > cancel and extraction failure preserve all existing fields 379ms
+ ✓ tests/frontend/resume-import.test.tsx > resume import review > replace mode changes only profile fields represented by extracted candidates 300ms
+ ✓ tests/frontend/project-editor.test.tsx > manual project editor > manual creation sends technologies and zero repositories without ownership fields 165ms
+ ✓ tests/frontend/project-editor.test.tsx > manual project editor > a stale save preserves input and requires confirmation before reloading 245ms
+ ✓ tests/frontend/project-editor.test.tsx > manual project editor > field validation and network failures keep entered values available 131ms
+ ✓ tests/frontend/project-editor.test.tsx > manual project editor > publication is explicit, revision bound, and cancel does not send a request 130ms
+ ✓ tests/frontend/project-editor.test.tsx > manual project editor > repository and typed media rows remain labeled and keyboard reachable 324ms
+ ✓ tests/frontend/github-import.test.tsx > explicit GitHub suggestion review > technology review preserves commas while typing multiple editable values 466ms
+ ✓ tests/frontend/github-import.test.tsx > explicit GitHub suggestion review > cancelled application keeps the reviewed suggestions available 110ms
+ ✓ tests/frontend/github-import.test.tsx > explicit GitHub suggestion review > nothing is applied until edited suggestions are explicitly confirmed 121ms
+ ✓ tests/frontend/github-import.test.tsx > explicit GitHub suggestion review > failure is focused, explains manual recovery and does not apply anything 66ms
+ ✓ tests/frontend/affiliation-verification.test.tsx > affiliation verification panel > submits a normalized verification request through the authenticated API 531ms
+ ✓ tests/frontend/affiliation-verification.test.tsx > affiliation verification panel > confirms a link from the keyboard and renders persisted identity 32ms
+ ✓ tests/frontend/affiliation-verification.test.tsx > affiliation verification panel > shows safe expired or reused-link errors from the API 61ms
+ ✓ tests/frontend/affiliation-verification.test.tsx > affiliation verification panel > renders an already-verified account without another request form 8ms
+ ✓ tests/frontend/student-profile.test.tsx > public student profile > renders the complete professional shell from structured profile data 153ms
+ ✓ tests/frontend/student-profile.test.tsx > public student profile > renders every project with a clear role and future project route 66ms
+ ✓ tests/frontend/student-profile.test.tsx > public student profile > renders safe professional and project links 33ms
+ ✓ tests/frontend/student-profile.test.tsx > public student profile > preserves student identity in the employer inquiry action 30ms
+ ✓ tests/frontend/student-profile.test.tsx > public student profile > keeps the complete link workflow keyboard accessible 102ms
+ ✓ tests/frontend/student-profile.test.tsx > public student profile > settles all profile content immediately for reduced motion 36ms
+ ✓ tests/frontend/student-profile.test.tsx > public student profile > renders the owner preview from the public projection and identifies omitted fields 24ms
+ ✓ tests/frontend/student-profile.test.tsx > public student profile > applies each controlled preset, hero treatment, and semantic section order 34ms
+ ✓ tests/frontend/student-profile.test.tsx > student profile route states > shows a non-disclosing profile-specific not-found state 9ms
+ ✓ tests/frontend/student-profile.test.tsx > student profile route states > shows a recoverable database error state 62ms
+ ✓ tests/frontend/project-detail.test.tsx > public project detail > renders the complete project evidence structure 160ms
+ ✓ tests/frontend/project-detail.test.tsx > public project detail > keeps technologies conceptually separate from contributor roles and skills 16ms
+ ✓ tests/frontend/project-detail.test.tsx > public project detail > links every contributor in the public projection 45ms
+ ✓ tests/frontend/project-detail.test.tsx > public project detail > renders a broken optional URL as a safe accessible external link 31ms
+ ✓ tests/frontend/project-detail.test.tsx > public project detail > preserves project identity in the inquiry action 30ms
+ ✓ tests/frontend/project-detail.test.tsx > public project detail > keeps primary project actions keyboard reachable 75ms
+ ✓ tests/frontend/project-detail.test.tsx > public project detail > settles all content immediately for reduced motion 34ms
+ ✓ tests/frontend/project-detail.test.tsx > project route states > shows a useful project-specific not-found state 11ms
+ ✓ tests/frontend/project-detail.test.tsx > project route states > shows a distinct recoverable server error state 40ms
+ ✓ tests/frontend/project-team.test.tsx > personal project team controls > only own role, statement and visibility are sent with the contribution revision 221ms
+ ✓ tests/frontend/project-team.test.tsx > personal project team controls > stale contribution retains unsaved text and asks before replacing it 145ms
+ ✓ tests/frontend/project-team.test.tsx > personal project team controls > invitation discloses public defaults and has no personal edit form before consent 62ms
+ ✓ tests/frontend/project-team.test.tsx > personal project team controls > stale transfer disables acceptance but retains a decline action 12ms
+ ✓ tests/frontend/project-team.test.tsx > personal project team controls > removed relationships show a notice without exposing contribution editing 10ms
+ ✓ tests/frontend/student-auth.test.tsx > student authentication controls > starts GitHub sign-in from the keyboard without adding scopes 181ms
+ ✓ tests/frontend/student-auth.test.tsx > student authentication controls > disables provider sign-in when server configuration is absent 8ms
+ ✓ tests/frontend/student-auth.test.tsx > student authentication controls > reports a safe provider-start failure 67ms
+ ✓ tests/frontend/student-auth.test.tsx > student authentication controls > calls the server-backed sign-out endpoint and reports failures 62ms
+ ✓ tests/frontend/student-auth.test.tsx > student authentication controls > returns to sign-in after a successful sign-out 62ms
+ ✓ tests/frontend/project-demo.test.tsx > visitor-initiated isolated project experience > unreviewed providers offer external access without executing a frame 201ms
+ ✓ tests/frontend/project-demo.test.tsx > visitor-initiated isolated project experience > no interactive frame or video loads until requested, with separate evidence actions 73ms
+ ✓ tests/frontend/project-demo.test.tsx > visitor-initiated isolated project experience > slow loading remains uncertain and retry/stop cleanly replace and remove the frame 50ms
+ ✓ tests/frontend/project-demo.test.tsx > visitor-initiated isolated project experience > a frame load event never claims a working demo, and external launch remains available 31ms
+ ✓ tests/frontend/project-demo.test.tsx > visitor-initiated isolated project experience > missing fallback media and unplayable video retain descriptions, links and other evidence 30ms
+ ✓ tests/frontend/project-demo.test.tsx > visitor-initiated isolated project experience > supports independent video evidence without a playable frame 5ms
+ ✓ tests/frontend/project-demo.test.tsx > visitor-initiated isolated project experience > supports independent source evidence without a playable frame 3ms
+ ✓ tests/frontend/project-demo.test.tsx > visitor-initiated isolated project experience > supports independent fallback_image evidence without a playable frame 6ms
+ ✓ tests/frontend/project-demo.test.tsx > visitor-initiated isolated project experience > supports independent fallback_video evidence without a playable frame 5ms
+ ✓ tests/frontend/project-demo.test.tsx > visitor-initiated isolated project experience > supports independent fallback_link evidence without a playable frame 7ms
+ ✓ tests/frontend/project-demo.test.tsx > visitor-initiated isolated project experience > unsafe legacy media cannot become links or embedded content 1ms
+ ✓ tests/unit/resume-extraction.test.ts > deterministic resume extraction > extracts grounded candidates from the clean single-column fixture 470ms
+stderr | tests/unit/resume-extraction.test.ts > deterministic resume extraction > rejects spoofed, corrupt, and oversized inputs before returning candidates
+Warning: Indexing all PDF objects
+
+ ✓ tests/unit/resume-extraction.test.ts > deterministic resume extraction > minimal fixture produces only its grounded education candidate 7ms
+ ✓ tests/unit/resume-extraction.test.ts > deterministic resume extraction > keeps multi-column education and experience separated 15ms
+ ✓ tests/unit/resume-extraction.test.ts > deterministic resume extraction > treats embedded commands as inert text and excludes them from suggestions 8ms
+ ✓ tests/unit/resume-extraction.test.ts > deterministic resume extraction > rejects spoofed, corrupt, and oversized inputs before returning candidates 4ms
+ ✓ tests/unit/resume-extraction.test.ts > deterministic resume extraction > does not misreport a missing deployed PDF.js worker as an unreadable resume 2ms
+ ✓ tests/unit/resume-extraction.test.ts > deterministic resume extraction > parses Word-style heading variants, distinct experience entries, and split links 18ms
+ ✓ tests/unit/resume-extraction.test.ts > deterministic resume extraction > keeps right-aligned Word dates in one column unless both sides have headings 1ms
+ ✓ tests/unit/inquiry-api-error.test.ts > inquiry API database failure > returns a recoverable structured 500 rather than validation or not-found 190ms
+ ✓ tests/frontend/branding.test.tsx > NOT ImmXrsive branding > uses the exact supplied logo path with accessible fallback text 126ms
+ ✓ tests/frontend/branding.test.tsx > NOT ImmXrsive branding > identifies the site as an independent student project 5ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > normalizes identity https://GitHub.com/QA/XR-Studio.git/?tab=readme#top 2ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > normalizes identity https://github.com/qa/xr-studio 0ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > rejects unsafe repository http://github.com/a/b 3ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > rejects unsafe repository https://github.com:443/a/b 0ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > rejects unsafe repository https://github.com.evil.com/a/b 0ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > rejects unsafe repository https://github.com@evil.com/a/b 0ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > rejects unsafe repository https://user:pw@github.com/a/b 0ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > rejects unsafe repository https://github.com./a/b 0ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > rejects unsafe repository https://github.com/a/b/tree/main 0ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > rejects unsafe repository https://github.com/a/b%2fsecret 0ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > rejects unsafe repository https://github.com/a/%252f 0ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > rejects unsafe repository https://github.com/a/b/../c 0ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > rejects unsafe repository https://github.com/a/b\c 0ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > rejects unsafe repository https://api.github.com/repos/a/b 0ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > rejects unsafe repository https://127.0.0.1/a/b 0ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > rejects unsafe repository https://github.com/a/.. 0ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > rejects unsafe repository https://github.com/a/b// 0ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > uses two fixed unauthenticated routes and returns editable language suggestions only 26ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > handles upstream status 404 1ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > handles upstream status 401 0ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > handles upstream status 403 0ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > handles upstream status 429 0ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > handles upstream status 500 0ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > handles upstream status 302 0ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > private/mismatched/malformed and oversized responses cannot leak or escape the fixed upstream 3ms
+ ✓ tests/unit/github-import.test.ts > bounded public GitHub import > times out within its own abort budget 23ms
+ ✓ tests/unit/project-api-error.test.ts > project API failure isolation > database failures return a structured 500 rather than a false 404 36ms
+ ✓ tests/unit/fixture-validation.test.ts > fixture validation > official fixtures validate 7ms
+ ✓ tests/unit/fixture-validation.test.ts > fixture validation > invalid enum values fail 2ms
+ ✓ tests/unit/fixture-validation.test.ts > fixture validation > an unknown skill reference fails 1ms
+ ✓ tests/unit/fixture-validation.test.ts > fixture validation > an unknown project reference fails 1ms
+ ✓ tests/unit/fixture-validation.test.ts > fixture validation > an unknown contributor student fails 1ms
+ ✓ tests/unit/fixture-validation.test.ts > fixture validation > a project_ids and contributors mismatch fails 1ms
+ ✓ tests/unit/fixture-validation.test.ts > fixture validation > duplicate skills and availability values fail 1ms
+ ✓ tests/unit/fixture-validation.test.ts > fixture validation > duplicate project contributors fail 1ms
+ ✓ tests/unit/fixture-validation.test.ts > fixture validation > invalid supplied URLs fail 1ms
+ ✓ tests/unit/project-evidence-url.test.ts > deployment-compatible evidence boundaries > embedding is confined to the reviewed fixture and static providers, with no application-page embedding 2ms
+ ✓ tests/unit/project-evidence-url.test.ts > deployment-compatible evidence boundaries > official fixtures are copied byte-for-byte into public static paths 5ms
+ ✓ tests/unit/project-evidence-url.test.ts > deployment-compatible evidence boundaries > only exact reviewed relative paths are accepted 1ms
+ ✓ tests/unit/project-evidence-url.test.ts > deployment-compatible evidence boundaries > structured fixture media persist separately without permitting raw iframe markup 4ms
+ ✓ tests/unit/project-validation.test.ts > shared project input boundaries > zero repositories and unknown dates remain valid 4ms
+ ✓ tests/unit/project-validation.test.ts > shared project input boundaries > rejects unsafe URL http://github.com/org/repo 1ms
+ ✓ tests/unit/project-validation.test.ts > shared project input boundaries > rejects unsafe URL https://localhost/demo 0ms
+ ✓ tests/unit/project-validation.test.ts > shared project input boundaries > rejects unsafe URL https://localhost./demo 0ms
+ ✓ tests/unit/project-validation.test.ts > shared project input boundaries > rejects unsafe URL https://127.0.0.1/demo 0ms
+ ✓ tests/unit/project-validation.test.ts > shared project input boundaries > rejects unsafe URL https://[::1]/ 0ms
+ ✓ tests/unit/project-validation.test.ts > shared project input boundaries > rejects unsafe URL https://internal/demo 0ms
+ ✓ tests/unit/project-validation.test.ts > shared project input boundaries > rejects unsafe URL https://host.local/demo 0ms
+ ✓ tests/unit/project-validation.test.ts > shared project input boundaries > rejects unsafe URL https://user:secret@example.com/ 0ms
+ ✓ tests/unit/project-validation.test.ts > shared project input boundaries > rejects unsafe URL https://example.com:8443/ 0ms
+ ✓ tests/unit/project-validation.test.ts > shared project input boundaries > rejects unsafe URL javascript:alert(1) 0ms
+ ✓ tests/unit/project-validation.test.ts > shared project input boundaries > rejects unsafe URL <iframe src='https://example.com'> 0ms
+ ✓ tests/unit/project-validation.test.ts > shared project input boundaries > normalizes GitHub keys independently from a permanent project ID 2ms
+ ✓ tests/unit/project-validation.test.ts > shared project input boundaries > allows multiple distinct repositories and distinct media types 1ms
+ ✓ tests/unit/project-validation.test.ts > shared project input boundaries > rejects ownership, arbitrary HTML fields, duplicate primary media and invalid dates 1ms
+ ✓ tests/unit/affiliation-verification.test.ts > affiliation verification primitives > accepts only an exact configured domain and normalizes case 2ms
+ ✓ tests/unit/affiliation-verification.test.ts > affiliation verification primitives > caps link lifetime at 30 minutes and supports configured domains 1ms
+ ✓ tests/unit/affiliation-verification.test.ts > affiliation verification primitives > requires an HTTPS public origin in production 1ms
+ ✓ tests/unit/affiliation-verification.test.ts > affiliation verification primitives > allows the explicit controlled browser runtime to use loopback HTTP 0ms
+ ✓ tests/unit/affiliation-verification.test.ts > affiliation verification primitives > generates high-entropy opaque tokens and stable non-reversible hashes 1ms
+ ✓ tests/unit/affiliation-verification.test.ts > affiliation verification primitives > builds branded text and HTML without injecting the link as markup 0ms
+ ✓ tests/unit/affiliation-verification.test.ts > affiliation verification primitives > selects Gmail without falling through and sends from the configured account 2ms
+ ✓ tests/unit/affiliation-verification.test.ts > affiliation verification primitives > fails closed for missing or unknown provider configuration 0ms
+ ✓ tests/unit/affiliation-verification.test.ts > affiliation verification primitives > uses Resend only when selected and preserves its configured sender 1ms
+ ✓ tests/unit/affiliation-verification.test.ts > affiliation verification primitives > returns a sanitized error when Gmail rejects or times out 1ms
+ ✓ tests/unit/student-profile-validation.test.ts > student profile draft validation > normalizes links and de-duplicates standardized selections 6ms
+ ✓ tests/unit/student-profile-validation.test.ts > student profile draft validation > rejects ownership and profile identifiers supplied by a client 0ms
+ ✓ tests/unit/student-profile-validation.test.ts > student profile draft validation > rejects unsafe or non-GitHub URLs 0ms
+ ✓ tests/unit/student-profile-validation.test.ts > student profile draft validation > rejects unsafe or non-GitHub URLs 0ms
+ ✓ tests/unit/student-profile-validation.test.ts > student profile draft validation > rejects unsafe or non-GitHub URLs 0ms
+ ✓ tests/unit/student-profile-validation.test.ts > student profile draft validation > keeps markup-like biography content as plain text and enforces its limit 0ms
+ ✓ tests/unit/student-profile-validation.test.ts > student profile draft validation > allowlists presentation choices and requires each ordered section exactly once 1ms
+ ✓ tests/unit/inquiry-validation.test.ts > inquiry validation > trims fields and normalizes contact email 4ms
+ ✓ tests/unit/inquiry-validation.test.ts > inquiry validation > validates companyName 1ms
+ ✓ tests/unit/inquiry-validation.test.ts > inquiry validation > validates contactName 0ms
+ ✓ tests/unit/inquiry-validation.test.ts > inquiry validation > validates contactEmail 0ms
+ ✓ tests/unit/inquiry-validation.test.ts > inquiry validation > validates description 0ms
+ ✓ tests/unit/inquiry-validation.test.ts > inquiry validation > rejects invalid source types and unsupported spoofing fields 0ms
+ ✓ tests/unit/inquiry-validation.test.ts > inquiry validation > rejects recognized template prompts with actionable feedback 1ms
+ ✓ tests/unit/inquiry-validation.test.ts > inquiry validation > allows unrelated bracketed custom text 0ms
+ ✓ tests/unit/talent-query.test.ts > talent query normalization > trims text and de-duplicates repeated filters in first-seen order 2ms
+ ✓ tests/unit/talent-query.test.ts > talent query normalization > an empty q behaves as no text filter 0ms
+ ✓ tests/unit/talent-query.test.ts > talent query normalization > escapes every character with SQL LIKE meaning 0ms
+ ✓ tests/unit/talent-query.test.ts > talent query normalization > rejects invalid query skill=Unknown 0ms
+ ✓ tests/unit/talent-query.test.ts > talent query normalization > rejects invalid query availability=temporary 0ms
+ ✓ tests/unit/talent-query.test.ts > talent query normalization > rejects invalid query status=staff 0ms
+ ✓ tests/unit/talent-query.test.ts > talent search expression parser > parses React 0ms
+ ✓ tests/unit/talent-query.test.ts > talent search expression parser > parses Machine Learning 0ms
+ ✓ tests/unit/talent-query.test.ts > talent search expression parser > parses React, TypeScript 0ms
+ ✓ tests/unit/talent-query.test.ts > talent search expression parser > parses React | TypeScript 0ms
+ ✓ tests/unit/talent-query.test.ts > talent search expression parser > parses Unity | Blender, Maya 0ms
+ ✓ tests/unit/talent-query.test.ts > talent search expression parser > parses "Machine Learning" 0ms
+ ✓ tests/unit/talent-query.test.ts > talent search expression parser > parses "Research, Design", React 0ms
+ ✓ tests/unit/talent-query.test.ts > talent search expression parser > parses "C|C++" | Rust 0ms
+ ✓ tests/unit/talent-query.test.ts > talent search expression parser > parses   React |  TypeScript , Figma   0ms
+ ✓ tests/unit/talent-query.test.ts > talent search expression parser > parses React | react | REACT 0ms
+ ✓ tests/unit/talent-query.test.ts > talent search expression parser > parses "Say \"hello\"" 0ms
+ ✓ tests/unit/talent-query.test.ts > talent search expression parser > rejects malformed expression React, 0ms
+ ✓ tests/unit/talent-query.test.ts > talent search expression parser > rejects malformed expression | React 0ms
+ ✓ tests/unit/talent-query.test.ts > talent search expression parser > rejects malformed expression React || TypeScript 0ms
+ ✓ tests/unit/talent-query.test.ts > talent search expression parser > rejects malformed expression "React 0ms
+ ✓ tests/unit/talent-query.test.ts > talent search expression parser > rejects malformed expression React,,TypeScript 0ms
+ ✓ tests/unit/talent-query.test.ts > talent search expression parser > enforces expression complexity and length limits 0ms
+ ✓ tests/unit/database-security-hardening.test.ts > database Data API hardening > protects every application-owned table in both migrations 3ms
+ ✓ tests/unit/database-security-hardening.test.ts > database Data API hardening > uses deny-by-default RLS, grants, and future-object controls 0ms
+ ✓ tests/unit/database-security-hardening.test.ts > database Data API hardening > keeps production scripts target-guarded and free of row reads 0ms
+ ✓ tests/unit/database-security-hardening.test.ts > database Data API hardening > synchronizes production with the exact Drizzle migration 1ms
+ ✓ tests/unit/database-safety.test.ts > database safety > normalizes Supabase session and transaction poolers to one logical target 2ms
+ ✓ tests/unit/database-safety.test.ts > database safety > treats separate database names in one Supabase project as isolated 1ms
+ ✓ tests/unit/database-safety.test.ts > database safety > refuses destructive tests across different ports of the same database 1ms
+ ✓ tests/unit/database-safety.test.ts > database safety > allows test and development databases with distinct database names 0ms
+ ✓ tests/unit/database-safety.test.ts > database safety > always refuses the protected production project 0ms
+ ✓ tests/unit/database-safety.test.ts > database safety > requires development migrations to match the runtime database 0ms
+ ✓ tests/unit/student-access-route.test.ts > student access gateway > sends signed-out visitors to GitHub sign-in 3ms
+ ✓ tests/unit/student-access-route.test.ts > student access gateway > sends an unverified student to affiliation verification 1ms
+ ✓ tests/unit/student-access-route.test.ts > student access gateway > sends a verified student to their dashboard 0ms
+ ✓ tests/unit/auth-config.test.ts > authentication configuration > requests the minimum GitHub login scope without repository access 3ms
+ ✓ tests/unit/auth-config.test.ts > authentication configuration > normalizes callback undefined safely 0ms
+ ✓ tests/unit/auth-config.test.ts > authentication configuration > normalizes callback null safely 0ms
+ ✓ tests/unit/auth-config.test.ts > authentication configuration > normalizes callback https://attacker.example/steal safely 0ms
+ ✓ tests/unit/auth-config.test.ts > authentication configuration > normalizes callback //attacker.example/steal safely 0ms
+ ✓ tests/unit/auth-config.test.ts > authentication configuration > normalizes callback javascript:alert(1) safely 0ms
+ ✓ tests/unit/auth-config.test.ts > authentication configuration > normalizes callback /student/dashboard safely 0ms
+ ✓ tests/unit/auth-config.test.ts > authentication configuration > normalizes callback /student/dashboard?tab=identity safely 0ms
+ ✓ tests/unit/inquiry-template.test.ts > contextual inquiry templates > uses only trusted student name and headline for student context 2ms
+ ✓ tests/unit/inquiry-template.test.ts > contextual inquiry templates > uses trusted project title, ID, and context 0ms
+ ✓ tests/unit/inquiry-template.test.ts > contextual inquiry templates > detects only canonical unresolved prompts 1ms
+ ✓ tests/unit/inquiry-template.test.ts > contextual inquiry templates > distinguishes substantial edits for reset protection 0ms
+ ✓ tests/unit/fixture-ids.test.ts > deterministic fixture identifiers > the same source values always create the same identifiers 2ms
+ ✓ tests/unit/fixture-ids.test.ts > deterministic fixture identifiers > different exact skill names remain independent 1ms
+ ✓ tests/unit/resume-runtime-config.test.ts > deployed resume extraction runtime > traces the PDF.js fake-worker module into the production function 2ms
+
+ Test Files  31 passed (31)
+      Tests  230 passed (230)
+   Start at  11:38:20
+   Duration  60.31s (tests 39%, environment 38%, import 21%, transform 2%)
+
+    Isolate  31 workers spawned · ~828ms startup each (spawn + environment, per file)
+             at least ~24.84s faster with isolate: false — reuses workers across files instead of one per file
+
+JSON report written to C:/Coding Assignments/immxrsive-talent-platform/tmp/phase7-unit-results.json
+
+IDENTITY VERIFIED {"container":"548e8a26662bcf4f1ed594d1a275a8509a39e9c737ae55ac5771ac50ed32caf4","database":"phase7_65680adbaeb3_fresh","user":"phase7_65680adbaeb3","published":"127.0.0.1:56710","serverPort":5432,"cluster":"immx-phase7-65680adbaeb3","version":"PostgreSQL 18.6 (Debian 18.6-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit"}
+COMMAND complete browser regression and manual journeys: node node_modules/@playwright/test/cli.js test --reporter=list,json [all database variables explicitly scoped to disposable container]
+RESULT complete browser regression and manual journeys: exit=0, timeout=false
+[WebServer] (node:41552) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:26104) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 130 tests using 1 worker
+
+(node:53816) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok   1 [desktop] › tests\browser\affiliation-verification.spec.ts:22:1 › authenticated student confirms a single-use affiliation link (1.0s)
+  ok   2 [desktop] › tests\browser\auth.spec.ts:3:1 › student sign-in is accessible and keyboard-operable (250ms)
+  ok   3 [desktop] › tests\browser\auth.spec.ts:24:1 › student dashboard redirects unauthenticated visitors (202ms)
+  ok   4 [desktop] › tests\browser\auth.spec.ts:30:1 › student verification and its APIs fail closed when signed out (216ms)
+  ok   5 [desktop] › tests\browser\auth.spec.ts:43:1 › Release 1 public journeys remain unauthenticated (1.1s)
+  ok   6 [desktop] › tests\browser\branding.spec.ts:11:1 › supplied NOT ImmXrsive identity spans public, inquiry, and student access pages (1.6s)
+  ok   7 [desktop] › tests\browser\inquiry.spec.ts:3:1 › student inquiry renders trusted source context and a locked form (319ms)
+  ok   8 [desktop] › tests\browser\inquiry.spec.ts:18:1 › project inquiry retains the project and never selects a contributor (243ms)
+  ok   9 [desktop] › tests\browser\inquiry.spec.ts:28:1 › template reset protects substantial edits and restores source context (1.2s)
+  ok  10 [desktop] › tests\browser\inquiry.spec.ts:44:1 › unresolved prompts are blocked locally while custom bracket text is allowed (1.3s)
+  ok  11 [desktop] › tests\browser\inquiry.spec.ts:68:1 › accessible validation feedback retains entered employer values (1.3s)
+  ok  12 [desktop] › tests\browser\inquiry.spec.ts:89:1 › duplicate submission is blocked while pending and success is announced (1.5s)
+  ok  13 [desktop] › tests\browser\inquiry.spec.ts:110:1 › backend failure is recoverable without losing data (1.3s)
+  ok  14 [desktop] › tests\browser\inquiry.spec.ts:124:1 › invalid and unpublished student inquiry routes are indistinguishable (311ms)
+  ok  15 [desktop] › tests\browser\inquiry.spec.ts:133:1 › invalid project inquiry route has a useful unavailable state (231ms)
+  ok  16 [desktop] › tests\browser\inquiry.spec.ts:139:1 › keyboard workflow and visible focus cover every form control (407ms)
+  ok  17 [desktop] › tests\browser\inquiry.spec.ts:155:1 › reduced motion leaves context and form immediately complete (239ms)
+  -   18 [desktop] › tests\browser\inquiry.spec.ts:163:1 › 390px inquiry form and success state have no horizontal overflow
+  ok  19 [desktop] › tests\browser\manual-project.spec.ts:12:1 › verified student manually creates, previews, resolves conflicts and publishes canonical evidence (12.1s)
+  ok  20 [desktop] › tests\browser\private-student-profile.spec.ts:22:1 › verified student creates and returns to a private profile draft (6.7s)
+  ok  21 [desktop] › tests\browser\project-demo.spec.ts:8:1 › official playable fixture interacts inside an isolated frame while fallback and navigation survive failures (15.8s)
+  ok  22 [desktop] › tests\browser\project-detail.spec.ts:3:1 › project supports direct navigation, reload, and its complete evidence shell (943ms)
+  ok  23 [desktop] › tests\browser\project-detail.spec.ts:17:1 › canonical project shows ordered contributor roles and public profile links (313ms)
+  ok  24 [desktop] › tests\browser\project-detail.spec.ts:26:1 › unpublished contributor identifier and role stay out of the public project (298ms)
+  ok  25 [desktop] › tests\browser\project-detail.spec.ts:35:1 › broken optional asset remains an ordinary safe link without breaking the page (314ms)
+  ok  26 [desktop] › tests\browser\project-detail.spec.ts:43:1 › project inquiry handoff preserves project identity without choosing a contributor (771ms)
+  ok  27 [desktop] › tests\browser\project-detail.spec.ts:52:1 › student evidence reaches the canonical page and browser back remains natural (932ms)
+  ok  28 [desktop] › tests\browser\project-detail.spec.ts:62:1 › project links are keyboard reachable with visible focus (617ms)
+  ok  29 [desktop] › tests\browser\project-detail.spec.ts:76:1 › reduced motion leaves every project section immediately available (575ms)
+  -   30 [desktop] › tests\browser\project-detail.spec.ts:85:1 › 390px project page retains content and has no horizontal overflow
+  ok  31 [desktop] › tests\browser\project-detail.spec.ts:99:1 › unknown project has a useful project-specific not-found experience (295ms)
+  ok  32 [desktop] › tests\browser\project-detail.spec.ts:105:1 › WebGL failure cannot remove project content (520ms)
+[WebServer] ⨯ Error: The destination stream closed early.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '777493300'
+[WebServer] }
+  ok  33 [desktop] › tests\browser\project-import.spec.ts:8:1 › GitHub suggestions remain editable and duplicate view/join leads through independent contributor consent (7.5s)
+  ok  34 [desktop] › tests\browser\project-team.spec.ts:8:1 › independent students consent, own their evidence, restore relationships and transfer maintenance (13.2s)
+  ok  35 [desktop] › tests\browser\release-1-acceptance.spec.ts:3:1 › Scenario A: search and filters lead through project evidence to project inquiry (2.3s)
+  ok  36 [desktop] › tests\browser\release-1-acceptance.spec.ts:22:1 › Scenario B: two-skill AND, individual removal, Clear All, and student inquiry (2.9s)
+  ok  37 [desktop] › tests\browser\release-1-acceptance.spec.ts:44:1 › Scenario C: stable deep links survive reload and browser back (1.8s)
+  ok  38 [desktop] › tests\browser\release-1-acceptance.spec.ts:56:1 › Scenario D: unpublished and invalid routes fail safely (768ms)
+  ok  39 [desktop] › tests\browser\release-1-acceptance.spec.ts:67:1 › Scenario E: P07 remains usable beside its broken optional URL (315ms)
+  -   40 [desktop] › tests\browser\release-1-acceptance.spec.ts:77:1 › Scenario F: the complete workflow has no overflow at 390px
+  ok  41 [desktop] › tests\browser\release-1-acceptance.spec.ts:93:1 › Scenario G: keyboard-only controls expose focus throughout the core workflow (2.8s)
+  ok  42 [desktop] › tests\browser\release-1-acceptance.spec.ts:113:1 › Scenario H: reduced motion preserves the complete core workflow (775ms)
+  ok  43 [desktop] › tests\browser\release-1-acceptance.spec.ts:125:1 › Scenario I: missing WebGL leaves the core workflow functional (1.8s)
+  ok  44 [desktop] › tests\browser\student-profile.spec.ts:3:1 › published profile supports direct navigation and reload (759ms)
+  ok  45 [desktop] › tests\browser\student-profile.spec.ts:13:1 › profile exposes the complete professional shell and project evidence (606ms)
+  ok  46 [desktop] › tests\browser\student-profile.spec.ts:27:1 › browser back preserves the directory URL state (989ms)
+  ok  47 [desktop] › tests\browser\student-profile.spec.ts:60:1 › profile links are keyboard reachable with visible focus (365ms)
+  ok  48 [desktop] › tests\browser\student-profile.spec.ts:73:1 › reduced motion leaves the complete profile immediately available (293ms)
+  -   49 [desktop] › tests\browser\student-profile.spec.ts:82:1 › 390px profile has no horizontal overflow and retains every action
+  ok  50 [desktop] › tests\browser\student-profile.spec.ts:96:1 › unknown and unpublished routes use the same useful not-found state (436ms)
+  ok  51 [desktop] › tests\browser\student-profile.spec.ts:107:1 › WebGL failure cannot remove profile functionality (1.1s)
+  ok  52 [desktop] › tests\browser\student-profile.spec.ts:118:1 › inquiry handoff preserves the selected student in the real form (775ms)
+  ok  53 [desktop] › tests\browser\talent.spec.ts:55:1 › root redirects to the talent experience (624ms)
+  ok  54 [desktop] › tests\browser\talent.spec.ts:61:1 › directory workflow remains functional and URL-addressable (1.3s)
+[WebServer] ⨯ Error: The destination stream closed early.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '777493300'
+[WebServer] }
+  ok  55 [desktop] › tests\browser\talent.spec.ts:77:1 › student access is discoverable and keyboard-operable in public navigation (821ms)
+  ok  56 [desktop] › tests\browser\talent.spec.ts:89:1 › advanced expressions remain URL-addressable and browser history restores them (1.4s)
+  ok  57 [desktop] › tests\browser\talent.spec.ts:106:1 › search tips are keyboard-accessible and malformed searches retain results (1.0s)
+  ok  58 [desktop] › tests\browser\talent.spec.ts:126:1 › keyboard focus is visible and filters operate without a pointer (980ms)
+  -   59 [desktop] › tests\browser\talent.spec.ts:145:1 › 390px layout has no horizontal document overflow
+[WebServer] ⨯ Error: The destination stream closed early.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '777493300'
+[WebServer] }
+  ok  60 [desktop] › tests\browser\talent.spec.ts:161:1 › reduced motion keeps the complete directory usable (583ms)
+[WebServer] ⨯ Error: The destination stream closed early.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '777493300'
+[WebServer] }
+[WebServer] ⨯ Error: The destination stream closed early.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '777493300'
+[WebServer] }
+  ok  61 [desktop] › tests\browser\talent.spec.ts:172:1 › a WebGL context failure leaves the directory intact (405ms)
+[WebServer] ⨯ Error: The destination stream closed early.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '777493300'
+[WebServer] }
+  ok  62 [desktop] › tests\browser\talent.spec.ts:182:1 › GSAP fallback exposes every chapter and preserves filtering (747ms)
+[WebServer] ⨯ Error: The destination stream closed early.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '777493300'
+[WebServer] }
+[WebServer] ⨯ Error: The destination stream closed early.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '777493300'
+[WebServer] }
+  ok  63 [desktop] › tests\browser\talent.spec.ts:196:1 › focused removed card hands focus to the result summary (764ms)
+  ok  64 [desktop] › tests\browser\talent.spec.ts:208:1 › native scroll advances the authored field sequence (1.1s)
+  ok  65 [desktop] › tests\browser\talent.spec.ts:221:1 › motion cleanup runs when the talent page unmounts (905ms)
+(node:30516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  66 [mobile-390] › tests\browser\affiliation-verification.spec.ts:22:1 › authenticated student confirms a single-use affiliation link (643ms)
+  ok  67 [mobile-390] › tests\browser\auth.spec.ts:3:1 › student sign-in is accessible and keyboard-operable (290ms)
+  ok  68 [mobile-390] › tests\browser\auth.spec.ts:24:1 › student dashboard redirects unauthenticated visitors (224ms)
+  ok  69 [mobile-390] › tests\browser\auth.spec.ts:30:1 › student verification and its APIs fail closed when signed out (239ms)
+  ok  70 [mobile-390] › tests\browser\auth.spec.ts:43:1 › Release 1 public journeys remain unauthenticated (836ms)
+  ok  71 [mobile-390] › tests\browser\branding.spec.ts:11:1 › supplied NOT ImmXrsive identity spans public, inquiry, and student access pages (1.6s)
+  ok  72 [mobile-390] › tests\browser\inquiry.spec.ts:3:1 › student inquiry renders trusted source context and a locked form (306ms)
+  ok  73 [mobile-390] › tests\browser\inquiry.spec.ts:18:1 › project inquiry retains the project and never selects a contributor (285ms)
+  ok  74 [mobile-390] › tests\browser\inquiry.spec.ts:28:1 › template reset protects substantial edits and restores source context (1.3s)
+  ok  75 [mobile-390] › tests\browser\inquiry.spec.ts:44:1 › unresolved prompts are blocked locally while custom bracket text is allowed (1.4s)
+  ok  76 [mobile-390] › tests\browser\inquiry.spec.ts:68:1 › accessible validation feedback retains entered employer values (1.3s)
+  ok  77 [mobile-390] › tests\browser\inquiry.spec.ts:89:1 › duplicate submission is blocked while pending and success is announced (1.6s)
+  ok  78 [mobile-390] › tests\browser\inquiry.spec.ts:110:1 › backend failure is recoverable without losing data (1.2s)
+  ok  79 [mobile-390] › tests\browser\inquiry.spec.ts:124:1 › invalid and unpublished student inquiry routes are indistinguishable (339ms)
+  ok  80 [mobile-390] › tests\browser\inquiry.spec.ts:133:1 › invalid project inquiry route has a useful unavailable state (244ms)
+  ok  81 [mobile-390] › tests\browser\inquiry.spec.ts:139:1 › keyboard workflow and visible focus cover every form control (453ms)
+  ok  82 [mobile-390] › tests\browser\inquiry.spec.ts:155:1 › reduced motion leaves context and form immediately complete (279ms)
+  ok  83 [mobile-390] › tests\browser\inquiry.spec.ts:163:1 › 390px inquiry form and success state have no horizontal overflow (1.3s)
+  ok  84 [mobile-390] › tests\browser\manual-project.spec.ts:12:1 › verified student manually creates, previews, resolves conflicts and publishes canonical evidence (12.1s)
+  ok  85 [mobile-390] › tests\browser\private-student-profile.spec.ts:22:1 › verified student creates and returns to a private profile draft (5.4s)
+  ok  86 [mobile-390] › tests\browser\project-demo.spec.ts:8:1 › official playable fixture interacts inside an isolated frame while fallback and navigation survive failures (14.2s)
+  ok  87 [mobile-390] › tests\browser\project-detail.spec.ts:3:1 › project supports direct navigation, reload, and its complete evidence shell (702ms)
+  ok  88 [mobile-390] › tests\browser\project-detail.spec.ts:17:1 › canonical project shows ordered contributor roles and public profile links (533ms)
+  ok  89 [mobile-390] › tests\browser\project-detail.spec.ts:26:1 › unpublished contributor identifier and role stay out of the public project (301ms)
+  ok  90 [mobile-390] › tests\browser\project-detail.spec.ts:35:1 › broken optional asset remains an ordinary safe link without breaking the page (289ms)
+  ok  91 [mobile-390] › tests\browser\project-detail.spec.ts:43:1 › project inquiry handoff preserves project identity without choosing a contributor (747ms)
+  ok  92 [mobile-390] › tests\browser\project-detail.spec.ts:52:1 › student evidence reaches the canonical page and browser back remains natural (1.0s)
+  ok  93 [mobile-390] › tests\browser\project-detail.spec.ts:62:1 › project links are keyboard reachable with visible focus (604ms)
+  ok  94 [mobile-390] › tests\browser\project-detail.spec.ts:76:1 › reduced motion leaves every project section immediately available (280ms)
+  ok  95 [mobile-390] › tests\browser\project-detail.spec.ts:85:1 › 390px project page retains content and has no horizontal overflow (294ms)
+  ok  96 [mobile-390] › tests\browser\project-detail.spec.ts:99:1 › unknown project has a useful project-specific not-found experience (246ms)
+  ok  97 [mobile-390] › tests\browser\project-detail.spec.ts:105:1 › WebGL failure cannot remove project content (282ms)
+  ok  98 [mobile-390] › tests\browser\project-import.spec.ts:8:1 › GitHub suggestions remain editable and duplicate view/join leads through independent contributor consent (5.7s)
+[WebServer] ⨯ Error: The destination stream closed early.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '777493300'
+[WebServer] }
+  ok  99 [mobile-390] › tests\browser\project-team.spec.ts:8:1 › independent students consent, own their evidence, restore relationships and transfer maintenance (11.1s)
+  ok 100 [mobile-390] › tests\browser\release-1-acceptance.spec.ts:3:1 › Scenario A: search and filters lead through project evidence to project inquiry (2.1s)
+  ok 101 [mobile-390] › tests\browser\release-1-acceptance.spec.ts:22:1 › Scenario B: two-skill AND, individual removal, Clear All, and student inquiry (3.4s)
+  ok 102 [mobile-390] › tests\browser\release-1-acceptance.spec.ts:44:1 › Scenario C: stable deep links survive reload and browser back (2.2s)
+  ok 103 [mobile-390] › tests\browser\release-1-acceptance.spec.ts:56:1 › Scenario D: unpublished and invalid routes fail safely (694ms)
+[WebServer] ⨯ Error: The destination stream closed early.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '777493300'
+[WebServer] }
+  ok 104 [mobile-390] › tests\browser\release-1-acceptance.spec.ts:67:1 › Scenario E: P07 remains usable beside its broken optional URL (317ms)
+  ok 105 [mobile-390] › tests\browser\release-1-acceptance.spec.ts:77:1 › Scenario F: the complete workflow has no overflow at 390px (1.9s)
+  ok 106 [mobile-390] › tests\browser\release-1-acceptance.spec.ts:93:1 › Scenario G: keyboard-only controls expose focus throughout the core workflow (5.4s)
+  ok 107 [mobile-390] › tests\browser\release-1-acceptance.spec.ts:113:1 › Scenario H: reduced motion preserves the complete core workflow (1.5s)
+  ok 108 [mobile-390] › tests\browser\release-1-acceptance.spec.ts:125:1 › Scenario I: missing WebGL leaves the core workflow functional (1.0s)
+  ok 109 [mobile-390] › tests\browser\student-profile.spec.ts:3:1 › published profile supports direct navigation and reload (1.1s)
+  ok 110 [mobile-390] › tests\browser\student-profile.spec.ts:13:1 › profile exposes the complete professional shell and project evidence (364ms)
+  ok 111 [mobile-390] › tests\browser\student-profile.spec.ts:27:1 › browser back preserves the directory URL state (863ms)
+  ok 112 [mobile-390] › tests\browser\student-profile.spec.ts:60:1 › profile links are keyboard reachable with visible focus (381ms)
+  ok 113 [mobile-390] › tests\browser\student-profile.spec.ts:73:1 › reduced motion leaves the complete profile immediately available (292ms)
+  ok 114 [mobile-390] › tests\browser\student-profile.spec.ts:82:1 › 390px profile has no horizontal overflow and retains every action (528ms)
+  ok 115 [mobile-390] › tests\browser\student-profile.spec.ts:96:1 › unknown and unpublished routes use the same useful not-found state (519ms)
+  ok 116 [mobile-390] › tests\browser\student-profile.spec.ts:107:1 › WebGL failure cannot remove profile functionality (335ms)
+  ok 117 [mobile-390] › tests\browser\student-profile.spec.ts:118:1 › inquiry handoff preserves the selected student in the real form (787ms)
+  ok 118 [mobile-390] › tests\browser\talent.spec.ts:55:1 › root redirects to the talent experience (579ms)
+  ok 119 [mobile-390] › tests\browser\talent.spec.ts:61:1 › directory workflow remains functional and URL-addressable (1.1s)
+  ok 120 [mobile-390] › tests\browser\talent.spec.ts:77:1 › student access is discoverable and keyboard-operable in public navigation (794ms)
+  ok 121 [mobile-390] › tests\browser\talent.spec.ts:89:1 › advanced expressions remain URL-addressable and browser history restores them (1.9s)
+  ok 122 [mobile-390] › tests\browser\talent.spec.ts:106:1 › search tips are keyboard-accessible and malformed searches retain results (818ms)
+  ok 123 [mobile-390] › tests\browser\talent.spec.ts:126:1 › keyboard focus is visible and filters operate without a pointer (862ms)
+  ok 124 [mobile-390] › tests\browser\talent.spec.ts:145:1 › 390px layout has no horizontal document overflow (762ms)
+[WebServer] ⨯ Error: The destination stream closed early.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '777493300'
+[WebServer] }
+  ok 125 [mobile-390] › tests\browser\talent.spec.ts:161:1 › reduced motion keeps the complete directory usable (520ms)
+  ok 126 [mobile-390] › tests\browser\talent.spec.ts:172:1 › a WebGL context failure leaves the directory intact (407ms)
+[WebServer] ⨯ Error: The destination stream closed early.
+[WebServer]     at ignore-listed frames {
+[WebServer]   digest: '777493300'
+[WebServer] }
+  ok 127 [mobile-390] › tests\browser\talent.spec.ts:182:1 › GSAP fallback exposes every chapter and preserves filtering (650ms)
+  ok 128 [mobile-390] › tests\browser\talent.spec.ts:196:1 › focused removed card hands focus to the result summary (775ms)
+  ok 129 [mobile-390] › tests\browser\talent.spec.ts:208:1 › native scroll advances the authored field sequence (989ms)
+  ok 130 [mobile-390] › tests\browser\talent.spec.ts:221:1 › motion cleanup runs when the talent page unmounts (779ms)
+
+  5 skipped
+  125 passed (3.7m)
+
+IDENTITY VERIFIED {"container":"548e8a26662bcf4f1ed594d1a275a8509a39e9c737ae55ac5771ac50ed32caf4","database":"phase7_65680adbaeb3_fresh","user":"phase7_65680adbaeb3","published":"127.0.0.1:56710","serverPort":5432,"cluster":"immx-phase7-65680adbaeb3","version":"PostgreSQL 18.6 (Debian 18.6-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit"}
+COMMAND fixture validation: node --import tsx scripts/validate-fixtures.ts [all database variables explicitly scoped to disposable container]
+RESULT fixture validation: exit=0, timeout=false
+Fixture validation passed.
+Students: 18
+Projects: 9
+Skills: 24
+Project contributors: 24
+
+PHASE 7 VERIFICATION PASSED
+COMMAND docker rm --force --volumes 548e8a26662bcf4f1ed594d1a275a8509a39e9c737ae55ac5771ac50ed32caf4 [verified run label]
+CLEANUP: created container and its disposable data removed; no existing resources touched
+PRESERVATION: 96 pre-existing untracked inputs and all historical SQL migrations unchanged

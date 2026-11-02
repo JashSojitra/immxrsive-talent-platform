@@ -106,7 +106,7 @@ export async function queryPublicStudentProfile(
       })
       .from(projectContributors)
       .innerJoin(projects, eq(projects.id, projectContributors.projectId))
-      .where(eq(projectContributors.studentId, studentId))
+      .where(and(eq(projectContributors.studentId, studentId), eq(projects.publicationStatus, "published")))
       .orderBy(asc(sql`lower(${projects.title})`), asc(projects.id)),
   ]);
 

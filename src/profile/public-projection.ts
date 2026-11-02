@@ -1,4 +1,5 @@
-import { and, asc, eq } from "drizzle-orm";
+import { and, asc, eq, inArray } from "drizzle-orm";
+import { queryFeaturedProjectRows, queryStructuredProjectAssets, publicAssets } from "@/projects/public-evidence";
 
 import type { Database } from "@/db/client";
 import {
@@ -10,6 +11,7 @@ import {
   studentProfileLinks,
   studentProfiles,
   studentProfileSkills,
+  projectTechnologies,
 } from "@/db/schema";
 import type { PublicStudentProfile } from "@/db/queries/student-profile";
 import type { PrivateStudentProfile } from "@/profile/service";
@@ -84,6 +86,12 @@ export async function querySelfServiceProfileProjection(
       : Promise.resolve([]),
   ]);
 
+  const projectRows = await queryFeaturedProjectRows(db, [profile.id]);
+  const ids = projectRows.map(project => project.id);
+  const [projectAssets, technologies] = await Promise.all([
+    queryStructuredProjectAssets(db, ids),
+    ids.length ? db.select({ projectId: projectTechnologies.projectId, name: projectTechnologies.technologyName }).from(projectTechnologies).where(inArray(projectTechnologies.projectId, ids)).orderBy(projectTechnologies.displayOrder) : Promise.resolve([]),
+  ]);
   return {
     id: profile.id,
     name: profile.name,
@@ -92,7 +100,7 @@ export async function querySelfServiceProfileProjection(
     program: profile.program,
     status: profile.status,
     skills: skillRows.map(({ name }) => name),
-    projects: [],
+    projects: projectRows.map(project => ({ id: project.id, title: project.title, description: project.description, domain: project.domain, role: project.role, technologies: technologies.filter(t => t.projectId === project.id).map(t => t.name), links: publicAssets(projectAssets, project.id) })),
     presentationPreset: profile.presentationPreset as PublicStudentProfile["presentationPreset"],
     heroMedia: profile.heroMedia as PublicStudentProfile["heroMedia"],
     sectionOrder: profile.sectionOrder,

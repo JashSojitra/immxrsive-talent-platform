@@ -1,0 +1,3917 @@
+{
+  "date": "2026-11-01",
+  "scope": "New disposable local Docker PostgreSQL only; no production/development validation",
+  "baseline_head": "4c8a64d7313c1401889ae97a1223090d059008de",
+  "suites": {
+    "integration": {
+      "files": 13,
+      "passed": 158,
+      "failed": 0,
+      "skipped": 0,
+      "total": 158
+    },
+    "unit": {
+      "files": 31,
+      "passed": 230,
+      "failed": 0,
+      "skipped": 0,
+      "total": 230
+    },
+    "browser": {
+      "passed": 125,
+      "failed": 0,
+      "skipped": 5,
+      "flaky": 0,
+      "total": 130,
+      "duration_seconds": 219.847
+    }
+  },
+  "cases": [
+    {
+      "suite": "integration",
+      "file": "tests/integration/affiliation-verification.test.ts",
+      "case_index": 0,
+      "name": "student affiliation verification stores only a token hash and atomically verifies once",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/affiliation-verification.test.ts",
+      "case_index": 1,
+      "name": "student affiliation verification rejects wrong-account, expired, and superseded links without claiming identity",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/affiliation-verification.test.ts",
+      "case_index": 2,
+      "name": "student affiliation verification prevents a verified university email from being claimed by another account",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/affiliation-verification.test.ts",
+      "case_index": 3,
+      "name": "student affiliation verification rate limits repeated requests by internal user across addresses",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/affiliation-verification.test.ts",
+      "case_index": 4,
+      "name": "student affiliation verification rate limits invalid confirmations by user and network address",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/affiliation-verification.test.ts",
+      "case_index": 5,
+      "name": "student affiliation verification API fails closed when unauthenticated and does not invoke storage",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/affiliation-verification.test.ts",
+      "case_index": 6,
+      "name": "student affiliation verification does not report delivery success when the provider is unconfigured",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/affiliation-verification.test.ts",
+      "case_index": 7,
+      "name": "student affiliation verification sanitizes delivery failures and invalidates the unsent challenge",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/auth-identity.test.ts",
+      "case_index": 0,
+      "name": "authentication identity and session integration repeat provider lookup survives a GitHub username change",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/auth-identity.test.ts",
+      "case_index": 1,
+      "name": "authentication identity and session integration database rejects a duplicate provider and immutable provider account ID",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/auth-identity.test.ts",
+      "case_index": 2,
+      "name": "authentication identity and session integration database-backed sessions sign out and do not expose credentials",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/auth-identity.test.ts",
+      "case_index": 3,
+      "name": "authentication identity and session integration production GitHub start flow emits only the intended scope and no secret",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/auth-identity.test.ts",
+      "case_index": 4,
+      "name": "authentication identity and session integration an unauthenticated session lookup fails closed",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/fixture-import.test.ts",
+      "case_index": 0,
+      "name": "fixture import with PostgreSQL multiple student availability values import in source order",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/fixture-import.test.ts",
+      "case_index": 1,
+      "name": "fixture import with PostgreSQL student skills remain independent from project technologies",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/fixture-import.test.ts",
+      "case_index": 2,
+      "name": "fixture import with PostgreSQL a shared project is one project with multiple contributor rows",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/fixture-import.test.ts",
+      "case_index": 3,
+      "name": "fixture import with PostgreSQL contributor roles are preserved",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/fixture-import.test.ts",
+      "case_index": 4,
+      "name": "fixture import with PostgreSQL importing the same fixtures twice is idempotent",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/fixture-import.test.ts",
+      "case_index": 5,
+      "name": "fixture import with PostgreSQL fixture validation failure cannot partially mutate the database",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/fixture-import.test.ts",
+      "case_index": 6,
+      "name": "fixture import with PostgreSQL a database failure rolls back the entire import transaction",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 0,
+      "name": "contextual employer inquiry API valid student inquiry returns 201 and persists trusted student context only",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 1,
+      "name": "contextual employer inquiry API valid project inquiry returns 201 and persists trusted project context only",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 2,
+      "name": "contextual employer inquiry API published UUID profile inquiry persists only the trusted profile foreign key and snapshot",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 3,
+      "name": "contextual employer inquiry API rejects unpublished UUID profile without inserting an inquiry",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 4,
+      "name": "contextual employer inquiry API rejects unverified UUID profile without inserting an inquiry",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 5,
+      "name": "contextual employer inquiry API rejects missing-status UUID profile without inserting an inquiry",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 6,
+      "name": "contextual employer inquiry API database enforces null-safe exact source combinations, including project-only inquiries",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 7,
+      "name": "contextual employer inquiry API database rejects mismatched legacy source ID",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 8,
+      "name": "contextual employer inquiry API database rejects mismatched profile source ID",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 9,
+      "name": "contextual employer inquiry API database rejects mismatched project source ID",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 10,
+      "name": "contextual employer inquiry API profile foreign key rejects nonexistent profiles and restricts deletion of referenced profiles",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 11,
+      "name": "contextual employer inquiry API client cannot submit spoofed sourceName",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 12,
+      "name": "contextual employer inquiry API client cannot submit spoofed sourceUrl",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 13,
+      "name": "contextual employer inquiry API unavailable student source S16 returns a non-disclosing 404",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 14,
+      "name": "contextual employer inquiry API unavailable student source INVALID returns a non-disclosing 404",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 15,
+      "name": "contextual employer inquiry API unavailable student source 00000000-0000-4000-8000-000000000000 returns a non-disclosing 404",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 16,
+      "name": "contextual employer inquiry API unavailable student source ' OR 1=1 -- returns a non-disclosing 404",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 17,
+      "name": "contextual employer inquiry API unavailable project source INVALID returns a non-disclosing 404",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 18,
+      "name": "contextual employer inquiry API invalid companyName returns structured field feedback",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 19,
+      "name": "contextual employer inquiry API invalid contactName returns structured field feedback",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 20,
+      "name": "contextual employer inquiry API invalid contactEmail returns structured field feedback",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 21,
+      "name": "contextual employer inquiry API invalid description returns structured field feedback",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 22,
+      "name": "contextual employer inquiry API invalid sourceType returns structured field feedback",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 23,
+      "name": "contextual employer inquiry API rejects unresolved template prompts without persisting them",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 24,
+      "name": "contextual employer inquiry API persists a final personalized message with unrelated bracket text",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/inquiry-api.test.ts",
+      "case_index": 25,
+      "name": "contextual employer inquiry API oversized and malformed bodies are rejected before persistence",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/manual-project-api.test.ts",
+      "case_index": 0,
+      "name": "manual project HTTP and public projection verified student creates, edits, publishes and unpublishes one canonical project",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/manual-project-api.test.ts",
+      "case_index": 1,
+      "name": "manual project HTTP and public projection zero/multiple/replaced repositories preserve the permanent ID and every shared field",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/manual-project-api.test.ts",
+      "case_index": 2,
+      "name": "manual project HTTP and public projection anonymous, unverified, outsider and legacy mutations are denied",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/manual-project-api.test.ts",
+      "case_index": 3,
+      "name": "manual project HTTP and public projection configured public origin accepts proxy reconstruction without trusting an internal host",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/manual-project-api.test.ts",
+      "case_index": 4,
+      "name": "manual project HTTP and public projection strict body schemas, origin checks and bounded JSON reject unsafe requests",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/manual-project-api.test.ts",
+      "case_index": 5,
+      "name": "manual project HTTP and public projection stale update/publication returns a structured 409 and preserves newer database values",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/manual-project-api.test.ts",
+      "case_index": 6,
+      "name": "manual project HTTP and public projection public associations require accepted, visible, published profiles and personal featuring",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/private-student-profile.test.ts",
+      "case_index": 0,
+      "name": "private student profile verified owner creates one unpublished draft and receives it on return",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/private-student-profile.test.ts",
+      "case_index": 1,
+      "name": "private student profile updates only the acting owner's draft and rejects stale revisions",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/private-student-profile.test.ts",
+      "case_index": 2,
+      "name": "private student profile rejects forged identity fields and unknown standardized skills",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/private-student-profile.test.ts",
+      "case_index": 3,
+      "name": "private student profile publishes only an explicit allowlisted projection and supports unpublish and republish",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/private-student-profile.test.ts",
+      "case_index": 4,
+      "name": "private student profile requires complete public fields and rejects stale or forged publication requests",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/private-student-profile.test.ts",
+      "case_index": 5,
+      "name": "private student profile extracts a resume without modifying or publishing the owner's profile",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/private-student-profile.test.ts",
+      "case_index": 6,
+      "name": "private student profile resume extraction fails closed before reading storage",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/private-student-profile.test.ts",
+      "case_index": 7,
+      "name": "private student profile resume extraction fails closed before reading storage",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/private-student-profile.test.ts",
+      "case_index": 8,
+      "name": "private student profile fails closed before opening the database",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/private-student-profile.test.ts",
+      "case_index": 9,
+      "name": "private student profile fails closed before opening the database",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/private-student-profile.test.ts",
+      "case_index": 10,
+      "name": "private student profile publication fails closed before opening the database",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/private-student-profile.test.ts",
+      "case_index": 11,
+      "name": "private student profile publication fails closed before opening the database",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-demo-api.test.ts",
+      "case_index": 0,
+      "name": "typed project demo and public privacy all typed evidence persists separately, including hosted fixture paths and public descriptions",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-demo-api.test.ts",
+      "case_index": 1,
+      "name": "typed project demo and public privacy playable-only projects remain valid without inventing other media",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-demo-api.test.ts",
+      "case_index": 2,
+      "name": "typed project demo and public privacy video-only projects remain valid without inventing other media",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-demo-api.test.ts",
+      "case_index": 3,
+      "name": "typed project demo and public privacy source-only projects remain valid without inventing other media",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-demo-api.test.ts",
+      "case_index": 4,
+      "name": "typed project demo and public privacy fallback_image-only projects remain valid without inventing other media",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-demo-api.test.ts",
+      "case_index": 5,
+      "name": "typed project demo and public privacy fallback_video-only projects remain valid without inventing other media",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-demo-api.test.ts",
+      "case_index": 6,
+      "name": "typed project demo and public privacy fallback_link-only projects remain valid without inventing other media",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-demo-api.test.ts",
+      "case_index": 7,
+      "name": "typed project demo and public privacy unsafe/local/arbitrary-relative and raw embed inputs never persist",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-demo-api.test.ts",
+      "case_index": 8,
+      "name": "typed project demo and public privacy unpublished projects and removed personal relationships never leak typed evidence",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-detail-api.test.ts",
+      "case_index": 0,
+      "name": "public project detail API valid project returns its complete stable contract in database order",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-detail-api.test.ts",
+      "case_index": 1,
+      "name": "public project detail API shared profile evidence resolves to one canonical project identity",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-detail-api.test.ts",
+      "case_index": 2,
+      "name": "public project detail API project technologies remain distinct from contributor skills",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-detail-api.test.ts",
+      "case_index": 3,
+      "name": "public project detail API unpublished contributor identifier and role are absent from the public project",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-detail-api.test.ts",
+      "case_index": 4,
+      "name": "public project detail API broken optional external URL is returned without being fetched or failing",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-detail-api.test.ts",
+      "case_index": 5,
+      "name": "public project detail API unknown project returns a structured project-specific 404",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-detail-api.test.ts",
+      "case_index": 6,
+      "name": "public project detail API runtime endpoint does not depend on fixture files",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-import-api.test.ts",
+      "case_index": 0,
+      "name": "GitHub duplicate and join API all official duplicate fixtures produce distinct expected outcomes",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-import-api.test.ts",
+      "case_index": 1,
+      "name": "GitHub duplicate and join API normalized multiple repository matches require account-bound acknowledgement and retain stable IDs",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-import-api.test.ts",
+      "case_index": 2,
+      "name": "GitHub duplicate and join API concurrent same-repository creates serialize and only one proceeds without fresh confirmation",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-import-api.test.ts",
+      "case_index": 3,
+      "name": "GitHub duplicate and join API changed candidate sets invalidate previous acknowledgement without revealing private projects",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-import-api.test.ts",
+      "case_index": 4,
+      "name": "GitHub duplicate and join API public join requests need maintainer approval and then independent invitation acceptance",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-import-api.test.ts",
+      "case_index": 5,
+      "name": "GitHub duplicate and join API join decline/stale/invalid role/replay and unpublished/legacy/unverified targets fail closed",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-import-api.test.ts",
+      "case_index": 6,
+      "name": "GitHub duplicate and join API deterministic GitHub HTTP import stays suggestion-only with strict auth/body/origin checks",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-import-api.test.ts",
+      "case_index": 7,
+      "name": "GitHub duplicate and join API legacy fixture repository assets warn without granting legacy ownership or join access",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-import-api.test.ts",
+      "case_index": 8,
+      "name": "GitHub duplicate and join API new request table denies client roles and validates state and revision",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-team-api.test.ts",
+      "case_index": 0,
+      "name": "project team private HTTP journey private inbox and pending/declined roles never imply public acceptance",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-team-api.test.ts",
+      "case_index": 1,
+      "name": "project team private HTTP journey eligible search excludes private/unverified directories and invitations reject unverified targets",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-team-api.test.ts",
+      "case_index": 2,
+      "name": "project team private HTTP journey two accepted profiles share one URL and only the contributor controls their evidence",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-team-api.test.ts",
+      "case_index": 3,
+      "name": "project team private HTTP journey soft removal and restore preserve contribution, original acceptance, ID and visibility",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-team-api.test.ts",
+      "case_index": 4,
+      "name": "project team private HTTP journey transfer requires recipient consent and invalidates outgoing maintainer authority",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-team-api.test.ts",
+      "case_index": 5,
+      "name": "project team private HTTP journey stale transfer cannot be accepted but can be declined; replacement cancels prior offer",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/project-team-api.test.ts",
+      "case_index": 6,
+      "name": "project team private HTTP journey strict schemas, cross-site, anonymous, unverified and outsider requests fail closed",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/shared-projects.test.ts",
+      "case_index": 0,
+      "name": "shared project domain and database security roles match the official fixture exactly and legacy labels are not rewritten",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/shared-projects.test.ts",
+      "case_index": 1,
+      "name": "shared project domain and database security creation is atomic, private, creator-maintained and accepted without changing personal skills",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/shared-projects.test.ts",
+      "case_index": 2,
+      "name": "shared project domain and database security invalid role, forged fields and unverified creation fail without partial projects",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/shared-projects.test.ts",
+      "case_index": 3,
+      "name": "shared project domain and database security only maintainer edits shared fields; repositories disconnect without changing identity",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/shared-projects.test.ts",
+      "case_index": 4,
+      "name": "shared project domain and database security published project remains accessible, unpublication hides it",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/shared-projects.test.ts",
+      "case_index": 5,
+      "name": "shared project domain and database security invitations are recipient-only, proposed-role-bearing and never accepted silently",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/shared-projects.test.ts",
+      "case_index": 6,
+      "name": "shared project domain and database security declined invitations retain history but cannot become contributions",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/shared-projects.test.ts",
+      "case_index": 7,
+      "name": "shared project domain and database security contributor alone owns statement/role/visibility; hiding does not remove acceptance",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/shared-projects.test.ts",
+      "case_index": 8,
+      "name": "shared project domain and database security soft removal and restoration retain relationship ID, acceptance and personal data",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/shared-projects.test.ts",
+      "case_index": 9,
+      "name": "shared project domain and database security current maintainer cannot remove their own accepted relationship",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/shared-projects.test.ts",
+      "case_index": 10,
+      "name": "shared project domain and database security transfer requires accepted target and consent, preserves ID, revokes old edit authority",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/shared-projects.test.ts",
+      "case_index": 11,
+      "name": "shared project domain and database security edits after transfer offer invalidate stale transfer, and decline preserves maintainer",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/shared-projects.test.ts",
+      "case_index": 12,
+      "name": "shared project domain and database security concurrent stale shared saves have one winner and atomic child collections",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/shared-projects.test.ts",
+      "case_index": 13,
+      "name": "shared project domain and database security legacy ownership fails closed and fixture reimport skips colliding user-managed projects",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/shared-projects.test.ts",
+      "case_index": 14,
+      "name": "shared project domain and database security typed media and repository identity are independent, and duplicate primary media fail",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/shared-projects.test.ts",
+      "case_index": 15,
+      "name": "shared project domain and database security all new tables deny direct client privileges with RLS and no permissive policies",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/shared-projects.test.ts",
+      "case_index": 16,
+      "name": "shared project domain and database security database rejects invalid origin-owner, state and revision values",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/student-profile-api.test.ts",
+      "case_index": 0,
+      "name": "public student profile API published student returns 200 with the professional shell",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/student-profile-api.test.ts",
+      "case_index": 1,
+      "name": "public student profile API multiple availability values preserve database display order",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/student-profile-api.test.ts",
+      "case_index": 2,
+      "name": "public student profile API standardized student skills preserve their own display order",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/student-profile-api.test.ts",
+      "case_index": 3,
+      "name": "public student profile API project technologies never populate student skills",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/student-profile-api.test.ts",
+      "case_index": 4,
+      "name": "public student profile API project evidence includes descriptions, domains, technologies, links, and contributor roles",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/student-profile-api.test.ts",
+      "case_index": 5,
+      "name": "public student profile API shared projects stay canonical while preserving each student's role",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/student-profile-api.test.ts",
+      "case_index": 6,
+      "name": "public student profile API professional links are returned in deterministic order",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/student-profile-api.test.ts",
+      "case_index": 7,
+      "name": "public student profile API unknown and unpublished students return indistinguishable 404 responses",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/student-profile-api.test.ts",
+      "case_index": 8,
+      "name": "public student profile API runtime endpoint does not depend on fixture files",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 0,
+      "name": "public directory API no filters returns every published student and excludes S16",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 1,
+      "name": "public directory API text search matches a student name",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 2,
+      "name": "public directory API text search matches a professional headline",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 3,
+      "name": "public directory API text search matches standardized skill names",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 4,
+      "name": "public directory API text search is case-insensitive",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 5,
+      "name": "public directory API text search uses literal substring semantics",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 6,
+      "name": "public directory API SQL wildcard characters are treated literally",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 7,
+      "name": "public directory API comma groups use AND and may match different searchable fields",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 8,
+      "name": "public directory API pipe terms use OR semantics",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 9,
+      "name": "public directory API mixed expressions apply OR within AND groups",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 10,
+      "name": "public directory API quoted phrases retain literal multiword behavior",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 11,
+      "name": "public directory API free-text search does not inspect project evidence",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 12,
+      "name": "public directory API one skill filter matches explicit student skills",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 13,
+      "name": "public directory API two skill filters use AND semantics",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 14,
+      "name": "public directory API project technologies do not influence skill matching",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 15,
+      "name": "public directory API one availability filter uses structured availability",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 16,
+      "name": "public directory API multiple availability values use OR semantics",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 17,
+      "name": "public directory API one status filter matches the selected status",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 18,
+      "name": "public directory API both status values use OR semantics",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 19,
+      "name": "public directory API filter categories combine with AND",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 20,
+      "name": "public directory API duplicate filter values are harmless and normalized",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 21,
+      "name": "public directory API invalid skill=Unknown returns a structured 400",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 22,
+      "name": "public directory API invalid availability=temporary returns a structured 400",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 23,
+      "name": "public directory API invalid status=staff returns a structured 400",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 24,
+      "name": "public directory API invalid search q=React%2C returns a useful structured 400",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 25,
+      "name": "public directory API invalid search q=%22React returns a useful structured 400",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 26,
+      "name": "public directory API invalid search q=%7C%20React returns a useful structured 400",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 27,
+      "name": "public directory API an empty match returns 200 with an empty envelope",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 28,
+      "name": "public directory API student ordering is deterministic by lower-case name then ID",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 29,
+      "name": "public directory API nested skills and availability preserve fixture display order",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 30,
+      "name": "public directory API project evidence count is based on canonical contributor rows",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 31,
+      "name": "public directory API skills endpoint returns DB-backed standardized skills in display order",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 32,
+      "name": "public directory API skills endpoint returns availability and status metadata",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 33,
+      "name": "public directory API directory and filter metadata requests complete concurrently",
+      "status": "passed"
+    },
+    {
+      "suite": "integration",
+      "file": "tests/integration/talent-api.test.ts",
+      "case_index": 34,
+      "name": "public directory API runtime APIs work without access to the fixture directory",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/affiliation-verification.test.tsx",
+      "case_index": 0,
+      "name": "affiliation verification panel submits a normalized verification request through the authenticated API",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/affiliation-verification.test.tsx",
+      "case_index": 1,
+      "name": "affiliation verification panel confirms a link from the keyboard and renders persisted identity",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/affiliation-verification.test.tsx",
+      "case_index": 2,
+      "name": "affiliation verification panel shows safe expired or reused-link errors from the API",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/affiliation-verification.test.tsx",
+      "case_index": 3,
+      "name": "affiliation verification panel renders an already-verified account without another request form",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/branding.test.tsx",
+      "case_index": 0,
+      "name": "NOT ImmXrsive branding uses the exact supplied logo path with accessible fallback text",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/branding.test.tsx",
+      "case_index": 1,
+      "name": "NOT ImmXrsive branding identifies the site as an independent student project",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/github-import.test.tsx",
+      "case_index": 0,
+      "name": "explicit GitHub suggestion review technology review preserves commas while typing multiple editable values",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/github-import.test.tsx",
+      "case_index": 1,
+      "name": "explicit GitHub suggestion review cancelled application keeps the reviewed suggestions available",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/github-import.test.tsx",
+      "case_index": 2,
+      "name": "explicit GitHub suggestion review nothing is applied until edited suggestions are explicitly confirmed",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/github-import.test.tsx",
+      "case_index": 3,
+      "name": "explicit GitHub suggestion review failure is focused, explains manual recovery and does not apply anything",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/inquiry.test.tsx",
+      "case_index": 0,
+      "name": "contextual inquiry experience renders student context and a locked four-field employer form",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/inquiry.test.tsx",
+      "case_index": 1,
+      "name": "contextual inquiry experience renders project context without selecting a contributor",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/inquiry.test.tsx",
+      "case_index": 2,
+      "name": "contextual inquiry experience uses compact metadata typography only for generated profile UUIDs",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/inquiry.test.tsx",
+      "case_index": 3,
+      "name": "contextual inquiry experience keeps edits across rerenders and resets substantial edits only after confirmation",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/inquiry.test.tsx",
+      "case_index": 4,
+      "name": "contextual inquiry experience blocks unresolved canonical prompts locally but permits unrelated brackets",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/inquiry.test.tsx",
+      "case_index": 5,
+      "name": "contextual inquiry experience shows accessible field errors and retains employer values",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/inquiry.test.tsx",
+      "case_index": 6,
+      "name": "contextual inquiry experience prevents duplicate submission while the request is pending",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/inquiry.test.tsx",
+      "case_index": 7,
+      "name": "contextual inquiry experience renders and focuses a successful confirmation",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/inquiry.test.tsx",
+      "case_index": 8,
+      "name": "contextual inquiry experience shows backend failure separately and preserves values for retry",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/inquiry.test.tsx",
+      "case_index": 9,
+      "name": "inquiry route states renders a useful non-disclosing unavailable state",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/inquiry.test.tsx",
+      "case_index": 10,
+      "name": "inquiry route states renders a recoverable route failure",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/private-student-profile.test.tsx",
+      "case_index": 0,
+      "name": "private student profile editor creates a structured private draft from keyboard-accessible controls",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/private-student-profile.test.tsx",
+      "case_index": 1,
+      "name": "private student profile editor preserves edits and exposes server validation after a failed save",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/private-student-profile.test.tsx",
+      "case_index": 2,
+      "name": "private student profile editor renders biography markup as textarea text and sends only editable fields",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/private-student-profile.test.tsx",
+      "case_index": 3,
+      "name": "private student profile editor keeps publication explicit, blocks it while dirty, and sends the saved revision",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/private-student-profile.test.tsx",
+      "case_index": 4,
+      "name": "private student profile editor shows server publication requirements without publishing",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/private-student-profile.test.tsx",
+      "case_index": 5,
+      "name": "private student profile editor persists allowlisted presentation, media, and keyboard-operable section ordering",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-demo.test.tsx",
+      "case_index": 0,
+      "name": "visitor-initiated isolated project experience unreviewed providers offer external access without executing a frame",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-demo.test.tsx",
+      "case_index": 1,
+      "name": "visitor-initiated isolated project experience no interactive frame or video loads until requested, with separate evidence actions",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-demo.test.tsx",
+      "case_index": 2,
+      "name": "visitor-initiated isolated project experience slow loading remains uncertain and retry/stop cleanly replace and remove the frame",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-demo.test.tsx",
+      "case_index": 3,
+      "name": "visitor-initiated isolated project experience a frame load event never claims a working demo, and external launch remains available",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-demo.test.tsx",
+      "case_index": 4,
+      "name": "visitor-initiated isolated project experience missing fallback media and unplayable video retain descriptions, links and other evidence",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-demo.test.tsx",
+      "case_index": 5,
+      "name": "visitor-initiated isolated project experience supports independent video evidence without a playable frame",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-demo.test.tsx",
+      "case_index": 6,
+      "name": "visitor-initiated isolated project experience supports independent source evidence without a playable frame",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-demo.test.tsx",
+      "case_index": 7,
+      "name": "visitor-initiated isolated project experience supports independent fallback_image evidence without a playable frame",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-demo.test.tsx",
+      "case_index": 8,
+      "name": "visitor-initiated isolated project experience supports independent fallback_video evidence without a playable frame",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-demo.test.tsx",
+      "case_index": 9,
+      "name": "visitor-initiated isolated project experience supports independent fallback_link evidence without a playable frame",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-demo.test.tsx",
+      "case_index": 10,
+      "name": "visitor-initiated isolated project experience unsafe legacy media cannot become links or embedded content",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-detail.test.tsx",
+      "case_index": 0,
+      "name": "public project detail renders the complete project evidence structure",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-detail.test.tsx",
+      "case_index": 1,
+      "name": "public project detail keeps technologies conceptually separate from contributor roles and skills",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-detail.test.tsx",
+      "case_index": 2,
+      "name": "public project detail links every contributor in the public projection",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-detail.test.tsx",
+      "case_index": 3,
+      "name": "public project detail renders a broken optional URL as a safe accessible external link",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-detail.test.tsx",
+      "case_index": 4,
+      "name": "public project detail preserves project identity in the inquiry action",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-detail.test.tsx",
+      "case_index": 5,
+      "name": "public project detail keeps primary project actions keyboard reachable",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-detail.test.tsx",
+      "case_index": 6,
+      "name": "public project detail settles all content immediately for reduced motion",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-detail.test.tsx",
+      "case_index": 7,
+      "name": "project route states shows a useful project-specific not-found state",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-detail.test.tsx",
+      "case_index": 8,
+      "name": "project route states shows a distinct recoverable server error state",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-editor.test.tsx",
+      "case_index": 0,
+      "name": "manual project editor manual creation sends technologies and zero repositories without ownership fields",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-editor.test.tsx",
+      "case_index": 1,
+      "name": "manual project editor a stale save preserves input and requires confirmation before reloading",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-editor.test.tsx",
+      "case_index": 2,
+      "name": "manual project editor field validation and network failures keep entered values available",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-editor.test.tsx",
+      "case_index": 3,
+      "name": "manual project editor publication is explicit, revision bound, and cancel does not send a request",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-editor.test.tsx",
+      "case_index": 4,
+      "name": "manual project editor repository and typed media rows remain labeled and keyboard reachable",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-team.test.tsx",
+      "case_index": 0,
+      "name": "personal project team controls only own role, statement and visibility are sent with the contribution revision",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-team.test.tsx",
+      "case_index": 1,
+      "name": "personal project team controls stale contribution retains unsaved text and asks before replacing it",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-team.test.tsx",
+      "case_index": 2,
+      "name": "personal project team controls invitation discloses public defaults and has no personal edit form before consent",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-team.test.tsx",
+      "case_index": 3,
+      "name": "personal project team controls stale transfer disables acceptance but retains a decline action",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/project-team.test.tsx",
+      "case_index": 4,
+      "name": "personal project team controls removed relationships show a notice without exposing contribution editing",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/resume-import.test.tsx",
+      "case_index": 0,
+      "name": "resume import review does not change manual data until approved candidates are explicitly applied",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/resume-import.test.tsx",
+      "case_index": 1,
+      "name": "resume import review cancel and extraction failure preserve all existing fields",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/resume-import.test.tsx",
+      "case_index": 2,
+      "name": "resume import review replace mode changes only profile fields represented by extracted candidates",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/student-auth.test.tsx",
+      "case_index": 0,
+      "name": "student authentication controls starts GitHub sign-in from the keyboard without adding scopes",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/student-auth.test.tsx",
+      "case_index": 1,
+      "name": "student authentication controls disables provider sign-in when server configuration is absent",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/student-auth.test.tsx",
+      "case_index": 2,
+      "name": "student authentication controls reports a safe provider-start failure",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/student-auth.test.tsx",
+      "case_index": 3,
+      "name": "student authentication controls calls the server-backed sign-out endpoint and reports failures",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/student-auth.test.tsx",
+      "case_index": 4,
+      "name": "student authentication controls returns to sign-in after a successful sign-out",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/student-profile.test.tsx",
+      "case_index": 0,
+      "name": "public student profile renders the complete professional shell from structured profile data",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/student-profile.test.tsx",
+      "case_index": 1,
+      "name": "public student profile renders every project with a clear role and future project route",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/student-profile.test.tsx",
+      "case_index": 2,
+      "name": "public student profile renders safe professional and project links",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/student-profile.test.tsx",
+      "case_index": 3,
+      "name": "public student profile preserves student identity in the employer inquiry action",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/student-profile.test.tsx",
+      "case_index": 4,
+      "name": "public student profile keeps the complete link workflow keyboard accessible",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/student-profile.test.tsx",
+      "case_index": 5,
+      "name": "public student profile settles all profile content immediately for reduced motion",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/student-profile.test.tsx",
+      "case_index": 6,
+      "name": "public student profile renders the owner preview from the public projection and identifies omitted fields",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/student-profile.test.tsx",
+      "case_index": 7,
+      "name": "public student profile applies each controlled preset, hero treatment, and semantic section order",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/student-profile.test.tsx",
+      "case_index": 8,
+      "name": "student profile route states shows a non-disclosing profile-specific not-found state",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/student-profile.test.tsx",
+      "case_index": 9,
+      "name": "student profile route states shows a recoverable database error state",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/talent-directory.test.tsx",
+      "case_index": 0,
+      "name": "talent directory renders API results, count, required card evidence, and stable profile links",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/talent-directory.test.tsx",
+      "case_index": 1,
+      "name": "talent directory submits search to the API and serializes it into the URL",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/talent-directory.test.tsx",
+      "case_index": 2,
+      "name": "talent directory keeps advanced expressions shareable through the existing q parameter",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/talent-directory.test.tsx",
+      "case_index": 3,
+      "name": "talent directory opens accessible search tips by hover, click, keyboard, Escape, and outside click",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/talent-directory.test.tsx",
+      "case_index": 4,
+      "name": "talent directory shows malformed search feedback inline and preserves valid results",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/talent-directory.test.tsx",
+      "case_index": 5,
+      "name": "talent directory supports multiple API-backed filters, individual removal, and Clear All",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/talent-directory.test.tsx",
+      "case_index": 6,
+      "name": "talent directory restores repeated filter values from a reload-safe query",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/talent-directory.test.tsx",
+      "case_index": 7,
+      "name": "talent directory shows a deliberate empty state while retaining filters, then clears them",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/talent-directory.test.tsx",
+      "case_index": 8,
+      "name": "talent directory shows a recoverable backend error instead of an empty directory",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/talent-directory.test.tsx",
+      "case_index": 9,
+      "name": "talent directory keeps search and filters keyboard operable when Three.js is unavailable",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/talent-directory.test.tsx",
+      "case_index": 10,
+      "name": "talent directory keeps every chapter and the directory functional when GSAP does not initialize",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/talent-directory.test.tsx",
+      "case_index": 11,
+      "name": "talent directory moves focus to the stable result summary when a focused card disappears",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/talent-directory.test.tsx",
+      "case_index": 12,
+      "name": "talent directory settles all content immediately when reduced motion is requested",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/talent-directory.test.tsx",
+      "case_index": 13,
+      "name": "talent URL helpers round-trips multi-valued filters without collapsing them",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/frontend/talent-directory.test.tsx",
+      "case_index": 14,
+      "name": "talent URL helpers round-trips commas, pipes, and quotes in q",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/affiliation-verification.test.ts",
+      "case_index": 0,
+      "name": "affiliation verification primitives accepts only an exact configured domain and normalizes case",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/affiliation-verification.test.ts",
+      "case_index": 1,
+      "name": "affiliation verification primitives caps link lifetime at 30 minutes and supports configured domains",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/affiliation-verification.test.ts",
+      "case_index": 2,
+      "name": "affiliation verification primitives requires an HTTPS public origin in production",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/affiliation-verification.test.ts",
+      "case_index": 3,
+      "name": "affiliation verification primitives allows the explicit controlled browser runtime to use loopback HTTP",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/affiliation-verification.test.ts",
+      "case_index": 4,
+      "name": "affiliation verification primitives generates high-entropy opaque tokens and stable non-reversible hashes",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/affiliation-verification.test.ts",
+      "case_index": 5,
+      "name": "affiliation verification primitives builds branded text and HTML without injecting the link as markup",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/affiliation-verification.test.ts",
+      "case_index": 6,
+      "name": "affiliation verification primitives selects Gmail without falling through and sends from the configured account",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/affiliation-verification.test.ts",
+      "case_index": 7,
+      "name": "affiliation verification primitives fails closed for missing or unknown provider configuration",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/affiliation-verification.test.ts",
+      "case_index": 8,
+      "name": "affiliation verification primitives uses Resend only when selected and preserves its configured sender",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/affiliation-verification.test.ts",
+      "case_index": 9,
+      "name": "affiliation verification primitives returns a sanitized error when Gmail rejects or times out",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/auth-config.test.ts",
+      "case_index": 0,
+      "name": "authentication configuration requests the minimum GitHub login scope without repository access",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/auth-config.test.ts",
+      "case_index": 1,
+      "name": "authentication configuration normalizes callback undefined safely",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/auth-config.test.ts",
+      "case_index": 2,
+      "name": "authentication configuration normalizes callback null safely",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/auth-config.test.ts",
+      "case_index": 3,
+      "name": "authentication configuration normalizes callback https://attacker.example/steal safely",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/auth-config.test.ts",
+      "case_index": 4,
+      "name": "authentication configuration normalizes callback //attacker.example/steal safely",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/auth-config.test.ts",
+      "case_index": 5,
+      "name": "authentication configuration normalizes callback javascript:alert(1) safely",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/auth-config.test.ts",
+      "case_index": 6,
+      "name": "authentication configuration normalizes callback /student/dashboard safely",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/auth-config.test.ts",
+      "case_index": 7,
+      "name": "authentication configuration normalizes callback /student/dashboard?tab=identity safely",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/database-safety.test.ts",
+      "case_index": 0,
+      "name": "database safety normalizes Supabase session and transaction poolers to one logical target",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/database-safety.test.ts",
+      "case_index": 1,
+      "name": "database safety treats separate database names in one Supabase project as isolated",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/database-safety.test.ts",
+      "case_index": 2,
+      "name": "database safety refuses destructive tests across different ports of the same database",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/database-safety.test.ts",
+      "case_index": 3,
+      "name": "database safety allows test and development databases with distinct database names",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/database-safety.test.ts",
+      "case_index": 4,
+      "name": "database safety always refuses the protected production project",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/database-safety.test.ts",
+      "case_index": 5,
+      "name": "database safety requires development migrations to match the runtime database",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/database-security-hardening.test.ts",
+      "case_index": 0,
+      "name": "database Data API hardening protects every application-owned table in both migrations",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/database-security-hardening.test.ts",
+      "case_index": 1,
+      "name": "database Data API hardening uses deny-by-default RLS, grants, and future-object controls",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/database-security-hardening.test.ts",
+      "case_index": 2,
+      "name": "database Data API hardening keeps production scripts target-guarded and free of row reads",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/database-security-hardening.test.ts",
+      "case_index": 3,
+      "name": "database Data API hardening synchronizes production with the exact Drizzle migration",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/fixture-ids.test.ts",
+      "case_index": 0,
+      "name": "deterministic fixture identifiers the same source values always create the same identifiers",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/fixture-ids.test.ts",
+      "case_index": 1,
+      "name": "deterministic fixture identifiers different exact skill names remain independent",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/fixture-validation.test.ts",
+      "case_index": 0,
+      "name": "fixture validation official fixtures validate",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/fixture-validation.test.ts",
+      "case_index": 1,
+      "name": "fixture validation invalid enum values fail",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/fixture-validation.test.ts",
+      "case_index": 2,
+      "name": "fixture validation an unknown skill reference fails",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/fixture-validation.test.ts",
+      "case_index": 3,
+      "name": "fixture validation an unknown project reference fails",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/fixture-validation.test.ts",
+      "case_index": 4,
+      "name": "fixture validation an unknown contributor student fails",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/fixture-validation.test.ts",
+      "case_index": 5,
+      "name": "fixture validation a project_ids and contributors mismatch fails",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/fixture-validation.test.ts",
+      "case_index": 6,
+      "name": "fixture validation duplicate skills and availability values fail",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/fixture-validation.test.ts",
+      "case_index": 7,
+      "name": "fixture validation duplicate project contributors fail",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/fixture-validation.test.ts",
+      "case_index": 8,
+      "name": "fixture validation invalid supplied URLs fail",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 0,
+      "name": "bounded public GitHub import normalizes identity https://GitHub.com/QA/XR-Studio.git/?tab=readme#top",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 1,
+      "name": "bounded public GitHub import normalizes identity https://github.com/qa/xr-studio",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 2,
+      "name": "bounded public GitHub import rejects unsafe repository http://github.com/a/b",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 3,
+      "name": "bounded public GitHub import rejects unsafe repository https://github.com:443/a/b",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 4,
+      "name": "bounded public GitHub import rejects unsafe repository https://github.com.evil.com/a/b",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 5,
+      "name": "bounded public GitHub import rejects unsafe repository https://github.com@evil.com/a/b",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 6,
+      "name": "bounded public GitHub import rejects unsafe repository https://user:pw@github.com/a/b",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 7,
+      "name": "bounded public GitHub import rejects unsafe repository https://github.com./a/b",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 8,
+      "name": "bounded public GitHub import rejects unsafe repository https://github.com/a/b/tree/main",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 9,
+      "name": "bounded public GitHub import rejects unsafe repository https://github.com/a/b%2fsecret",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 10,
+      "name": "bounded public GitHub import rejects unsafe repository https://github.com/a/%252f",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 11,
+      "name": "bounded public GitHub import rejects unsafe repository https://github.com/a/b/../c",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 12,
+      "name": "bounded public GitHub import rejects unsafe repository https://github.com/a/b\\c",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 13,
+      "name": "bounded public GitHub import rejects unsafe repository https://api.github.com/repos/a/b",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 14,
+      "name": "bounded public GitHub import rejects unsafe repository https://127.0.0.1/a/b",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 15,
+      "name": "bounded public GitHub import rejects unsafe repository https://github.com/a/..",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 16,
+      "name": "bounded public GitHub import rejects unsafe repository https://github.com/a/b//",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 17,
+      "name": "bounded public GitHub import uses two fixed unauthenticated routes and returns editable language suggestions only",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 18,
+      "name": "bounded public GitHub import handles upstream status 404",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 19,
+      "name": "bounded public GitHub import handles upstream status 401",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 20,
+      "name": "bounded public GitHub import handles upstream status 403",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 21,
+      "name": "bounded public GitHub import handles upstream status 429",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 22,
+      "name": "bounded public GitHub import handles upstream status 500",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 23,
+      "name": "bounded public GitHub import handles upstream status 302",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 24,
+      "name": "bounded public GitHub import private/mismatched/malformed and oversized responses cannot leak or escape the fixed upstream",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/github-import.test.ts",
+      "case_index": 25,
+      "name": "bounded public GitHub import times out within its own abort budget",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/inquiry-api-error.test.ts",
+      "case_index": 0,
+      "name": "inquiry API database failure returns a recoverable structured 500 rather than validation or not-found",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/inquiry-template.test.ts",
+      "case_index": 0,
+      "name": "contextual inquiry templates uses only trusted student name and headline for student context",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/inquiry-template.test.ts",
+      "case_index": 1,
+      "name": "contextual inquiry templates uses trusted project title, ID, and context",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/inquiry-template.test.ts",
+      "case_index": 2,
+      "name": "contextual inquiry templates detects only canonical unresolved prompts",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/inquiry-template.test.ts",
+      "case_index": 3,
+      "name": "contextual inquiry templates distinguishes substantial edits for reset protection",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/inquiry-validation.test.ts",
+      "case_index": 0,
+      "name": "inquiry validation trims fields and normalizes contact email",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/inquiry-validation.test.ts",
+      "case_index": 1,
+      "name": "inquiry validation validates companyName",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/inquiry-validation.test.ts",
+      "case_index": 2,
+      "name": "inquiry validation validates contactName",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/inquiry-validation.test.ts",
+      "case_index": 3,
+      "name": "inquiry validation validates contactEmail",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/inquiry-validation.test.ts",
+      "case_index": 4,
+      "name": "inquiry validation validates description",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/inquiry-validation.test.ts",
+      "case_index": 5,
+      "name": "inquiry validation rejects invalid source types and unsupported spoofing fields",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/inquiry-validation.test.ts",
+      "case_index": 6,
+      "name": "inquiry validation rejects recognized template prompts with actionable feedback",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/inquiry-validation.test.ts",
+      "case_index": 7,
+      "name": "inquiry validation allows unrelated bracketed custom text",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/project-api-error.test.ts",
+      "case_index": 0,
+      "name": "project API failure isolation database failures return a structured 500 rather than a false 404",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/project-evidence-url.test.ts",
+      "case_index": 0,
+      "name": "deployment-compatible evidence boundaries embedding is confined to the reviewed fixture and static providers, with no application-page embedding",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/project-evidence-url.test.ts",
+      "case_index": 1,
+      "name": "deployment-compatible evidence boundaries official fixtures are copied byte-for-byte into public static paths",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/project-evidence-url.test.ts",
+      "case_index": 2,
+      "name": "deployment-compatible evidence boundaries only exact reviewed relative paths are accepted",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/project-evidence-url.test.ts",
+      "case_index": 3,
+      "name": "deployment-compatible evidence boundaries structured fixture media persist separately without permitting raw iframe markup",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/project-validation.test.ts",
+      "case_index": 0,
+      "name": "shared project input boundaries zero repositories and unknown dates remain valid",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/project-validation.test.ts",
+      "case_index": 1,
+      "name": "shared project input boundaries rejects unsafe URL http://github.com/org/repo",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/project-validation.test.ts",
+      "case_index": 2,
+      "name": "shared project input boundaries rejects unsafe URL https://localhost/demo",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/project-validation.test.ts",
+      "case_index": 3,
+      "name": "shared project input boundaries rejects unsafe URL https://localhost./demo",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/project-validation.test.ts",
+      "case_index": 4,
+      "name": "shared project input boundaries rejects unsafe URL https://127.0.0.1/demo",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/project-validation.test.ts",
+      "case_index": 5,
+      "name": "shared project input boundaries rejects unsafe URL https://[::1]/",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/project-validation.test.ts",
+      "case_index": 6,
+      "name": "shared project input boundaries rejects unsafe URL https://internal/demo",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/project-validation.test.ts",
+      "case_index": 7,
+      "name": "shared project input boundaries rejects unsafe URL https://host.local/demo",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/project-validation.test.ts",
+      "case_index": 8,
+      "name": "shared project input boundaries rejects unsafe URL https://user:secret@example.com/",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/project-validation.test.ts",
+      "case_index": 9,
+      "name": "shared project input boundaries rejects unsafe URL https://example.com:8443/",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/project-validation.test.ts",
+      "case_index": 10,
+      "name": "shared project input boundaries rejects unsafe URL javascript:alert(1)",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/project-validation.test.ts",
+      "case_index": 11,
+      "name": "shared project input boundaries rejects unsafe URL <iframe src='https://example.com'>",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/project-validation.test.ts",
+      "case_index": 12,
+      "name": "shared project input boundaries normalizes GitHub keys independently from a permanent project ID",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/project-validation.test.ts",
+      "case_index": 13,
+      "name": "shared project input boundaries allows multiple distinct repositories and distinct media types",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/project-validation.test.ts",
+      "case_index": 14,
+      "name": "shared project input boundaries rejects ownership, arbitrary HTML fields, duplicate primary media and invalid dates",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/resume-extraction.test.ts",
+      "case_index": 0,
+      "name": "deterministic resume extraction extracts grounded candidates from the clean single-column fixture",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/resume-extraction.test.ts",
+      "case_index": 1,
+      "name": "deterministic resume extraction minimal fixture produces only its grounded education candidate",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/resume-extraction.test.ts",
+      "case_index": 2,
+      "name": "deterministic resume extraction keeps multi-column education and experience separated",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/resume-extraction.test.ts",
+      "case_index": 3,
+      "name": "deterministic resume extraction treats embedded commands as inert text and excludes them from suggestions",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/resume-extraction.test.ts",
+      "case_index": 4,
+      "name": "deterministic resume extraction rejects spoofed, corrupt, and oversized inputs before returning candidates",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/resume-extraction.test.ts",
+      "case_index": 5,
+      "name": "deterministic resume extraction does not misreport a missing deployed PDF.js worker as an unreadable resume",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/resume-extraction.test.ts",
+      "case_index": 6,
+      "name": "deterministic resume extraction parses Word-style heading variants, distinct experience entries, and split links",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/resume-extraction.test.ts",
+      "case_index": 7,
+      "name": "deterministic resume extraction keeps right-aligned Word dates in one column unless both sides have headings",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/resume-runtime-config.test.ts",
+      "case_index": 0,
+      "name": "deployed resume extraction runtime traces the PDF.js fake-worker module into the production function",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/student-access-route.test.ts",
+      "case_index": 0,
+      "name": "student access gateway sends signed-out visitors to GitHub sign-in",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/student-access-route.test.ts",
+      "case_index": 1,
+      "name": "student access gateway sends an unverified student to affiliation verification",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/student-access-route.test.ts",
+      "case_index": 2,
+      "name": "student access gateway sends a verified student to their dashboard",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/student-profile-validation.test.ts",
+      "case_index": 0,
+      "name": "student profile draft validation normalizes links and de-duplicates standardized selections",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/student-profile-validation.test.ts",
+      "case_index": 1,
+      "name": "student profile draft validation rejects ownership and profile identifiers supplied by a client",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/student-profile-validation.test.ts",
+      "case_index": 2,
+      "name": "student profile draft validation rejects unsafe or non-GitHub URLs",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/student-profile-validation.test.ts",
+      "case_index": 3,
+      "name": "student profile draft validation rejects unsafe or non-GitHub URLs",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/student-profile-validation.test.ts",
+      "case_index": 4,
+      "name": "student profile draft validation rejects unsafe or non-GitHub URLs",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/student-profile-validation.test.ts",
+      "case_index": 5,
+      "name": "student profile draft validation keeps markup-like biography content as plain text and enforces its limit",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/student-profile-validation.test.ts",
+      "case_index": 6,
+      "name": "student profile draft validation allowlists presentation choices and requires each ordered section exactly once",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/talent-query.test.ts",
+      "case_index": 0,
+      "name": "talent query normalization trims text and de-duplicates repeated filters in first-seen order",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/talent-query.test.ts",
+      "case_index": 1,
+      "name": "talent query normalization an empty q behaves as no text filter",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/talent-query.test.ts",
+      "case_index": 2,
+      "name": "talent query normalization escapes every character with SQL LIKE meaning",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/talent-query.test.ts",
+      "case_index": 3,
+      "name": "talent query normalization rejects invalid query skill=Unknown",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/talent-query.test.ts",
+      "case_index": 4,
+      "name": "talent query normalization rejects invalid query availability=temporary",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/talent-query.test.ts",
+      "case_index": 5,
+      "name": "talent query normalization rejects invalid query status=staff",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/talent-query.test.ts",
+      "case_index": 6,
+      "name": "talent search expression parser parses React",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/talent-query.test.ts",
+      "case_index": 7,
+      "name": "talent search expression parser parses Machine Learning",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/talent-query.test.ts",
+      "case_index": 8,
+      "name": "talent search expression parser parses React, TypeScript",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/talent-query.test.ts",
+      "case_index": 9,
+      "name": "talent search expression parser parses React | TypeScript",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/talent-query.test.ts",
+      "case_index": 10,
+      "name": "talent search expression parser parses Unity | Blender, Maya",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/talent-query.test.ts",
+      "case_index": 11,
+      "name": "talent search expression parser parses \"Machine Learning\"",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/talent-query.test.ts",
+      "case_index": 12,
+      "name": "talent search expression parser parses \"Research, Design\", React",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/talent-query.test.ts",
+      "case_index": 13,
+      "name": "talent search expression parser parses \"C|C++\" | Rust",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/talent-query.test.ts",
+      "case_index": 14,
+      "name": "talent search expression parser parses   React |  TypeScript , Figma  ",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/talent-query.test.ts",
+      "case_index": 15,
+      "name": "talent search expression parser parses React | react | REACT",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/talent-query.test.ts",
+      "case_index": 16,
+      "name": "talent search expression parser parses \"Say \\\"hello\\\"\"",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/talent-query.test.ts",
+      "case_index": 17,
+      "name": "talent search expression parser rejects malformed expression React,",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/talent-query.test.ts",
+      "case_index": 18,
+      "name": "talent search expression parser rejects malformed expression | React",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/talent-query.test.ts",
+      "case_index": 19,
+      "name": "talent search expression parser rejects malformed expression React || TypeScript",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/talent-query.test.ts",
+      "case_index": 20,
+      "name": "talent search expression parser rejects malformed expression \"React",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/talent-query.test.ts",
+      "case_index": 21,
+      "name": "talent search expression parser rejects malformed expression React,,TypeScript",
+      "status": "passed"
+    },
+    {
+      "suite": "unit",
+      "file": "tests/unit/talent-query.test.ts",
+      "case_index": 22,
+      "name": "talent search expression parser enforces expression complexity and length limits",
+      "status": "passed"
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/affiliation-verification.spec.ts",
+      "name": "authenticated student confirms a single-use affiliation link",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/affiliation-verification.spec.ts",
+      "name": "authenticated student confirms a single-use affiliation link",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/auth.spec.ts",
+      "name": "student sign-in is accessible and keyboard-operable",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/auth.spec.ts",
+      "name": "student dashboard redirects unauthenticated visitors",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/auth.spec.ts",
+      "name": "student verification and its APIs fail closed when signed out",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/auth.spec.ts",
+      "name": "Release 1 public journeys remain unauthenticated",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/auth.spec.ts",
+      "name": "student sign-in is accessible and keyboard-operable",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/auth.spec.ts",
+      "name": "student dashboard redirects unauthenticated visitors",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/auth.spec.ts",
+      "name": "student verification and its APIs fail closed when signed out",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/auth.spec.ts",
+      "name": "Release 1 public journeys remain unauthenticated",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/branding.spec.ts",
+      "name": "supplied NOT ImmXrsive identity spans public, inquiry, and student access pages",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/branding.spec.ts",
+      "name": "supplied NOT ImmXrsive identity spans public, inquiry, and student access pages",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "student inquiry renders trusted source context and a locked form",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "project inquiry retains the project and never selects a contributor",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "template reset protects substantial edits and restores source context",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "unresolved prompts are blocked locally while custom bracket text is allowed",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "accessible validation feedback retains entered employer values",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "duplicate submission is blocked while pending and success is announced",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "backend failure is recoverable without losing data",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "invalid and unpublished student inquiry routes are indistinguishable",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "invalid project inquiry route has a useful unavailable state",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "keyboard workflow and visible focus cover every form control",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "reduced motion leaves context and form immediately complete",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "390px inquiry form and success state have no horizontal overflow",
+      "project": "desktop",
+      "status": "skipped",
+      "attempts": 1,
+      "skip_reason": "mobile-only assertion"
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "student inquiry renders trusted source context and a locked form",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "project inquiry retains the project and never selects a contributor",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "template reset protects substantial edits and restores source context",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "unresolved prompts are blocked locally while custom bracket text is allowed",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "accessible validation feedback retains entered employer values",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "duplicate submission is blocked while pending and success is announced",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "backend failure is recoverable without losing data",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "invalid and unpublished student inquiry routes are indistinguishable",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "invalid project inquiry route has a useful unavailable state",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "keyboard workflow and visible focus cover every form control",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "reduced motion leaves context and form immediately complete",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/inquiry.spec.ts",
+      "name": "390px inquiry form and success state have no horizontal overflow",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/manual-project.spec.ts",
+      "name": "verified student manually creates, previews, resolves conflicts and publishes canonical evidence",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/manual-project.spec.ts",
+      "name": "verified student manually creates, previews, resolves conflicts and publishes canonical evidence",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/private-student-profile.spec.ts",
+      "name": "verified student creates and returns to a private profile draft",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/private-student-profile.spec.ts",
+      "name": "verified student creates and returns to a private profile draft",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-demo.spec.ts",
+      "name": "official playable fixture interacts inside an isolated frame while fallback and navigation survive failures",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-demo.spec.ts",
+      "name": "official playable fixture interacts inside an isolated frame while fallback and navigation survive failures",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-detail.spec.ts",
+      "name": "project supports direct navigation, reload, and its complete evidence shell",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-detail.spec.ts",
+      "name": "canonical project shows ordered contributor roles and public profile links",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-detail.spec.ts",
+      "name": "unpublished contributor identifier and role stay out of the public project",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-detail.spec.ts",
+      "name": "broken optional asset remains an ordinary safe link without breaking the page",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-detail.spec.ts",
+      "name": "project inquiry handoff preserves project identity without choosing a contributor",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-detail.spec.ts",
+      "name": "student evidence reaches the canonical page and browser back remains natural",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-detail.spec.ts",
+      "name": "project links are keyboard reachable with visible focus",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-detail.spec.ts",
+      "name": "reduced motion leaves every project section immediately available",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-detail.spec.ts",
+      "name": "390px project page retains content and has no horizontal overflow",
+      "project": "desktop",
+      "status": "skipped",
+      "attempts": 1,
+      "skip_reason": "mobile-only assertion"
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-detail.spec.ts",
+      "name": "unknown project has a useful project-specific not-found experience",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-detail.spec.ts",
+      "name": "WebGL failure cannot remove project content",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-detail.spec.ts",
+      "name": "project supports direct navigation, reload, and its complete evidence shell",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-detail.spec.ts",
+      "name": "canonical project shows ordered contributor roles and public profile links",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-detail.spec.ts",
+      "name": "unpublished contributor identifier and role stay out of the public project",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-detail.spec.ts",
+      "name": "broken optional asset remains an ordinary safe link without breaking the page",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-detail.spec.ts",
+      "name": "project inquiry handoff preserves project identity without choosing a contributor",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-detail.spec.ts",
+      "name": "student evidence reaches the canonical page and browser back remains natural",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-detail.spec.ts",
+      "name": "project links are keyboard reachable with visible focus",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-detail.spec.ts",
+      "name": "reduced motion leaves every project section immediately available",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-detail.spec.ts",
+      "name": "390px project page retains content and has no horizontal overflow",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-detail.spec.ts",
+      "name": "unknown project has a useful project-specific not-found experience",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-detail.spec.ts",
+      "name": "WebGL failure cannot remove project content",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-import.spec.ts",
+      "name": "GitHub suggestions remain editable and duplicate view/join leads through independent contributor consent",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-import.spec.ts",
+      "name": "GitHub suggestions remain editable and duplicate view/join leads through independent contributor consent",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-team.spec.ts",
+      "name": "independent students consent, own their evidence, restore relationships and transfer maintenance",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/project-team.spec.ts",
+      "name": "independent students consent, own their evidence, restore relationships and transfer maintenance",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/release-1-acceptance.spec.ts",
+      "name": "Scenario A: search and filters lead through project evidence to project inquiry",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/release-1-acceptance.spec.ts",
+      "name": "Scenario B: two-skill AND, individual removal, Clear All, and student inquiry",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/release-1-acceptance.spec.ts",
+      "name": "Scenario C: stable deep links survive reload and browser back",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/release-1-acceptance.spec.ts",
+      "name": "Scenario D: unpublished and invalid routes fail safely",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/release-1-acceptance.spec.ts",
+      "name": "Scenario E: P07 remains usable beside its broken optional URL",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/release-1-acceptance.spec.ts",
+      "name": "Scenario F: the complete workflow has no overflow at 390px",
+      "project": "desktop",
+      "status": "skipped",
+      "attempts": 1,
+      "skip_reason": "mobile-only acceptance scenario"
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/release-1-acceptance.spec.ts",
+      "name": "Scenario G: keyboard-only controls expose focus throughout the core workflow",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/release-1-acceptance.spec.ts",
+      "name": "Scenario H: reduced motion preserves the complete core workflow",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/release-1-acceptance.spec.ts",
+      "name": "Scenario I: missing WebGL leaves the core workflow functional",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/release-1-acceptance.spec.ts",
+      "name": "Scenario A: search and filters lead through project evidence to project inquiry",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/release-1-acceptance.spec.ts",
+      "name": "Scenario B: two-skill AND, individual removal, Clear All, and student inquiry",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/release-1-acceptance.spec.ts",
+      "name": "Scenario C: stable deep links survive reload and browser back",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/release-1-acceptance.spec.ts",
+      "name": "Scenario D: unpublished and invalid routes fail safely",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/release-1-acceptance.spec.ts",
+      "name": "Scenario E: P07 remains usable beside its broken optional URL",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/release-1-acceptance.spec.ts",
+      "name": "Scenario F: the complete workflow has no overflow at 390px",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/release-1-acceptance.spec.ts",
+      "name": "Scenario G: keyboard-only controls expose focus throughout the core workflow",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/release-1-acceptance.spec.ts",
+      "name": "Scenario H: reduced motion preserves the complete core workflow",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/release-1-acceptance.spec.ts",
+      "name": "Scenario I: missing WebGL leaves the core workflow functional",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/student-profile.spec.ts",
+      "name": "published profile supports direct navigation and reload",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/student-profile.spec.ts",
+      "name": "profile exposes the complete professional shell and project evidence",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/student-profile.spec.ts",
+      "name": "browser back preserves the directory URL state",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/student-profile.spec.ts",
+      "name": "profile links are keyboard reachable with visible focus",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/student-profile.spec.ts",
+      "name": "reduced motion leaves the complete profile immediately available",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/student-profile.spec.ts",
+      "name": "390px profile has no horizontal overflow and retains every action",
+      "project": "desktop",
+      "status": "skipped",
+      "attempts": 1,
+      "skip_reason": "mobile-only assertion"
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/student-profile.spec.ts",
+      "name": "unknown and unpublished routes use the same useful not-found state",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/student-profile.spec.ts",
+      "name": "WebGL failure cannot remove profile functionality",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/student-profile.spec.ts",
+      "name": "inquiry handoff preserves the selected student in the real form",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/student-profile.spec.ts",
+      "name": "published profile supports direct navigation and reload",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/student-profile.spec.ts",
+      "name": "profile exposes the complete professional shell and project evidence",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/student-profile.spec.ts",
+      "name": "browser back preserves the directory URL state",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/student-profile.spec.ts",
+      "name": "profile links are keyboard reachable with visible focus",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/student-profile.spec.ts",
+      "name": "reduced motion leaves the complete profile immediately available",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/student-profile.spec.ts",
+      "name": "390px profile has no horizontal overflow and retains every action",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/student-profile.spec.ts",
+      "name": "unknown and unpublished routes use the same useful not-found state",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/student-profile.spec.ts",
+      "name": "WebGL failure cannot remove profile functionality",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/student-profile.spec.ts",
+      "name": "inquiry handoff preserves the selected student in the real form",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "root redirects to the talent experience",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "directory workflow remains functional and URL-addressable",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "student access is discoverable and keyboard-operable in public navigation",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "advanced expressions remain URL-addressable and browser history restores them",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "search tips are keyboard-accessible and malformed searches retain results",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "keyboard focus is visible and filters operate without a pointer",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "390px layout has no horizontal document overflow",
+      "project": "desktop",
+      "status": "skipped",
+      "attempts": 1,
+      "skip_reason": "mobile-only assertion"
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "reduced motion keeps the complete directory usable",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "a WebGL context failure leaves the directory intact",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "GSAP fallback exposes every chapter and preserves filtering",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "focused removed card hands focus to the result summary",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "native scroll advances the authored field sequence",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "motion cleanup runs when the talent page unmounts",
+      "project": "desktop",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "root redirects to the talent experience",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "directory workflow remains functional and URL-addressable",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "student access is discoverable and keyboard-operable in public navigation",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "advanced expressions remain URL-addressable and browser history restores them",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "search tips are keyboard-accessible and malformed searches retain results",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "keyboard focus is visible and filters operate without a pointer",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "390px layout has no horizontal document overflow",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "reduced motion keeps the complete directory usable",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "a WebGL context failure leaves the directory intact",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "GSAP fallback exposes every chapter and preserves filtering",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "focused removed card hands focus to the result summary",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "native scroll advances the authored field sequence",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    },
+    {
+      "suite": "browser",
+      "file": "tests/browser/talent.spec.ts",
+      "name": "motion cleanup runs when the talent page unmounts",
+      "project": "mobile-390",
+      "status": "passed",
+      "attempts": 1,
+      "skip_reason": ""
+    }
+  ]
+}

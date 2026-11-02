@@ -9,6 +9,7 @@ import {
   authSessions,
   authUsers,
   authVerifications,
+  inquiries,
   studentAffiliations,
 } from "../../src/db/schema";
 import { importFixtureData } from "../../src/fixtures/import";
@@ -25,6 +26,7 @@ test("verified student creates and returns to a private profile draft", async ({
   const suffix = `${Date.now()}-${test.info().project.name}`;
   const email = `profile-${suffix}@example.test`;
   let userId: string | undefined;
+  let inquiryId: string | undefined;
 
   try {
     await importFixtureData(connection.db, validateFixtureData(await loadFixtureSource()));
@@ -145,6 +147,12 @@ test("verified student creates and returns to a private profile draft", async ({
     const privateBody = await privateResponse.json() as { profile: { id: string } };
     const publicId = privateBody.profile.id;
     expect((await page.request.get(`/api/v1/students/${publicId}`)).status()).toBe(404);
+    const rejectedInquiry = await page.request.post("/api/v1/inquiries", { data: {
+      sourceType: "student", sourceId: publicId, companyName: "Browser Employer",
+      contactName: "Browser Contact", contactEmail: "employer@example.test",
+      description: "This request must not be accepted for an unpublished profile.",
+    } });
+    expect(rejectedInquiry.status()).toBe(404);
     await page.getByRole("link", { name: "Return to editor" }).click();
 
     page.once("dialog", (dialog) => dialog.accept());
@@ -190,6 +198,41 @@ test("verified student creates and returns to a private profile draft", async ({
     }).toBe(true);
     expect(await page.evaluate(() => document.documentElement.scrollWidth))
       .toBeLessThanOrEqual(page.viewportSize()?.width ?? 0);
+    await page.getByLabel(/company name/i).fill("Browser Employer");
+    await page.getByLabel(/contact name/i).fill("Browser Contact");
+    await page.getByLabel(/contact email/i).fill("employer@example.test");
+    await page.getByLabel(/inquiry description/i).fill("We would like to discuss this student's XR work and an internship opportunity.");
+    const submitted = page.waitForResponse((response) =>
+      response.url().endsWith("/api/v1/inquiries") && response.request().method() === "POST");
+    await page.getByRole("button", { name: /submit inquiry/i }).click();
+    const response = await submitted;
+    expect(response.status()).toBe(201);
+    const confirmation = await response.json() as { id: string };
+    inquiryId = confirmation.id;
+    await expect(page.getByText("Inquiry received")).toBeVisible();
+    const [persisted] = await connection.db.select().from(inquiries).where(eq(inquiries.id, inquiryId));
+    expect(persisted).toMatchObject({
+      studentProfileId: publicId, studentId: null, projectId: null,
+      sourceId: publicId, sourceName: "Browser Profile Student", sourceUrl: `/students/${publicId}`,
+    });
+    // A published flag alone cannot make an unverified account an inquiry source.
+    const [affiliation] = await connection.db.select().from(studentAffiliations)
+      .where(eq(studentAffiliations.userId, userId));
+    await connection.db.delete(studentAffiliations).where(eq(studentAffiliations.userId, userId));
+    try {
+      const unverified = await page.request.post("/api/v1/inquiries", { data: {
+        sourceType: "student", sourceId: publicId, companyName: "Browser Employer",
+        contactName: "Browser Contact", contactEmail: "employer@example.test",
+        description: "A published profile without verified affiliation must reject this inquiry.",
+      } });
+      expect(unverified.status()).toBe(404);
+      expect(await connection.db.select({ id: inquiries.id }).from(inquiries)
+        .where(eq(inquiries.studentProfileId, publicId))).toEqual([{ id: inquiryId }]);
+    } finally {
+      await connection.db.insert(studentAffiliations).values(affiliation);
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth))
+      .toBeLessThanOrEqual(page.viewportSize()?.width ?? 0);
     await page.goBack();
     await expect(page).toHaveURL(`/students/${publicId}`);
 
@@ -198,6 +241,12 @@ test("verified student creates and returns to a private profile draft", async ({
     await page.getByRole("button", { name: "Unpublish profile" }).click();
     await expect(page.getByText("Profile unpublished. Your maintained private data is preserved."))
       .toBeVisible();
+    const lateInquiry = await page.request.post("/api/v1/inquiries", { data: {
+      sourceType: "student", sourceId: publicId, companyName: "Browser Employer",
+      contactName: "Browser Contact", contactEmail: "employer@example.test",
+      description: "A formerly published profile must reject a stale inquiry form submission.",
+    } });
+    expect(lateInquiry.status()).toBe(404);
     expect((await page.request.get(`/api/v1/students/${publicId}`)).status()).toBe(404);
     const unpublishedSearch = await page.request.get(
       "/api/v1/talent?q=%22Browser%20private%20XR%20profile%20updated%22",
@@ -210,6 +259,7 @@ test("verified student creates and returns to a private profile draft", async ({
         .toBeLessThanOrEqual(390);
     }
   } finally {
+    if (inquiryId) await connection.db.delete(inquiries).where(eq(inquiries.id, inquiryId));
     if (userId) await connection.db.delete(authUsers).where(eq(authUsers.id, userId));
     await connection.client.end();
   }

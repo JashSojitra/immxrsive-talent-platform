@@ -1,4 +1,4 @@
-import { inArray, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 
 import type { Database } from "@/db/client";
 import {
@@ -43,6 +43,7 @@ export async function importFixtureData(
   );
   const studentIds = fixtureData.students.map((student) => student.id);
   const projectIds = fixtureData.projects.map((project) => project.id);
+  let importedProjectIds: string[] = [];
 
   const studentSkillRows = fixtureData.students.flatMap((student) =>
     student.skills.map((skillName, displayOrder) => ({
@@ -160,10 +161,12 @@ export async function importFixtureData(
             title: project.title,
             description: project.description,
             domain: project.domain,
+            publicationStatus: "published" as const,
           })),
         )
         .onConflictDoUpdate({
           target: projects.id,
+          setWhere: eq(projects.origin, "legacy_fixture"),
           set: {
             title: sql.raw('excluded."title"'),
             description: sql.raw('excluded."description"'),
@@ -172,16 +175,22 @@ export async function importFixtureData(
         });
     }
 
-    if (projectIds.length > 0) {
+    // Lock fixture-owned rows before reconciling children. A colliding student
+    // project is never overwritten or stripped of relationships by a reimport.
+    const importedRows = projectIds.length ? await tx.select({ id: projects.id }).from(projects)
+      .where(and(inArray(projects.id, projectIds), eq(projects.origin, "legacy_fixture"))).for("update") : [];
+    importedProjectIds = importedRows.map(({ id }) => id);
+    const allowed = new Set(importedProjectIds);
+    if (importedProjectIds.length > 0) {
       await tx
         .delete(projectContributors)
-        .where(inArray(projectContributors.projectId, projectIds));
+        .where(inArray(projectContributors.projectId, importedProjectIds));
       await tx
         .delete(projectTechnologies)
-        .where(inArray(projectTechnologies.projectId, projectIds));
+        .where(inArray(projectTechnologies.projectId, importedProjectIds));
       await tx
         .delete(projectAssets)
-        .where(inArray(projectAssets.projectId, projectIds));
+        .where(inArray(projectAssets.projectId, importedProjectIds));
     }
 
     if (studentIds.length > 0) {
@@ -205,14 +214,14 @@ export async function importFixtureData(
     if (professionalLinkRows.length > 0) {
       await tx.insert(professionalLinks).values(professionalLinkRows);
     }
-    if (contributorRows.length > 0) {
-      await tx.insert(projectContributors).values(contributorRows);
+    if (contributorRows.some(row => allowed.has(row.projectId))) {
+      await tx.insert(projectContributors).values(contributorRows.filter(row => allowed.has(row.projectId)));
     }
-    if (technologyRows.length > 0) {
-      await tx.insert(projectTechnologies).values(technologyRows);
+    if (technologyRows.some(row => allowed.has(row.projectId))) {
+      await tx.insert(projectTechnologies).values(technologyRows.filter(row => allowed.has(row.projectId)));
     }
-    if (projectAssetRows.length > 0) {
-      await tx.insert(projectAssets).values(projectAssetRows);
+    if (projectAssetRows.some(row => allowed.has(row.projectId))) {
+      await tx.insert(projectAssets).values(projectAssetRows.filter(row => allowed.has(row.projectId)));
     }
   });
 
@@ -223,10 +232,10 @@ export async function importFixtureData(
     availabilityOptions: AVAILABILITY_VALUES.length,
     studentAvailability: studentAvailabilityRows.length,
     professionalLinks: professionalLinkRows.length,
-    projects: fixtureData.projects.length,
-    projectContributors: contributorRows.length,
-    projectTechnologies: technologyRows.length,
-    projectAssets: projectAssetRows.length,
+    projects: importedProjectIds.length,
+    projectContributors: contributorRows.filter(row => importedProjectIds.includes(row.projectId)).length,
+    projectTechnologies: technologyRows.filter(row => importedProjectIds.includes(row.projectId)).length,
+    projectAssets: projectAssetRows.filter(row => importedProjectIds.includes(row.projectId)).length,
   };
 }
 

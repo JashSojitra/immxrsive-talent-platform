@@ -1,5 +1,67 @@
 # R2 peer QA repair and retest
 
+## Release 3 Phase 1 follow-up: UUID profile inquiry submission
+
+Verification update (October 30, 2026): the database-backed validation pending
+below has now completed against newly created localhost-only Docker PostgreSQL
+18.6 instances. Fresh 0000-0008 migration, populated pre-0008 upgrade, 26 inquiry
+integration cases, 63 API regressions, and both actual desktop/390px UUID browser
+submission journeys passed with clean exits. A restrictive-FK SQLSTATE assertion
+was corrected and unverified browser rejection coverage added; no application or
+migration change was needed during verification. Both containers were removed.
+See [complete verification evidence](release-3-phase1-verification.md) for
+identities, commands, initial failure, successful results and cleanup. The earlier
+validation notes below remain as the historical implementation-stage record.
+
+October 30, 2026 (Toronto), branch `feat/release-3`; uncommitted repair for review.
+This is separate from the deployed-status evidence below.
+
+The inquiry form could display a published account-owned profile, but POST source
+resolution queried only legacy `students`. The repair resolves eligible published
+UUID profiles through their account and verified affiliation, snapshots only the
+public name/ID/URL, and persists `inquiries.student_profile_id`. A shared row lock
+keeps profile unpublication from racing the source check and insert. Malformed,
+unknown, unpublished, unverified, and missing-status sources fail closed with the
+existing non-disclosing 404 contract. Legacy student and project routes and
+confirmation responses are unchanged.
+
+Forward-only migration `0008_r2_profile_inquiry.sql` adds the nullable restrictive
+profile FK and replaces the source check. Student inquiries require exactly one
+student FK; project inquiries require only the project FK. All null cases are
+explicit. No historical SQL migration, checksum, or existing journal entry was
+changed; the new snapshot changes only `public.inquiries`. Existing valid legacy
+and project rows satisfy the new check without a data rewrite. Migration must be
+applied before running this application version; it has not been executed here.
+
+New integration coverage checks persisted UUID context, private/ineligible
+rejection without insertion, all 16 source-type/FK-presence combinations,
+mismatched source IDs, restrictive/profile FK behavior, and legacy/project
+submission. The existing browser journey now submits the real form and checks the
+stored row in both desktop and 390px projects; it also checks rejection before
+publication and after unpublication. Test-owned inquiries are removed before
+account cleanup because the new FK intentionally restricts deletion.
+
+Validation for this repair:
+
+- `npm run typecheck`: passed.
+- `npm run lint`: passed.
+- `node node_modules/vitest/vitest.mjs run --exclude 'tests/integration/**' --pool=threads --maxWorkers=1`: 24 files, 160 tests passed, clean exit.
+- Default fork-pool `npm test` attempts stalled before test results and were
+  interrupted; thread-pool execution above completed successfully.
+- `git diff --check`: passed; only line-ending normalization warnings.
+- Historical migration SQL, existing journal entries, and snapshot chain checked;
+  prior migrations remain unchanged.
+- Integration and browser tests: not run. No explicitly verified disposable test
+  database was available. Installed PostgreSQL command-line tools lacked
+  `share/postgres.bki`; an attempted new local `initdb` failed before creating a
+  cluster. No existing database was connected to, migrated, cleared, or used as a
+  fallback. Normal development and production databases were not contacted.
+
+Ready for code review, with database-backed validation pending. Before release,
+run the new integration cases and desktop/390px journey on a verified disposable
+database, including an upgrade rehearsal preserving existing inquiries. No R3
+project features, commit, push, deployment, or tag were performed.
+
 Date: October 25, 2026 (Toronto)
 Frozen baseline: `R2-submission` at `7627b70e640b5dfe8f1cbe33adf833023cd2bf5d`  
 Post-R2 branch: `fix/r2-peer-qa-repair`  

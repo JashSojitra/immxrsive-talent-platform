@@ -328,3 +328,5 @@
     transition: none;
   }
 }
+
+.profileNav { flex-wrap: wrap; }

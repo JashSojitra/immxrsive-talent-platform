@@ -36,9 +36,9 @@ export default async function StudentProfileEditorPage() {
 
   return (
     <div className={authStyles.shell}>
-      <nav className={authStyles.nav} aria-label="Student profile editor">
+      <nav className={`${authStyles.nav} ${authStyles.profileNav}`} aria-label="Student profile editor">
         <BrandLogo className={authStyles.brand} />
-        <Link className={authStyles.backLink} href="/student/dashboard">Dashboard</Link>
+        <Link className={authStyles.backLink} href="/student/dashboard">Dashboard</Link> <Link className={authStyles.backLink} href="/student/projects">My Projects</Link>
       </nav>
       <ProfileEditor
         initialProfile={serializableProfile}

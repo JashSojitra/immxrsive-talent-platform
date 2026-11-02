@@ -10,10 +10,12 @@ import {
 } from "drizzle-orm";
 
 import type { Database } from "@/db/client";
+import { queryFeaturedProjectRows } from "@/projects/public-evidence";
 import {
   availabilityOptions,
   authUsers,
   projectContributors,
+  projects,
   skills,
   studentAvailability,
   studentProfileAvailability,
@@ -174,7 +176,8 @@ async function queryLegacyTalentDirectory(db: Database, query: TalentQuery) {
         count: countDistinct(projectContributors.projectId).mapWith(Number),
       })
       .from(projectContributors)
-      .where(inArray(projectContributors.studentId, studentIds))
+      .innerJoin(projects, eq(projects.id, projectContributors.projectId))
+      .where(and(inArray(projectContributors.studentId, studentIds), eq(projects.publicationStatus, "published")))
       .groupBy(projectContributors.studentId),
   ]);
 
@@ -226,6 +229,7 @@ async function querySelfServiceTalentDirectory(
   ]);
   const skillsByProfile = groupValuesByKey(skillRows, "profileId", "name");
   const availabilityByProfile = groupValuesByKey(availabilityRows, "profileId", "value");
+  const projectEvidence = await queryFeaturedProjectRows(db, profileIds);
 
   return publishableRows.flatMap((profile) => {
     const profileSkills = skillsByProfile.get(profile.id) ?? [];
@@ -240,7 +244,7 @@ async function querySelfServiceTalentDirectory(
       status: profile.status,
       skills: profileSkills,
       ...(publicAvailability ? { availability: publicAvailability } : {}),
-      projectEvidenceCount: 0,
+      projectEvidenceCount: projectEvidence.filter(project => project.profileId === profile.id).length,
     }];
   });
 }

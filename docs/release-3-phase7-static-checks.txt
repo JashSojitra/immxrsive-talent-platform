@@ -1,0 +1,18 @@
+Phase 7 final static checks ? 2026-11-01
+npm run typecheck: exit 0
+npm run lint: exit 0
+node node_modules/drizzle-kit/bin.cjs check: exit 0; Everything's fine
+node scripts/validate-release-3-adapter.mjs: exit 0; JSON/provisional team contract valid, official template still missing
+  Authoring attempts initially failed on a wrong page count (10 vs actual 9) and a validator regex supporting only const exports. The documentation validator was corrected to actual 9 pages and const/function exports; no application/test changes.
+git diff --check: exit 0; existing LF/CRLF conversion notices only
+Local markdown links in Phase 7 documents: all targets exist
+All 27 exact official wording blocks preserved from PDF transcription
+All 26 functional matrix references resolve to freshly passed test cases
+Independent SHA256 baseline: 248 application/test/migration/config/original-fixture/course inputs, zero changes
+Driver preservation: 96 pre-existing untracked inputs and all historical SQL unchanged
+Docker read-only cleanup check: docker ps --all --filter label=immx.phase7.run --format '{{.ID}} {{.Names}} {{.Status}}': exit 0, empty output
+Branch feat/release-3; HEAD 4c8a64d7313c1401889ae97a1223090d059008de
+Author Jash Sojitra <jash221434@gmail.com>
+R1 ref 9caf0fe58b60982e356c6802bb21a332f04136e7 unchanged
+R2 ref 88f1220b47a4e8d16123be2776afa9aba9a2b288 unchanged
+No R3 tag. No commit, push, deploy or production operation.

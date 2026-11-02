@@ -4,6 +4,8 @@ import { describe, expect, test } from "vitest";
 
 const schemaSource = readFileSync("src/db/schema.ts", "utf8");
 const migrationSource = readFileSync("drizzle/0007_harden_data_api.sql", "utf8");
+const joinMigration = readFileSync("drizzle/0010_r3_project_join_requests.sql", "utf8");
+const sharedMigration = readFileSync("drizzle/0009_r3_shared_projects.sql", "utf8");
 const productionMigration = readFileSync(
   "docs/release-2-production-security-hardening.sql",
   "utf8",
@@ -33,9 +35,16 @@ describe("database Data API hardening", () => {
   test("protects every application-owned table in both migrations", () => {
     const expected = applicationTables(schemaSource);
 
-    expect(expected).toHaveLength(24);
-    expect(protectedTables(migrationSource)).toEqual(expected);
-    expect(protectedTables(productionMigration)).toEqual(expected);
+    const historical = protectedTables(migrationSource);
+    expect(historical).toHaveLength(24);
+    expect(protectedTables(productionMigration)).toEqual(historical);
+    expect([...historical, ...protectedTables(sharedMigration), ...protectedTables(joinMigration)].sort()).toEqual(expected);
+    expect(joinMigration).toMatch(/REVOKE ALL PRIVILEGES ON TABLE/);
+    expect(joinMigration).not.toMatch(/CREATE POLICY|GRANT .* TO (anon|authenticated)/);
+    expect(sharedMigration).toMatch(/ENABLE ROW LEVEL SECURITY/);
+    expect(sharedMigration).toMatch(/REVOKE ALL PRIVILEGES ON TABLE/);
+    expect(sharedMigration).toMatch(/FROM PUBLIC, anon, authenticated/);
+    expect(sharedMigration).not.toMatch(/CREATE POLICY|GRANT .* TO (anon|authenticated)/);
   });
 
   test("uses deny-by-default RLS, grants, and future-object controls", () => {

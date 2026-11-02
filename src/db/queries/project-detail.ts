@@ -1,6 +1,7 @@
 import { and, asc, eq } from "drizzle-orm";
 
 import type { Database } from "@/db/client";
+import { queryAccountContributors, queryStructuredProjectAssets, publicAssets } from "@/projects/public-evidence";
 import {
   projectAssets,
   projectContributors,
@@ -15,9 +16,11 @@ export interface PublicProjectContributor {
   headline: string;
   role: string;
   profileUrl: string;
+  statement?: string;
 }
 
 export interface PublicProjectAsset {
+  altText?: string;
   type: string;
   label: string;
   url: string;
@@ -31,26 +34,37 @@ export interface PublicProjectDetail {
   technologies: string[];
   contributors: PublicProjectContributor[];
   assets: PublicProjectAsset[];
+  projectDate?: string | null;
+  projectStatus?: string;
 }
 
 export async function queryPublicProject(
   db: Database,
   projectId: string,
 ): Promise<PublicProjectDetail | null> {
+  return queryProjectPresentation(db, projectId, true);
+}
+
+// Internal projection for guarded maintainer preview. Public callers always use
+// queryPublicProject; no URL/query-string parameter controls this flag.
+export async function queryProjectPresentation(db: Database, projectId: string, requirePublished: boolean): Promise<PublicProjectDetail | null> {
   const [project] = await db
     .select({
       id: projects.id,
       title: projects.title,
       description: projects.description,
       domain: projects.domain,
+      origin: projects.origin,
+      projectDate: projects.projectDate,
+      projectStatus: projects.projectStatus,
     })
     .from(projects)
-    .where(eq(projects.id, projectId))
+    .where(and(eq(projects.id, projectId), requirePublished ? eq(projects.publicationStatus, "published") : undefined))
     .limit(1);
 
   if (!project) return null;
 
-  const [technologyRows, contributorRows, assetRows] = await Promise.all([
+  const [technologyRows, contributorRows, assetRows, accountRows, structuredAssets] = await Promise.all([
     db
       .select({ name: projectTechnologies.technologyName })
       .from(projectTechnologies)
@@ -85,15 +99,18 @@ export async function queryPublicProject(
       .from(projectAssets)
       .where(eq(projectAssets.projectId, projectId))
       .orderBy(asc(projectAssets.displayOrder), asc(projectAssets.id)),
+    queryAccountContributors(db, projectId),
+    queryStructuredProjectAssets(db, [projectId]),
   ]);
 
   return {
-    ...project,
+    id: project.id, title: project.title, description: project.description, domain: project.domain,
+    ...(project.origin === "student" ? { projectDate: project.projectDate, projectStatus: project.projectStatus } : {}),
     technologies: technologyRows.map(({ name }) => name),
-    contributors: contributorRows.map((contributor) => ({
+    contributors: [...contributorRows.map((contributor) => ({
       ...contributor,
       profileUrl: `/students/${contributor.studentId}`,
-    })),
-    assets: assetRows,
+    })), ...accountRows.map(({ statement, ...contributor }) => ({ ...contributor, profileUrl: `/students/${contributor.studentId}`, ...(statement ? { statement } : {}) }))],
+    assets: [...assetRows, ...publicAssets(structuredAssets, projectId)],
   };
 }

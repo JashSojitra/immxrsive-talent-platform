@@ -57,7 +57,16 @@ export function ProjectDetailMotion({ children }: { children: ReactNode }) {
         }, page);
 
         ScrollTrigger.refresh();
-        dispose = () => context.revert();
+        // Player/video/fallback expansion changes downstream chapter positions.
+        // Refresh once per layout frame, and dispose with the owning page.
+        let refreshFrame = 0; let height = page.offsetHeight;
+        const observer = typeof ResizeObserver !== "undefined" ? new ResizeObserver(() => {
+          if (cancelled || page.offsetHeight === height) return;
+          height = page.offsetHeight; cancelAnimationFrame(refreshFrame);
+          refreshFrame = requestAnimationFrame(() => { if (!cancelled) ScrollTrigger.refresh(); });
+        }) : null;
+        observer?.observe(page);
+        dispose = () => { observer?.disconnect(); cancelAnimationFrame(refreshFrame); context.revert(); };
       })
       .catch(() => {
         page.dataset.motion = "fallback";
