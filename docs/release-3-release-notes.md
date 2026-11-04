@@ -1,5 +1,7 @@
 # Release 3 release notes — review draft
 
+> Closure update, 2026-11-04 (proposed, not applied): quote the test exclusion glob to restore the intended unit/frontend selection on Bash; add exact-repository/import/playable/duplicate/save deterministic checks. No application source or migration changes. [Closure report](release-3-closure-report.md) records fresh results separately from Phase 7, the fixed portable source-checksum verification, 239 passing unit/frontend tests and missing live evidence. [AutoDemo and R3.1 remain deferred](release-3-post-release-roadmap.md). The historical review draft follows.
+
 Date: 2026-11-01. Branch `feat/release-3`. The assessed commit, deployment and `R3-submission` tag are not established. See [final QA](release-3-final-qa.md) and [traceability](release-3-final-traceability.md).
 
 Verified students can manually create, preview, edit and explicitly publish canonical projects. Permanent project IDs support zero, one or multiple independent repository links. Drafts stay private. Shared edits and publication use optimistic revisions; stale saves return recoverable conflicts and retain unsaved input.

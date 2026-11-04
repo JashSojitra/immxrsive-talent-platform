@@ -12,7 +12,7 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --exclude tests/integration/**",
+    "test": "vitest run --exclude \"tests/integration/**\"",
     "test:unit": "vitest run tests/unit",
     "test:integration": "node --env-file-if-exists=.env.local node_modules/vitest/vitest.mjs run tests/integration",
     "test:api": "node --env-file-if-exists=.env.local node_modules/vitest/vitest.mjs run tests/integration/talent-api.test.ts tests/integration/student-profile-api.test.ts tests/integration/project-detail-api.test.ts tests/integration/inquiry-api.test.ts tests/integration/auth-identity.test.ts tests/integration/affiliation-verification.test.ts tests/integration/private-student-profile.test.ts",

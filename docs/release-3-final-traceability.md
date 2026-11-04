@@ -1,5 +1,7 @@
 # Release 3 final requirement traceability
 
+> Closure update, 2026-11-04: the “fresh” cases and PASS labels below are historical Phase 7 results. See the [new complete 27-row closure matrix](release-3-closure-report.md#complete-requirement-audit) for source review, 239 passing unit/frontend tests including portable checksum regressions, NOT RUN DB/browser checks, production evidence gaps and current NO-GO. This worker used the repository transcription and did not inspect the excluded original Moodle PDF.
+
 Date: 2026-11-01. Authority: official five-page Moodle PDF in `docs/course/r3`, reread for Phase 7. Exact numbered wording below is transcribed with line wrapping normalized. Official clarifications for R3.06 (team editor decision) and R3.13 (recoverable removal) are reflected in the release notes.
 
 **Scope of status:** PASS means fresh Phase 7 disposable-environment acceptance evidence, not deployed production approval. Requirements R3.01?R3.26 are evaluated against current code, tests and observable behavior. R3.27 is FAIL because the required assessed tag does not exist. Public release-evidence gaps are separate mandatory release gates, even where local behavior passes. No previous report alone establishes a PASS.

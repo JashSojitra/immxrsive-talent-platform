@@ -19,6 +19,15 @@ const productionPostcheck = readFileSync(
   "utf8",
 );
 
+// Source verification only: tolerate checkout CRLF, preserving every other byte.
+// This helper is never used by migration application or runtime hashing.
+function sourceChecksum(source: Buffer) {
+  const bytes = [...source].filter((byte, index) => !(byte === 13 && source[index + 1] === 10));
+  return createHash("sha256").update(Buffer.from(bytes)).digest("hex");
+}
+
+const expectedMigrationHash = "3d9c718bef8edb14d3bcbd8bff858f6f5d822776548d69ed6c1532a63df9fe92";
+
 function applicationTables(source: string) {
   return [...source.matchAll(/pgTable\(\s*["']([^"']+)["']/g)]
     .map((match) => match[1])
@@ -72,10 +81,27 @@ describe("database Data API hardening", () => {
     expect(productionPostcheck).not.toMatch(/SELECT \* FROM public\./);
   });
 
+  test("verifies LF and CRLF source against the same legitimate checksum", () => {
+    const lf = Buffer.from(migrationSource.replace(/\r\n/g, "\n"));
+    const crlf = Buffer.from(lf.toString("utf8").replace(/\n/g, "\r\n"));
+    expect(sourceChecksum(lf)).toBe(expectedMigrationHash);
+    expect(sourceChecksum(crlf)).toBe(expectedMigrationHash);
+  });
+
+  test("rejects content, whitespace, lone CR and final-newline changes", () => {
+    const lf = migrationSource.replace(/\r\n/g, "\n");
+    for (const changed of [lf.replace("REVOKE", "GRANT"), lf.replace(" ", "  "),
+      lf.replace("\n", "\r"), lf.slice(0, -1), `${lf}-- changed\n`]) {
+      expect(changed).not.toBe(lf);
+      expect(sourceChecksum(Buffer.from(changed))).not.toBe(expectedMigrationHash);
+      expect(sourceChecksum(Buffer.from(changed.replace(/\n/g, "\r\n")))).not.toBe(expectedMigrationHash);
+    }
+  });
+
   test("synchronizes production with the exact Drizzle migration", () => {
-    const migrationHash = createHash("sha256")
-      .update(readFileSync("drizzle/0007_harden_data_api.sql"))
-      .digest("hex");
+    const migrationHash = sourceChecksum(readFileSync("drizzle/0007_harden_data_api.sql"));
+
+    expect(migrationHash).toBe(expectedMigrationHash);
 
     expect(productionMigration).toContain(migrationHash);
     expect(productionPostcheck).toContain(migrationHash);

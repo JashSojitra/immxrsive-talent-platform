@@ -1,5 +1,7 @@
 # Release 3 known issues and release gaps
 
+> Closure update, 2026-11-04: [current findings and gates](release-3-closure-report.md) supersede the old operational status below. Caller reports R3 deployed at `b81ba3df3a28f0b0e267414852f8e202129a2f19`; no independent live verification here. Exact reported import failure remains unexplained; deterministic checks pass. This patch fixes Bash expansion in `npm test`; this revision fixes source-only CRLF/LF checksum verification without altering migration bytes or expected hashes. Current unit/frontend: 239 passed, 0 failed/skipped across 33 files; lint, typecheck and build pass. Disposable DB/browser checks were NOT RUN (Docker access denied). Genuine two-contributor/import evidence, official template and assessed tag remain blockers. See [human checklist](release-3-closure-human-checklist.md). Historical text follows unchanged.
+
 Date: 2026-11-01. No failing acceptance test was found in fresh Phase 7 QA. This is not exhaustive security or device certification.
 
 Mandatory release gaps:
