@@ -35,7 +35,7 @@ export default async function StudentSignInPage({ searchParams }: SignInPageProp
       </nav>
       <main className={styles.main}>
         <section aria-labelledby="student-access-title">
-          <p className={styles.eyebrow}>Student access / Release 2</p>
+          <p className={styles.eyebrow}>Student access</p>
           <h1 className={styles.headline} id="student-access-title">
             Your work.<br /><em>Your identity.</em>
           </h1>

@@ -215,7 +215,7 @@
       "entry_point": "https://github.com/JashSojitra/immxrsive-talent-platform/releases/tag/R3-submission",
       "method_or_action": "Verify assessed tag and deployed commit",
       "role": "public",
-      "setup": "Create tag only after final acceptance",
+      "setup": "Existing immutable R3-submission tag; compare its commit to deployment records without moving or recreating it",
       "expected_behavior": "Tag exists and identifies exact assessed deployed commit"
     }
   ],
@@ -283,13 +283,14 @@
       "verified_from_user_report": "R3 deployment b81ba3df3a28f0b0e267414852f8e202129a2f19; production smoke 12/12",
       "shared_project_url": null,
       "contributor_profile_urls": [],
-      "real_import_confirmation": null,
-      "assessed_tag": null
+      "real_import_confirmation": "Manually confirmed by owner in peer QA repair context; not independently rerun by worker; date/project URL not supplied.",
+      "assessed_tag": "R3-submission (exists per owner confirmation; immutable; SHA not independently reconciled)"
     },
     "qa_documents": [
       "docs/release-3-final-qa.md",
       "docs/release-3-final-traceability.md",
-      "docs/release-3-closure-report.md"
+      "docs/release-3-closure-report.md",
+      "docs/r3-peer-qa-addendum.md"
     ]
   }
 }
