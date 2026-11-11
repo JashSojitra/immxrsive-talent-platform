@@ -61,9 +61,9 @@ test("verified student manually creates, previews, resolves conflicts and publis
     await expect(page.getByLabel("Project title", { exact: true })).toHaveValue("Spatial Learning Studio");
     expect((await page.request.get(`/api/v1/projects/${id}`)).status()).toBe(404);
     expect((await page.request.get(`/api/v1/projects/${id}?preview=true`)).status()).toBe(404);
-    // App Router can stream the not-found UI with HTTP 200. Assert the actual
-    // privacy boundary in HTML/UI; the JSON API above must still return 404.
-    const unavailable = await (await page.request.get(`/projects/${id}`)).text();
+    const privateResponse = await page.request.get(`/projects/${id}`);
+    expect(privateResponse.status()).toBe(404);
+    const unavailable = await privateResponse.text();
     expect(unavailable).toContain("noindex"); expect(unavailable).not.toContain("Spatial Learning Studio");
     expect(unavailable).not.toContain("An interactive spatial-learning prototype");
     await page.goto(`/projects/${id}`); await expect(page.getByRole("heading", { name: /Project\s+not available/i })).toBeVisible();
@@ -143,6 +143,7 @@ test("verified student manually creates, previews, resolves conflicts and publis
     await page.screenshot({ path: testInfo.outputPath("project-editor.png"), fullPage: true });
     page.once("dialog", dialog => dialog.accept()); await page.getByRole("button", { name: "Unpublish project", exact: true }).click();
     await expect(page.getByRole("status")).toContainText("Project unpublished");
+    expect((await page.request.get(`/projects/${id}`)).status()).toBe(404);
     expect((await page.request.get(`/api/v1/projects/${id}`)).status()).toBe(404);
     expect((await (await page.request.get(`/api/v1/students/${profile.id}`)).json()).projects).toEqual([]);
     expect(consoleErrors).toEqual([]);

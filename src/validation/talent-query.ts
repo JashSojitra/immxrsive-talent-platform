@@ -52,7 +52,13 @@ export function parseTalentQuery(
   authoritativeSkillNames: ReadonlySet<string>,
 ): TalentQuery {
   const q = searchParams.get("q")?.trim() ?? "";
-  const requestedSkills = uniqueTrimmed(searchParams.getAll("skill"));
+  const canonicalSkills = new Map(
+    [...authoritativeSkillNames].map((name) => [name.toLowerCase(), name]),
+  );
+  const requestedSkills = uniqueTrimmed(searchParams.getAll("skill").map((value) => {
+    const trimmed = value.trim();
+    return canonicalSkills.get(trimmed.toLowerCase()) ?? trimmed;
+  }));
   const requestedAvailability = uniqueTrimmed(searchParams.getAll("availability"));
   const requestedStatuses = uniqueTrimmed(searchParams.getAll("status"));
   const details: ApiErrorDetail[] = [];

@@ -109,3 +109,16 @@ test("WebGL failure cannot remove project content", async ({ page }) => {
   await expect(page.getByText("XR Developer", { exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: /project inquiry/i })).toBeAttached();
 });
+
+
+for (const id of ["not-a-uuid", "00000000-0000-4000-8000-000000000000"]) {
+  test(`missing project ${id} returns HTTP 404 before streaming`, async ({ request }) => {
+    const response = await request.get(`/projects/${id}`);
+    expect(response.status()).toBe(404);
+    expect(await response.text()).toMatch(/not available/i);
+  });
+}
+
+test("published fixture still returns HTTP 200", async ({ request }) => {
+  expect((await request.get("/projects/P01")).status()).toBe(200);
+});

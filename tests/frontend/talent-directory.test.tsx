@@ -332,3 +332,53 @@ describe("talent URL helpers", () => {
 });
 
 const EMPTY_FILTERS_FOR_TEST = { q: "", skill: [], availability: [], status: [] };
+
+
+describe("peer QA skill filters", () => {
+  it.each(["unity", "UnItY", "Unity"])("keeps %s selected and removable", async (skill) => {
+    window.__IMMXRSIVE_DISABLE_MOTION__ = true;
+    mockApi();
+    render(<TalentDirectory initialSearch={`skill=${skill}`} />);
+    await screen.findByText("Avery Chen");
+    const checkbox = screen.getByRole("checkbox", { name: "Unity" });
+    expect(checkbox).toBeChecked();
+    await userEvent.click(checkbox);
+    await waitFor(() => expect(window.location.search).toBe(""));
+  });
+
+  it("offers correction instead of retrying an unknown filter as an outage", async () => {
+    window.__IMMXRSIVE_DISABLE_MOTION__ = true;
+    vi.spyOn(globalThis, "fetch").mockImplementation((input) => {
+      if (String(input).includes("/skills")) return json(metadata);
+      if (String(input).includes("skill=unknown")) return json({ error: {
+        code: "INVALID_QUERY", message: "Invalid directory filters.",
+        details: [{ field: "skill", message: "Unknown standardized skill: unknown" }],
+      } }, 400);
+      return json({ items: [avery], count: 1 });
+    });
+    render(<TalentDirectory initialSearch="skill=unknown" />);
+    expect(await screen.findByRole("alert")).toHaveTextContent("Unknown standardized skill: unknown");
+    expect(screen.queryByText(/503/)).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Try again" })).not.toBeInTheDocument();
+    await userEvent.click(screen.getAllByRole("button", { name: "Clear all filters" })[0]);
+    expect(await screen.findByText("Avery Chen")).toBeInTheDocument();
+  });
+});
+
+
+it("retries a transient directory failure without changing the active filter", async () => {
+  window.__IMMXRSIVE_DISABLE_MOTION__ = true;
+  let requests = 0;
+  vi.spyOn(globalThis, "fetch").mockImplementation((input) => {
+    if (String(input).includes("/skills")) return json(metadata);
+    requests += 1;
+    if (requests === 1) return json({ error: { code: "INTERNAL_ERROR", message: "Temporarily unavailable" } }, 500);
+    expect(String(input)).toBe("/api/v1/talent?skill=unity");
+    return json({ items: [avery], count: 1 });
+  });
+  render(<TalentDirectory initialSearch="skill=unity" />);
+  await userEvent.click(await screen.findByRole("button", { name: "Try again" }));
+  expect(await screen.findByText("Avery Chen")).toBeInTheDocument();
+  expect(requests).toBe(2);
+  expect(window.location.search).toBe("?skill=unity");
+});

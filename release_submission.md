@@ -1,30 +1,32 @@
-# Release Submission
+# Release Submission — R3 post-submission correction
 
 Release: R3
-Team: team-01
+Team: team-01 (solo student)
 Project Option: Project 1
 Deployment: https://immxrsive-talent-platform.vercel.app/
 Repository: https://github.com/JashSojitra/immxrsive-talent-platform
-Release tag: R3-submission — **PENDING; do not submit as created**
-Commit: b81ba3df3a28f0b0e267414852f8e202129a2f19 — **reported deployed R3 baseline; verify final assessed SHA after any further merge**
-Adapter: evaluation_adapter.json — **replace with reconciled official-template version before assessment**
-Known issues: Live GitHub import failure reported but not reproduced; two-contributor public evidence and assessed tag pending. No verified production backup; R2 rollback after R3 drafts may expose projects. See release notes and final QA.
-Test notes: Pre-deployment disposable full R3 QA reported 158 integration/API, 230 unit/frontend and 125 browser tests passed (5 intentional mobile-only skips). Closure worker reported 239 unit/frontend passes after test reliability patch; DB/browser not rerun for that patch. Production rollout reported 12/12 smoke checks and verified migrations 0008–0010. Authenticated two-account production acceptance remains outstanding.
+Release tag: R3-submission — exists per owner's confirmation; historical assessed tag remains immutable.
+Commit: b81ba3df3a28f0b0e267414852f8e202129a2f19 — previously reported deployed baseline, not independently reconciled here with the assessed tag or current production.
+Adapter: evaluation_adapter.json — local R1 template fields inspected; official R3 schema compliance remains unverified.
 
-## Test accounts
+## Correction scope and original assessed state
 
-Use two independent consenting verified Algoma student accounts, each authenticated through the application's existing GitHub sign-in and student verification flow. Create a canonical project with account A, publish both eligible profiles, invite account B with a standardized role, and accept on account B. Provide evaluator setup assistance through the approved private course channel; do not commit passwords, private verification links or tokens. Account details and public profile URLs: **PENDING**.
+This is a post-submission evidence correction for peer QA issue #3. It does not change the assessed tag, submitted history, or establish that later repairs were assessed. The pre-correction document is preserved verbatim in `docs/archive/r3-peer-qa/release_submission.before-correction.md`; that copy is the input snapshot, not an independently retrieved tagged artifact.
 
-## Release-specific evidence
+The earlier statements “NOT YET READY”, tag “PENDING” / “not yet created”, and GitHub import “NOT VERIFIED” were stale. The owner confirms that `R3-submission` exists and that the GitHub import workflow was manually confirmed. These confirmations are user-reported evidence, not fresh authenticated checks by this repair worker. The snapshot has no local assessed tag to inspect. No exact import date, imported project URL, or assessed/deployed SHA reconciliation was supplied.
 
-- **Deployed site:** https://immxrsive-talent-platform.vercel.app/ — production was reported ready on baseline `b81ba3d`; verify final deployed SHA against the assessed tag.
-- **Repository and assessed tag:** https://github.com/JashSojitra/immxrsive-talent-platform — `R3-submission` **not yet created**.
-- **Release notes and known issues:** `docs/release-3-release-notes.md`, `docs/release-3-known-issues.md`. Shared editing is maintainer-only; accepted relationship removal is reversible.
-- **Published shared project with two accepted contributors:** **PENDING public canonical project URL and two published contributor profile URLs.** Automated two-account testing does not substitute for this persistent example.
-- **Working playable demo:** https://immxrsive-talent-platform.vercel.app/fixtures/r3/working_demo.html — live interaction reported and independently tried through a published project page.
-- **Fallback image:** https://immxrsive-talent-platform.vercel.app/fixtures/r3/fallback.svg — public smoke GET reported passed. The published QA project linking both playable and fallback is **PENDING URL**.
-- **Real public GitHub repository for import:** https://github.com/JashSojitra/immxrsive-talent-platform is a candidate, but its successful *production import workflow* is **NOT VERIFIED**; do not claim success.
-- **R3 requirement audit:** `docs/release-3-final-traceability.md`; initial local matrix 26/27 with R3.27 awaiting assessed tag. Final human acceptance is still required.
-- **Completed evaluation adapter:** `evaluation_adapter.json` — must use the official downloaded template, with deployed entry points and evaluator setup.
+## Verified functionality and evidence limits
 
-**Submission status: NOT YET READY.** Fill public collaborative evidence, confirm GitHub import, finalize adapter and assessed/deployed commit, create `R3-submission` tag, then remove pending markers.
+- GitHub import: manually confirmed by the owner. The earlier failure is not claimed to remain reproducible.
+- Collaboration: automated collaboration tests passed according to the supplied acceptance context and prior QA records. The solo student has no persistent public project demonstrating two independent human contributors. Automated accounts do not establish that human evidence.
+- Prior records report 158 integration/API passes, 230 unit/frontend passes, 125 browser passes and 5 intentional skips; a later closure worker reported 239 unit/frontend passes. Production smoke was reported 12/12. These are historical reports, not results of this repair patch.
+- The course playable and fallback fixtures are `/fixtures/r3/working_demo.html` and `/fixtures/r3/fallback.svg`. On this worker's public API inspection, project `02bf74ba-fe2a-4707-9b62-30d45fc08b01` had a misspelled playable hostname, no technologies, and no fallback. See the addendum for owner correction steps; its data has not been repaired here.
+- No production backup, private-account acceptance, or current deployed commit was verified by this job.
+
+## Evaluator access and remaining evidence
+
+Public pages require no credentials. Evaluators should use their own eligible GitHub-authenticated Algoma student accounts and existing affiliation verification. Arrange access through the approved private course channel; never publish credentials, verification links or tokens.
+
+Two consenting verified students can create a canonical project, publish eligible profiles, invite and accept with a standardized role, then supply the canonical project URL and both public profile URLs. This remains an evidence gap, not a claim of completed human collaboration. The solo-team constraint should be disclosed to the assessor rather than inventing an example.
+
+See `docs/r3-peer-qa-addendum.md` for repair scope, adapter limitations, validation, remaining manual steps and proposed issue replies. R3.1 Admin Studio is outside this correction.

@@ -105,6 +105,7 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchError, setSearchError] = useState("");
+  const [invalidFilters, setInvalidFilters] = useState(false);
   const [retryKey, setRetryKey] = useState(0);
   const query = serializeTalentFilters(filters);
   const resultIds = results?.items.map((student) => student.id).join("|") ?? "";
@@ -130,6 +131,7 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
         if (focusedCard && !response.items.some((student) => student.id === focusedCard.dataset.studentId)) {
           resultSummaryRef.current?.focus({ preventScroll: true });
         }
+        setInvalidFilters(false);
         setResults(response);
         setError("");
         setSearchError("");
@@ -137,12 +139,15 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
       })
       .catch((reason: unknown) => {
         if (!abort.signal.aborted) {
+          setInvalidFilters(false);
           if (reason instanceof ApiRequestError && reason.code === "INVALID_QUERY") {
             const queryDetail = reason.details.find((detail) => detail.field === "q");
             if (queryDetail) {
               setSearchError(queryDetail.message ?? reason.message);
             } else {
-              setError(reason.message);
+              setInvalidFilters(true);
+              setResults(null);
+              setError(reason.details.map((detail) => detail.message).filter(Boolean).join(" ") || reason.message);
             }
           } else {
             setError(apiMessage(reason));
@@ -194,7 +199,7 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
         ...current,
         [key]: checked
           ? Array.from(new Set([...current[key], value]))
-          : current[key].filter((item) => item !== value),
+          : current[key].filter((item) => key === "skill" ? item.trim().toLowerCase() !== value.trim().toLowerCase() : item !== value),
       }));
     },
     [],
@@ -345,7 +350,7 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
                 <FilterGroup
                   legend="Skills"
                   options={metadata.skills}
-                  selected={filters.skill}
+                  selected={filters.skill.map((value) => metadata.skills.find((skill) => skill.value.toLowerCase() === value.trim().toLowerCase())?.value ?? value)}
                   onChange={(value, checked) => setFilterValues("skill", value, checked)}
                 />
                 <FilterGroup
@@ -407,6 +412,8 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
               {error ? (
                 <ErrorState
                   message={error}
+                  invalidFilters={invalidFilters}
+                  onClear={clearAll}
                   onRetry={() => {
                     setLoading(true);
                     setError("");
@@ -667,13 +674,13 @@ function EmptyState({ onClear }: { onClear: () => void }) {
   );
 }
 
-function ErrorState({ message, onRetry }: { message: string; onRetry: () => void }) {
+function ErrorState({ message, onRetry, invalidFilters, onClear }: { message: string; onRetry: () => void; invalidFilters: boolean; onClear: () => void }) {
   return (
     <div className={styles.statePanel} role="alert">
-      <span className={styles.stateCode}>503 / Signal interrupted</span>
-      <h3>We couldn&apos;t load the directory.</h3>
+      <span className={styles.stateCode}>{invalidFilters ? "400 / Invalid filters" : "Signal interrupted"}</span>
+      <h3>{invalidFilters ? "Check your directory filters." : "We couldn’t load the directory."}</h3>
       <p>{message}</p>
-      <button type="button" onClick={onRetry}>Try again</button>
+      {invalidFilters ? <button type="button" onClick={onClear}>Clear all filters</button> : <button type="button" onClick={onRetry}>Try again</button>}
     </div>
   );
 }
