@@ -29,6 +29,15 @@ describe("talent query normalization", () => {
     });
   });
 
+  test.each(["react", "ReAcT", "React"])("canonicalizes known skill %s", (value) => {
+    expect(parseTalentQuery(new URLSearchParams({ skill: value }), skills).skills).toEqual(["React"]);
+  });
+
+  test("deduplicates canonical skills without accepting unknown names", () => {
+    expect(parseTalentQuery(new URLSearchParams("skill=react&skill=React"), skills).skills).toEqual(["React"]);
+    expect(() => parseTalentQuery(new URLSearchParams("skill=reactish"), skills)).toThrow(TalentQueryValidationError);
+  });
+
   test("an empty q behaves as no text filter", () => {
     expect(parseTalentQuery(new URLSearchParams("q=%20%20"), skills).q).toBe("");
   });

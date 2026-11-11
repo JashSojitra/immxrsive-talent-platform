@@ -4,6 +4,8 @@ test("student sign-in is accessible and keyboard-operable", async ({ page }, tes
   await page.goto("/student/sign-in");
 
   await expect(page.getByRole("heading", { name: /your work.*your identity/i })).toBeVisible();
+  await expect(page.getByText("Student access", { exact: true })).toBeVisible();
+  await expect(page.getByText(/Release 2/i)).toHaveCount(0);
   const signIn = page.getByRole("button", { name: "Continue with GitHub" });
   await expect(signIn).toBeEnabled();
   await page.keyboard.press("Tab");
