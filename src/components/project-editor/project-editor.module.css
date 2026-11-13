@@ -40,7 +40,7 @@
 .footer { padding: 40px 0; margin-top: 80px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: .75rem; }
 .skip { position: fixed; top: 12px; left: 12px; z-index: 30; padding: 12px; color: var(--ink); background: var(--electric); transform: translateY(-200%); }
 .skip:focus { transform: translateY(0); }
-.workspace :is(input,textarea,select,button,a):focus-visible { outline: 2px solid var(--electric); outline-offset: 4px; }
+.workspace :is(input,textarea,select,button,a,summary):focus-visible { outline: 2px solid var(--electric); outline-offset: 4px; }
 @media(max-width:650px) { .columns { grid-template-columns: minmax(0,1fr); gap: 0; } .nav { flex-wrap: wrap; padding: 16px 0; } .nav nav { gap: 18px; } .hero { padding: 60px 0 40px; } .row { padding-inline: 12px; } .actions { gap: 18px; } .actions > button { width: 100%; } }
 @media(prefers-reduced-motion:reduce) { .workspace * { scroll-behavior: auto; transition: none; } }
 
@@ -50,3 +50,5 @@
 .card h3 { overflow-wrap: anywhere; font-weight: 450; font-size: 1.5rem; }
 
 .section h2 { font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 350; letter-spacing: -.04em; margin-block: 22px; overflow-wrap: anywhere; }
+
+.card h2, .card small { overflow-wrap: anywhere; }

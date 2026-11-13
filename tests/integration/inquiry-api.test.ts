@@ -163,10 +163,13 @@ describeWithDatabase("contextual employer inquiry API", () => {
     await expect(db.insert(inquiries).values({
       sourceType: "student", sourceId: missingId, studentProfileId: missingId,
       sourceName: "Snapshot", sourceUrl: "/context", ...validEmployerFields,
-    })).rejects.toMatchObject({ cause: { code: "23503" } });
+    })).rejects.toMatchObject({ cause: {
+      code: "23503", constraint_name: "inquiries_student_profile_id_student_profiles_id_fk",
+    } });
     await expect(db.delete(studentProfiles).where(eq(studentProfiles.id, profileId)))
       .rejects.toMatchObject({ cause: {
-        code: "23001", constraint_name: "inquiries_student_profile_id_student_profiles_id_fk",
+        // PostgreSQL uses foreign_key_violation for an ON DELETE RESTRICT FK.
+        code: "23503", constraint_name: "inquiries_student_profile_id_student_profiles_id_fk",
       } });
     expect(await db.select({ id: studentProfiles.id }).from(studentProfiles)
       .where(eq(studentProfiles.id, profileId))).toEqual([{ id: profileId }]);

@@ -55,7 +55,7 @@ export function logicalDatabaseIdentity(databaseUrl: string): LogicalDatabaseIde
       host,
       port,
       database,
-      key: `postgres:${host}:${port}/${database}`,
+      key: `postgres:${["localhost", "127.0.0.1", "[::1]"].includes(host) ? "loopback" : host}:${port}/${database}`,
     };
 }
 
@@ -74,6 +74,16 @@ export function assertSafeTestDatabaseTarget(input: {
         "TEST_DATABASE_URL overlaps the logical development database; refusing destructive tests.",
       );
     }
+  }
+
+  // Automated writes are restricted to explicitly disposable, loopback databases.
+  // A different remote database name is not proof that it is safe to destroy.
+  const parsed = new URL(input.testDatabaseUrl);
+  if (testIdentity.kind !== "postgres" ||
+      !["localhost", "127.0.0.1", "[::1]"].includes(testIdentity.host) ||
+      !/^immxrsive_test_[a-z0-9_]+$/.test(testIdentity.database) ||
+      parsed.search || parsed.hash) {
+    throw new Error("Automated tests require a loopback immxrsive_test_* disposable database without URL options.");
   }
 
   return testIdentity;

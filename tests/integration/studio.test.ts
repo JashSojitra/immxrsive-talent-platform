@@ -85,4 +85,53 @@ suite("XR Studio disposable database boundaries", () => {
     expect(rows).toHaveLength(3); for (const row of rows) expect(row.relrowsecurity).toBe(true);
     const [r] = await db.execute(sql`SELECT has_table_privilege('anon','public.studio_roles','SELECT') AS allowed`); expect(r.allowed).toBe(false);
   });
+  test("concurrent edits commit exactly one revision and one audit event", async () => {
+    await submit();
+    const before = (await studioDetail(db, owner, id)).history.length;
+    const commands = await Promise.allSettled([
+      studioCommand(db, curator, id, { action: "review", version: 1 }),
+      studioCommand(db, admin, id, { action: "review", version: 1 }),
+    ]);
+    expect(commands.filter(r => r.status === "fulfilled")).toHaveLength(1);
+    const rejected = commands.find(r => r.status === "rejected");
+    expect(rejected).toMatchObject({ status: "rejected", reason: { code: "EDIT_CONFLICT" } });
+    expect((await studioDetail(db, owner, id)).history).toHaveLength(before + 1);
+  });
+  test("revoked staff cannot read or mutate a submitted project", async () => {
+    await submit();
+    await db.delete(studioRoles).where(eq(studioRoles.userId, curator));
+    await expect(studioDetail(db, curator, id)).rejects.toMatchObject({ status: 404 });
+    await expect(act(curator, "review")).rejects.toMatchObject({ status: 404 });
+    await expect(studioList(db, curator, true)).rejects.toMatchObject({ status: 403 });
+  });
+  test("audit deletion and truncation are blocked even on a disposable database", async () => {
+    await submit();
+    await expect(db.delete(studioEvents).where(eq(studioEvents.projectId, id))).rejects.toThrow();
+    await expect(db.execute(sql`TRUNCATE public.studio_events`)).rejects.toThrow();
+    expect((await studioDetail(db, owner, id)).history).toHaveLength(1);
+  });
+  test("role assignment requires super admin, logs changes and preserves the last super admin", async () => {
+    await db.update(studioRoles).set({ role: "platform_super_admin" }).where(eq(studioRoles.userId, admin));
+    await expect(db.execute(sql`SELECT public.assign_studio_role(${curator}, ${other}, 'xr_admin', 'Unauthorized')`)).rejects.toThrow();
+    await db.execute(sql`SELECT public.assign_studio_role(${admin}, ${other}, 'xr_curator', 'Synthetic grant')`);
+    expect((await studioList(db, other, true))).toBeDefined();
+    await db.execute(sql`SELECT public.assign_studio_role(${admin}, ${other}, NULL, 'Synthetic revocation')`);
+    await expect(studioList(db, other, true)).rejects.toMatchObject({ status: 403 });
+    await expect(db.execute(sql`SELECT public.assign_studio_role(${admin}, ${admin}, NULL, 'Last admin')`)).rejects.toThrow();
+    const events = await db.select().from(studioEvents).where(eq(studioEvents.actorUserId, admin));
+    expect(events.filter(e => e.action === "role_assignment")).toHaveLength(2);
+  });
+  test("browser roles have no table or operational function privileges", async () => {
+    for (const role of ["anon", "authenticated"]) {
+      for (const table of ["studio_roles", "studio_submissions", "studio_events"]) {
+        for (const privilege of ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE"]) {
+          const [row] = await db.execute(sql`SELECT has_table_privilege(${role}, ${`public.${table}`}, ${privilege}) AS allowed`);
+          expect(row.allowed).toBe(false);
+        }
+      }
+      const [row] = await db.execute(sql`SELECT has_function_privilege(${role}, 'public.assign_studio_role(text,text,text,text)', 'EXECUTE') AS allowed`);
+      expect(row.allowed).toBe(false);
+    }
+  });
+
 });

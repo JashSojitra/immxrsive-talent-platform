@@ -1,12 +1,11 @@
+import { pathToFileURL } from "node:url";
+import { resolve } from "node:path";
 import { defineConfig, devices } from "@playwright/test";
-import { existsSync } from "node:fs";
 
 import { assertSafeTestDatabaseTarget } from "./src/db/safety";
 
-if (existsSync(".env.local")) process.loadEnvFile(".env.local");
-
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;
-const developmentDatabaseUrl = process.env.DATABASE_URL;
+const developmentDatabaseUrl = process.env.DEVELOPMENT_DATABASE_URL ?? process.env.DATABASE_URL;
 if (!testDatabaseUrl) {
   throw new Error("TEST_DATABASE_URL is required for browser tests.");
 }
@@ -20,6 +19,8 @@ assertSafeTestDatabaseTarget({
 
 export default defineConfig({
   testDir: "./tests/browser",
+  globalSetup: "./tests/browser/global-setup.ts",
+  outputDir: process.env.IMMXRSIVE_PLAYWRIGHT_OUTPUT_DIR ?? "test-results",
   fullyParallel: false,
   workers: 1,
   timeout: 30_000,
@@ -30,6 +31,7 @@ export default defineConfig({
   webServer: {
     command: "npm run db:migrate:test && npm run start -- --hostname 127.0.0.1 --port 3100",
     env: {
+      NODE_OPTIONS: `--import=${pathToFileURL(resolve("tests/fixtures/github-fetch.mjs")).href}`,
       DATABASE_URL: testDatabaseUrl,
       TEST_DATABASE_URL: testDatabaseUrl,
       DEVELOPMENT_DATABASE_URL: developmentDatabaseUrl,
