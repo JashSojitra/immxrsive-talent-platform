@@ -104,6 +104,110 @@ suite("XR Studio disposable database boundaries", () => {
     await expect(act(curator, "review")).rejects.toMatchObject({ status: 404 });
     await expect(studioList(db, curator, true)).rejects.toMatchObject({ status: 403 });
   });
+  // Hold a real uncommitted authorization change, then verify the read waits
+  // on PostgreSQL's lock before observing the committed loss of access.
+  async function assertReadWaitsForAuthorizationChange(change: (tx: Parameters<Parameters<Database["transaction"]>[0]>[0]) => Promise<unknown>, read: () => Promise<unknown>, status: number) {
+    let release!: () => void;
+    let locked!: () => void;
+    const gate = new Promise<void>(resolve => { release = resolve; });
+    const ready = new Promise<void>(resolve => { locked = resolve; });
+    const changing = db.transaction(async tx => {
+      await change(tx);
+      locked();
+      await gate;
+    });
+    // Avoid an unhandled rejection if setup fails before signaling readiness.
+    await Promise.race([ready, changing]);
+    let settled = false;
+    const reading = read().then(value => ({ value }), error => ({ error })).finally(() => { settled = true; });
+    try {
+      let waiting = false;
+      const deadline = Date.now() + 5000;
+      while (!settled && Date.now() < deadline) {
+        const [row] = await db.execute(sql`SELECT EXISTS (
+          SELECT 1 FROM pg_stat_activity
+          WHERE datname = current_database() AND pid <> pg_backend_pid()
+          AND wait_event_type = 'Lock' AND query ILIKE '%for share%'
+        ) AS waiting`);
+        if (row.waiting) { waiting = true; break; }
+        await new Promise(resolve => setTimeout(resolve, 20));
+      }
+      expect(waiting).toBe(true);
+    } finally {
+      release();
+      await changing;
+      // Always collect the reader before database teardown, even on failure.
+      await reading;
+    }
+    expect(await reading).toMatchObject({ error: { status } });
+  }
+  test("detail reads serialize with an in-flight ownership transfer", async () => {
+    await submit();
+    await assertReadWaitsForAuthorizationChange(
+      tx => tx.update(projects).set({ maintainerUserId: other, version: 2 }).where(eq(projects.id, id)),
+      () => studioDetail(db, owner, id), 404,
+    );
+  });
+  test.each(["detail", "queue"])("%s reads serialize with an in-flight staff revocation", async kind => {
+    await submit();
+    await assertReadWaitsForAuthorizationChange(
+      tx => tx.delete(studioRoles).where(eq(studioRoles.userId, curator)),
+      () => kind === "detail" ? studioDetail(db, curator, id) : studioList(db, curator, true),
+      kind === "detail" ? 404 : 403,
+    );
+  });
+  // Reverse the audit's writer-first races: pause the protected data query,
+  // then prove the authorization-changing writer waits until that read ends.
+  async function assertAuthorizationHeldThroughRead(kind: "owner" | "detail" | "queue") {
+    await submit();
+    let release!: () => void;
+    let locked!: () => void;
+    const gate = new Promise<void>(resolve => { release = resolve; });
+    const ready = new Promise<void>(resolve => { locked = resolve; });
+    const table = kind === "queue" ? "studio_submissions" : "studio_events";
+    const blocking = db.transaction(async tx => {
+      await tx.execute(sql`LOCK TABLE ${sql.identifier(table)} IN ACCESS EXCLUSIVE MODE`);
+      locked();
+      await gate;
+    });
+    await Promise.race([ready, blocking]);
+    const actor = kind === "owner" ? owner : curator;
+    const reading = (kind === "queue" ? studioList(db, actor, true) : studioDetail(db, actor, id))
+      .then(value => ({ value }), error => ({ error }));
+    let changing: Promise<{ value: unknown } | { error: unknown }> | undefined;
+    async function waitForQuery(pattern: string) {
+      const deadline = Date.now() + 5000;
+      while (Date.now() < deadline) {
+        const [row] = await db.execute(sql`SELECT EXISTS (
+          SELECT 1 FROM pg_stat_activity WHERE datname = current_database()
+          AND pid <> pg_backend_pid() AND wait_event_type = 'Lock'
+          AND query ILIKE ${pattern}
+        ) AS waiting`);
+        if (row.waiting) return true;
+        await new Promise(resolve => setTimeout(resolve, 20));
+      }
+      return false;
+    }
+    try {
+      // History/queue retrieval has started, after the authorization reads.
+      expect(await waitForQuery(`%from "${table}"%`)).toBe(true);
+      const change = kind === "owner"
+        ? db.update(projects).set({ maintainerUserId: other, version: 2 }).where(eq(projects.id, id))
+        : db.delete(studioRoles).where(eq(studioRoles.userId, curator));
+      changing = Promise.resolve(change).then(value => ({ value }), error => ({ error }));
+      expect(await waitForQuery(kind === "owner" ? '%update "projects"%' : '%delete from "studio_roles"%')).toBe(true);
+    } finally {
+      release();
+      await Promise.allSettled([blocking, reading, ...(changing ? [changing] : [])]);
+    }
+    expect(await reading).not.toHaveProperty("error");
+    expect(await changing).not.toHaveProperty("error");
+    await expect(kind === "queue" ? studioList(db, actor, true) : studioDetail(db, actor, id))
+      .rejects.toMatchObject({ status: kind === "queue" ? 403 : 404 });
+  }
+  test.each(["owner", "detail", "queue"] as const)("%s authorization stays locked through private data retrieval", async kind => {
+    await assertAuthorizationHeldThroughRead(kind);
+  });
   test("audit deletion and truncation are blocked even on a disposable database", async () => {
     await submit();
     await expect(db.delete(studioEvents).where(eq(studioEvents.projectId, id))).rejects.toThrow();

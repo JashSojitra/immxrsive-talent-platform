@@ -10,22 +10,31 @@ export async function staffRole(db: Database, actor: string): Promise<Role | nul
   return (grant?.role as Role) ?? null;
 }
 export async function studioList(db: Database, actor: string, staff: boolean) {
-  const role = await staffRole(db, actor);
-  if (staff && !role) fail("FORBIDDEN", 403);
-  const rows = await db.select({ submission: studioSubmissions, project: projects }).from(studioSubmissions)
-    .innerJoin(projects, eq(projects.id, studioSubmissions.projectId))
-    .where(staff ? undefined : eq(projects.maintainerUserId, actor)).orderBy(desc(studioSubmissions.updatedAt));
-  return rows.map(({ submission, project }) => ({ submission: { ...submission, ...showcaseVisibility(submission, project) }, projectTitle: project.title }));
+  return db.transaction(async tx => {
+    // Keep authorization valid until the private queue has been read. Operational
+    // role revocation takes an incompatible table/row lock and must serialize.
+    const [grant] = await tx.select().from(studioRoles).where(eq(studioRoles.userId, actor)).for("share");
+    if (staff && !grant) fail("FORBIDDEN", 403);
+    const rows = await tx.select({ submission: studioSubmissions, project: projects }).from(studioSubmissions)
+      .innerJoin(projects, eq(projects.id, studioSubmissions.projectId))
+      .where(staff ? undefined : eq(projects.maintainerUserId, actor)).orderBy(desc(studioSubmissions.updatedAt));
+    return rows.map(({ submission, project }) => ({ submission: { ...submission, ...showcaseVisibility(submission, project) }, projectTitle: project.title }));
+  });
 }
 export async function studioDetail(db: Database, actor: string, projectId: string) {
-  const [project] = await db.select().from(projects).where(eq(projects.id, projectId));
-  const role = await staffRole(db, actor);
-  const [submission] = await db.select().from(studioSubmissions).where(eq(studioSubmissions.projectId, projectId));
-  const owner = project?.origin === "student" && project.maintainerUserId === actor;
-  // Staff cannot browse unsubmitted private projects through this endpoint.
-  if (!project || (!owner && (!role || !submission))) fail("NOT_FOUND", 404);
-  const history = submission ? await db.select().from(studioEvents).where(eq(studioEvents.projectId, projectId)).orderBy(desc(studioEvents.createdAt)) : [];
-  return { project: { id: project.id, title: project.title, description: project.description, version: project.version }, submission: submission ? { ...submission, ...showcaseVisibility(submission, project) } : null, history, owner, role };
+  return db.transaction(async tx => {
+    // Match command lock order. Holding the project and grant through history
+    // retrieval prevents a former owner/revoked reviewer reading later events.
+    const [project] = await tx.select().from(projects).where(eq(projects.id, projectId)).for("share");
+    const [grant] = await tx.select().from(studioRoles).where(eq(studioRoles.userId, actor)).for("share");
+    const [submission] = await tx.select().from(studioSubmissions).where(eq(studioSubmissions.projectId, projectId));
+    const owner = project?.origin === "student" && project.maintainerUserId === actor;
+    const role = grant ? grant.role as Role : null;
+    // Staff cannot browse unsubmitted private projects through this endpoint.
+    if (!project || (!owner && (!role || !submission))) fail("NOT_FOUND", 404);
+    const history = submission ? await tx.select().from(studioEvents).where(eq(studioEvents.projectId, projectId)).orderBy(desc(studioEvents.createdAt)) : [];
+    return { project: { id: project.id, title: project.title, description: project.description, version: project.version }, submission: submission ? { ...submission, ...showcaseVisibility(submission, project) } : null, history, owner, role };
+  });
 }
 export async function studioCommand(db: Database, actor: string, projectId: string, raw: unknown) {
   const c = commandSchema.parse(raw);
