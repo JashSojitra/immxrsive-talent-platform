@@ -1,3 +1,4 @@
+import { AdminExperience } from "@/admin/Experience";
 import Link from "next/link";
 
 import { BrandLogo } from "@/components/brand/BrandLogo";
@@ -13,7 +14,7 @@ export function ProjectDetailView({ project, preview = false }: { project: Publi
     <ProjectDetailMotion>
       <a className={styles.skipLink} href="#project-evidence">Skip to project evidence</a>
       <div className={styles.spatialBackdrop} aria-hidden="true"><span /><span /><span /></div>
-      {preview ? <aside className={styles.preview}><strong>Private preview — saved project</strong><p>This preview does not publish the project. Only published profiles appear as public contributors.</p><Link href={`/student/projects/${project.id}/edit`}>Return to editor</Link></aside> : null}
+      {preview ? <aside className={styles.preview}><strong>Private preview — saved project</strong><p>This preview does not publish the project. Only published profiles appear as public contributors.</p><Link href={project.managementMode === "ADMIN_MANAGED" ? `/admin/projects/${project.id}/edit` : `/student/projects/${project.id}/edit`}>Return to editor</Link></aside> : null}
 
       <header className={styles.siteHeader} data-project-nav>
         <BrandLogo className={styles.brand} />
@@ -43,7 +44,8 @@ export function ProjectDetailView({ project, preview = false }: { project: Publi
       </section>
 
       <div id="project-evidence">
-        <ProjectDemo key={`${project.id}-${JSON.stringify(project.assets)}`} title={project.title} assets={project.assets} />
+        {project.adminPresentation ? <AdminExperience key={`${project.id}-${JSON.stringify(project.adminPresentation)}`} content={project.adminPresentation} /> : <ProjectDemo key={`${project.id}-${JSON.stringify(project.assets)}`} title={project.title} assets={project.assets} />}
+        {project.adminPresentation && <section className={styles.technologySection}><h2>Project context</h2><p>{project.adminPresentation.institution}</p><p>Tools / frameworks: {project.adminPresentation.tools.join(", ") || "Not supplied"}</p><p>Project dates: {project.adminPresentation.startDate || "Not supplied"} — {project.adminPresentation.endDate || "Ongoing"}</p><p>Admin-managed presentation. Contributor credits are descriptive attribution and do not verify identities, confer ownership or create personal skills.</p></section>}
         <section className={styles.technologySection} aria-labelledby="technologies-title" data-project-section>
           <SectionHeading index="02" label="Technology system" id="technologies-title">
             Built with a<br /><em>project stack.</em>
@@ -88,8 +90,8 @@ export function ProjectDetailView({ project, preview = false }: { project: Publi
                     </Link>
                   ) : (
                     <div aria-label={`Public profile unavailable for contributor ${index + 1}`}>
-                      <span>Public profile unavailable</span>
-                      <small>Contributor relationship retained</small>
+                      <span>{project.managementMode === "ADMIN_MANAGED" ? contributor.name : "Public profile unavailable"}</span>
+                      <small>{project.managementMode === "ADMIN_MANAGED" ? "Descriptive project credit" : "Contributor relationship retained"}</small>
                     </div>
                   )}
                 </div>

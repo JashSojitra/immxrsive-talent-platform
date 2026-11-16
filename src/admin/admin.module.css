@@ -1,0 +1,18 @@
+.portal { min-height: 100vh; }
+.frame { display: grid; grid-template-columns: 185px minmax(0,1fr); gap: 48px; padding-top: 38px; }
+.sidebar { display: flex; flex-direction: column; gap: 8px; align-self: start; position: sticky; top: 24px; }
+.sidebar a { padding: 12px 8px; border-bottom: 1px solid var(--line); text-underline-offset: 5px; font-size: .85rem; }
+.main { min-width: 0; }
+.main h1 { font-size: clamp(2.7rem,5vw,5rem); line-height: 1; font-weight: 350; letter-spacing: -.05em; overflow-wrap: anywhere; }
+.metrics { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 16px; margin: 36px 0; }
+.metrics a { display: block; padding: 20px 12px; border: 1px solid var(--line); text-decoration: none; }
+.metrics strong { display: block; font-size: 2.5rem; font-weight: 400; color: var(--electric); }
+.main p, .main li { line-height: 1.7; overflow-wrap: anywhere; }
+.main table { border-collapse: collapse; width: 100%; }
+.main td, .main th { text-align: left; border-bottom: 1px solid var(--line); padding: 14px 8px; overflow-wrap: anywhere; }
+.scroll { overflow-x: auto; }
+.notice { padding: 18px; border: 1px solid var(--electric); margin: 20px 0; }
+.filters { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px; }
+.previewLink { display: inline-block; padding: 12px 0; text-underline-offset: 5px; }
+@media(max-width:800px) { .frame { grid-template-columns: minmax(0,1fr); gap: 20px; } .sidebar { flex-direction: row; flex-wrap: wrap; position: static; gap: 8px 16px; } .metrics { grid-template-columns: repeat(2,minmax(0,1fr)); } .filters { grid-template-columns: minmax(0,1fr); } }
+@media(prefers-reduced-motion:reduce) { .portal * { scroll-behavior: auto; animation: none; transition: none; } }

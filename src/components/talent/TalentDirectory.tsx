@@ -459,6 +459,7 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
 
       <footer className={styles.footer}>
         <span>NOT ImmXrsive</span>
+        <Link href="/showcase">Explore project showcases</Link>
         <p>Independent student-built course project for Algoma-connected talent.</p>
       </footer>
     </main>

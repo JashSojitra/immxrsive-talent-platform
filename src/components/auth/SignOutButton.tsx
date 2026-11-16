@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { authClient } from "@/auth/client";
 
-export function SignOutButton() {
+export function SignOutButton({ callbackURL = "/student/sign-in" }: { callbackURL?: string }) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
@@ -21,7 +21,7 @@ export function SignOutButton() {
         setIsPending(false);
         return;
       }
-      router.replace("/student/sign-in");
+      router.replace(callbackURL);
       router.refresh();
     } catch {
       setError("Sign out failed. Please try again.");
