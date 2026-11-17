@@ -684,3 +684,41 @@ export type Project = typeof projects.$inferSelect;
 export type AuthUser = typeof authUsers.$inferSelect;
 export type StudentAffiliation = typeof studentAffiliations.$inferSelect;
 export type StudentProfile = typeof studentProfiles.$inferSelect;
+
+// Staff grants are independent of Better Auth profile fields and student affiliation.
+export const studioRoles = pgTable("studio_roles", {
+  userId: text("user_id").primaryKey().references(() => authUsers.id, { onDelete: "restrict" }),
+  role: text("role").notNull(),
+}, t => [check("studio_role_check", sql`${t.role} IN ('xr_curator','xr_admin','platform_super_admin')`)]).enableRLS();
+export const studioSubmissions = pgTable("studio_submissions", {
+  projectId: text("project_id").primaryKey().references(() => projects.id, { onDelete: "restrict" }),
+  submittedBy: text("submitted_by").notNull().references(() => authUsers.id, { onDelete: "restrict" }),
+  state: text("state").notNull().default("submitted"),
+  title: text("title").notNull(),
+  summary: text("summary").notNull(),
+  mediaUrl: text("media_url").notNull().default(""),
+  demoUrl: text("demo_url").notNull().default(""),
+  contentVersion: integer("content_version").notNull().default(1),
+  acceptedVersion: integer("accepted_version"),
+  acceptedBy: text("accepted_by").references(() => authUsers.id, { onDelete: "restrict" }),
+  acceptedProjectVersion: integer("accepted_project_version"),
+  published: boolean("published").notNull().default(false),
+  version: integer("version").notNull().default(1),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+}, t => [
+  check("studio_state_check", sql`${t.state} IN ('submitted','under_review','changes_requested','approved','rejected','withdrawn')`),
+  check("studio_versions_check", sql`${t.version} > 0 AND ${t.contentVersion} > 0 AND (${t.acceptedVersion} IS NULL OR ${t.acceptedVersion} = ${t.contentVersion})`),
+  check("studio_acceptance_check", sql`(${t.acceptedVersion} IS NULL AND ${t.acceptedBy} IS NULL AND ${t.acceptedProjectVersion} IS NULL) OR (${t.acceptedVersion} IS NOT NULL AND ${t.acceptedBy} IS NOT NULL AND ${t.acceptedProjectVersion} IS NOT NULL AND ${t.acceptedProjectVersion} > 0)`),
+  check("studio_publish_check", sql`NOT ${t.published} OR (${t.state} = 'approved' AND ${t.acceptedVersion} = ${t.contentVersion} AND ${t.acceptedBy} IS NOT NULL)`),
+  check("studio_content_check", sql`length(${t.title}) BETWEEN 1 AND 160 AND length(${t.summary}) BETWEEN 1 AND 4000 AND length(${t.mediaUrl}) <= 2048 AND length(${t.demoUrl}) <= 2048`),
+  index("studio_queue_idx").on(t.state, t.updatedAt),
+]).enableRLS();
+export const studioEvents = pgTable("studio_events", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  projectId: text("project_id").references(() => studioSubmissions.projectId, { onDelete: "restrict" }),
+  actorUserId: text("actor_user_id").notNull().references(() => authUsers.id, { onDelete: "restrict" }),
+  action: text("action").notNull(),
+  note: text("note").notNull(),
+  snapshot: jsonb("snapshot").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+}, t => [index("studio_history_idx").on(t.projectId, t.createdAt), check("studio_event_note_check", sql`length(${t.note}) <= 2000`)]).enableRLS();

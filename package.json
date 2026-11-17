@@ -14,32 +14,32 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run --exclude \"tests/integration/**\"",
     "test:unit": "vitest run tests/unit",
-    "test:integration": "node --env-file-if-exists=.env.local node_modules/vitest/vitest.mjs run tests/integration",
-    "test:api": "node --env-file-if-exists=.env.local node_modules/vitest/vitest.mjs run tests/integration/talent-api.test.ts tests/integration/student-profile-api.test.ts tests/integration/project-detail-api.test.ts tests/integration/inquiry-api.test.ts tests/integration/auth-identity.test.ts tests/integration/affiliation-verification.test.ts tests/integration/private-student-profile.test.ts",
+    "test:integration": "node node_modules/vitest/vitest.mjs run tests/integration",
+    "test:api": "node node_modules/vitest/vitest.mjs run tests/integration/talent-api.test.ts tests/integration/student-profile-api.test.ts tests/integration/project-detail-api.test.ts tests/integration/inquiry-api.test.ts tests/integration/auth-identity.test.ts tests/integration/affiliation-verification.test.ts tests/integration/private-student-profile.test.ts",
     "test:frontend": "vitest run tests/frontend",
     "test:browser": "npm run build && playwright test",
     "env:check": "node --env-file-if-exists=.env.local --import tsx scripts/check-local-environment.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "node --env-file-if-exists=.env.local --import tsx scripts/migrate.ts",
-    "db:migrate:test": "node --env-file-if-exists=.env.local --import tsx scripts/migrate-test.ts",
+    "db:migrate:test": "node --import tsx scripts/migrate-test.ts",
     "fixtures:validate": "tsx scripts/validate-fixtures.ts",
     "fixtures:import": "node --env-file-if-exists=.env.local --import tsx scripts/import-fixtures.ts",
     "fixtures:verify": "node --env-file-if-exists=.env.local --import tsx scripts/verify-import.ts"
   },
   "dependencies": {
-    "@better-auth/drizzle-adapter": "^1.7.7",
-    "better-auth": "^1.7.7",
+    "@better-auth/drizzle-adapter": "1.7.16",
+    "better-auth": "1.7.16",
     "dotenv": "^18.0.4",
     "drizzle-orm": "^0.45.3",
     "gsap": "^3.15.0",
-    "next": "^16.3.8",
-    "nodemailer": "^10.1.0",
+    "next": "16.4.6",
+    "nodemailer": "10.5.0",
     "pdfjs-dist": "^6.4.299",
     "postgres": "^3.4.9",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "resend": "^6.32.1",
-    "zod": "^4.6.5"
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",
@@ -53,13 +53,19 @@
     "@types/three": "^0.149.0",
     "drizzle-kit": "^0.31.11",
     "eslint": "^9.39.5",
-    "eslint-config-next": "^16.3.8",
+    "eslint-config-next": "16.4.6",
     "jsdom": "^29.1.1",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3",
-    "vitest": "^5.0.2"
+    "vitest": "5.1.0"
   },
   "overrides": {
-    "source-map-js": "1.2.2"
+    "source-map-js": "1.2.2",
+    "@esbuild-kit/core-utils": {
+      "esbuild": "0.25.12"
+    },
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "11.0.1"
+    }
   }
 }

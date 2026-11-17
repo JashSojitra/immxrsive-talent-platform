@@ -5,6 +5,7 @@ import { describe, expect, test } from "vitest";
 const schemaSource = readFileSync("src/db/schema.ts", "utf8");
 const migrationSource = readFileSync("drizzle/0007_harden_data_api.sql", "utf8");
 const joinMigration = readFileSync("drizzle/0010_r3_project_join_requests.sql", "utf8");
+const studioMigration = readFileSync("drizzle/0011_r31_xr_studio.sql", "utf8");
 const sharedMigration = readFileSync("drizzle/0009_r3_shared_projects.sql", "utf8");
 const productionMigration = readFileSync(
   "docs/release-2-production-security-hardening.sql",
@@ -47,7 +48,10 @@ describe("database Data API hardening", () => {
     const historical = protectedTables(migrationSource);
     expect(historical).toHaveLength(24);
     expect(protectedTables(productionMigration)).toEqual(historical);
-    expect([...historical, ...protectedTables(sharedMigration), ...protectedTables(joinMigration)].sort()).toEqual(expected);
+    expect([...historical, ...protectedTables(sharedMigration), ...protectedTables(joinMigration), ...protectedTables(studioMigration)].sort()).toEqual(expected);
+    expect(studioMigration).toMatch(/ENABLE ROW LEVEL SECURITY/);
+    expect(studioMigration).toMatch(/REVOKE ALL PRIVILEGES ON TABLE/);
+    expect(studioMigration).not.toMatch(/CREATE POLICY|GRANT .* TO (anon|authenticated)/);
     expect(joinMigration).toMatch(/REVOKE ALL PRIVILEGES ON TABLE/);
     expect(joinMigration).not.toMatch(/CREATE POLICY|GRANT .* TO (anon|authenticated)/);
     expect(sharedMigration).toMatch(/ENABLE ROW LEVEL SECURITY/);

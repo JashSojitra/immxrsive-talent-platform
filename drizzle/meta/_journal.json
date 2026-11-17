@@ -78,6 +78,13 @@
       "when": 1793485871711,
       "tag": "0010_r3_project_join_requests",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1794000688635,
+      "tag": "0011_r31_xr_studio",
+      "breakpoints": true
     }
   ]
 }
