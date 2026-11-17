@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { describe, expect, test } from "vitest";
 
+const adminMigration = readFileSync("drizzle/0012_cooing_shatterstar.sql", "utf8");
 const schemaSource = readFileSync("src/db/schema.ts", "utf8");
 const migrationSource = readFileSync("drizzle/0007_harden_data_api.sql", "utf8");
 const joinMigration = readFileSync("drizzle/0010_r3_project_join_requests.sql", "utf8");
@@ -48,7 +49,15 @@ describe("database Data API hardening", () => {
     const historical = protectedTables(migrationSource);
     expect(historical).toHaveLength(24);
     expect(protectedTables(productionMigration)).toEqual(historical);
-    expect([...historical, ...protectedTables(sharedMigration), ...protectedTables(joinMigration), ...protectedTables(studioMigration)].sort()).toEqual(expected);
+    const adminTables = [...adminMigration.matchAll(/CREATE TABLE "([a-z_]+)"/g)].map(m => m[1]);
+    expect(adminTables).toHaveLength(3);
+    for (const table of adminTables) {
+      expect(adminMigration).toContain(`ALTER TABLE "${table}" ENABLE ROW LEVEL SECURITY`);
+      expect(adminMigration).toContain(`public.${table}`);
+    }
+    expect(adminMigration).toMatch(/REVOKE ALL PRIVILEGES ON TABLE[\s\S]*?FROM PUBLIC, anon, authenticated/);
+    expect(adminMigration).not.toMatch(/CREATE POLICY|GRANT .* TO (anon|authenticated)/);
+    expect([...historical, ...protectedTables(sharedMigration), ...protectedTables(joinMigration), ...protectedTables(studioMigration), ...adminTables].sort()).toEqual(expected);
     expect(studioMigration).toMatch(/ENABLE ROW LEVEL SECURITY/);
     expect(studioMigration).toMatch(/REVOKE ALL PRIVILEGES ON TABLE/);
     expect(studioMigration).not.toMatch(/CREATE POLICY|GRANT .* TO (anon|authenticated)/);

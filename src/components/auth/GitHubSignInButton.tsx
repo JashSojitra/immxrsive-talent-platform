@@ -8,9 +8,10 @@ import { GITHUB_PROVIDER_ID } from "@/auth/config";
 type GitHubSignInButtonProps = {
   callbackURL: string;
   configured: boolean;
+  errorCallbackURL?: string;
 };
 
-export function GitHubSignInButton({ callbackURL, configured }: GitHubSignInButtonProps) {
+export function GitHubSignInButton({ callbackURL, configured, errorCallbackURL = "/student/sign-in?error=oauth" }: GitHubSignInButtonProps) {
   const [error, setError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
 
@@ -22,7 +23,7 @@ export function GitHubSignInButton({ callbackURL, configured }: GitHubSignInButt
       const result = await authClient.signIn.social({
         provider: GITHUB_PROVIDER_ID,
         callbackURL,
-        errorCallbackURL: "/student/sign-in?error=oauth",
+        errorCallbackURL,
       });
 
       if (result.error) {

@@ -149,7 +149,8 @@ export const projects = pgTable("projects", {
   title: text("title").notNull(),
   description: text("description").notNull(),
   domain: text("domain").notNull(),
-  origin: text("origin", { enum: ["legacy_fixture", "student"] }).default("legacy_fixture").notNull(),
+  origin: text("origin", { enum: ["legacy_fixture", "student", "admin"] }).default("legacy_fixture").notNull(),
+  managementMode: text("management_mode", { enum: ["STUDENT_MANAGED", "ADMIN_MANAGED"] }).default("STUDENT_MANAGED").notNull(),
   maintainerUserId: text("maintainer_user_id").references(() => authUsers.id, { onDelete: "restrict" }),
   publicationStatus: profileStatusEnum("publication_status").default("unpublished").notNull(),
   projectStatus: text("project_status", { enum: ["in_progress", "completed", "on_hold"] }).default("in_progress").notNull(),
@@ -159,7 +160,8 @@ export const projects = pgTable("projects", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   publishedAt: timestamp("published_at", { withTimezone: true }),
 }, (table) => [
-  check("projects_origin_owner_check", sql`(${table.origin} = 'legacy_fixture' AND ${table.maintainerUserId} IS NULL) OR (${table.origin} = 'student' AND ${table.maintainerUserId} IS NOT NULL)`),
+  check("projects_origin_owner_check", sql`(${table.origin} = 'legacy_fixture' AND ${table.maintainerUserId} IS NULL) OR (${table.origin} = 'student' AND ${table.maintainerUserId} IS NOT NULL) OR (${table.origin} = 'admin' AND ${table.maintainerUserId} IS NULL)`),
+  check("projects_management_mode_check", sql`(${table.managementMode} = 'ADMIN_MANAGED' AND ${table.origin} = 'admin') OR (${table.managementMode} = 'STUDENT_MANAGED' AND ${table.origin} IN ('legacy_fixture','student'))`),
   check("projects_status_check", sql`${table.projectStatus} IN ('in_progress', 'completed', 'on_hold')`),
   check("projects_version_positive", sql`${table.version} > 0`),
   index("projects_maintainer_idx").on(table.maintainerUserId),
@@ -722,3 +724,26 @@ export const studioEvents = pgTable("studio_events", {
   snapshot: jsonb("snapshot").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 }, t => [index("studio_history_idx").on(t.projectId, t.createdAt), check("studio_event_note_check", sql`length(${t.note}) <= 2000`)]).enableRLS();
+
+// Admin ownership and descriptive presentation are independent of student membership.
+export const adminProjectDetails = pgTable("admin_project_details", {
+  projectId: text("project_id").primaryKey().references(() => projects.id, { onDelete: "restrict" }),
+  createdBy: text("created_by").notNull().references(() => authUsers.id, { onDelete: "restrict" }),
+  lifecycle: text("lifecycle", { enum: ["draft", "published", "unpublished", "archived"] }).default("draft").notNull(),
+  content: jsonb("content").$type<import("@/admin/policy").AdminContent>().notNull(),
+  repositoryKey: text("repository_key"),
+}, t => [
+  check("admin_lifecycle_check", sql`${t.lifecycle} IN ('draft','published','unpublished','archived')`),
+  uniqueIndex("admin_repository_unique").on(t.repositoryKey),
+]).enableRLS();
+export const adminCreditLinks = pgTable("admin_credit_links", {
+  projectId: text("project_id").notNull().references(() => adminProjectDetails.projectId, { onDelete: "restrict" }),
+  profileId: uuid("profile_id").notNull().references(() => studentProfiles.id, { onDelete: "restrict" }),
+}, t => [primaryKey({ columns: [t.projectId, t.profileId] })]).enableRLS();
+export const adminEvents = pgTable("admin_events", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  projectId: text("project_id").references(() => adminProjectDetails.projectId, { onDelete: "restrict" }),
+  actorUserId: text("actor_user_id").notNull().references(() => authUsers.id, { onDelete: "restrict" }),
+  action: text("action").notNull(), note: text("note").notNull(), snapshot: jsonb("snapshot").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+}, t => [index("admin_event_history_idx").on(t.projectId, t.createdAt), check("admin_event_note_check", sql`length(${t.note}) <= 2000`)]).enableRLS();

@@ -1,3 +1,4 @@
+import { queryAdminPublicProject } from "@/admin/public";
 import { and, asc, eq } from "drizzle-orm";
 
 import type { Database } from "@/db/client";
@@ -36,6 +37,8 @@ export interface PublicProjectDetail {
   assets: PublicProjectAsset[];
   projectDate?: string | null;
   projectStatus?: string;
+  managementMode?: "ADMIN_MANAGED";
+  adminPresentation?: import("@/admin/public").PublicAdminPresentation;
 }
 
 export async function queryPublicProject(
@@ -63,6 +66,7 @@ export async function queryProjectPresentation(db: Database, projectId: string, 
     .limit(1);
 
   if (!project) return null;
+  if (project.origin === "admin") return queryAdminPublicProject(db, projectId);
 
   const [technologyRows, contributorRows, assetRows, accountRows, structuredAssets] = await Promise.all([
     db

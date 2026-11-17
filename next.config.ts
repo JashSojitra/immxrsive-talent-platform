@@ -9,7 +9,8 @@ const nextConfig: NextConfig = {
       { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(), usb=(), xr-spatial-tracking=()" },
     ];
     return [
-      ...["/projects/:path*", "/students/:path*", "/student/:path*", "/api/:path*", "/talent"].map(source => ({ source, headers: application })),
+      ...["/projects/:path*", "/students/:path*", "/student/:path*", "/api/:path*", "/talent", "/admin/:path*", "/showcase"].map(source => ({ source, headers: application })),
+      { source: "/admin/:path*", headers: [{ key: "Cache-Control", value: "private, no-store" }, { key: "X-Robots-Tag", value: "noindex, nofollow" }] },
       { source: "/fixtures/r3/:path*", headers: [
         { key: "Content-Security-Policy", value: "default-src 'none'; script-src 'sha256-GF6VgUgnDup4061I2zIcOH9SjC3Q0Lc0+e/rbWFwA2g='; style-src 'sha256-q2PDlbSsnFa4xp1uzpfOpE8q2Z61v5Vyi2mk/eN3cnE='; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'; sandbox allow-scripts" },
         { key: "Referrer-Policy", value: "no-referrer" },
