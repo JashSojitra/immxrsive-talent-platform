@@ -1,0 +1,14 @@
+
+ RUN  v5.1.0 /srv/codex-remote/jobs/js-november/immxrsive-r4/slot-0
+
+warning: in the working copy of 'migration.sql', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.gitattributes', LF will be replaced by CRLF the next time Git touches it
+
+ Test Files  3 passed (3)
+      Tests  15 passed (15)
+   Start at  10:39:57
+   Duration  2.28s (tests 62%, environment 16%, import 15%, transform 6%)
+
+    Isolate  3 workers spawned · ~164ms startup each (spawn + environment, per file)
+             at least ~328ms faster with isolate: false — reuses workers across files instead of one per file
+

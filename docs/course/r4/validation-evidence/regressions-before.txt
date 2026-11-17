@@ -1,0 +1,50 @@
+
+ RUN  v5.1.0 <snapshot>
+
+ ❯ tests/frontend/r4-partners.test.tsx (5 tests | 1 failed) 201ms
+   × opening a duplicate match does not attach the pending import to that company 45ms
+ ❯ tests/unit/r4-inquiry.test.ts (3 tests | 3 failed) 4ms
+   × malformed partner ID ------------------------------------ never reaches a UUID database comparison 3ms
+   × malformed partner ID aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa never reaches a UUID database comparison 0ms
+   × malformed partner ID 12345678-1234-1234-1234-12345678901- never reaches a UUID database comparison 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/r4-inquiry.test.ts > malformed partner ID ------------------------------------ never reaches a UUID database comparison
+ FAIL  tests/unit/r4-inquiry.test.ts > malformed partner ID aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa never reaches a UUID database comparison
+ FAIL  tests/unit/r4-inquiry.test.ts > malformed partner ID 12345678-1234-1234-1234-12345678901- never reaches a UUID database comparison
+Error: invalid UUID reached database
+ ❯ Object.<anonymous> tests/unit/r4-inquiry.test.ts:6:32
+
+ ❯ src/db/queries/inquiry.ts:19:34
+ ❯ Object.transaction tests/unit/r4-inquiry.test.ts:7:64
+ ❯ createContextualInquiry src/db/queries/inquiry.ts:16:13
+ ❯ tests/unit/r4-inquiry.test.ts:8:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/frontend/r4-partners.test.tsx > opening a duplicate match does not attach the pending import to that company
+AssertionError: expected { …(6) } to not have property "importEventId"
+
+- Expected:
+undefined
+
++ Received:
+"pending-import"
+
+ ❯ tests/frontend/r4-partners.test.tsx:46:54
+     44|  await waitFor(()=>expect(fetch).toHaveBeenCalledTimes(2));
+     45|  expect(JSON.parse(fetch.mock.calls[1][1].body)).toMatchObject({id:exi…
+     46|  expect(JSON.parse(fetch.mock.calls[1][1].body)).not.toHaveProperty("i…
+       |                                                      ^
+     47| });
+     48|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  4 failed | 4 passed (8)
+   Start at  10:09:48
+   Duration  896ms (environment 36%, import 30%, tests 26%, transform 7%)
+

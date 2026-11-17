@@ -1,0 +1,248 @@
+{
+  "date": "2026-11-17",
+  "environment": "Node 24.11.1/npm 11.6.2 via PATH=/tmp/immxrsive-r4-validation/node-v24.11.1-linux-x64/bin:$PATH. DB test commands used two distinct loopback disposable identities, supplied through DATABASE_URL and TEST_DATABASE_URL; credentials/role identity omitted. No .env.local loaded.",
+  "scope": "Validation, installation and infrastructure commands. Routine cat/rg/find/ls reads, inline file edits and polling are not test runs and are not counted. Exact test command arguments recorded; bootstrap is sanitized.",
+  "commands": [
+    {
+      "command": "git -c safe.directory=\"$PWD\" status --short; git -c safe.directory=\"$PWD\" cat-file -t 8bbf9228a7b59602297f3d53697e1ca4a23b66dd",
+      "exit": 0,
+      "result": "Baseline object available; snapshot initially clean. Initial calls without safe.directory failed with dubious ownership; retry did not alter git config."
+    },
+    {
+      "command": "docker info --format '{{.ServerVersion}}'",
+      "exit": 1,
+      "result": "Docker socket permission denied; no container created."
+    },
+    {
+      "command": "node --version; npm --version; command -v psql; command -v ld",
+      "exit": 0,
+      "result": "Default Node 18.19.1/npm 9.2.0; psql absent; /usr/bin/ld is GNU linker. Discovery combined independent read-only probes; not a test execution."
+    },
+    {
+      "command": "curl -I --max-time 15 https://nodejs.org/dist/v24.11.1/node-v24.11.1-linux-x64.tar.xz",
+      "exit": 0,
+      "result": "HTTP 200"
+    },
+    {
+      "command": "curl -fsS --max-time 60 https://nodejs.org/dist/v24.11.1/node-v24.11.1-linux-x64.tar.xz -o /tmp/immxrsive-r4-validation/node.tar.xz && tar -xf /tmp/immxrsive-r4-validation/node.tar.xz -C /tmp/immxrsive-r4-validation",
+      "exit": 0
+    },
+    {
+      "command": "npm ci --ignore-scripts --cache /tmp/immxrsive-r4-validation/npm-cache",
+      "exit": 0,
+      "result": "Lockfile install. No manifest changes."
+    },
+    {
+      "command": "npm run typecheck",
+      "exit": 0,
+      "phase": "initial"
+    },
+    {
+      "command": "npm run lint",
+      "exit": 0,
+      "phase": "initial"
+    },
+    {
+      "command": "npm run typecheck",
+      "exit": 0,
+      "phase": "final"
+    },
+    {
+      "command": "npm run lint",
+      "exit": 0,
+      "phase": "final"
+    },
+    {
+      "command": "npx vitest run tests/unit/r4-http.test.ts tests/unit/r4-import.test.ts tests/unit/r4-network.test.ts tests/frontend/r4-partners.test.tsx tests/unit/database-security-hardening.test.ts",
+      "exit": 0,
+      "passed": 46,
+      "files": 5,
+      "evidence": "r4-tests.txt"
+    },
+    {
+      "command": "npx vitest run tests/unit/r4-inquiry.test.ts tests/frontend/r4-partners.test.tsx",
+      "exit": 1,
+      "phase": "before",
+      "passed": 4,
+      "failed": 4,
+      "files": 2,
+      "evidence": "regressions-before.txt"
+    },
+    {
+      "command": "npx vitest run tests/unit/r4-inquiry.test.ts tests/frontend/r4-partners.test.tsx",
+      "exit": 0,
+      "phase": "after",
+      "passed": 8,
+      "failed": 0,
+      "files": 2,
+      "evidence": "regressions-after.txt"
+    },
+    {
+      "command": "npm run fixtures:validate",
+      "exit": 0,
+      "result": {
+        "students": 18,
+        "projects": 9,
+        "skills": 24,
+        "contributors": 24
+      },
+      "evidence": "fixtures.txt"
+    },
+    {
+      "command": "npm view @embedded-postgres/linux-x64 versions --json",
+      "exit": 1,
+      "result": "Default npm cache not writable; retried with isolated cache."
+    },
+    {
+      "command": "npm --cache /tmp/immxrsive-r4-validation/npm-cache view @embedded-postgres/linux-x64 versions --json",
+      "exit": 0
+    },
+    {
+      "command": "npm --cache /tmp/immxrsive-r4-validation/npm-cache pack @embedded-postgres/linux-x64@17.7.0-beta.16 --pack-destination /tmp/immxrsive-r4-validation",
+      "exit": 0,
+      "result": "Exact npm package, no project manifest/dependency addition."
+    },
+    {
+      "command": "tar -xf /tmp/immxrsive-r4-validation/embedded-postgres-linux-x64-17.7.0-beta.16.tgz -C /tmp/immxrsive-r4-validation/pg",
+      "exit": 0
+    },
+    {
+      "command": "/tmp/immxrsive-r4-validation/pg/package/native/bin/initdb --version",
+      "exit": 127,
+      "result": "Missing packaged libpq symlink before hydration; shell continued in compound probe."
+    },
+    {
+      "command": "node scripts/hydrate-symlinks.js",
+      "exit": 0,
+      "cwd": "/tmp/immxrsive-r4-validation/pg/package"
+    },
+    {
+      "command": "/tmp/immxrsive-r4-validation/pg/package/native/bin/initdb -D /tmp/immxrsive-r4-validation/pgdata -A trust --no-locale -E UTF8",
+      "exit": 0
+    },
+    {
+      "command": "/tmp/immxrsive-r4-validation/pg/package/native/bin/pg_ctl -D /tmp/immxrsive-r4-validation/pgdata -l /tmp/immxrsive-r4-validation/postgres.log -o '-h 127.0.0.1 -p 55487 -k /tmp/immxrsive-r4-validation -c shared_buffers=32MB -c max_connections=20' start",
+      "exit": 0,
+      "executions": 5,
+      "result": "First standalone start did not persist across tool namespaces; four subsequent test runs started PG in same shell context."
+    },
+    {
+      "command": "node --input-type=module - (temporary postgres bootstrap)",
+      "exit": 1,
+      "phase": "separate sandbox",
+      "result": "ECONNREFUSED; no bootstrap writes. Retried same execution as server."
+    },
+    {
+      "command": "node --input-type=module - (temporary postgres bootstrap)",
+      "exit": 0,
+      "phase": "same sandbox",
+      "result": "Created local synthetic control DB and nologin compatibility roles only; no grants. Exact test identities intentionally omitted."
+    },
+    {
+      "command": "npx vitest run tests/integration/r4-partners.test.ts tests/integration/admin-migration.test.ts",
+      "exit": 1,
+      "phase": "inaccessible separate sandbox",
+      "passed": 0,
+      "failedSuites": 2,
+      "executedCases": 0,
+      "evidence": "integration-initial.txt"
+    },
+    {
+      "command": "npx vitest run tests/integration/r4-partners.test.ts tests/integration/admin-migration.test.ts",
+      "exit": 1,
+      "phase": "working PG17 before migration-test repair",
+      "passed": 5,
+      "failed": 1,
+      "files": 2,
+      "evidence": "integration-before.txt"
+    },
+    {
+      "command": "npx vitest run tests/integration/r4-partners.test.ts",
+      "exit": 1,
+      "phase": "new company-binding regression before repair",
+      "passed": 6,
+      "failed": 1,
+      "files": 1,
+      "evidence": "relationship-before.txt"
+    },
+    {
+      "command": "npx vitest run tests/integration/r4-partners.test.ts tests/integration/admin-migration.test.ts tests/integration/admin-session.test.ts tests/integration/inquiry-api.test.ts tests/integration/project-detail-api.test.ts tests/integration/private-student-profile.test.ts",
+      "exit": 0,
+      "passed": 55,
+      "files": 6,
+      "evidence": "integration-after.txt"
+    },
+    {
+      "command": "npx vitest run tests/integration/r4-partners.test.ts tests/integration/admin-onboarding.test.ts",
+      "exit": 0,
+      "passed": 33,
+      "files": 2,
+      "evidence": "integration-final-affected.txt"
+    },
+    {
+      "command": "/tmp/immxrsive-r4-validation/pg/package/native/bin/pg_ctl -D /tmp/immxrsive-r4-validation/pgdata stop -m fast",
+      "exit": 0,
+      "executions": 4
+    },
+    {
+      "command": "npx vitest run tests/unit/r4-http.test.ts tests/unit/r4-import.test.ts tests/unit/r4-network.test.ts tests/unit/r4-inquiry.test.ts tests/unit/database-security-hardening.test.ts tests/unit/inquiry-validation.test.ts tests/unit/inquiry-template.test.ts tests/frontend/r4-partners.test.tsx tests/frontend/inquiry.test.tsx",
+      "exit": 0,
+      "passed": 73,
+      "files": 9,
+      "evidence": "final-focused.txt"
+    },
+    {
+      "command": "node --import tsx --input-type=module - <<'JS'\nimport {generateDrizzleJson,generateMigration} from 'drizzle-kit/api';\nimport * as schema from './src/db/schema.ts';\nimport {readFileSync} from 'node:fs';\nconst previous=JSON.parse(readFileSync('drizzle/meta/0013_snapshot.json','utf8'));\nconst delta=await generateMigration(previous,generateDrizzleJson(schema,previous.id));\nif(delta.length)throw new Error(JSON.stringify(delta));\nconsole.log('Schema matches 0013 snapshot; zero generated migration statements.');\nJS",
+      "exit": 0,
+      "generatedStatements": 0
+    },
+    {
+      "command": "npx vitest list --json",
+      "exit": 0,
+      "execution": false,
+      "discoveredDeclarations": {
+        "unit": 149,
+        "frontend": 109,
+        "integration": 188
+      },
+      "evidence": "vitest-discovery.json"
+    },
+    {
+      "command": "npx playwright test --list",
+      "exit": 0,
+      "execution": false,
+      "discovered": 150,
+      "files": 16,
+      "evidence": "browser-discovery.txt"
+    },
+    {
+      "command": "node scripts/validate-r4-candidate.mjs --write",
+      "exit": 1,
+      "phase": "initial helper bug",
+      "result": "Parser mistook manifest legend for a path; corrected before evidence generation."
+    },
+    {
+      "command": "node scripts/validate-r4-candidate.mjs --write",
+      "exit": 0,
+      "result": "Refresh candidate and final changed-files inventory; repeated after documentation edits."
+    },
+    {
+      "command": "node scripts/validate-r4-candidate.mjs",
+      "exit": 0,
+      "result": "Final read-only verification; see candidate.json."
+    },
+    {
+      "command": "git -c safe.directory=\"$PWD\" diff --check",
+      "exit": 0
+    }
+  ],
+  "not_executed": [
+    "npm test (full cumulative)",
+    "npm run test:integration (full cumulative)",
+    "npm run build",
+    "npx playwright test (actual browser execution)",
+    "node --import tsx scripts/seed-r4-collaborations.ts <mapping.json>",
+    "live public fixture import",
+    "production/deployment/tag/Moodle actions"
+  ]
+}

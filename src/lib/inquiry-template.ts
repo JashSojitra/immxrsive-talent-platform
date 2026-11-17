@@ -1,5 +1,5 @@
 export type InquiryTemplateSource = {
-  type: "student" | "project";
+  type: "student" | "project" | "partner";
   id: string;
   name: string;
   detail: string;
@@ -16,6 +16,7 @@ export const INQUIRY_TEMPLATE_PLACEHOLDERS = [
 ] as const;
 
 export function createInquiryTemplate(source: InquiryTemplateSource) {
+  if (source.type === "partner") return `Hello, I would like to discuss a collaboration with ${source.name}. Our organization is [company/organization]. We are interested in [opportunity or collaboration]. Please contact me to discuss next steps.`;
   if (source.type === "project") {
     return `Hello,
 

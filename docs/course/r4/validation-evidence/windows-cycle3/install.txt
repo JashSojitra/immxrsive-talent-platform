@@ -1,0 +1,13 @@
+﻿npm.cmd : npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.hirok.io
+At C:\Coding Assignments\immxrsive-r4\scripts\validate-r4.ps1:52 char:15
++     $output = & $Program @Arguments 2>&1 | Out-String
++               ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm warn deprec...://tsx.hirok.io:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.hirok.io
+npm warn deprecated eslint@9.39.5: This version is no longer supported. Please see https://eslint.org/version-support 
+for other options.
+
+added 492 packages in 43s
+

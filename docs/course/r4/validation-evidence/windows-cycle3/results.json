@@ -1,0 +1,67 @@
+﻿[
+    {
+        "Check":  "install",
+        "ExitCode":  0,
+        "Seconds":  43.5
+    },
+    {
+        "Check":  "candidate-history",
+        "ExitCode":  1,
+        "Seconds":  0.3
+    },
+    {
+        "Check":  "fixtures",
+        "ExitCode":  0,
+        "Seconds":  1
+    },
+    {
+        "Check":  "migrations",
+        "ExitCode":  0,
+        "Seconds":  1.7
+    },
+    {
+        "Check":  "typecheck",
+        "ExitCode":  0,
+        "Seconds":  16.7
+    },
+    {
+        "Check":  "lint",
+        "ExitCode":  0,
+        "Seconds":  20
+    },
+    {
+        "Check":  "unit",
+        "ExitCode":  0,
+        "Seconds":  15.4
+    },
+    {
+        "Check":  "frontend",
+        "ExitCode":  0,
+        "Seconds":  68.3
+    },
+    {
+        "Check":  "integration",
+        "ExitCode":  0,
+        "Seconds":  50.9
+    },
+    {
+        "Check":  "build",
+        "ExitCode":  0,
+        "Seconds":  31.3
+    },
+    {
+        "Check":  "browser-install",
+        "ExitCode":  0,
+        "Seconds":  2
+    },
+    {
+        "Check":  "browser",
+        "ExitCode":  1,
+        "Seconds":  299.1
+    },
+    {
+        "Check":  "cleanup",
+        "ExitCode":  0,
+        "Seconds":  0
+    }
+]

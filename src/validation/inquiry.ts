@@ -8,7 +8,7 @@ import {
 export const MAX_INQUIRY_BODY_BYTES = 16 * 1024;
 
 export const inquiryRequestSchema = z.object({
-  sourceType: z.enum(["student", "project"], {
+  sourceType: z.enum(["student", "project", "partner"], {
     error: "Choose a valid inquiry source.",
   }),
   sourceId: z.string().trim().min(1, "Inquiry source is required.").max(64),

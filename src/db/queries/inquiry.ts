@@ -1,7 +1,8 @@
+import { z } from "zod";
 import { and, eq, isNotNull } from "drizzle-orm";
 
 import type { Database } from "@/db/client";
-import { authUsers, inquiries, projects, studentAffiliations, studentProfiles, students } from "@/db/schema";
+import { authUsers, partnerCompanies, partnerInquiries, inquiries, projects, studentAffiliations, studentProfiles, students } from "@/db/schema";
 import type { InquiryRequest } from "@/validation/inquiry";
 
 export interface InquiryConfirmation {
@@ -14,6 +15,13 @@ export async function createContextualInquiry(
   input: InquiryRequest,
 ): Promise<InquiryConfirmation | null> {
   return db.transaction(async (tx) => {
+    if (input.sourceType === "partner") {
+      if (!z.uuid().safeParse(input.sourceId).success) return null;
+      const [company] = await tx.select().from(partnerCompanies).where(and(eq(partnerCompanies.id,input.sourceId),eq(partnerCompanies.status,"published"))).for("share");
+      if (!company) return null;
+      const [created] = await tx.insert(partnerInquiries).values({companyId:company.id,sourceName:company.content.name,content:{companyName:input.companyName,contactName:input.contactName,contactEmail:input.contactEmail,description:input.description}}).returning({id:partnerInquiries.id});
+      return {id:created.id,message:"Collaboration inquiry submitted successfully."};
+    }
     const source = input.sourceType === "student"
       ? await resolveStudentSource(tx, input.sourceId)
       : await resolveProjectSource(tx, input.sourceId);

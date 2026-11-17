@@ -1,0 +1,17 @@
+﻿
+> immxrsive-talent-platform@0.1.0 test:frontend
+> vitest run tests/frontend
+
+
+ RUN  v5.1.0 C:/Coding Assignments/immxrsive-r4
+
+
+ Test Files  18 passed (18)
+      Tests  117 passed (117)
+   Start at  10:46:13
+   Duration  70.40s (tests 41%, environment 41%, import 17%)
+
+    Isolate  18 workers spawned · ~1.70s startup each (spawn + environment, per file)
+             at least ~28.89s faster with isolate: false — reuses workers across files instead of one per file
+
+

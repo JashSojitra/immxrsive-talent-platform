@@ -1,0 +1,134 @@
+
+ RUN  v5.1.0 <snapshot>
+
+stdout | tests/integration/r4-partners.test.ts
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "student_availability_availability_value_availability_options_value_fk" will be truncated to "student_availability_availability_value_availability_options_va"',
+  file: 'scansup.c',
+  line: '102',
+  routine: 'truncate_identifier'
+}
+
+stdout | tests/integration/r4-partners.test.ts
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "student_profile_availability_availability_value_availability_options_value_fk" will be truncated to "student_profile_availability_availability_value_availability_op"',
+  file: 'scansup.c',
+  line: '102',
+  routine: 'truncate_identifier'
+}
+
+stdout | tests/integration/r4-partners.test.ts
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "project_maintainer_transfers_to_membership_id_project_memberships_id_fk" will be truncated to "project_maintainer_transfers_to_membership_id_project_membershi"',
+  file: 'scansup.c',
+  line: '102',
+  routine: 'truncate_identifier'
+}
+
+stdout | tests/integration/r4-partners.test.ts
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "admin_credit_links_project_id_admin_project_details_project_id_fk" will be truncated to "admin_credit_links_project_id_admin_project_details_project_id_"',
+  file: 'scansup.c',
+  line: '102',
+  routine: 'truncate_identifier'
+}
+
+stdout | tests/integration/r4-partners.test.ts
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "partner_collaboration_participants_collaboration_id_profile_id_pk" will be truncated to "partner_collaboration_participants_collaboration_id_profile_id_"',
+  file: 'scansup.c',
+  line: '102',
+  routine: 'truncate_identifier'
+}
+
+stdout | tests/integration/r4-partners.test.ts
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "partner_collaboration_participants_collaboration_id_partner_collaborations_id_fk" will be truncated to "partner_collaboration_participants_collaboration_id_partner_col"',
+  file: 'scansup.c',
+  line: '102',
+  routine: 'truncate_identifier'
+}
+
+stdout | tests/integration/r4-partners.test.ts
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "partner_collaboration_participants_profile_id_student_profiles_id_fk" will be truncated to "partner_collaboration_participants_profile_id_student_profiles_"',
+  file: 'scansup.c',
+  line: '102',
+  routine: 'truncate_identifier'
+}
+
+stdout | tests/integration/r4-partners.test.ts
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "partner_collaboration_projects_collaboration_id_partner_collaborations_id_fk" will be truncated to "partner_collaboration_projects_collaboration_id_partner_collabo"',
+  file: 'scansup.c',
+  line: '102',
+  routine: 'truncate_identifier'
+}
+
+stdout | tests/integration/r4-partners.test.ts
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42622',
+  message: 'identifier "project_official_verifications_request_id_partner_requests_id_fk" will be truncated to "project_official_verifications_request_id_partner_requests_id_f"',
+  file: 'scansup.c',
+  line: '102',
+  routine: 'truncate_identifier'
+}
+
+ ❯ tests/integration/r4-partners.test.ts (7 tests | 1 failed) 268ms
+   × relationship constraint rejects using a different company's approval 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/r4-partners.test.ts > relationship constraint rejects using a different company's approval
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ tests/integration/r4-partners.test.ts:96:5
+     94|  await expect(db.transaction(async tx=>{
+     95|   await tx.insert(s.projectVerifiedPartners).values({projectId,company…
+     96|  })).rejects.toThrow();
+       |     ^
+     97| });
+     98|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 passed (7)
+   Start at  10:11:23
+   Duration  648ms (tests 45%, import 42%, transform 12%)
+

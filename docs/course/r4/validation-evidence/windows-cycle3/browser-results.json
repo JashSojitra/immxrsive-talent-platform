@@ -1,0 +1,5652 @@
+﻿{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Coding Assignments\\immxrsive-r4\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--reporter=line,json"
+    ],
+    "configFile": "C:\\Coding Assignments\\immxrsive-r4\\playwright.config.ts",
+    "rootDir": "C:/Coding Assignments/immxrsive-r4/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": "C:\\Coding Assignments\\immxrsive-r4\\tests\\browser\\global-setup.ts",
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/JASH2/AppData/Local/Temp/immxrsive-r4-results-5d32cd8d5715420187d10383ae5281da/browser-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "desktop",
+        "name": "desktop",
+        "testDir": "C:/Coding Assignments/immxrsive-r4/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/JASH2/AppData/Local/Temp/immxrsive-r4-results-5d32cd8d5715420187d10383ae5281da/browser-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "mobile-390",
+        "name": "mobile-390",
+        "testDir": "C:/Coding Assignments/immxrsive-r4/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "line"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run db:migrate:test && npm run start -- --hostname 127.0.0.1 --port 3100",
+      "env": {
+        "NODE_OPTIONS": "--import=file:///C:/Coding%20Assignments/immxrsive-r4/tests/fixtures/github-fetch.mjs",
+        "DATABASE_URL": "[DATABASE_URL]",
+        "TEST_DATABASE_URL": "[DATABASE_URL]",
+        "DEVELOPMENT_DATABASE_URL": "[DATABASE_URL]",
+        "IMMXRSIVE_BROWSER_TEST_RUNTIME": "1",
+        "BETTER_AUTH_URL": "http://127.0.0.1:3100",
+        "BETTER_AUTH_SECRET": "browser-test-secret-with-at-least-thirty-two-characters",
+        "GITHUB_CLIENT_ID": "browser-test-client-id",
+        "GITHUB_CLIENT_SECRET": "browser-test-client-secret"
+      },
+      "url": "http://127.0.0.1:3100/talent",
+      "reuseExistingServer": false,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "admin-onboarding.spec.ts",
+      "file": "admin-onboarding.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "anonymous administrator access and forged requests are denied",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1141,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:30:03.320Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1d9a20ab666ce8cb94da-107b614a46ac98d207cd",
+          "file": "admin-onboarding.spec.ts",
+          "line": 9,
+          "column": 1
+        },
+        {
+          "title": "staff import, configure, credit, preview and publish without student account",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6068,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:30:05.809Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1d9a20ab666ce8cb94da-80e5d0b5de256b155890",
+          "file": "admin-onboarding.spec.ts",
+          "line": 15,
+          "column": 1
+        },
+        {
+          "title": "anonymous administrator access and forged requests are denied",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 430,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:30.340Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1d9a20ab666ce8cb94da-02a26eb47801c638f30b",
+          "file": "admin-onboarding.spec.ts",
+          "line": 9,
+          "column": 1
+        },
+        {
+          "title": "staff import, configure, credit, preview and publish without student account",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6063,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:31.088Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1d9a20ab666ce8cb94da-6cc029eff9cc5c404c2a",
+          "file": "admin-onboarding.spec.ts",
+          "line": 15,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "affiliation-verification.spec.ts",
+      "file": "affiliation-verification.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "authenticated student confirms a single-use affiliation link",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 745,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:30:11.917Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4999c079cb05be00b15d-0db41b6a5dd7881be4c1",
+          "file": "affiliation-verification.spec.ts",
+          "line": 22,
+          "column": 1
+        },
+        {
+          "title": "authenticated student confirms a single-use affiliation link",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 603,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:37.181Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4999c079cb05be00b15d-aa430f9aa4a5ea072c75",
+          "file": "affiliation-verification.spec.ts",
+          "line": 22,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "auth.spec.ts",
+      "file": "auth.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "student sign-in is accessible and keyboard-operable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 355,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:30:12.692Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d748ac400d08b85935ef-078558e07a8adc411439",
+          "file": "auth.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "student dashboard redirects unauthenticated visitors",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 289,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:30:13.062Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d748ac400d08b85935ef-43e69c8d3cf695c01d2e",
+          "file": "auth.spec.ts",
+          "line": 26,
+          "column": 1
+        },
+        {
+          "title": "student verification and its APIs fail closed when signed out",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 324,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:30:13.363Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d748ac400d08b85935ef-514ae9ce51f53c923ae6",
+          "file": "auth.spec.ts",
+          "line": 32,
+          "column": 1
+        },
+        {
+          "title": "Release 1 public journeys remain unauthenticated",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1223,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:30:13.700Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d748ac400d08b85935ef-f64eee9aef1318820264",
+          "file": "auth.spec.ts",
+          "line": 45,
+          "column": 1
+        },
+        {
+          "title": "student sign-in is accessible and keyboard-operable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 315,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:37.804Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d748ac400d08b85935ef-e27cb26f149499b34c50",
+          "file": "auth.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "student dashboard redirects unauthenticated visitors",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 297,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:38.133Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d748ac400d08b85935ef-c13a63f4c71a72ad6af8",
+          "file": "auth.spec.ts",
+          "line": 26,
+          "column": 1
+        },
+        {
+          "title": "student verification and its APIs fail closed when signed out",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 299,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:38.442Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d748ac400d08b85935ef-3ccd504352dc8778e4d6",
+          "file": "auth.spec.ts",
+          "line": 32,
+          "column": 1
+        },
+        {
+          "title": "Release 1 public journeys remain unauthenticated",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 932,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:38.754Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d748ac400d08b85935ef-fc191d11167cb6ba05e8",
+          "file": "auth.spec.ts",
+          "line": 45,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "branding.spec.ts",
+      "file": "branding.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "supplied NOT ImmXrsive identity spans public, inquiry, and student access pages",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1967,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:30:14.951Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c7f19e806919ac620bf8-ca734e5a65b0f99aa46b",
+          "file": "branding.spec.ts",
+          "line": 11,
+          "column": 1
+        },
+        {
+          "title": "supplied NOT ImmXrsive identity spans public, inquiry, and student access pages",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1717,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:39.706Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c7f19e806919ac620bf8-014dbaf2aab165889dfa",
+          "file": "branding.spec.ts",
+          "line": 11,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "inquiry.spec.ts",
+      "file": "inquiry.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "student inquiry renders trusted source context and a locked form",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 392,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:30:16.955Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-aa72ce13cee3ddc538dc",
+          "file": "inquiry.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "project inquiry retains the project and never selects a contributor",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 300,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:30:17.361Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-23c8065831a9406308c3",
+          "file": "inquiry.spec.ts",
+          "line": 18,
+          "column": 1
+        },
+        {
+          "title": "template reset protects substantial edits and restores source context",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1398,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:30:17.674Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-a533a0e0164d967d937c",
+          "file": "inquiry.spec.ts",
+          "line": 28,
+          "column": 1
+        },
+        {
+          "title": "unresolved prompts are blocked locally while custom bracket text is allowed",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1428,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:30:19.084Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-cca20f78f75f8ac881f2",
+          "file": "inquiry.spec.ts",
+          "line": 44,
+          "column": 1
+        },
+        {
+          "title": "accessible validation feedback retains entered employer values",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1390,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:30:20.524Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-966da876146ba6171f00",
+          "file": "inquiry.spec.ts",
+          "line": 68,
+          "column": 1
+        },
+        {
+          "title": "duplicate submission is blocked while pending and success is announced",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1735,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:30:21.927Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-236e46d3b78ec8df1895",
+          "file": "inquiry.spec.ts",
+          "line": 89,
+          "column": 1
+        },
+        {
+          "title": "backend failure is recoverable without losing data",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1413,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:30:23.678Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-c9563a2fc47eecbde317",
+          "file": "inquiry.spec.ts",
+          "line": 110,
+          "column": 1
+        },
+        {
+          "title": "invalid and unpublished student inquiry routes are indistinguishable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 415,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:30:25.108Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-126359e1c1039ffd9fc1",
+          "file": "inquiry.spec.ts",
+          "line": 124,
+          "column": 1
+        },
+        {
+          "title": "invalid project inquiry route has a useful unavailable state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 296,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:30:25.538Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-186055da8c9a5206a91d",
+          "file": "inquiry.spec.ts",
+          "line": 133,
+          "column": 1
+        },
+        {
+          "title": "keyboard workflow and visible focus cover every form control",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 522,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:30:25.848Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-8f7fa8c829fe2b1fcdbb",
+          "file": "inquiry.spec.ts",
+          "line": 139,
+          "column": 1
+        },
+        {
+          "title": "reduced motion leaves context and form immediately complete",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 276,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:30:26.386Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-1d53d8521f165c021a2d",
+          "file": "inquiry.spec.ts",
+          "line": 155,
+          "column": 1
+        },
+        {
+          "title": "390px inquiry form and success state have no horizontal overflow",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "mobile-only assertion",
+                  "location": {
+                    "file": "C:\\Coding Assignments\\immxrsive-r4\\tests\\browser\\inquiry.spec.ts",
+                    "line": 164,
+                    "column": 8
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 75,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:30:26.674Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "mobile-only assertion",
+                      "location": {
+                        "file": "C:\\Coding Assignments\\immxrsive-r4\\tests\\browser\\inquiry.spec.ts",
+                        "line": 164,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-b7646e577e01b95cc59b",
+          "file": "inquiry.spec.ts",
+          "line": 163,
+          "column": 1
+        },
+        {
+          "title": "student inquiry renders trusted source context and a locked form",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 340,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:41.456Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-ccb9c4f4cd5721825271",
+          "file": "inquiry.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "project inquiry retains the project and never selects a contributor",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 345,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:41.809Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-05c1aa3d973ebae82a8f",
+          "file": "inquiry.spec.ts",
+          "line": 18,
+          "column": 1
+        },
+        {
+          "title": "template reset protects substantial edits and restores source context",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1327,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:42.169Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-07615cc9059d6ee3da06",
+          "file": "inquiry.spec.ts",
+          "line": 28,
+          "column": 1
+        },
+        {
+          "title": "unresolved prompts are blocked locally while custom bracket text is allowed",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1422,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:43.507Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-7fe89141ec86d48b6818",
+          "file": "inquiry.spec.ts",
+          "line": 44,
+          "column": 1
+        },
+        {
+          "title": "accessible validation feedback retains entered employer values",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1349,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:44.941Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-ccd58ada2f09a16ffc4f",
+          "file": "inquiry.spec.ts",
+          "line": 68,
+          "column": 1
+        },
+        {
+          "title": "duplicate submission is blocked while pending and success is announced",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1619,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:46.301Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-0604f88e712fd046546f",
+          "file": "inquiry.spec.ts",
+          "line": 89,
+          "column": 1
+        },
+        {
+          "title": "backend failure is recoverable without losing data",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1318,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:47.932Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-9727f3840db9291d05d0",
+          "file": "inquiry.spec.ts",
+          "line": 110,
+          "column": 1
+        },
+        {
+          "title": "invalid and unpublished student inquiry routes are indistinguishable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 365,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:49.264Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-e0b8faf3666820a3b72a",
+          "file": "inquiry.spec.ts",
+          "line": 124,
+          "column": 1
+        },
+        {
+          "title": "invalid project inquiry route has a useful unavailable state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 278,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:49.641Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-882694f36a19cd4b0cb3",
+          "file": "inquiry.spec.ts",
+          "line": 133,
+          "column": 1
+        },
+        {
+          "title": "keyboard workflow and visible focus cover every form control",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 455,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:49.933Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-3d3b3828bd327aca5e6e",
+          "file": "inquiry.spec.ts",
+          "line": 139,
+          "column": 1
+        },
+        {
+          "title": "reduced motion leaves context and form immediately complete",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 309,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:50.400Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-7e8a8fe50eaef2b8edac",
+          "file": "inquiry.spec.ts",
+          "line": 155,
+          "column": 1
+        },
+        {
+          "title": "390px inquiry form and success state have no horizontal overflow",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1311,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:50.722Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "1dd9ea12cb0a7aca4d46-0be0fd28792260e8d0e9",
+          "file": "inquiry.spec.ts",
+          "line": 163,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "manual-project.spec.ts",
+      "file": "manual-project.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "verified student manually creates, previews, resolves conflicts and publishes canonical evidence",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 13957,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:30:26.819Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "603adb25d356a8a888b8-99d390659ee5050f48b5",
+          "file": "manual-project.spec.ts",
+          "line": 12,
+          "column": 1
+        },
+        {
+          "title": "verified student manually creates, previews, resolves conflicts and publishes canonical evidence",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 12120,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:52.083Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "603adb25d356a8a888b8-0327e8d6796eb8170cd6",
+          "file": "manual-project.spec.ts",
+          "line": 12,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "private-student-profile.spec.ts",
+      "file": "private-student-profile.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "verified student creates and returns to a private profile draft",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7146,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:30:40.830Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "541849061fdea9f6694e-a8320ba3d4a9a08dddf5",
+          "file": "private-student-profile.spec.ts",
+          "line": 22,
+          "column": 1
+        },
+        {
+          "title": "verified student creates and returns to a private profile draft",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5661,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:33:04.242Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "541849061fdea9f6694e-9902f134c591b4f0ccf2",
+          "file": "private-student-profile.spec.ts",
+          "line": 22,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "project-demo.spec.ts",
+      "file": "project-demo.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "official playable fixture interacts inside an isolated frame while fallback and navigation survive failures",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 140000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 16981,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:30:48.021Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "disposable-qa-project",
+                      "contentType": "application/json",
+                      "body": "eyJpZCI6IjJkNWQ2ZGI4LWM3NGQtNGViYy04YzQ3LWM1ZjY3MDdmZmZjYiIsInRpdGxlIjoiUjMgRGVtbyBhbmQgRmFsbGJhY2sgUUEiLCJ1cmwiOiIvcHJvamVjdHMvMmQ1ZDZkYjgtYzc0ZC00ZWJjLThjNDctYzVmNjcwN2ZmZmNiIiwicGxheWFibGUiOiIvZml4dHVyZXMvcjMvd29ya2luZ19kZW1vLmh0bWwiLCJmYWxsYmFjayI6Ii9maXh0dXJlcy9yMy9mYWxsYmFjay5zdmcifQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ddcda7b9ca49920f6dea-ebd3cbb342efa494eab3",
+          "file": "project-demo.spec.ts",
+          "line": 8,
+          "column": 1
+        },
+        {
+          "title": "official playable fixture interacts inside an isolated frame while fallback and navigation survive failures",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 140000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 14519,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:33:09.945Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "disposable-qa-project",
+                      "contentType": "application/json",
+                      "body": "eyJpZCI6Ijc0NzE4MDdmLTMwZmItNDI0OS04YjUwLTVkNDIzZjFiMDU1MCIsInRpdGxlIjoiUjMgRGVtbyBhbmQgRmFsbGJhY2sgUUEiLCJ1cmwiOiIvcHJvamVjdHMvNzQ3MTgwN2YtMzBmYi00MjQ5LThiNTAtNWQ0MjNmMWIwNTUwIiwicGxheWFibGUiOiIvZml4dHVyZXMvcjMvd29ya2luZ19kZW1vLmh0bWwiLCJmYWxsYmFjayI6Ii9maXh0dXJlcy9yMy9mYWxsYmFjay5zdmcifQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ddcda7b9ca49920f6dea-0623a5468133e7ce33e3",
+          "file": "project-demo.spec.ts",
+          "line": 8,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "project-detail.spec.ts",
+      "file": "project-detail.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "project supports direct navigation, reload, and its complete evidence shell",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 779,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:31:05.035Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-5c5150295f450e16cead",
+          "file": "project-detail.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "canonical project shows ordered contributor roles and public profile links",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 534,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:31:05.829Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-a0fd60d6f55318a3c66b",
+          "file": "project-detail.spec.ts",
+          "line": 17,
+          "column": 1
+        },
+        {
+          "title": "unpublished contributor identifier and role stay out of the public project",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 548,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:31:06.376Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-b424c768f2e378d89c87",
+          "file": "project-detail.spec.ts",
+          "line": 26,
+          "column": 1
+        },
+        {
+          "title": "broken optional asset remains an ordinary safe link without breaking the page",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 581,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:31:06.936Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-fef04ad3c4fa0479a6ce",
+          "file": "project-detail.spec.ts",
+          "line": 35,
+          "column": 1
+        },
+        {
+          "title": "project inquiry handoff preserves project identity without choosing a contributor",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 821,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:31:07.529Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-ad707ac840c0b16e18cd",
+          "file": "project-detail.spec.ts",
+          "line": 43,
+          "column": 1
+        },
+        {
+          "title": "student evidence reaches the canonical page and browser back remains natural",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1235,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:31:08.362Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-7f18c1c1742e6199c688",
+          "file": "project-detail.spec.ts",
+          "line": 52,
+          "column": 1
+        },
+        {
+          "title": "project links are keyboard reachable with visible focus",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 414,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:31:09.610Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-0d6b0b0e1e4ec7fbb337",
+          "file": "project-detail.spec.ts",
+          "line": 62,
+          "column": 1
+        },
+        {
+          "title": "reduced motion leaves every project section immediately available",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 586,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:31:10.037Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-322e60c32e096878857f",
+          "file": "project-detail.spec.ts",
+          "line": 76,
+          "column": 1
+        },
+        {
+          "title": "390px project page retains content and has no horizontal overflow",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "mobile-only assertion",
+                  "location": {
+                    "file": "C:\\Coding Assignments\\immxrsive-r4\\tests\\browser\\project-detail.spec.ts",
+                    "line": 86,
+                    "column": 8
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 74,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:31:10.635Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "mobile-only assertion",
+                      "location": {
+                        "file": "C:\\Coding Assignments\\immxrsive-r4\\tests\\browser\\project-detail.spec.ts",
+                        "line": 86,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-f6bee73b249db561115a",
+          "file": "project-detail.spec.ts",
+          "line": 85,
+          "column": 1
+        },
+        {
+          "title": "unknown project has a useful project-specific not-found experience",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 352,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:31:10.720Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-f0dd1d2f1d65a5af125f",
+          "file": "project-detail.spec.ts",
+          "line": 99,
+          "column": 1
+        },
+        {
+          "title": "WebGL failure cannot remove project content",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 341,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:31:11.087Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-09a328828cb291ead493",
+          "file": "project-detail.spec.ts",
+          "line": 105,
+          "column": 1
+        },
+        {
+          "title": "missing project not-a-uuid returns HTTP 404 before streaming",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 42,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:31:11.447Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-e22d46cd8175db8c35b1",
+          "file": "project-detail.spec.ts",
+          "line": 115,
+          "column": 3
+        },
+        {
+          "title": "missing project 00000000-0000-4000-8000-000000000000 returns HTTP 404 before streaming",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 23,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:31:11.500Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-028cd361e9a3fa79c5af",
+          "file": "project-detail.spec.ts",
+          "line": 115,
+          "column": 3
+        },
+        {
+          "title": "published fixture still returns HTTP 200",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 45,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:31:11.534Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-6a72482a2314c81d480e",
+          "file": "project-detail.spec.ts",
+          "line": 122,
+          "column": 1
+        },
+        {
+          "title": "project supports direct navigation, reload, and its complete evidence shell",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 978,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:33:24.502Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-2a1a2a65b4385a26d2f7",
+          "file": "project-detail.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "canonical project shows ordered contributor roles and public profile links",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 364,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:33:25.494Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-43803ccd34a296ca583d",
+          "file": "project-detail.spec.ts",
+          "line": 17,
+          "column": 1
+        },
+        {
+          "title": "unpublished contributor identifier and role stay out of the public project",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 365,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:33:25.873Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-816588aab6647326cb19",
+          "file": "project-detail.spec.ts",
+          "line": 26,
+          "column": 1
+        },
+        {
+          "title": "broken optional asset remains an ordinary safe link without breaking the page",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 334,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:33:26.254Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-f87f4ed38bd0ebbb7e4a",
+          "file": "project-detail.spec.ts",
+          "line": 35,
+          "column": 1
+        },
+        {
+          "title": "project inquiry handoff preserves project identity without choosing a contributor",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1040,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:33:26.602Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-13667a834ecdf4c769a1",
+          "file": "project-detail.spec.ts",
+          "line": 43,
+          "column": 1
+        },
+        {
+          "title": "student evidence reaches the canonical page and browser back remains natural",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1060,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:33:27.655Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-dd2f25f132702a7f53c0",
+          "file": "project-detail.spec.ts",
+          "line": 52,
+          "column": 1
+        },
+        {
+          "title": "project links are keyboard reachable with visible focus",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 632,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:33:28.726Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-2bb0aaebbb0d7cb23ed9",
+          "file": "project-detail.spec.ts",
+          "line": 62,
+          "column": 1
+        },
+        {
+          "title": "reduced motion leaves every project section immediately available",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 646,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:33:29.371Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-6ae8d8c784bcf5694c0b",
+          "file": "project-detail.spec.ts",
+          "line": 76,
+          "column": 1
+        },
+        {
+          "title": "390px project page retains content and has no horizontal overflow",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 568,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:33:30.032Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-f88d0d0f9365bc072358",
+          "file": "project-detail.spec.ts",
+          "line": 85,
+          "column": 1
+        },
+        {
+          "title": "unknown project has a useful project-specific not-found experience",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 287,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:33:30.612Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-57a112e070473f40c0c8",
+          "file": "project-detail.spec.ts",
+          "line": 99,
+          "column": 1
+        },
+        {
+          "title": "WebGL failure cannot remove project content",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 614,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:33:30.911Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-9053147a90c6e24f5ed3",
+          "file": "project-detail.spec.ts",
+          "line": 105,
+          "column": 1
+        },
+        {
+          "title": "missing project not-a-uuid returns HTTP 404 before streaming",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 33,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:33:31.538Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-2a7142d66c6f8b888dac",
+          "file": "project-detail.spec.ts",
+          "line": 115,
+          "column": 3
+        },
+        {
+          "title": "missing project 00000000-0000-4000-8000-000000000000 returns HTTP 404 before streaming",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 25,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:33:31.582Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-e47a6c32d140c3196514",
+          "file": "project-detail.spec.ts",
+          "line": 115,
+          "column": 3
+        },
+        {
+          "title": "published fixture still returns HTTP 200",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 45,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:33:31.619Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "13df258b854052e5fcc3-14b1d34e7d05460e3f3a",
+          "file": "project-detail.spec.ts",
+          "line": 122,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "project-import.spec.ts",
+      "file": "project-import.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "GitHub suggestions remain editable and duplicate view/join leads through independent contributor consent",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 100000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7400,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:31:11.600Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4d3874469ac8cf9c242e-0d6bfa27ffe1503f9ce4",
+          "file": "project-import.spec.ts",
+          "line": 8,
+          "column": 1
+        },
+        {
+          "title": "GitHub suggestions remain editable and duplicate view/join leads through independent contributor consent",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 100000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6595,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:33:31.701Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4d3874469ac8cf9c242e-aca3bb54f25cc81bceaf",
+          "file": "project-import.spec.ts",
+          "line": 8,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "project-team.spec.ts",
+      "file": "project-team.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "independent students consent, own their evidence, restore relationships and transfer maintenance",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 12993,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:31:19.034Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "44bda66b307d17bcbf65-fd92f2b7e720c6000bc5",
+          "file": "project-team.spec.ts",
+          "line": 8,
+          "column": 1
+        },
+        {
+          "title": "independent students consent, own their evidence, restore relationships and transfer maintenance",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 12062,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:33:38.334Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "44bda66b307d17bcbf65-37e7bbd4aeff09a2f9f9",
+          "file": "project-team.spec.ts",
+          "line": 8,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "r4-partners.spec.ts",
+      "file": "r4-partners.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "R4 public 390px directory, privacy and contextual inquiry",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5804,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText(/inquiry submitted/i)\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText(/inquiry submitted/i) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/inquiry submitted/i)\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText(/inquiry submitted/i)\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText(/inquiry submitted/i) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/inquiry submitted/i)\u001b[22m\n\n    at C:\\Coding Assignments\\immxrsive-r4\\tests\\browser\\r4-partners.spec.ts:17:452",
+                    "location": {
+                      "file": "C:\\Coding Assignments\\immxrsive-r4\\tests\\browser\\r4-partners.spec.ts",
+                      "column": 452,
+                      "line": 17
+                    },
+                    "snippet": "  15 |   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);\n  16 |   await page.getByRole(\"link\",{name:`Discuss a collaboration with ${company.content.name}`}).click();await expect(page.getByRole(\"heading\",{level:1})).toContainText(company.content.name);\n> 17 |   await page.getByLabel(\"Company name\").fill(\"Synthetic employer\");await page.getByLabel(\"Contact name\").fill(\"Synthetic contact\");await page.getByLabel(\"Contact email\").fill(\"contact@example.test\");await page.getByLabel(\"Inquiry description\").fill(\"We would like to discuss a research collaboration and a student training prototype.\");await page.getByRole(\"button\",{name:/submit inquiry/i}).click();await expect(page.getByText(/inquiry submitted/i)).toBeVisible();\n     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ^\n  18 |  }finally{await c.client.end();}\n  19 | });\n  20 | for(const width of [1280,768])test(`R4 staff manual draft/publish at ${width}px`,async({page})=>{"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Coding Assignments\\immxrsive-r4\\tests\\browser\\r4-partners.spec.ts",
+                        "column": 452,
+                        "line": 17
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText(/inquiry submitted/i)\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText(/inquiry submitted/i) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/inquiry submitted/i)\u001b[22m\n\n\n  15 |   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);\n  16 |   await page.getByRole(\"link\",{name:`Discuss a collaboration with ${company.content.name}`}).click();await expect(page.getByRole(\"heading\",{level:1})).toContainText(company.content.name);\n> 17 |   await page.getByLabel(\"Company name\").fill(\"Synthetic employer\");await page.getByLabel(\"Contact name\").fill(\"Synthetic contact\");await page.getByLabel(\"Contact email\").fill(\"contact@example.test\");await page.getByLabel(\"Inquiry description\").fill(\"We would like to discuss a research collaboration and a student training prototype.\");await page.getByRole(\"button\",{name:/submit inquiry/i}).click();await expect(page.getByText(/inquiry submitted/i)).toBeVisible();\n     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ^\n  18 |  }finally{await c.client.end();}\n  19 | });\n  20 | for(const width of [1280,768])test(`R4 staff manual draft/publish at ${width}px`,async({page})=>{\n    at C:\\Coding Assignments\\immxrsive-r4\\tests\\browser\\r4-partners.spec.ts:17:452"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:31:32.071Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\JASH2\\AppData\\Local\\Temp\\immxrsive-r4-results-5d32cd8d5715420187d10383ae5281da\\browser-artifacts\\r4-partners-R4-public-390p-7af32-vacy-and-contextual-inquiry-desktop\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\JASH2\\AppData\\Local\\Temp\\immxrsive-r4-results-5d32cd8d5715420187d10383ae5281da\\browser-artifacts\\r4-partners-R4-public-390p-7af32-vacy-and-contextual-inquiry-desktop\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Coding Assignments\\immxrsive-r4\\tests\\browser\\r4-partners.spec.ts",
+                    "column": 452,
+                    "line": 17
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "ef2009a060c149405965-92430d5f487f45350210",
+          "file": "r4-partners.spec.ts",
+          "line": 8,
+          "column": 1
+        },
+        {
+          "title": "R4 staff manual draft/publish at 1280px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1329,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:31:40.670Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ef2009a060c149405965-c3fe8d245273232ebcdb",
+          "file": "r4-partners.spec.ts",
+          "line": 20,
+          "column": 31
+        },
+        {
+          "title": "R4 staff manual draft/publish at 768px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1023,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:31:42.335Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ef2009a060c149405965-7908e8a1c00bad2a3651",
+          "file": "r4-partners.spec.ts",
+          "line": 20,
+          "column": 31
+        },
+        {
+          "title": "R4 student requests require independent staff approval at 1280px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5369,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:31:43.372Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ef2009a060c149405965-f92d298f4b0f47783ba7",
+          "file": "r4-partners.spec.ts",
+          "line": 33,
+          "column": 33
+        },
+        {
+          "title": "R4 student requests require independent staff approval at 768px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6900,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:31:48.756Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ef2009a060c149405965-52ff27c57d44dbe413a6",
+          "file": "r4-partners.spec.ts",
+          "line": 33,
+          "column": 33
+        },
+        {
+          "title": "R4 public 390px directory, privacy and contextual inquiry",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5854,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText(/inquiry submitted/i)\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText(/inquiry submitted/i) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/inquiry submitted/i)\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText(/inquiry submitted/i)\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText(/inquiry submitted/i) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/inquiry submitted/i)\u001b[22m\n\n    at C:\\Coding Assignments\\immxrsive-r4\\tests\\browser\\r4-partners.spec.ts:17:452",
+                    "location": {
+                      "file": "C:\\Coding Assignments\\immxrsive-r4\\tests\\browser\\r4-partners.spec.ts",
+                      "column": 452,
+                      "line": 17
+                    },
+                    "snippet": "  15 |   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);\n  16 |   await page.getByRole(\"link\",{name:`Discuss a collaboration with ${company.content.name}`}).click();await expect(page.getByRole(\"heading\",{level:1})).toContainText(company.content.name);\n> 17 |   await page.getByLabel(\"Company name\").fill(\"Synthetic employer\");await page.getByLabel(\"Contact name\").fill(\"Synthetic contact\");await page.getByLabel(\"Contact email\").fill(\"contact@example.test\");await page.getByLabel(\"Inquiry description\").fill(\"We would like to discuss a research collaboration and a student training prototype.\");await page.getByRole(\"button\",{name:/submit inquiry/i}).click();await expect(page.getByText(/inquiry submitted/i)).toBeVisible();\n     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ^\n  18 |  }finally{await c.client.end();}\n  19 | });\n  20 | for(const width of [1280,768])test(`R4 staff manual draft/publish at ${width}px`,async({page})=>{"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Coding Assignments\\immxrsive-r4\\tests\\browser\\r4-partners.spec.ts",
+                        "column": 452,
+                        "line": 17
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText(/inquiry submitted/i)\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText(/inquiry submitted/i) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/inquiry submitted/i)\u001b[22m\n\n\n  15 |   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);\n  16 |   await page.getByRole(\"link\",{name:`Discuss a collaboration with ${company.content.name}`}).click();await expect(page.getByRole(\"heading\",{level:1})).toContainText(company.content.name);\n> 17 |   await page.getByLabel(\"Company name\").fill(\"Synthetic employer\");await page.getByLabel(\"Contact name\").fill(\"Synthetic contact\");await page.getByLabel(\"Contact email\").fill(\"contact@example.test\");await page.getByLabel(\"Inquiry description\").fill(\"We would like to discuss a research collaboration and a student training prototype.\");await page.getByRole(\"button\",{name:/submit inquiry/i}).click();await expect(page.getByText(/inquiry submitted/i)).toBeVisible();\n     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ^\n  18 |  }finally{await c.client.end();}\n  19 | });\n  20 | for(const width of [1280,768])test(`R4 staff manual draft/publish at ${width}px`,async({page})=>{\n    at C:\\Coding Assignments\\immxrsive-r4\\tests\\browser\\r4-partners.spec.ts:17:452"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:33:50.432Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\JASH2\\AppData\\Local\\Temp\\immxrsive-r4-results-5d32cd8d5715420187d10383ae5281da\\browser-artifacts\\r4-partners-R4-public-390p-7af32-vacy-and-contextual-inquiry-mobile-390\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\JASH2\\AppData\\Local\\Temp\\immxrsive-r4-results-5d32cd8d5715420187d10383ae5281da\\browser-artifacts\\r4-partners-R4-public-390p-7af32-vacy-and-contextual-inquiry-mobile-390\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Coding Assignments\\immxrsive-r4\\tests\\browser\\r4-partners.spec.ts",
+                    "column": 452,
+                    "line": 17
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "ef2009a060c149405965-836ddbb4560bb826a7b9",
+          "file": "r4-partners.spec.ts",
+          "line": 8,
+          "column": 1
+        },
+        {
+          "title": "R4 staff manual draft/publish at 1280px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1156,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:33:58.970Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ef2009a060c149405965-2b33b5d00d3a1e6debf1",
+          "file": "r4-partners.spec.ts",
+          "line": 20,
+          "column": 31
+        },
+        {
+          "title": "R4 staff manual draft/publish at 768px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 965,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:00.440Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ef2009a060c149405965-6d3f7ba923d4b6a1a6d8",
+          "file": "r4-partners.spec.ts",
+          "line": 20,
+          "column": 31
+        },
+        {
+          "title": "R4 student requests require independent staff approval at 1280px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5868,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:01.418Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ef2009a060c149405965-a8021f9ca46495fbb77d",
+          "file": "r4-partners.spec.ts",
+          "line": 33,
+          "column": 33
+        },
+        {
+          "title": "R4 student requests require independent staff approval at 768px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6472,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:07.301Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ef2009a060c149405965-7710faefd61e6370b31d",
+          "file": "r4-partners.spec.ts",
+          "line": 33,
+          "column": 33
+        }
+      ]
+    },
+    {
+      "title": "release-1-acceptance.spec.ts",
+      "file": "release-1-acceptance.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Scenario A: search and filters lead through project evidence to project inquiry",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2865,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:31:55.696Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "09d2f5cda1f00419a53a-fe3d392aa7f774daa71b",
+          "file": "release-1-acceptance.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "Scenario B: two-skill AND, individual removal, Clear All, and student inquiry",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3284,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:31:58.576Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "09d2f5cda1f00419a53a-0bc6b2353d1d8dead244",
+          "file": "release-1-acceptance.spec.ts",
+          "line": 22,
+          "column": 1
+        },
+        {
+          "title": "Scenario C: stable deep links survive reload and browser back",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1471,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:01.874Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "09d2f5cda1f00419a53a-4b159724523cc4d9ebf4",
+          "file": "release-1-acceptance.spec.ts",
+          "line": 44,
+          "column": 1
+        },
+        {
+          "title": "Scenario D: unpublished and invalid routes fail safely",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 818,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:03.358Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "09d2f5cda1f00419a53a-e4e6b9d384e781a75690",
+          "file": "release-1-acceptance.spec.ts",
+          "line": 56,
+          "column": 1
+        },
+        {
+          "title": "Scenario E: P07 remains usable beside its broken optional URL",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 593,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:04.188Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "09d2f5cda1f00419a53a-2ea17c521476cd27046c",
+          "file": "release-1-acceptance.spec.ts",
+          "line": 67,
+          "column": 1
+        },
+        {
+          "title": "Scenario F: the complete workflow has no overflow at 390px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "mobile-only acceptance scenario",
+                  "location": {
+                    "file": "C:\\Coding Assignments\\immxrsive-r4\\tests\\browser\\release-1-acceptance.spec.ts",
+                    "line": 78,
+                    "column": 8
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 76,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:04.795Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "mobile-only acceptance scenario",
+                      "location": {
+                        "file": "C:\\Coding Assignments\\immxrsive-r4\\tests\\browser\\release-1-acceptance.spec.ts",
+                        "line": 78,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "09d2f5cda1f00419a53a-f3a5a9b097f4c92d9529",
+          "file": "release-1-acceptance.spec.ts",
+          "line": 77,
+          "column": 1
+        },
+        {
+          "title": "Scenario G: keyboard-only controls expose focus throughout the core workflow",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3839,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:04.883Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "09d2f5cda1f00419a53a-ee10ca45264c62b9590c",
+          "file": "release-1-acceptance.spec.ts",
+          "line": 93,
+          "column": 1
+        },
+        {
+          "title": "Scenario H: reduced motion preserves the complete core workflow",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 887,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:08.735Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "09d2f5cda1f00419a53a-0f338219ecb2e37c4321",
+          "file": "release-1-acceptance.spec.ts",
+          "line": 113,
+          "column": 1
+        },
+        {
+          "title": "Scenario I: missing WebGL leaves the core workflow functional",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1156,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:09.633Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "09d2f5cda1f00419a53a-1042ce30ee508888d5e4",
+          "file": "release-1-acceptance.spec.ts",
+          "line": 125,
+          "column": 1
+        },
+        {
+          "title": "Scenario A: search and filters lead through project evidence to project inquiry",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2300,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:13.817Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "09d2f5cda1f00419a53a-8b475b84771264665e7a",
+          "file": "release-1-acceptance.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "Scenario B: two-skill AND, individual removal, Clear All, and student inquiry",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3367,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:16.130Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "09d2f5cda1f00419a53a-907efbd1e135876771b2",
+          "file": "release-1-acceptance.spec.ts",
+          "line": 22,
+          "column": 1
+        },
+        {
+          "title": "Scenario C: stable deep links survive reload and browser back",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1724,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:19.510Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "09d2f5cda1f00419a53a-76a60da54a98b0449293",
+          "file": "release-1-acceptance.spec.ts",
+          "line": 44,
+          "column": 1
+        },
+        {
+          "title": "Scenario D: unpublished and invalid routes fail safely",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 716,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:21.249Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "09d2f5cda1f00419a53a-a0adc34c780b086b7b35",
+          "file": "release-1-acceptance.spec.ts",
+          "line": 56,
+          "column": 1
+        },
+        {
+          "title": "Scenario E: P07 remains usable beside its broken optional URL",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 348,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:21.978Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "09d2f5cda1f00419a53a-8e6404e6d5bec3d38d73",
+          "file": "release-1-acceptance.spec.ts",
+          "line": 67,
+          "column": 1
+        },
+        {
+          "title": "Scenario F: the complete workflow has no overflow at 390px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1881,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:22.337Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "09d2f5cda1f00419a53a-4254ffbd509d0e1dcaa1",
+          "file": "release-1-acceptance.spec.ts",
+          "line": 77,
+          "column": 1
+        },
+        {
+          "title": "Scenario G: keyboard-only controls expose focus throughout the core workflow",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2523,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:24.230Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "09d2f5cda1f00419a53a-03aa137af6a956fc6681",
+          "file": "release-1-acceptance.spec.ts",
+          "line": 93,
+          "column": 1
+        },
+        {
+          "title": "Scenario H: reduced motion preserves the complete core workflow",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1583,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:26.766Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "09d2f5cda1f00419a53a-20c4c7ec43cc1d741c5c",
+          "file": "release-1-acceptance.spec.ts",
+          "line": 113,
+          "column": 1
+        },
+        {
+          "title": "Scenario I: missing WebGL leaves the core workflow functional",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1859,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:28.363Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "09d2f5cda1f00419a53a-d55ea40fea27beb0365b",
+          "file": "release-1-acceptance.spec.ts",
+          "line": 125,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "student-profile.spec.ts",
+      "file": "student-profile.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "published profile supports direct navigation and reload",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 772,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:10.808Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "71bcec37664909153050-5eee5bbcfa4323548290",
+          "file": "student-profile.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "profile exposes the complete professional shell and project evidence",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 377,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:11.592Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "71bcec37664909153050-8aec69dc6159201880be",
+          "file": "student-profile.spec.ts",
+          "line": 13,
+          "column": 1
+        },
+        {
+          "title": "browser back preserves the directory URL state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1051,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:11.980Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "71bcec37664909153050-2695ea115bbe7182c287",
+          "file": "student-profile.spec.ts",
+          "line": 27,
+          "column": 1
+        },
+        {
+          "title": "profile links are keyboard reachable with visible focus",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 376,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:13.045Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "71bcec37664909153050-8eea473443b105b6ef25",
+          "file": "student-profile.spec.ts",
+          "line": 60,
+          "column": 1
+        },
+        {
+          "title": "reduced motion leaves the complete profile immediately available",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 291,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:13.433Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "71bcec37664909153050-795f01d435e0d5dc083b",
+          "file": "student-profile.spec.ts",
+          "line": 73,
+          "column": 1
+        },
+        {
+          "title": "390px profile has no horizontal overflow and retains every action",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "mobile-only assertion",
+                  "location": {
+                    "file": "C:\\Coding Assignments\\immxrsive-r4\\tests\\browser\\student-profile.spec.ts",
+                    "line": 83,
+                    "column": 8
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 72,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:13.737Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "mobile-only assertion",
+                      "location": {
+                        "file": "C:\\Coding Assignments\\immxrsive-r4\\tests\\browser\\student-profile.spec.ts",
+                        "line": 83,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "71bcec37664909153050-3505042673636b9a1b6d",
+          "file": "student-profile.spec.ts",
+          "line": 82,
+          "column": 1
+        },
+        {
+          "title": "unknown and unpublished routes use the same useful not-found state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 429,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:13.820Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "71bcec37664909153050-6a3e31471175e999f7e7",
+          "file": "student-profile.spec.ts",
+          "line": 96,
+          "column": 1
+        },
+        {
+          "title": "WebGL failure cannot remove profile functionality",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 334,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:14.262Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "71bcec37664909153050-8eaf7d6d26d47e939aa0",
+          "file": "student-profile.spec.ts",
+          "line": 107,
+          "column": 1
+        },
+        {
+          "title": "inquiry handoff preserves the selected student in the real form",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 718,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:14.607Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "71bcec37664909153050-9c3b06509d0398b2e3d2",
+          "file": "student-profile.spec.ts",
+          "line": 118,
+          "column": 1
+        },
+        {
+          "title": "published profile supports direct navigation and reload",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1607,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:30.256Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "71bcec37664909153050-21ae22fed5080dd1ecb9",
+          "file": "student-profile.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "profile exposes the complete professional shell and project evidence",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 385,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:31.876Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "71bcec37664909153050-9c116aedfe20d7b84a33",
+          "file": "student-profile.spec.ts",
+          "line": 13,
+          "column": 1
+        },
+        {
+          "title": "browser back preserves the directory URL state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 950,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:32.273Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "71bcec37664909153050-ff0355ccdf51d01ffd3c",
+          "file": "student-profile.spec.ts",
+          "line": 27,
+          "column": 1
+        },
+        {
+          "title": "profile links are keyboard reachable with visible focus",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 597,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:33.236Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "71bcec37664909153050-c8c4f15358967170dabd",
+          "file": "student-profile.spec.ts",
+          "line": 60,
+          "column": 1
+        },
+        {
+          "title": "reduced motion leaves the complete profile immediately available",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 674,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:33.845Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "71bcec37664909153050-df0978128552e61a395d",
+          "file": "student-profile.spec.ts",
+          "line": 73,
+          "column": 1
+        },
+        {
+          "title": "390px profile has no horizontal overflow and retains every action",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1155,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:34.534Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "71bcec37664909153050-62db54ed6ff8181bbbda",
+          "file": "student-profile.spec.ts",
+          "line": 82,
+          "column": 1
+        },
+        {
+          "title": "unknown and unpublished routes use the same useful not-found state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 363,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:35.705Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "71bcec37664909153050-6e991c93a9ab80add325",
+          "file": "student-profile.spec.ts",
+          "line": 96,
+          "column": 1
+        },
+        {
+          "title": "WebGL failure cannot remove profile functionality",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1102,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:36.081Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "71bcec37664909153050-5bc9b378978d96e4cc94",
+          "file": "student-profile.spec.ts",
+          "line": 107,
+          "column": 1
+        },
+        {
+          "title": "inquiry handoff preserves the selected student in the real form",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1047,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:37.196Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "71bcec37664909153050-a5c2c438b6d97f4699de",
+          "file": "student-profile.spec.ts",
+          "line": 118,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "studio.spec.ts",
+      "file": "studio.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "anonymous Studio access requires sign-in and API access is denied",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 529,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:15.348Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "64bdea7002f9c9cea9f4-eddd3916dee31878de3d",
+          "file": "studio.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "public showcase supports reduced motion, keyboard navigation and narrow screens",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 266,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:15.890Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "64bdea7002f9c9cea9f4-7d644557a7a5cb9a45cb",
+          "file": "studio.spec.ts",
+          "line": 15,
+          "column": 1
+        },
+        {
+          "title": "anonymous Studio access requires sign-in and API access is denied",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 479,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:38.264Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "64bdea7002f9c9cea9f4-d5a5780b3f7704dbd20f",
+          "file": "studio.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "public showcase supports reduced motion, keyboard navigation and narrow screens",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 283,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:38.756Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "64bdea7002f9c9cea9f4-9f211acb5f2b4642fe2f",
+          "file": "studio.spec.ts",
+          "line": 15,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "talent.spec.ts",
+      "file": "talent.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "root redirects to the talent experience",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 682,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:16.192Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-f9468beeb322404c0690",
+          "file": "talent.spec.ts",
+          "line": 55,
+          "column": 1
+        },
+        {
+          "title": "directory workflow remains functional and URL-addressable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1370,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:16.887Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-7d1d62f54d5aafc11d21",
+          "file": "talent.spec.ts",
+          "line": 61,
+          "column": 1
+        },
+        {
+          "title": "student access is discoverable and keyboard-operable in public navigation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 815,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:18.272Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-72f196474fb2d5f0a9ee",
+          "file": "talent.spec.ts",
+          "line": 77,
+          "column": 1
+        },
+        {
+          "title": "advanced expressions remain URL-addressable and browser history restores them",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1312,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:19.103Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-b8b2f6e7562ea8aa46ed",
+          "file": "talent.spec.ts",
+          "line": 89,
+          "column": 1
+        },
+        {
+          "title": "search tips are keyboard-accessible and malformed searches retain results",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1088,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:20.440Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-df459d3c21faa8e177c6",
+          "file": "talent.spec.ts",
+          "line": 106,
+          "column": 1
+        },
+        {
+          "title": "keyboard focus is visible and filters operate without a pointer",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1039,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:21.549Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-edf305cfd4a796e4fe94",
+          "file": "talent.spec.ts",
+          "line": 126,
+          "column": 1
+        },
+        {
+          "title": "390px layout has no horizontal document overflow",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "mobile-only assertion",
+                  "location": {
+                    "file": "C:\\Coding Assignments\\immxrsive-r4\\tests\\browser\\talent.spec.ts",
+                    "line": 146,
+                    "column": 8
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 85,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:22.602Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "mobile-only assertion",
+                      "location": {
+                        "file": "C:\\Coding Assignments\\immxrsive-r4\\tests\\browser\\talent.spec.ts",
+                        "line": 146,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-ae2913821b31635a3493",
+          "file": "talent.spec.ts",
+          "line": 145,
+          "column": 1
+        },
+        {
+          "title": "reduced motion keeps the complete directory usable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 624,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:22.700Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-1ff2044c8c0e8a48c7d3",
+          "file": "talent.spec.ts",
+          "line": 161,
+          "column": 1
+        },
+        {
+          "title": "a WebGL context failure leaves the directory intact",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 436,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:23.339Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-a455bdc01f2177d45a9e",
+          "file": "talent.spec.ts",
+          "line": 172,
+          "column": 1
+        },
+        {
+          "title": "GSAP fallback exposes every chapter and preserves filtering",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 805,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:23.791Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-29068ca2ee7cc2bf654f",
+          "file": "talent.spec.ts",
+          "line": 182,
+          "column": 1
+        },
+        {
+          "title": "focused removed card hands focus to the result summary",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 851,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:24.620Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-900da1df6bd602224b03",
+          "file": "talent.spec.ts",
+          "line": 196,
+          "column": 1
+        },
+        {
+          "title": "native scroll advances the authored field sequence",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1110,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:25.485Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-4a60dd273b4fe723f27b",
+          "file": "talent.spec.ts",
+          "line": 208,
+          "column": 1
+        },
+        {
+          "title": "motion cleanup runs when the talent page unmounts",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 889,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:32:26.610Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-c3ae7c69fc487946a38d",
+          "file": "talent.spec.ts",
+          "line": 221,
+          "column": 1
+        },
+        {
+          "title": "root redirects to the talent experience",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 614,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:39.075Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-5f83165af2ff6d006902",
+          "file": "talent.spec.ts",
+          "line": 55,
+          "column": 1
+        },
+        {
+          "title": "directory workflow remains functional and URL-addressable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1225,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:39.705Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-146b99ae55302feb1bfa",
+          "file": "talent.spec.ts",
+          "line": 61,
+          "column": 1
+        },
+        {
+          "title": "student access is discoverable and keyboard-operable in public navigation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 805,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:40.945Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-62281fe575e2b12971d6",
+          "file": "talent.spec.ts",
+          "line": 77,
+          "column": 1
+        },
+        {
+          "title": "advanced expressions remain URL-addressable and browser history restores them",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1983,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:41.763Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-bc1a2726000f46547bf8",
+          "file": "talent.spec.ts",
+          "line": 89,
+          "column": 1
+        },
+        {
+          "title": "search tips are keyboard-accessible and malformed searches retain results",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 877,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:43.762Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-f7f3509b1075ec1cc0ce",
+          "file": "talent.spec.ts",
+          "line": 106,
+          "column": 1
+        },
+        {
+          "title": "keyboard focus is visible and filters operate without a pointer",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 858,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:44.653Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-f0ef85a07dd185af39ad",
+          "file": "talent.spec.ts",
+          "line": 126,
+          "column": 1
+        },
+        {
+          "title": "390px layout has no horizontal document overflow",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 804,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:45.524Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-7bd9546bec7a6a3ce2d4",
+          "file": "talent.spec.ts",
+          "line": 145,
+          "column": 1
+        },
+        {
+          "title": "reduced motion keeps the complete directory usable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 618,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:46.342Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-f3d71e2a36e764ee41e0",
+          "file": "talent.spec.ts",
+          "line": 161,
+          "column": 1
+        },
+        {
+          "title": "a WebGL context failure leaves the directory intact",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 441,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:46.976Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-02b755df83353f360aa7",
+          "file": "talent.spec.ts",
+          "line": 172,
+          "column": 1
+        },
+        {
+          "title": "GSAP fallback exposes every chapter and preserves filtering",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 695,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:47.432Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-4e7bba464012e5783b27",
+          "file": "talent.spec.ts",
+          "line": 182,
+          "column": 1
+        },
+        {
+          "title": "focused removed card hands focus to the result summary",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 755,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:48.148Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-07b6dc971401e93b7ed9",
+          "file": "talent.spec.ts",
+          "line": 196,
+          "column": 1
+        },
+        {
+          "title": "native scroll advances the authored field sequence",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1010,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:48.922Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-6e9fb4abf15fbfad5e56",
+          "file": "talent.spec.ts",
+          "line": 208,
+          "column": 1
+        },
+        {
+          "title": "motion cleanup runs when the talent page unmounts",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-390",
+              "projectName": "mobile-390",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 919,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-17T15:34:49.949Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3b531ddc1ffac0d0cab2-1ca1b53a7363b45c4d28",
+          "file": "talent.spec.ts",
+          "line": 221,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-17T15:29:54.734Z",
+    "duration": 297176.85699999996,
+    "expected": 147,
+    "skipped": 5,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

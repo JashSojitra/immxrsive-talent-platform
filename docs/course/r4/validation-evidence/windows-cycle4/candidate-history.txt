@@ -1,0 +1,158 @@
+﻿node.exe : warning: in the working copy of 'docs/course/r4/validation-evidence/candidate.json', LF will be replaced by 
+CRLF the next time Git touches it
+At C:\Coding Assignments\immxrsive-r4\scripts\validate-r4.ps1:52 char:15
++     $output = & $Program @Arguments 2>&1 | Out-String
++               ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (warning: in the... Git touches it:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+warning: in the working copy of 'docs/course/r4/validation-evidence/windows-cycle3/browser-results.json', LF will be 
+replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/course/r4/validation-evidence/windows-cycle3/r4-partners-R4-public-390p-7af32-vac
+y-and-contextual-inquiry-desktop-error-context.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/course/r4/validation-evidence/windows-cycle3/r4-partners-R4-public-390p-7af32-vac
+y-and-contextual-inquiry-mobile-390-error-context.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/course/r4/changed-files.txt', LF will be replaced by CRLF the next time Git 
+touches it
+{
+  "baseline": "8bbf9228a7b59602297f3d53697e1ca4a23b66dd",
+  "transportHead": "c6908f57a9579d581c36f9b5bfd7eaf4e402c77d",
+  "hashBasis": "Git clean canonical bytes, using path attributes and checkout configuration; SHA-256",
+  "scope": "Executable source/configuration/tests/fixtures, excluding documentation and this evidence to avoid recursive hashing",
+  "candidateFingerprint": "6f6dde98f90e129106386ba45f731890aa230bebd1d1ec5cb52b0c32d31b7ca4",
+  "candidateFileCount": 351,
+  "suppliedInventoryVerifiedFiles": 50,
+  "historicalMigrationAndSnapshotFilesUnchanged": 25,
+  "historicalJournalEntriesUnchanged": 13,
+  "migrationHashBasis": "canonicalSha256 identifies committed content; rawMigratorSha256 hashes checkout bytes read by Drizzle and may differ on CRLF checkouts. Historical files and ledger hashes are never rewritten.",
+  "migrationJournal": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1790706443089,
+      "tag": "0000_lonely_guardian",
+      "breakpoints": true,
+      "canonicalSha256": "8bbc92d4b3872fcd3cd6af660e994ff92ac5af24e525266337375a48ec11bc47",
+      "rawMigratorSha256": "8412c875ae05cc6304ea6ffbb190c030fb8ce2f3b7f11b3674c9dedda1781f1e"
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791588001936,
+      "tag": "0001_tearful_agent_brand",
+      "breakpoints": true,
+      "canonicalSha256": "b790d71ce457de1482655dfc122999898f394ffb24548ab0f130866b8a1e5ac6",
+      "rawMigratorSha256": "7ec03d3043aa48172f63fb1f1f31cd2eb898ce430a5d8113e3f6aaf86f556249"
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791774105009,
+      "tag": "0002_rainy_wallflower",
+      "breakpoints": true,
+      "canonicalSha256": "5a910e33d6e20793ed4c893affeaa459b7ca0b09e49a84e882cdaf0d1be000ac",
+      "rawMigratorSha256": "f54d33873f77f75ffab04b42546165c96409671e13a54561718a1486f2b12ba1"
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791831456656,
+      "tag": "0003_wise_rockslide",
+      "breakpoints": true,
+      "canonicalSha256": "6883f65cef7465ee5426d67f438f20907cec243327bec78a62fb8f76af6a0dd3",
+      "rawMigratorSha256": "b6d85fcf87ec91929f140be91cc0675edde0b0a3b97e2ea5f0320455b1bb8b67"
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1791839286226,
+      "tag": "0004_salty_the_call",
+      "breakpoints": true,
+      "canonicalSha256": "e291a5a15cef439a4f51c86f6cdfb4f98b1811f68b7e9a9dbd916cd629549e1b",
+      "rawMigratorSha256": "8aa2541e8501431464892acc44d0eee335483123ee54a38e24f8b021e4070d69"
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1791855325918,
+      "tag": "0005_little_giant_girl",
+      "breakpoints": true,
+      "canonicalSha256": "3c9735a25f174f1c7055c3059a88ea8b79baccdf0073ef43f02d54c52a9f05d2",
+      "rawMigratorSha256": "de19b92421d7eab06282c5e805ac0aea0be1cff76029a9bda5610b66a4535ed4"
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791859600188,
+      "tag": "0006_adorable_lord_tyger",
+      "breakpoints": true,
+      "canonicalSha256": "0babe26b8388427908f680578fee6f379e8006a31ac0c65a7e87eb25f7b5df26",
+      "rawMigratorSha256": "e8803eac5f7ef3394f9f687b14a779eaa545bbbb9c2b220cbd3efdbcefb2b0a7"
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1791999181622,
+      "tag": "0007_harden_data_api",
+      "breakpoints": true,
+      "canonicalSha256": "3d9c718bef8edb14d3bcbd8bff858f6f5d822776548d69ed6c1532a63df9fe92",
+      "rawMigratorSha256": "52849fdd5d44e54f8e712f128ccd065812dd0cbd9a6c7920f422774050e047b2"
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1793402673237,
+      "tag": "0008_r2_profile_inquiry",
+      "breakpoints": true,
+      "canonicalSha256": "0dcd6c114ff14cf320d2893282706f85185445ac42807bdbba9adb55608ba99d",
+      "rawMigratorSha256": "287450e92ea5eb6b81d6f3e52588b07cc4759ba145d631bedcaf6988581474b0"
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793416021643,
+      "tag": "0009_r3_shared_projects",
+      "breakpoints": true,
+      "canonicalSha256": "7ebbca1ce1239b6cfd83d1bf0b0180c97c2efca1cafcd54d4486605f0b336e20",
+      "rawMigratorSha256": "c8920daafcec3c5eea1b17b0867210c46f01fab56bf652a5d8663050ef6b98cb"
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1793485871711,
+      "tag": "0010_r3_project_join_requests",
+      "breakpoints": true,
+      "canonicalSha256": "4196ef7c9dd9adbe4cc37568d95316f388b72e6de9ac7a74c10d3bb1ad896d24",
+      "rawMigratorSha256": "c221e0ff8c7ae4dee0fd91ba497dccd43d74901667884f0b9cace12cfc2e14fd"
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1794000688635,
+      "tag": "0011_r31_xr_studio",
+      "breakpoints": true,
+      "canonicalSha256": "877abf92ab4c5a5538bb8708ea5309020e69de71185136f6d5edb3ad9a5d6b83",
+      "rawMigratorSha256": "cd47dc344a8bb4156b033d8e03afecacf2f2dd7d9eb72c0202be1ae9ca295906"
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1794846746452,
+      "tag": "0012_cooing_shatterstar",
+      "breakpoints": true,
+      "canonicalSha256": "41a93c3e48eb4695219074dd6be2dd7ea90189106b1f40327c1c064ea6a4111d",
+      "rawMigratorSha256": "4a1912017030a72540114ae3c98f7ba842c5d35b1f7e1c10c486c5f5dc9bffad"
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1794870000000,
+      "tag": "0013_r4_partners",
+      "breakpoints": true,
+      "canonicalSha256": "bab182e7e5dc4f0cdb9bbf77056f0050ef2e523233b4f7cf7427738b3bd05565",
+      "rawMigratorSha256": "c98734f31204d3e4fb034858c71645750f43911e382583cdec7651095ec1b981"
+    }
+  ],
+  "changedFileCount": 107
+}
+

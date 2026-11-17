@@ -747,3 +747,64 @@ export const adminEvents = pgTable("admin_events", {
   action: text("action").notNull(), note: text("note").notNull(), snapshot: jsonb("snapshot").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 }, t => [index("admin_event_history_idx").on(t.projectId, t.createdAt), check("admin_event_note_check", sql`length(${t.note}) <= 2000`)]).enableRLS();
+
+// R4 companies and independently reviewed relationships. Imported text is only content.
+export const partnerCompanies = pgTable("partner_companies", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  content: jsonb("content").$type<import("@/partners/policy").CompanyContent>().notNull(),
+  normalizedDomain: text("normalized_domain"),
+  sources: jsonb("sources").$type<{sourceUrl:string;timestamp:string}[]>().default([]).notNull(),
+  status: text("status", { enum: ["draft", "published"] }).default("draft").notNull(),
+  version: integer("version").default(1).notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+}, t => [index("partner_companies_domain_idx").on(t.normalizedDomain), check("partner_companies_status_check",sql`${t.status} IN ('draft','published')`), check("partner_companies_version_check",sql`${t.version} > 0`)]).enableRLS();
+export const partnerCollaborations = pgTable("partner_collaborations", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  companyId: uuid("company_id").notNull().references(() => partnerCompanies.id, { onDelete: "restrict" }),
+  content: jsonb("content").$type<import("@/partners/policy").CollaborationContent>().notNull(),
+  version: integer("version").default(1).notNull(),
+}, t => [check("partner_collaborations_content_check",sql`${t.content}->>'visibility' IN ('public','limited','private') AND ${t.content}->>'status' IN ('current','past')`),check("partner_collaborations_version_check",sql`${t.version} > 0`)]).enableRLS();
+export const partnerCollaborationProjects = pgTable("partner_collaboration_projects", {
+  collaborationId: uuid("collaboration_id").notNull().references(() => partnerCollaborations.id, { onDelete: "restrict" }),
+  projectId: text("project_id").notNull().references(() => projects.id, { onDelete: "restrict" }),
+}, t => [primaryKey({ columns: [t.collaborationId, t.projectId] })]).enableRLS();
+export const partnerCollaborationParticipants = pgTable("partner_collaboration_participants", {
+  collaborationId: uuid("collaboration_id").notNull().references(() => partnerCollaborations.id, { onDelete: "restrict" }),
+  profileId: uuid("profile_id").notNull().references(() => studentProfiles.id, { onDelete: "restrict" }),
+}, t => [primaryKey({ columns: [t.collaborationId, t.profileId] })]).enableRLS();
+export const partnerRequests = pgTable("partner_requests", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  kind: text("kind", { enum: ["verification", "association"] }).notNull(),
+  projectId: text("project_id").notNull().references(() => projects.id, { onDelete: "restrict" }),
+  actorUserId: text("actor_user_id").notNull().references(() => authUsers.id, { onDelete: "restrict" }),
+  companyId: uuid("company_id").references(() => partnerCompanies.id, { onDelete: "restrict" }),
+  suggestedCompany: text("suggested_company").notNull(),
+  note: text("note").notNull(), evidence: text("evidence").notNull(),
+  status: text("status", { enum: ["pending", "approved", "rejected"] }).default("pending").notNull(),
+  decisionNote: text("decision_note").default("").notNull(),
+  reviewedBy: text("reviewed_by").references(() => authUsers.id, { onDelete: "restrict" }),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+}, t => [check("partner_requests_kind_check",sql`${t.kind} IN ('verification','association')`),check("partner_requests_status_check",sql`${t.status} IN ('pending','approved','rejected')`),check("partner_requests_no_self_review",sql`${t.reviewedBy} IS NULL OR ${t.reviewedBy} <> ${t.actorUserId}`),uniqueIndex("partner_requests_one_pending").on(t.projectId, t.kind).where(sql`${t.status} = 'pending'`)]).enableRLS();
+export const projectOfficialVerifications = pgTable("project_official_verifications", {
+  projectId: text("project_id").primaryKey().references(() => projects.id, { onDelete: "restrict" }),
+  requestId: uuid("request_id").notNull().references(() => partnerRequests.id, { onDelete: "restrict" }),
+}).enableRLS();
+export const projectVerifiedPartners = pgTable("project_verified_partners", {
+  projectId: text("project_id").notNull().references(() => projects.id, { onDelete: "restrict" }),
+  companyId: uuid("company_id").notNull().references(() => partnerCompanies.id, { onDelete: "restrict" }),
+  requestId: uuid("request_id").notNull().references(() => partnerRequests.id, { onDelete: "restrict" }),
+}, t => [primaryKey({ columns: [t.projectId, t.companyId] })]).enableRLS();
+export const partnerEvents = pgTable("partner_events", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  actorUserId: text("actor_user_id").notNull().references(() => authUsers.id, { onDelete: "restrict" }),
+  action: text("action").notNull(), subjectId: text("subject_id").notNull(),
+  snapshot: jsonb("snapshot").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+}).enableRLS();
+export const partnerInquiries = pgTable("partner_inquiries", {
+ id: uuid("id").defaultRandom().primaryKey(),
+ companyId: uuid("company_id").notNull().references(() => partnerCompanies.id, {onDelete:"restrict"}),
+ sourceName: text("source_name").notNull(),
+ content: jsonb("content").$type<{companyName:string;contactName:string;contactEmail:string;description:string}>().notNull(),
+ createdAt: timestamp("created_at", {withTimezone:true}).defaultNow().notNull(),
+}).enableRLS();

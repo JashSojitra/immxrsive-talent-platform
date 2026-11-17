@@ -5,7 +5,7 @@ import { InquiryForm } from "./InquiryForm";
 import styles from "./inquiry.module.css";
 
 export interface InquirySourceView {
-  type: "student" | "project";
+  type: "student" | "project" | "partner";
   id: string;
   name: string;
   detail: string;
@@ -21,7 +21,7 @@ export function InquiryPage({ source }: { source: InquirySourceView }) {
       <header className={styles.siteHeader}>
         <BrandLogo className={styles.brand} />
         <nav aria-label="Primary navigation">
-          <Link href={source.sourceUrl}>{isStudent ? "Profile" : "Project"}</Link>
+          <Link href={source.sourceUrl}>{isStudent ? "Profile" : source.type === "partner" ? "Partner" : "Project"}</Link>
           <span aria-current="page">Inquiry</span>
         </nav>
       </header>

@@ -1,0 +1,9 @@
+
+ RUN  v5.1.0 <snapshot>
+
+
+ Test Files  2 passed (2)
+      Tests  8 passed (8)
+   Start at  10:10:03
+   Duration  916ms (environment 35%, import 33%, tests 25%, transform 7%)
+

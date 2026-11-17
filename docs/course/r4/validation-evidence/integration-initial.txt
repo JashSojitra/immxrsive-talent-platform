@@ -1,0 +1,30 @@
+
+ RUN  v5.1.0 <snapshot>
+
+ ❯ tests/integration/r4-partners.test.ts (0 test)
+ ❯ tests/integration/admin-migration.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/admin-migration.test.ts [ tests/integration/admin-migration.test.ts ]
+ FAIL  tests/integration/r4-partners.test.ts [ tests/integration/r4-partners.test.ts ]
+Error: connect ECONNREFUSED 127.0.0.1:55487
+ ❯ cachedError node_modules/postgres/src/query.js:170:23
+ ❯ new Query node_modules/postgres/src/query.js:36:24
+ ❯ sql node_modules/postgres/src/index.js:112:11
+ ❯ tests/integration/setup.ts:22:16
+     20| const control = postgres(baseUrl, { max: 1, prepare: false });
+     21| try {
+     22|   await control`CREATE DATABASE ${control(suiteName)}`;
+       |                ^
+     23| } finally {
+     24|   await control.end();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  no tests
+   Start at  10:10:33
+   Duration  542ms (worker 96%, environment 4%)
+
