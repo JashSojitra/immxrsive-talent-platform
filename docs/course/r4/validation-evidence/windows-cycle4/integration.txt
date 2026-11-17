@@ -1,0 +1,17 @@
+﻿
+> immxrsive-talent-platform@0.1.0 test:integration
+> node node_modules/vitest/vitest.mjs run tests/integration
+
+
+ RUN  v5.1.0 C:/Coding Assignments/immxrsive-r4
+
+
+ Test Files  19 passed (19)
+      Tests  216 passed (216)
+   Start at  10:47:25
+   Duration  50.39s (tests 55%, import 44%, transform 1%)
+
+    Isolate  19 workers spawned · ~158ms startup each (spawn + environment, per file)
+             at least ~2.85s faster with isolate: false — reuses workers across files instead of one per file
+
+

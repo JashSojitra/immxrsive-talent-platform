@@ -1,0 +1,62 @@
+﻿[
+    {
+        "Check":  "candidate-history",
+        "ExitCode":  0,
+        "Seconds":  40.7
+    },
+    {
+        "Check":  "fixtures",
+        "ExitCode":  0,
+        "Seconds":  0.9
+    },
+    {
+        "Check":  "migrations",
+        "ExitCode":  0,
+        "Seconds":  1.7
+    },
+    {
+        "Check":  "typecheck",
+        "ExitCode":  0,
+        "Seconds":  19
+    },
+    {
+        "Check":  "lint",
+        "ExitCode":  0,
+        "Seconds":  17.9
+    },
+    {
+        "Check":  "unit",
+        "ExitCode":  0,
+        "Seconds":  16.5
+    },
+    {
+        "Check":  "frontend",
+        "ExitCode":  0,
+        "Seconds":  71.4
+    },
+    {
+        "Check":  "integration",
+        "ExitCode":  0,
+        "Seconds":  51.4
+    },
+    {
+        "Check":  "build",
+        "ExitCode":  0,
+        "Seconds":  14.8
+    },
+    {
+        "Check":  "browser-install",
+        "ExitCode":  0,
+        "Seconds":  1.9
+    },
+    {
+        "Check":  "browser",
+        "ExitCode":  0,
+        "Seconds":  279.3
+    },
+    {
+        "Check":  "cleanup",
+        "ExitCode":  0,
+        "Seconds":  0
+    }
+]

@@ -1,0 +1,103 @@
+﻿
+> immxrsive-talent-platform@0.1.0 build
+> next build
+
+▲ Next.js 16.4.6 (Turbopack)
+✓ Running next.config.ts took 43ms
+⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 7.6s
+  Running TypeScript ...
+  Finished TypeScript in 17.0s ...
+  Collecting page data using 31 workers ...
+  Generating static pages using 31 workers (0/29) ...
+  Generating static pages using 31 workers (7/29) 
+  Generating static pages using 31 workers (14/29) 
+  Generating static pages using 31 workers (21/29) 
+✓ Generating static pages using 31 workers (29/29) in 582ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /admin/[[...section]]
+├ ƒ /admin/sign-in
+├ ƒ /api/admin/access
+├ ƒ /api/admin/activity
+├ ƒ /api/admin/duplicates
+├ ƒ /api/admin/identity
+├ ƒ /api/admin/imports/github
+├ ƒ /api/admin/partners/[action]
+├ ƒ /api/admin/projects
+├ ƒ /api/admin/projects/[projectId]
+├ ƒ /api/auth/[...all]
+├ ƒ /api/studio
+├ ƒ /api/studio/[projectId]
+├ ƒ /api/v1/inquiries
+├ ƒ /api/v1/projects/[projectId]
+├ ƒ /api/v1/skills
+├ ƒ /api/v1/student/partner-requests
+├ ƒ /api/v1/student/profile/me
+├ ƒ /api/v1/student/profile/publication
+├ ƒ /api/v1/student/profile/resume/extract
+├ ƒ /api/v1/student/project-duplicates
+├ ƒ /api/v1/student/project-imports/github
+├ ƒ /api/v1/student/project-invitations
+├ ƒ /api/v1/student/project-join-requests
+├ ƒ /api/v1/student/project-join-requests/[joinRequestId]/response
+├ ƒ /api/v1/student/project-memberships/[membershipId]/contribution
+├ ƒ /api/v1/student/project-memberships/[membershipId]/removal
+├ ƒ /api/v1/student/project-memberships/[membershipId]/response
+├ ƒ /api/v1/student/project-memberships/[membershipId]/restore
+├ ƒ /api/v1/student/project-transfers/[transferId]/response
+├ ƒ /api/v1/student/projects
+├ ƒ /api/v1/student/projects/[projectId]
+├ ƒ /api/v1/student/projects/[projectId]/invitations
+├ ƒ /api/v1/student/projects/[projectId]/join-requests
+├ ƒ /api/v1/student/projects/[projectId]/maintainer-transfer
+├ ƒ /api/v1/student/projects/[projectId]/publication
+├ ƒ /api/v1/student/projects/[projectId]/team
+├ ƒ /api/v1/student/projects/[projectId]/teammates
+├ ƒ /api/v1/student/verification/confirm
+├ ƒ /api/v1/student/verification/request
+├ ƒ /api/v1/student/verification/status
+├ ƒ /api/v1/students/[studentId]
+├ ƒ /api/v1/talent
+├ ƒ /inquiry/partner/[companyId]
+├ ƒ /inquiry/project/[projectId]
+├ ƒ /inquiry/student/[studentId]
+├ ƒ /partners
+├ ƒ /partners/[companyId]
+├ ƒ /projects/[projectId]
+├ ƒ /showcase
+├ ƒ /student
+├ ƒ /student/dashboard
+├ ○ /student/profile
+├ ƒ /student/profile/edit
+├ ƒ /student/profile/preview
+├ ƒ /student/project-invitations
+├ ƒ /student/projects
+├ ƒ /student/projects/[projectId]/edit
+├ ƒ /student/projects/[projectId]/preview
+├ ƒ /student/projects/[projectId]/requests
+├ ƒ /student/projects/[projectId]/showcase
+├ ƒ /student/projects/[projectId]/team
+├ ƒ /student/projects/new
+├ ƒ /student/sign-in
+├ ƒ /student/verify
+├ ƒ /students/[studentId]
+├ ƒ /studio
+├ ƒ /studio/[projectId]
+└ ƒ /talent
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+

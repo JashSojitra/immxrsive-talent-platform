@@ -1,0 +1,18 @@
+﻿
+> immxrsive-talent-platform@0.1.0 test:unit
+> vitest run tests/unit
+
+
+ RUN  v5.1.0 C:/Coding Assignments/immxrsive-r4
+
+
+ Test Files  29 passed (29)
+      Tests  292 passed (292)
+   Start at  10:27:05
+   Duration  14.40s (import 75%, tests 15%, transform 8%, worker 2%)
+
+     Import  78 modules were evaluated 110 times · 7.43s total, 75% of tracked time
+             ~2.16s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+
+

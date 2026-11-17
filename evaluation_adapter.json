@@ -1,7 +1,85 @@
 {
-  "release": "R3",
-  "deployment_url": "https://immxrsive-talent-platform.vercel.app",
+  "release": "R4",
+  "status": "DRAFT_NOT_DEPLOYED",
+  "deployment_url": null,
+  "repository_url": "https://github.com/JashSojitra/immxrsive-talent-platform",
+  "chosen_challenge": "R4.14 - Duplicate Domain Warning",
+  "fixture_source_mapping": "docs/course/r4/fixture-sources.md",
   "checks": [
+    {
+      "requirement_or_scenario": "R4.01-R4.03",
+      "entry_point": "/admin",
+      "method_or_action": "Open dashboard and follow queue counts",
+      "role": "staff",
+      "setup": "Existing Better Auth account with studio role",
+      "expected_behavior": "No role -> 403 APIs; unauthenticated -> 401 APIs / sign-in page; counts link to actual task queues"
+    },
+    {
+      "requirement_or_scenario": "R4.04-R4.06",
+      "entry_point": "/student/projects/<projectId>/requests",
+      "method_or_action": "Submit verification note/evidence; independent staff reviews at /admin/partners#verification",
+      "role": "verified student maintainer / XR admin",
+      "setup": "STUDENT_MANAGED owned project and separate staff actor",
+      "expected_behavior": "No IDOR or self-review; only staff-approved request displays official marker at /projects/<projectId>"
+    },
+    {
+      "requirement_or_scenario": "R4.07-R4.09,R4.11-R4.12",
+      "entry_point": "/admin/partners#companies",
+      "method_or_action": "Create manual draft; fetch URL; review/apply proposal; save draft; publish explicitly",
+      "role": "XR admin",
+      "setup": "Four hosted fixture URLs PENDING; sources in docs/course/r4/fixture-sources.md",
+      "expected_behavior": "Failure retains manual form; import never grants status/roles; source URL and timestamp retained"
+    },
+    {
+      "requirement_or_scenario": "R4.14",
+      "entry_point": "/admin/partners#companies",
+      "method_or_action": "Save same normalized website host, then similar name with another host",
+      "role": "XR admin",
+      "setup": "One existing company with website",
+      "expected_behavior": "Same domain warns and links to existing record; separate creation requires acknowledgement; different domain never auto-merges"
+    },
+    {
+      "requirement_or_scenario": "R4.15-R4.18",
+      "entry_point": "/admin/partners",
+      "method_or_action": "Create/edit multiple dated collaborations, choose projects/participants and visibility",
+      "role": "XR admin",
+      "setup": "Exact collaboration_seed.json with explicit resolved ID mapping",
+      "expected_behavior": "Public narrative/links; limited label/year/status only; private omitted; unpublished students/projects omitted on public pages"
+    },
+    {
+      "requirement_or_scenario": "R4.20-R4.21",
+      "entry_point": "/student/projects/<projectId>/requests",
+      "method_or_action": "Select existing or suggest company, explain; staff selects published company and decides",
+      "role": "verified maintainer / separate XR admin",
+      "setup": "Owned project and independently provisioned accounts",
+      "expected_behavior": "Pending request grants no official association; approved associations support multiple partners"
+    },
+    {
+      "requirement_or_scenario": "R4.22-R4.24",
+      "entry_point": "/partners",
+      "method_or_action": "Open published partner, inspect current/past work; follow contextual inquiry",
+      "role": "public",
+      "setup": "Published company and public collaborations",
+      "expected_behavior": "Detail and public links available; /inquiry/partner/<companyId> stores source-locked inquiry via POST /api/v1/inquiries"
+    },
+    {
+      "requirement_or_scenario": "R4.25-R4.26",
+      "entry_point": "/admin/partners and /partners/<companyId>",
+      "method_or_action": "Complete staff journey at 1280/768px and public inquiry at 390px",
+      "role": "staff / public",
+      "setup": "Disposable PG17 + production build; tests/browser/r4-partners.spec.ts",
+      "expected_behavior": "Full Windows cycle 4: all 10 R4 cases passed; 390px privacy/inquiry HTTP201 and DB assertions, staff1280/768 draft/publication and student/curator denial plus independent decisions/markers. Human acceptance pending."
+    },
+    {
+      "requirement_or_scenario": "R4.27-R4.28",
+      "entry_point": "docs/course/r4/overnight-sprint-report.md",
+      "method_or_action": "Run cumulative regressions and verify deployed SHA before tag",
+      "role": "release operator",
+      "setup": "Existing R1-R3 tests; ld; authorized deployment",
+      "expected_behavior": "Full Windows cycle 4 engineering gates PASS; caller review/local commit authorized. Hosted/manual acceptance, later authorized deployment and immutable R4-submission tag PENDING; no tag created."
+    }
+  ],
+  "regression_checks": [
     {
       "requirement_or_scenario": "R3.01",
       "entry_point": "/student/projects/new",
@@ -112,7 +190,7 @@
       "method_or_action": "Compare project technologies to personal skills",
       "role": "public",
       "setup": "Published project with multiple contributors",
-      "expected_behavior": "Project technologies do not automatically become each person’s skills"
+      "expected_behavior": "Project technologies do not automatically become each person\u2019s skills"
     },
     {
       "requirement_or_scenario": "R3.15",
@@ -219,78 +297,32 @@
       "expected_behavior": "Tag exists and identifies exact assessed deployed commit"
     }
   ],
-  "fixture_setup": "Use Release 3 Fixtures-20261030: standard_roles.json, project_duplicate_cases.json; public HTML and SVG served at /fixtures/r3/working_demo.html and /fixtures/r3/fallback.svg. Official fixtures do not create a permanent collaborative project. Use two consenting verified student accounts to create, publish and accept the same canonical project; use an accessible public GitHub repository for live import. No destructive production fixture import.",
-  "test_access": "Public pages and fixture URLs need no credentials. Authorized evaluators should use their own eligible GitHub-authenticated student accounts and complete affiliation verification. Arrange any additional reviewer access through the approved private Moodle/course channel; no passwords/tokens in this file.",
-  "directory_endpoint": "/api/v1/talent",
-  "student_detail_endpoint": "/api/v1/students/{id}",
-  "project_detail_endpoint": "/api/v1/projects/{id}",
-  "student_page_route": "/students/{id}",
-  "project_page_route": "/projects/{id}",
-  "query_parameters": {
-    "text": "q",
-    "skill": "skill",
-    "availability": "availability",
-    "status": "status"
-  },
-  "directory_results_path": "items",
-  "id_field": "id",
-  "skills_field": "skills",
-  "contributors_field": "contributors",
-  "optional_broken_project_id": "P07",
-  "release_2": {
-    "student_entry_route": "/student",
-    "student_sign_in_route": "/student/sign-in",
-    "student_verification_route": "/student/verify",
-    "student_dashboard_route": "/student/dashboard",
-    "student_profile_editor_route": "/student/profile/edit",
-    "student_profile_preview_route": "/student/profile/preview",
-    "student_profile_api": "/api/v1/student/profile/me",
-    "student_profile_publication_api": "/api/v1/student/profile/publication",
-    "resume_extraction_api": "/api/v1/student/profile/resume/extract",
-    "verification_status_api": "/api/v1/student/verification/status",
-    "verification_request_api": "/api/v1/student/verification/request",
-    "verification_confirm_api": "/api/v1/student/verification/confirm",
-    "published_profile_route": "/students/{id}",
-    "approved_email_domain": "algomau.ca",
-    "resume_fixture_directory": "data/fixtures/r2"
-  },
-  "release_3": {
-    "pages": {
-      "dashboard": "/student/dashboard",
-      "my_projects": "/student/projects",
-      "add_project": "/student/projects/new",
-      "project_editor": "/student/projects/{projectId}/edit",
-      "draft_preview": "/student/projects/{projectId}/preview",
-      "project_team": "/student/projects/{projectId}/team",
-      "invitation_inbox": "/student/project-invitations",
-      "public_project": "/projects/{projectId}"
-    },
-    "apis": {
-      "projects": "/api/v1/student/projects",
-      "github_import": "/api/v1/student/project-imports/github",
-      "duplicate_warning": "/api/v1/student/project-duplicates",
-      "invite": "/api/v1/student/projects/{projectId}/invitations",
-      "join_request": "/api/v1/student/projects/{projectId}/join-requests",
-      "invitation_response": "/api/v1/student/project-memberships/{membershipId}/response",
-      "personal_contribution": "/api/v1/student/project-memberships/{membershipId}/contribution",
-      "maintenance_transfer": "/api/v1/student/projects/{projectId}/maintainer-transfer"
-    },
-    "playable_fixture": "/fixtures/r3/working_demo.html",
-    "fallback_fixture": "/fixtures/r3/fallback.svg",
-    "shared_editor_policy": "maintainer only",
-    "removal_policy": "reversible soft removal",
-    "production_evidence": {
-      "verified_from_user_report": "R3 deployment b81ba3df3a28f0b0e267414852f8e202129a2f19; production smoke 12/12",
-      "shared_project_url": null,
-      "contributor_profile_urls": [],
-      "real_import_confirmation": "Manually confirmed by owner in peer QA repair context; not independently rerun by worker; date/project URL not supplied.",
-      "assessed_tag": "R3-submission (exists per owner confirmation; immutable; SHA not independently reconciled)"
-    },
-    "qa_documents": [
-      "docs/release-3-final-qa.md",
-      "docs/release-3-final-traceability.md",
-      "docs/release-3-closure-report.md",
-      "docs/r3-peer-qa-addendum.md"
-    ]
+  "evidence_limits": "Routes exist in implementation; placeholders need actual installed IDs. No official adapter schema was supplied; this extends the repository format and is not a claim of Moodle schema validation.",
+  "validation": {
+    "status": "WINDOWS_CYCLE4_ENGINEERING_PASS_EXTERNAL_ACCEPTANCE_PENDING",
+    "report": "docs/course/r4/validation-report.md",
+    "acceptance_matrix": "docs/course/r4/acceptance-matrix.md",
+    "candidate_fingerprint_record": "docs/course/r4/validation-evidence/candidate.json",
+    "executed_browser_cases": 149,
+    "browser_discovered_cases": 154,
+    "full_unit_frontend_suite_executed": true,
+    "full_integration_suite_executed": true,
+    "production_build_executed": true,
+    "fixture_urls_verified": false,
+    "premerge_ready": true,
+    "browser_passed_cases": 149,
+    "browser_failed_cases": 0,
+    "browser_existing_skipped_cases": 5,
+    "browser_flaky_cases": 0,
+    "executed_unit_cases": 293,
+    "executed_frontend_cases": 117,
+    "executed_integration_cases": 216,
+    "exact_seed_cli_executed": true,
+    "staff_student_browser_authorization_executed": true,
+    "latest_windows_rerun": "PASS",
+    "windows_evidence": "docs/course/r4/validation-evidence/windows-cycle4",
+    "external_course_acceptance_complete": false,
+    "production_release_ready": false,
+    "candidate_fingerprint": "6f6dde98f90e129106386ba45f731890aa230bebd1d1ec5cb52b0c32d31b7ca4"
   }
 }

@@ -1,0 +1,152 @@
+Listing tests:
+  [desktop] › admin-onboarding.spec.ts:9:1 › anonymous administrator access and forged requests are denied
+  [desktop] › admin-onboarding.spec.ts:15:1 › staff import, configure, credit, preview and publish without student account
+  [desktop] › affiliation-verification.spec.ts:22:1 › authenticated student confirms a single-use affiliation link
+  [desktop] › auth.spec.ts:3:1 › student sign-in is accessible and keyboard-operable
+  [desktop] › auth.spec.ts:26:1 › student dashboard redirects unauthenticated visitors
+  [desktop] › auth.spec.ts:32:1 › student verification and its APIs fail closed when signed out
+  [desktop] › auth.spec.ts:45:1 › Release 1 public journeys remain unauthenticated
+  [desktop] › branding.spec.ts:11:1 › supplied NOT ImmXrsive identity spans public, inquiry, and student access pages
+  [desktop] › inquiry.spec.ts:3:1 › student inquiry renders trusted source context and a locked form
+  [desktop] › inquiry.spec.ts:18:1 › project inquiry retains the project and never selects a contributor
+  [desktop] › inquiry.spec.ts:28:1 › template reset protects substantial edits and restores source context
+  [desktop] › inquiry.spec.ts:44:1 › unresolved prompts are blocked locally while custom bracket text is allowed
+  [desktop] › inquiry.spec.ts:68:1 › accessible validation feedback retains entered employer values
+  [desktop] › inquiry.spec.ts:89:1 › duplicate submission is blocked while pending and success is announced
+  [desktop] › inquiry.spec.ts:110:1 › backend failure is recoverable without losing data
+  [desktop] › inquiry.spec.ts:124:1 › invalid and unpublished student inquiry routes are indistinguishable
+  [desktop] › inquiry.spec.ts:133:1 › invalid project inquiry route has a useful unavailable state
+  [desktop] › inquiry.spec.ts:139:1 › keyboard workflow and visible focus cover every form control
+  [desktop] › inquiry.spec.ts:155:1 › reduced motion leaves context and form immediately complete
+  [desktop] › inquiry.spec.ts:163:1 › 390px inquiry form and success state have no horizontal overflow
+  [desktop] › manual-project.spec.ts:12:1 › verified student manually creates, previews, resolves conflicts and publishes canonical evidence
+  [desktop] › private-student-profile.spec.ts:22:1 › verified student creates and returns to a private profile draft
+  [desktop] › project-demo.spec.ts:8:1 › official playable fixture interacts inside an isolated frame while fallback and navigation survive failures
+  [desktop] › project-detail.spec.ts:3:1 › project supports direct navigation, reload, and its complete evidence shell
+  [desktop] › project-detail.spec.ts:17:1 › canonical project shows ordered contributor roles and public profile links
+  [desktop] › project-detail.spec.ts:26:1 › unpublished contributor identifier and role stay out of the public project
+  [desktop] › project-detail.spec.ts:35:1 › broken optional asset remains an ordinary safe link without breaking the page
+  [desktop] › project-detail.spec.ts:43:1 › project inquiry handoff preserves project identity without choosing a contributor
+  [desktop] › project-detail.spec.ts:52:1 › student evidence reaches the canonical page and browser back remains natural
+  [desktop] › project-detail.spec.ts:62:1 › project links are keyboard reachable with visible focus
+  [desktop] › project-detail.spec.ts:76:1 › reduced motion leaves every project section immediately available
+  [desktop] › project-detail.spec.ts:85:1 › 390px project page retains content and has no horizontal overflow
+  [desktop] › project-detail.spec.ts:99:1 › unknown project has a useful project-specific not-found experience
+  [desktop] › project-detail.spec.ts:105:1 › WebGL failure cannot remove project content
+  [desktop] › project-detail.spec.ts:115:3 › missing project not-a-uuid returns HTTP 404 before streaming
+  [desktop] › project-detail.spec.ts:115:3 › missing project 00000000-0000-4000-8000-000000000000 returns HTTP 404 before streaming
+  [desktop] › project-detail.spec.ts:122:1 › published fixture still returns HTTP 200
+  [desktop] › project-import.spec.ts:8:1 › GitHub suggestions remain editable and duplicate view/join leads through independent contributor consent
+  [desktop] › project-team.spec.ts:8:1 › independent students consent, own their evidence, restore relationships and transfer maintenance
+  [desktop] › r4-partners.spec.ts:8:1 › R4 public 390px directory, privacy and contextual inquiry
+  [desktop] › r4-partners.spec.ts:20:31 › R4 staff manual draft/publish at 1280px
+  [desktop] › r4-partners.spec.ts:20:31 › R4 staff manual draft/publish at 768px
+  [desktop] › release-1-acceptance.spec.ts:3:1 › Scenario A: search and filters lead through project evidence to project inquiry
+  [desktop] › release-1-acceptance.spec.ts:22:1 › Scenario B: two-skill AND, individual removal, Clear All, and student inquiry
+  [desktop] › release-1-acceptance.spec.ts:44:1 › Scenario C: stable deep links survive reload and browser back
+  [desktop] › release-1-acceptance.spec.ts:56:1 › Scenario D: unpublished and invalid routes fail safely
+  [desktop] › release-1-acceptance.spec.ts:67:1 › Scenario E: P07 remains usable beside its broken optional URL
+  [desktop] › release-1-acceptance.spec.ts:77:1 › Scenario F: the complete workflow has no overflow at 390px
+  [desktop] › release-1-acceptance.spec.ts:93:1 › Scenario G: keyboard-only controls expose focus throughout the core workflow
+  [desktop] › release-1-acceptance.spec.ts:113:1 › Scenario H: reduced motion preserves the complete core workflow
+  [desktop] › release-1-acceptance.spec.ts:125:1 › Scenario I: missing WebGL leaves the core workflow functional
+  [desktop] › student-profile.spec.ts:3:1 › published profile supports direct navigation and reload
+  [desktop] › student-profile.spec.ts:13:1 › profile exposes the complete professional shell and project evidence
+  [desktop] › student-profile.spec.ts:27:1 › browser back preserves the directory URL state
+  [desktop] › student-profile.spec.ts:60:1 › profile links are keyboard reachable with visible focus
+  [desktop] › student-profile.spec.ts:73:1 › reduced motion leaves the complete profile immediately available
+  [desktop] › student-profile.spec.ts:82:1 › 390px profile has no horizontal overflow and retains every action
+  [desktop] › student-profile.spec.ts:96:1 › unknown and unpublished routes use the same useful not-found state
+  [desktop] › student-profile.spec.ts:107:1 › WebGL failure cannot remove profile functionality
+  [desktop] › student-profile.spec.ts:118:1 › inquiry handoff preserves the selected student in the real form
+  [desktop] › studio.spec.ts:3:1 › anonymous Studio access requires sign-in and API access is denied
+  [desktop] › studio.spec.ts:15:1 › public showcase supports reduced motion, keyboard navigation and narrow screens
+  [desktop] › talent.spec.ts:55:1 › root redirects to the talent experience
+  [desktop] › talent.spec.ts:61:1 › directory workflow remains functional and URL-addressable
+  [desktop] › talent.spec.ts:77:1 › student access is discoverable and keyboard-operable in public navigation
+  [desktop] › talent.spec.ts:89:1 › advanced expressions remain URL-addressable and browser history restores them
+  [desktop] › talent.spec.ts:106:1 › search tips are keyboard-accessible and malformed searches retain results
+  [desktop] › talent.spec.ts:126:1 › keyboard focus is visible and filters operate without a pointer
+  [desktop] › talent.spec.ts:145:1 › 390px layout has no horizontal document overflow
+  [desktop] › talent.spec.ts:161:1 › reduced motion keeps the complete directory usable
+  [desktop] › talent.spec.ts:172:1 › a WebGL context failure leaves the directory intact
+  [desktop] › talent.spec.ts:182:1 › GSAP fallback exposes every chapter and preserves filtering
+  [desktop] › talent.spec.ts:196:1 › focused removed card hands focus to the result summary
+  [desktop] › talent.spec.ts:208:1 › native scroll advances the authored field sequence
+  [desktop] › talent.spec.ts:221:1 › motion cleanup runs when the talent page unmounts
+  [mobile-390] › admin-onboarding.spec.ts:9:1 › anonymous administrator access and forged requests are denied
+  [mobile-390] › admin-onboarding.spec.ts:15:1 › staff import, configure, credit, preview and publish without student account
+  [mobile-390] › affiliation-verification.spec.ts:22:1 › authenticated student confirms a single-use affiliation link
+  [mobile-390] › auth.spec.ts:3:1 › student sign-in is accessible and keyboard-operable
+  [mobile-390] › auth.spec.ts:26:1 › student dashboard redirects unauthenticated visitors
+  [mobile-390] › auth.spec.ts:32:1 › student verification and its APIs fail closed when signed out
+  [mobile-390] › auth.spec.ts:45:1 › Release 1 public journeys remain unauthenticated
+  [mobile-390] › branding.spec.ts:11:1 › supplied NOT ImmXrsive identity spans public, inquiry, and student access pages
+  [mobile-390] › inquiry.spec.ts:3:1 › student inquiry renders trusted source context and a locked form
+  [mobile-390] › inquiry.spec.ts:18:1 › project inquiry retains the project and never selects a contributor
+  [mobile-390] › inquiry.spec.ts:28:1 › template reset protects substantial edits and restores source context
+  [mobile-390] › inquiry.spec.ts:44:1 › unresolved prompts are blocked locally while custom bracket text is allowed
+  [mobile-390] › inquiry.spec.ts:68:1 › accessible validation feedback retains entered employer values
+  [mobile-390] › inquiry.spec.ts:89:1 › duplicate submission is blocked while pending and success is announced
+  [mobile-390] › inquiry.spec.ts:110:1 › backend failure is recoverable without losing data
+  [mobile-390] › inquiry.spec.ts:124:1 › invalid and unpublished student inquiry routes are indistinguishable
+  [mobile-390] › inquiry.spec.ts:133:1 › invalid project inquiry route has a useful unavailable state
+  [mobile-390] › inquiry.spec.ts:139:1 › keyboard workflow and visible focus cover every form control
+  [mobile-390] › inquiry.spec.ts:155:1 › reduced motion leaves context and form immediately complete
+  [mobile-390] › inquiry.spec.ts:163:1 › 390px inquiry form and success state have no horizontal overflow
+  [mobile-390] › manual-project.spec.ts:12:1 › verified student manually creates, previews, resolves conflicts and publishes canonical evidence
+  [mobile-390] › private-student-profile.spec.ts:22:1 › verified student creates and returns to a private profile draft
+  [mobile-390] › project-demo.spec.ts:8:1 › official playable fixture interacts inside an isolated frame while fallback and navigation survive failures
+  [mobile-390] › project-detail.spec.ts:3:1 › project supports direct navigation, reload, and its complete evidence shell
+  [mobile-390] › project-detail.spec.ts:17:1 › canonical project shows ordered contributor roles and public profile links
+  [mobile-390] › project-detail.spec.ts:26:1 › unpublished contributor identifier and role stay out of the public project
+  [mobile-390] › project-detail.spec.ts:35:1 › broken optional asset remains an ordinary safe link without breaking the page
+  [mobile-390] › project-detail.spec.ts:43:1 › project inquiry handoff preserves project identity without choosing a contributor
+  [mobile-390] › project-detail.spec.ts:52:1 › student evidence reaches the canonical page and browser back remains natural
+  [mobile-390] › project-detail.spec.ts:62:1 › project links are keyboard reachable with visible focus
+  [mobile-390] › project-detail.spec.ts:76:1 › reduced motion leaves every project section immediately available
+  [mobile-390] › project-detail.spec.ts:85:1 › 390px project page retains content and has no horizontal overflow
+  [mobile-390] › project-detail.spec.ts:99:1 › unknown project has a useful project-specific not-found experience
+  [mobile-390] › project-detail.spec.ts:105:1 › WebGL failure cannot remove project content
+  [mobile-390] › project-detail.spec.ts:115:3 › missing project not-a-uuid returns HTTP 404 before streaming
+  [mobile-390] › project-detail.spec.ts:115:3 › missing project 00000000-0000-4000-8000-000000000000 returns HTTP 404 before streaming
+  [mobile-390] › project-detail.spec.ts:122:1 › published fixture still returns HTTP 200
+  [mobile-390] › project-import.spec.ts:8:1 › GitHub suggestions remain editable and duplicate view/join leads through independent contributor consent
+  [mobile-390] › project-team.spec.ts:8:1 › independent students consent, own their evidence, restore relationships and transfer maintenance
+  [mobile-390] › r4-partners.spec.ts:8:1 › R4 public 390px directory, privacy and contextual inquiry
+  [mobile-390] › r4-partners.spec.ts:20:31 › R4 staff manual draft/publish at 1280px
+  [mobile-390] › r4-partners.spec.ts:20:31 › R4 staff manual draft/publish at 768px
+  [mobile-390] › release-1-acceptance.spec.ts:3:1 › Scenario A: search and filters lead through project evidence to project inquiry
+  [mobile-390] › release-1-acceptance.spec.ts:22:1 › Scenario B: two-skill AND, individual removal, Clear All, and student inquiry
+  [mobile-390] › release-1-acceptance.spec.ts:44:1 › Scenario C: stable deep links survive reload and browser back
+  [mobile-390] › release-1-acceptance.spec.ts:56:1 › Scenario D: unpublished and invalid routes fail safely
+  [mobile-390] › release-1-acceptance.spec.ts:67:1 › Scenario E: P07 remains usable beside its broken optional URL
+  [mobile-390] › release-1-acceptance.spec.ts:77:1 › Scenario F: the complete workflow has no overflow at 390px
+  [mobile-390] › release-1-acceptance.spec.ts:93:1 › Scenario G: keyboard-only controls expose focus throughout the core workflow
+  [mobile-390] › release-1-acceptance.spec.ts:113:1 › Scenario H: reduced motion preserves the complete core workflow
+  [mobile-390] › release-1-acceptance.spec.ts:125:1 › Scenario I: missing WebGL leaves the core workflow functional
+  [mobile-390] › student-profile.spec.ts:3:1 › published profile supports direct navigation and reload
+  [mobile-390] › student-profile.spec.ts:13:1 › profile exposes the complete professional shell and project evidence
+  [mobile-390] › student-profile.spec.ts:27:1 › browser back preserves the directory URL state
+  [mobile-390] › student-profile.spec.ts:60:1 › profile links are keyboard reachable with visible focus
+  [mobile-390] › student-profile.spec.ts:73:1 › reduced motion leaves the complete profile immediately available
+  [mobile-390] › student-profile.spec.ts:82:1 › 390px profile has no horizontal overflow and retains every action
+  [mobile-390] › student-profile.spec.ts:96:1 › unknown and unpublished routes use the same useful not-found state
+  [mobile-390] › student-profile.spec.ts:107:1 › WebGL failure cannot remove profile functionality
+  [mobile-390] › student-profile.spec.ts:118:1 › inquiry handoff preserves the selected student in the real form
+  [mobile-390] › studio.spec.ts:3:1 › anonymous Studio access requires sign-in and API access is denied
+  [mobile-390] › studio.spec.ts:15:1 › public showcase supports reduced motion, keyboard navigation and narrow screens
+  [mobile-390] › talent.spec.ts:55:1 › root redirects to the talent experience
+  [mobile-390] › talent.spec.ts:61:1 › directory workflow remains functional and URL-addressable
+  [mobile-390] › talent.spec.ts:77:1 › student access is discoverable and keyboard-operable in public navigation
+  [mobile-390] › talent.spec.ts:89:1 › advanced expressions remain URL-addressable and browser history restores them
+  [mobile-390] › talent.spec.ts:106:1 › search tips are keyboard-accessible and malformed searches retain results
+  [mobile-390] › talent.spec.ts:126:1 › keyboard focus is visible and filters operate without a pointer
+  [mobile-390] › talent.spec.ts:145:1 › 390px layout has no horizontal document overflow
+  [mobile-390] › talent.spec.ts:161:1 › reduced motion keeps the complete directory usable
+  [mobile-390] › talent.spec.ts:172:1 › a WebGL context failure leaves the directory intact
+  [mobile-390] › talent.spec.ts:182:1 › GSAP fallback exposes every chapter and preserves filtering
+  [mobile-390] › talent.spec.ts:196:1 › focused removed card hands focus to the result summary
+  [mobile-390] › talent.spec.ts:208:1 › native scroll advances the authored field sequence
+  [mobile-390] › talent.spec.ts:221:1 › motion cleanup runs when the talent page unmounts
+Total: 150 tests in 16 files

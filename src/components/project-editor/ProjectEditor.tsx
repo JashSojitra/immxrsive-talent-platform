@@ -80,6 +80,7 @@ export function ProjectEditor({ initialData, roles }: { initialData: ProjectEdit
     setSuccess("Suggestions applied to your editable draft. Nothing has been saved."); return true;
   }
   return <>
+    {saved && <p><Link href={`/student/projects/${saved.project.id}/requests`}>Request official verification or company association</Link></p>}
     {!saved ? <GitHubImportPanel onApply={applySuggestions} disabled={pending} /> : null}
     {duplicates ? <div ref={duplicateRef} tabIndex={-1}><DuplicateWarning result={duplicates} disabled={pending} onContinue={() => void request("save", duplicates.acknowledgement)} /></div> : null}
     {saved ? <aside className={styles.identity} aria-label="Saved project"><span>{saved.project.publicationStatus === "published" ? "Published project" : "Private draft"}</span><code>{saved.project.id}</code><p>{dirty ? "You have unsaved changes." : "Your saved project is up to date."}</p></aside> : null}

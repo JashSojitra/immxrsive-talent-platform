@@ -1,0 +1,26 @@
+﻿
+> immxrsive-talent-platform@0.1.0 test:unit
+> vitest run tests/unit
+
+
+ RUN  v5.1.0 C:/Coding Assignments/immxrsive-r4
+
+npm.cmd : warning: in the working copy of 'migration.sql', LF will be replaced by CRLF the next time Git touches it
+At C:\Coding Assignments\immxrsive-r4\scripts\validate-r4.ps1:52 char:15
++     $output = & $Program @Arguments 2>&1 | Out-String
++               ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (warning: in the... Git touches it:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+warning: in the working copy of '.gitattributes', LF will be replaced by CRLF the next time Git touches it
+
+ Test Files  30 passed (30)
+      Tests  293 passed (293)
+   Start at  10:45:57
+   Duration  15.48s (import 75%, tests 20%, transform 3%, worker 2%)
+
+     Import  80 modules were evaluated 109 times · 7.87s total, 75% of tracked time
+             ~2.09s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+
+
