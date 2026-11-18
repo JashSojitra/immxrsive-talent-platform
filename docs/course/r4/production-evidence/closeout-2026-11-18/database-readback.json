@@ -1,0 +1,54 @@
+{
+  "collaborations": [
+    {
+      "companyId": "4912f68c-6ca7-403f-8f9e-6c9e713b02bd",
+      "id": "af393cdc-3da9-4b90-b394-bf13f01f3fb6",
+      "participants": [],
+      "projects": [
+        "P04"
+      ],
+      "status": "current",
+      "title": "XR Maintenance Training Study",
+      "visibility": "public",
+      "year": "2026"
+    },
+    {
+      "companyId": "4912f68c-6ca7-403f-8f9e-6c9e713b02bd",
+      "id": "3719463f-6832-426f-a112-9dc4a3b0eeb7",
+      "participants": [],
+      "projects": [
+        "P01"
+      ],
+      "status": "past",
+      "title": "Industrial Safety Training Prototype",
+      "visibility": "public",
+      "year": "2025"
+    }
+  ],
+  "companies": [
+    {
+      "id": "4912f68c-6ca7-403f-8f9e-6c9e713b02bd",
+      "name": "North Shore Simulations",
+      "sources": [
+        {
+          "sourceUrl": "https://immxrsive-talent-platform.vercel.app/fixtures/r4/company_normal.html",
+          "timestamp": "2026-11-18T05:13:54.343Z"
+        }
+      ],
+      "status": "published"
+    },
+    {
+      "id": "8fa3db85-3ec5-4530-9585-1cd269dac3b0",
+      "name": "Algoma Field Systems",
+      "sources": [
+        {
+          "sourceUrl": "https://immxrsive-talent-platform.vercel.app/fixtures/r4/company_sparse.html",
+          "timestamp": "2026-11-18T05:16:51.525Z"
+        }
+      ],
+      "status": "draft"
+    }
+  ],
+  "migrationCount": 14,
+  "relationshipRequestCount": 0
+}

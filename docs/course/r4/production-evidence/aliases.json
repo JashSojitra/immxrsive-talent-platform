@@ -1,0 +1,14 @@
+[
+  {
+    "alias": "immxrsive-talent-platform.vercel.app",
+    "deployment": "dpl_8jSxtNFhcnojKmhBUqRftYtGLLzN"
+  },
+  {
+    "alias": "immxrsive-talent-platform-three-flow.vercel.app",
+    "deployment": "dpl_8jSxtNFhcnojKmhBUqRftYtGLLzN"
+  },
+  {
+    "alias": "immxrsive-talent-platform-git-main-three-flow.vercel.app",
+    "deployment": "dpl_8jSxtNFhcnojKmhBUqRftYtGLLzN"
+  }
+]

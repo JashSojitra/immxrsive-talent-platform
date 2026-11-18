@@ -1,0 +1,41 @@
+{
+  "reviewedAt": "2026-11-18",
+  "sources": [
+    {
+      "file": "8. Release 4 - Requirements _ Project 1 - ImmXrsive Talent and Industry Platform _ R Moodle.pdf",
+      "sha256": "36be0e852162e476e15f8e8f94a9f91ede0a97d77f75ffe7a1482cfb0d96fa23"
+    },
+    {
+      "file": "Algoma University Mail - COSC 3506_ Release 4 requirements posted and new Release 4 deadlines.pdf",
+      "sha256": "82d6a3dadd60ce17a270cf497e28dbcc374416692a770487af1854a29c6b5c0b"
+    },
+    {
+      "file": "COSC-3506-F03-26F_ Release 4 Product Result (due Mon Nov 16) _ R Moodle.pdf",
+      "sha256": "3d97afe6ae8d4c23ef6ff7f5caaa3496b683f240bfd554f0366b36afbd072f79"
+    },
+    {
+      "file": "Release 4 Fixtures-20261117.zip",
+      "sha256": "1fda9de4dca12d4ded032caba50aba99321e6364f001ef3e811ec9ca69f80f47"
+    }
+  ],
+  "requirementsUrl": "https://moodle.dilab.ca/mod/book/view.php?id=3886&chapterid=28",
+  "assignmentUrl": "https://moodle.dilab.ca/mod/assign/view.php?id=3811",
+  "deadlineToronto": "2026-11-20T23:59:00-05:00",
+  "deadlineAuthority": "Instructor email dated November 16 supersedes the older assignment PDF dates",
+  "originalHtmlFixtureBytesMatch": true,
+  "originalJsonFixturesMatchAfterCheckoutNewlineNormalization": true,
+  "officialTemplateFieldsReviewed": [
+    "Release",
+    "Team",
+    "Project Option",
+    "Deployment",
+    "Repository",
+    "Release tag",
+    "Commit",
+    "Adapter",
+    "Known issues",
+    "Test notes",
+    "Test accounts",
+    "Release-specific evidence"
+  ]
+}

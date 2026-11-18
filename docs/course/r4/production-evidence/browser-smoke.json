@@ -1,0 +1,141 @@
+{
+  "verifiedAtUtc": "2026-11-17T20:12:19.077Z",
+  "origin": "https://immxrsive-talent-platform.vercel.app",
+  "sha": "27fb2a3ca3dd7a44076fafcda6d27c85b7c56672",
+  "checks": [
+    {
+      "path": "/talent",
+      "width": 390,
+      "status": 200,
+      "horizontalOverflow": false,
+      "passed": true
+    },
+    {
+      "path": "/projects/P01",
+      "width": 390,
+      "status": 200,
+      "horizontalOverflow": false,
+      "passed": true
+    },
+    {
+      "path": "/students/S01",
+      "width": 390,
+      "status": 200,
+      "horizontalOverflow": false,
+      "passed": true
+    },
+    {
+      "path": "/inquiry/project/P01",
+      "width": 390,
+      "status": 200,
+      "horizontalOverflow": false,
+      "passed": true
+    },
+    {
+      "path": "/partners",
+      "width": 390,
+      "status": 200,
+      "horizontalOverflow": false,
+      "passed": true
+    },
+    {
+      "path": "/showcase",
+      "width": 390,
+      "status": 200,
+      "horizontalOverflow": false,
+      "passed": true
+    },
+    {
+      "path": "/admin",
+      "width": 390,
+      "redirectedTo": "/admin/sign-in",
+      "passed": true
+    },
+    {
+      "path": "/admin/partners",
+      "width": 390,
+      "redirectedTo": "/admin/sign-in",
+      "passed": true
+    },
+    {
+      "path": "/studio",
+      "width": 390,
+      "redirectedTo": "/student/sign-in",
+      "passed": true
+    },
+    {
+      "path": "/student/projects",
+      "width": 390,
+      "redirectedTo": "/student/sign-in",
+      "passed": true
+    },
+    {
+      "path": "/talent",
+      "width": 1280,
+      "status": 200,
+      "horizontalOverflow": false,
+      "passed": true
+    },
+    {
+      "path": "/projects/P01",
+      "width": 1280,
+      "status": 200,
+      "horizontalOverflow": false,
+      "passed": true
+    },
+    {
+      "path": "/students/S01",
+      "width": 1280,
+      "status": 200,
+      "horizontalOverflow": false,
+      "passed": true
+    },
+    {
+      "path": "/inquiry/project/P01",
+      "width": 1280,
+      "status": 200,
+      "horizontalOverflow": false,
+      "passed": true
+    },
+    {
+      "path": "/partners",
+      "width": 1280,
+      "status": 200,
+      "horizontalOverflow": false,
+      "passed": true
+    },
+    {
+      "path": "/showcase",
+      "width": 1280,
+      "status": 200,
+      "horizontalOverflow": false,
+      "passed": true
+    },
+    {
+      "path": "/admin",
+      "width": 1280,
+      "redirectedTo": "/admin/sign-in",
+      "passed": true
+    },
+    {
+      "path": "/admin/partners",
+      "width": 1280,
+      "redirectedTo": "/admin/sign-in",
+      "passed": true
+    },
+    {
+      "path": "/studio",
+      "width": 1280,
+      "redirectedTo": "/student/sign-in",
+      "passed": true
+    },
+    {
+      "path": "/student/projects",
+      "width": 1280,
+      "redirectedTo": "/student/sign-in",
+      "passed": true
+    }
+  ],
+  "passed": 20,
+  "authenticatedWrites": 0
+}

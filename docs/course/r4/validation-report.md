@@ -1,146 +1,22 @@
-# R4 current validation status — 2026-11-17
+# R4 validation report — 2026-11-18
 
-## Cycle 5 final readiness — full Windows cycle 4 PASS
+Production candidate: `34426d89060b500ceeb7f7c9be866fc49cfb09cc` at https://immxrsive-talent-platform.vercel.app. R4 is deployed; production staff fixture acceptance passes. Final student/request, reviewer-access and freeze gates remain pending.
 
-**Local engineering gates PASS; ready for caller review and the authorized local commit. Course submission and production release remain incomplete.** Chosen challenge: **R4.14 — Duplicate Domain Warning**.
-
-The full safe `validate-r4.ps1` run used the exact requested branch, a new disposable PostgreSQL 17 container and a fresh production build: Windows Node **24.14.1**, npm **11.11.0**, Docker **29.9.2**. All **12 runner checks exited 0**, including candidate/history, fixtures, migrations, typecheck, full lint, unit, frontend, integration, build, browser install, browser and owned-resource cleanup. Logs prove **293 unit tests (30 files), 117 frontend tests (18 files), 216 integration tests (19 files)** passed. Playwright configured **154**, executed/passed **149**, skipped **5**, failed **0**, flaky **0**; report duration **277379 ms** (runner browser command 279.3 s). These are this full run's counts, never added to older targeted runs.
-
-All **10 R4 browser cases passed**: both projects execute the 390px public directory/privacy/inquiry scenario (HTTP 201, source-locked request and persisted DB content); manual staff draft/publication at 1280/768px; and student/curator UI/API write denial plus student requests, independent staff decisions and public official/partner markers at those staff widths.
-
-Evidence: [full results](validation-evidence/windows-cycle4/results.json), [browser report](validation-evidence/windows-cycle4/browser-results.json), and **all 11 per-command `.txt` logs** in [windows-cycle4](validation-evidence/windows-cycle4/). Browser-install output is empty but its result is exit 0. Cleanup is recorded in results.json. Cycle 3 reports, error contexts and per-command `.txt` logs remain in windows-cycle3; the earlier four-artifact-only claim is superseded. Its failures remain historical evidence, not current failures.
-
-Canonical executable identity: `6f6dde98f90e129106386ba45f731890aa230bebd1d1ec5cb52b0c32d31b7ca4`. This cycle changes documentation/inventory only, so the full passing matrix remains applicable. Windows raw Drizzle migration hashes remain untouched in `windows-cycle4/candidate-history.txt`; canonical hashes identify Git content and must never replace raw database-ledger hashes.
-
-### Five browser exclusions (all desktop project)
-
-| File / exact test | Recorded reason |
-|---|---|
-| inquiry.spec.ts — 390px inquiry form and success state have no horizontal overflow | mobile-only assertion |
-| project-detail.spec.ts — 390px project page retains content and has no horizontal overflow | mobile-only assertion |
-| release-1-acceptance.spec.ts — Scenario F: the complete workflow has no overflow at 390px | mobile-only acceptance scenario |
-| student-profile.spec.ts — 390px profile has no horizontal overflow and retains every action | mobile-only assertion |
-| talent.spec.ts — 390px layout has no horizontal document overflow | mobile-only assertion |
-
-These exclusions are configured skips, not passed executions; their mobile counterparts ran in the full report.
-
-### Final independent source/security/acceptance assessment
-
-Re-read R4 HTTP/policy/service/import boundaries, 0013 constraints/privileges, canonical candidate/history implementation, repaired inquiry/browser tests and acceptance mapping against R4.01–R4.28 (only challenge R4.14 claimed). No remaining confirmed source/security defect was found. Staff mutations recheck current roles in transactions; student ownership/verification and independent decisions remain enforced. Association approval binds the exact company; public projections filter private/limited content and recheck project/profile publication. Import uses bounded pinned public IPv4 HTTPS with no redirects or HTML execution. Nine tables deny Data API access; audit mutation is blocked. Historical migration content/journal prefixes and ADMIN_MANAGED direct staff publication/consent rules remain preserved. This is a source/evidence review, not production security certification. No source repair or mandatory full rerun is introduced by this cycle.
-
-### Bounded final worker verification
-
-Candidate/history/inventory checker PASS after two manifest refreshes: 351 executable files, 50 supplied inventory entries verified, 25 historical SQL/snapshot files unchanged and 13 historical journal entries preserved. Fingerprint matches the tested Windows candidate. All four fixture byte hashes match fixture-sources.md. JSON/report counts and whitespace checks PASS. Only eight documentation/manifest paths are modified; no untracked paths or source changes. No full worker suite/build ran. Typecheck/lint/schema generation were not repeated for prose-only changes; the unchanged schema and executable fingerprint retain the passing Windows checks. The candidate path union uses baseline diff (including staged/committed changes relative to that baseline) plus untracked files, so staging/commit does not drop paths; existing git-canonical regressions also ran in the full passing unit suite. Generated candidate.json rawMigratorSha256 values now describe this LF worker checkout, not the Windows execution; preserved Windows candidate-history.txt remains its raw-hash evidence.
-
-### Remaining external acceptance and operations
-
-Four exact fixture HTTPS URLs and response-byte hashes remain **PENDING**, specified in [fixture-sources.md](fixture-sources.md). Hosting was expressly not authorized; missing hosted URLs do **not** fail local code/build/test gates. Real hosted import/fallback/duplicate acceptance, private staff access instructions, real student/staff course demonstration, screenshots and human course acceptance remain pending. Official course PDF/email/schema authentication is unavailable in this snapshot; no claim of official adapter-schema validation is made.
-
-Production identity/history, unapplied 0013, backups/PITR, runtime privileges, staff bootstrap and deployment ordering remain unverified operator prerequisites. If 0013 is already applied to a target, preserve its ledger and use a reviewed additive migration. Live URL, deployed SHA, immutable R4 tag and Moodle receipt are pending. No production writes, grants, deployments, tags, merges, commits or pushes occurred. Caller may prepare the authorized reviewed local commit after checking exact branch and diff; integration/deployment are separate later actions.
-
----
-
-## Historical cycle 4 and earlier records (superseded status)
-
-
-## Cycle 4 status — Windows cycle 3 actually executed; rerun pending
-
-Chosen challenge: **R4.14 — Duplicate Domain Warning**. **NOT READY / NOT FINAL GREEN.**
-
-The caller ran the full safe PowerShell runner on the isolated R4 branch with disposable Docker PostgreSQL 17, Node 24.14.1/npm 11.11.0 and Docker 29.9.2. Actual results: **292 unit, 117 frontend, 216 integration PASS** (including the exact seed CLI regression); migrations, full lint, typecheck, fixtures, fresh production build and browser install PASS. Playwright: **154 configured, 147 PASS, 5 existing skipped, 2 FAIL, 0 flaky**. All eight configured staff/student authorization, independent approval and manual staff viewport cases passed. These are cumulative Windows results, not sums with earlier targeted runs. Cleanup of owned disposable resources passed.
-
-Both failures were the public 390px partner inquiry test, once per Playwright project. Both error contexts show successful intake with “Inquiry received,” partner-specific confirmation and a reference ID. The assertion incorrectly required contiguous “inquiry submitted.” Cycle 4 checks the actual accessible status, POST 201, source-locked request and matching persisted partner inquiry/content; no product validation or privacy checks were relaxed.
-
-The candidate-history check failed because raw CRLF historical checkout bytes were compared with LF Git blobs. Cycle 4 uses Git clean canonical bytes for history, archives, candidate fingerprint and manifest. Git applies path attributes and checkout configuration in a temporary object store, without writing repository metadata or historical files. Real content changes still fail. Evidence distinguishes canonical committed SHA-256 from raw checkout SHA-256 used by Drizzle; canonical verification does not rewrite migrations or any database ledger hash. Historical migrations, .gitattributes, supplied archives/inventories and raw Windows evidence are preserved.
-
-Available raw results, browser JSON and both error contexts: [windows-cycle3](validation-evidence/windows-cycle3/). The snapshot contains these four artifacts; separate per-command Windows logs were not present. Pre-update status documents are preserved in `docs/archive/r4-validation/cycle3-status/`. **Latest full Windows rerun of cycle 4 remains PENDING**. Browser auth and exact synthetic seed are now executed; hosted fixtures, human acceptance, deployed SHA/tag and Moodle evidence remain pending. No deployment, production writes, integration, commits or pushes occurred.
-
-## Cycle 4 bounded verification and source re-review
-
-Node 24.11.1: targeted Vitest **15 PASS / 3 files** (`git-canonical`, `r4-inquiry`, frontend `inquiry`); project typecheck PASS; ESLint on all changed executable/declaration/test files PASS. Checker PASS under native configuration and explicit `core.autocrlf=true`, with identical candidate fingerprints. The temporary-repository regression covers untracked LF/CRLF, staging newly added files, unchanged raw working bytes, corruption retention and binary attributes. No full build, browser or DB suite ran in this worker.
-
-A separate source re-review checked actual success markup, inquiry validation, response status/body and partner persistence schema against both error contexts; it also caught and corrected raw manifest and supplied-inventory reads so verification itself handles CRLF. The original changedPaths baseline-diff/untracked union remains intact after staging or commit. No additional agent was launched; independent caller review of the returned patch remains required. Local logs are retained under `validation-evidence/cycle4/`. Latest full Windows validation remains pending.
-
-Next full caller command, on the exact isolated R4 branch with Docker Desktop and a new disposable DB/build (no reuse flags):
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/validate-r4.ps1 -ExpectedBranch feat/r4-staff-industry-collaborations -InstallDependencies -InstallBrowser
-```
-
-Use the caller's established `ld` route for any heavy lab build/full-suite run. Do not run this against production.
-
-## Historical targeted worker report (preserved; superseded by Windows results above)
-
-# Independent R4 validation / repair — 2026-11-17
-
-**NOT READY FOR PRE-MERGE ACCEPTANCE.** Targeted validation passed after three product fixes and a migration-test repair. Full cumulative tests, production build, actual Playwright execution, hosted imports and human acceptance remain unmet gates. This job followed the explicit worker restriction to targeted checks; no whole build or full test suite was launched. `/usr/bin/ld` is the GNU linker, not the lab dispatcher. No accessible lab-dispatch/service-use skills, agent directory or project AGENTS/MEMORY files were present in the snapshot/home search. The caller must dispatch the heavy runs through its established `ld` workflow; no dispatcher syntax is invented here.
-
-## Provenance and inspection
-
-Real baseline `8bbf9228a7b59602297f3d53697e1ca4a23b66dd` exists locally. Supplied transport HEAD `c6908f57a9579d581c36f9b5bfd7eaf4e402c77d` contains the implementation; it is not a release commit. All 50 supplied inventory entries were read and their original transport bytes checked against the supplied hashes (inventory excludes its own hash). The complete real-baseline source diff, services, route wiring, UI, tests, fixtures, docs and generated schema metadata were reviewed; generated JSON was checked structurally and by schema comparison. Original inventory and changed release records are retained in `docs/archive/r4-validation/`. Historical R3 records remain untouched.
-
-`validation-evidence/candidate.json` records the final executable candidate SHA-256, per-file hashes, all migration hashes and transport/baseline IDs. It excludes documentation to avoid recursive hashes. The complete final patch inventory, including reports and archives, is `changed-files.txt`. Reproduce/verify with `node scripts/validate-r4-candidate.mjs` (or `--write` to refresh after edits). A caller lacking the transport object can still check the baseline/history, candidate fingerprint and inventory; original transport-byte verification is explicitly null in that case. This is not a deployment SHA or tag.
-
-## Confirmed repairs and proof
-
-1. **Cross-company approval reuse:** the deferred relationship trigger accepted company B with an approved association request for company A. A direct transaction regression resolved successfully before the repair, proving the defect. 0013 now checks the associated company against the approved request. Existing approved association writes still pass. Original unapplied 0013 bytes are archived; deploy this corrected migration only after operator verification that 0013 has never been applied. If already applied anywhere, use a new additive migration there instead of changing its historical hash.
-2. **Import provenance assigned to an unrelated company:** after applying an import, opening the duplicate warning's existing-company link retained `importEventId`. Saving then attached that pending import to the existing record without explicit application to it. The link now clears the pending import ID. The frontend regression failed before the repair and passes afterwards.
-3. **Malformed public partner inquiry ID:** 36 hyphens or 36 hex characters passed the loose character/count regex and reached a PostgreSQL UUID comparison. The query now validates UUID structure before DB access. Three focused regressions failed before the repair and pass afterwards; a real DB malformed-ID check also passes.
-4. **Stale migration regression:** the historical test required 0012 to be the final journal entry and failed on R4. It now runs separate disposable databases for upgrades from the 0011 and 0012 prefixes, preserving populated historical rows/ledger and checking 14 final entries and reapplication. No historical migration bytes were edited.
-
-Two repair cycles: application/query regressions, then DB integrity/migration regressions. Final assessment reviewed the repairs and affected results; no additional agent/client was launched. The caller still reviews the returned patch before integration.
-
-## Executed evidence and exact accounting
-
-Node 24.11.1, npm 11.6.2, lockfile install with ignored lifecycle scripts. Project manifests unchanged. Temporary PostgreSQL **17.7**, loopback only, separate disposable test/control and unused runtime identities, 32 MB shared buffers and 20 maximum connections. Nologin `anon`, `authenticated` and compatibility `postgres` roles existed only in this new cluster; no privilege grants were made. No `.env.local`, real credentials, production URLs or remote service data were loaded. The cluster was stopped after each run; test-created databases were dropped by the harness. A first start in a separate tool call was inaccessible from the next sandbox; starting DB and tests within one tool execution repaired that infrastructure issue.
-
-| Run | Actual exit and counts | Evidence |
+| Execution | Actual result | Scope |
 |---|---|---|
-| Initial focused R4/security | 0; 46 passed / 5 files | `r4-tests.txt` |
-| New inquiry/UI regressions before fix | 1; 4 failed, 4 passed / 2 files | `regressions-before.txt` |
-| Same regressions after fix | 0; 8 passed / 2 files | `regressions-after.txt` |
-| First DB attempt across tool sandboxes | 1; 2 failed suites, **0 tests executed** | `integration-initial.txt` |
-| Supplied R4 + historical migration on PG17 | 1; 5 passed, 1 failed / 2 files | `integration-before.txt` |
-| Company-binding + concurrency regression before SQL fix | 1; 6 passed, 1 failed / 1 file | `relationship-before.txt` |
-| Repaired R4 + migration/session/inquiry/project/profile regression | 0; 55 passed / 6 files | `integration-after.txt` |
-| Final affected R4 + admin-managed publication regression | 0; 33 passed / 2 files | `integration-final-affected.txt` |
-| Final focused unit/frontend | 0; 73 passed / 9 files | `final-focused.txt` |
-| Initial and final typecheck / **full lint** | all 0 | `typecheck-final.txt`, `lint-final.txt` |
-| Fixture validation | 0; 18 students, 9 projects, 24 skills, 24 contributors | `fixtures.txt` |
-| Schema vs 0013 snapshot | 0; zero generated migration statements | command in `commands.json` |
-| Baseline/history/inventory validation | 0; 25 historical SQL/snapshot files byte-identical, 13 journal entries unchanged | `candidate.json` |
-| Vitest discovery | 0; 149 unit, 109 frontend, 188 integration declarations | `vitest-discovery.json`; **not executions** |
-| Playwright discovery | 0; 150 cases / 16 files across two projects; R4 has 6 configured cases | `browser-discovery.txt`; **0 executed** |
-| Final whitespace check | 0 | `git diff --check` |
+| Closeout unit/frontend | 411 passed across 48 files | Final IPv4 importer repair; full suite |
+| Affected importer | 31 passed across 2 files | Overlaps full suite; do not add counts |
+| Typecheck / full lint / production build / fixture validation | PASS | Isolated closeout worktree |
+| Real hosted importer fetch | Four passed | Public fixture URLs, no DB writes |
+| Fresh production HTTP | 23 passed | Cumulative public APIs/pages, anonymous denials, four exact hashes |
+| Fresh production browser | 20 passed | Isolated unauthenticated sessions, 390px/1280px; six screenshots |
+| Earlier Windows cycle 4 integration | 216 passed | Disposable PostgreSQL 17; historical engineering evidence |
+| Earlier Windows cycle 4 browser | 149 passed, 5 intentional skips, 0 failures/flaky | Historical full R1–R4 engineering suite; 10 R4 cases passed |
 
-Final candidate coverage is **154 distinct executed passing cases across 16 files**: 73 unit/frontend cases plus 81 integration cases across 7 files. The two final DB runs overlap in the R4 file; count its latest 8 cases once (55 − earlier 7 + latest 8 + 25 admin cases = 81). Earlier runs, repaired failures and the prior author's claimed 165 are not added to this total. These targeted counts do not claim all available tests passed.
+Staff UI actually imported/reviewed/saved/published the normal fixture, saved the manually corrected sparse draft, displayed duplicate warning and existing-record link, retained different-domain similar-name proposal, and saved two distinct exact seed collaborations. Limited/private projections passed independent HTTP assertions, then public seed visibility was restored. Source history and final fixture IDs were independently queried read-only. No real student participant was inferred merely from a published profile.
 
-The final R4 DB file covers eight cases: staff protection/duplicate/version conflict; ownership/forgery/self-review/repeated decision; suggested company/multiple associations; privacy/current/past/inquiry/audit; exact mocked import provenance/no role grants; cross-company binding; simultaneous duplicate creation/stale edits/decisions; all-nine-table Data API denial/audit DELETE/TRUNCATE/malformed inquiry. Existing regressions executed: `admin-migration`, `admin-session`, `inquiry-api`, `project-detail-api`, `private-student-profile`, `admin-onboarding`. Other R1–R3 files are discovered only.
+Official Project 1 R4 brief, instructor deadline email, Moodle assignment PDF, original fixture ZIP and current generic submission templates were reviewed. All four HTML files match original ZIP bytes. JSON fixture differences are checkout CRLF only; decoded content matches exactly. Audit: production-evidence/closeout-2026-11-18/official-source-audit.json.
 
-## Migration and security assessment
+R4.04–R4.06/R4.20–R4.21 retain unit/integration/browser implementation evidence, but required live student pending-to-review evidence is absent. Do not mark it production-passed. Request count zero at read-back. No R4-submission tag or Moodle receipt exists. Authorized reviewer account access and issue creation need real reviewer authentication.
 
-0013 creates nine tables, related keys/indexes and an invoker-rights trigger; it does not alter historical rows or grant privileges. 0000–0012 SQL and supplied historical snapshot bytes match the real baseline exactly. The journal retains all 13 old entries and appends idx 13 with an increasing timestamp. 0011 defines `studio_audit_immutable()` reused by 0013; 0012 supplies immutable management mode and preserves independent admin publication. Both populated upgrade prefixes, ledger preservation, reapplication, schema/snapshot parity and new constraint execution passed on PG17. All nine tables have RLS enabled; `anon`/`authenticated` have no table privileges; the trigger function denies anon execution; UPDATE/DELETE/TRUNCATE of audit rows fail. Production runtime-owner privileges, production migration history and backups remain unverified.
-
-Staff mutations check current DB role in transactions; curator is read-only; actor is derived from session. Student requests require verified current student maintainer and immutable student management mode; other owners and self-review fail. Origin/JSON checks, strict payloads, optimistic versions and pending-request uniqueness protect mutations. Concurrent domain creation returns one saved record and one warning; concurrent stale edits and decisions produce one successful transition each. The corrected trigger binds company identity as well as request kind/project/independent decision.
-
-Importer rejects credentials/non-HTTPS/nonstandard ports/private or mixed DNS/IPv6; pins validated IPv4 for TLS connections; declines redirects, non-HTML/compressed responses; caps bytes and total request/DNS time. Mocked network tests exercise these boundaries, not a live public fetch. The IPv4 filter deliberately over-rejects some reserved/range neighbors; manual fallback remains the supported behavior. No DOM/LLM execution; React escapes text; strict schemas cannot grant roles or publication through imported fields. Public companies must be published; collaboration projection omits private entries and strips original details/edges/people from limited ones; public relationship targets are rechecked through existing query filters. Source review plus targeted DB tests support this assessment, not a penetration-test or browser claim.
-
-## Remaining gates and caller commands
-
-Use Node >=22.12 supported by the lockfile. In an `ld`-dispatched isolated job with a new disposable PG17 service, configure distinct loopback `DATABASE_URL` and `TEST_DATABASE_URL` using the established harness; do not load `.env.local`. Then run:
-
-```sh
-npm ci --ignore-scripts
-npm test
-npm run test:integration
-npm run build
-npx playwright test
-npm run fixtures:validate
-npm run typecheck
-npm run lint
-node scripts/validate-r4-candidate.mjs
-```
-
-`npm test` covers all non-integration unit/frontend files. The integration runner isolates each file in a new disposable database; the browser runner needs an unused separate test DB, production build, installed Chromium and its OS libraries. Playwright uses one worker; ensure localhost app/DB stay in the same dispatched execution context. Full tests/build/browser are heavy follow-ups required through caller `ld`, not failed executions here. Existing R4 browser scenarios exercise 390px public privacy/inquiry and 1280/768px staff draft/publication; student/curator denial and full student-to-staff decision journeys still require browser acceptance coverage beyond supplied scenarios.
-
-Exact collaboration seed execution with explicit resolved P01/P04/company/account mapping is still pending. Four public HTTPS fixture sources, content hashes after hosting, real staff access instructions, manual importer acceptance, student-to-staff review evidence, screenshots, live URL/deployed revision, immutable R4 tag and Moodle receipt remain pending. No fixture origin or deployed URL is invented. No merge, deployment, tag, production DB change, commit or push occurred. Integration target remains `feat/r4-staff-industry-collaborations`; no new branch/worktree was created.
+Current evidence: production-evidence/closeout-2026-11-18/. Historical logs: validation-evidence/windows-cycle4/. Source changed only for the reviewed transport fix; no migrations, privilege changes, destructive resets or fabricated identities in closeout. Prior 775-test aggregate refers to the earlier build and must not be presented as a newly rerun total.

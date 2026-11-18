@@ -1,0 +1,132 @@
+{
+  "verifiedAtUtc": "2026-11-17T19:23:24.7721733Z",
+  "project": "three-flow/immxrsive-talent-platform",
+  "method": "One authenticated request inside an isolated, staged Vercel Production runtime using its effective DATABASE_URL; no secret export",
+  "productionSourceSha": "b002d62ea5c5e3bb850d3d5a054036bb0d13c5b4",
+  "productionDeploymentId": "dpl_4fKdJxBmMiSpTKz7p62zoedfEb64",
+  "diagnosticDeploymentId": "dpl_9byhWLTgXc59SQMDvuGgFvtQP1Bf",
+  "diagnosticRuntimeNode": "26.x",
+  "productionNodeSetting": "24.x",
+  "productionAliasesChanged": false,
+  "diagnosticLocalSecurityTestsPassed": 11,
+  "diagnosticTypecheck": "PASS",
+  "diagnosticTargetedLint": "PASS",
+  "diagnosticLocalProductionBuild": "PASS",
+  "unauthorizedResponse": {
+    "status": 404,
+    "empty": true,
+    "noStore": true
+  },
+  "database": {
+    "projectRef": "acnwbxqzkcdqgbohvpil",
+    "connectionMode": "pooler",
+    "databaseMatches": true,
+    "readOnly": true,
+    "serverMajor": 17,
+    "journalPresent": true,
+    "migrationCount": 11,
+    "migrations": [
+      {
+        "index": 0,
+        "tag": "0000_lonely_guardian",
+        "matchesSource": true
+      },
+      {
+        "index": 1,
+        "tag": "0001_tearful_agent_brand",
+        "matchesSource": true
+      },
+      {
+        "index": 2,
+        "tag": "0002_rainy_wallflower",
+        "matchesSource": true
+      },
+      {
+        "index": 3,
+        "tag": "0003_wise_rockslide",
+        "matchesSource": true
+      },
+      {
+        "index": 4,
+        "tag": "0004_salty_the_call",
+        "matchesSource": true
+      },
+      {
+        "index": 5,
+        "tag": "0005_little_giant_girl",
+        "matchesSource": true
+      },
+      {
+        "index": 6,
+        "tag": "0006_adorable_lord_tyger",
+        "matchesSource": true
+      },
+      {
+        "index": 7,
+        "tag": "0007_harden_data_api",
+        "matchesSource": true
+      },
+      {
+        "index": 8,
+        "tag": "0008_r2_profile_inquiry",
+        "matchesSource": true
+      },
+      {
+        "index": 9,
+        "tag": "0009_r3_shared_projects",
+        "matchesSource": true
+      },
+      {
+        "index": 10,
+        "tag": "0010_r3_project_join_requests",
+        "matchesSource": true
+      }
+    ],
+    "historicalJournalMatches": true,
+    "laterSchemaObjectsPresent": false,
+    "managementModeColumnPresent": false
+  },
+  "checkedPendingSchemaObjects": [
+    "studio_roles",
+    "studio_submissions",
+    "studio_events",
+    "admin_project_details",
+    "admin_credit_links",
+    "admin_events",
+    "partner_companies",
+    "partner_collaborations",
+    "partner_events",
+    "projects.management_mode"
+  ],
+  "cleanup": {
+    "ProductionDeployment": "dpl_4fKdJxBmMiSpTKz7p62zoedfEb64",
+    "ProductionSha": "b002d62ea5c5e3bb850d3d5a054036bb0d13c5b4",
+    "ProductionNodeSetting": "24.x",
+    "AllOriginalAliasesVerified": [
+      "immxrsive-talent-platform.vercel.app",
+      "immxrsive-talent-platform-three-flow.vercel.app",
+      "immxrsive-talent-platform-git-main-three-flow.vercel.app"
+    ],
+    "ProductionHealthStatus": 200,
+    "OriginalProductionDiagnosticRouteStatus": 404,
+    "RemovedDeploymentRouteStatus": 404,
+    "DiagnosticDeploymentDeleted": true,
+    "TemporaryShareRevoked": true,
+    "DeletedDeploymentApiResult": "Deployment not found (404)"
+  },
+  "migrationsExecuted": 0,
+  "rolesGranted": 0,
+  "productionSecretsChanged": false,
+  "pullRequestsMerged": 0,
+  "nextAction": {
+    "migrationPermissionInThisTask": "Inspection only; no migration execution authorized by this diagnostic task",
+    "required": "Prepare/review a production-specific entry point using the existing Drizzle migrator within the verified Production environment or a trusted Supabase operator connection. Verify DDL privileges and complete schema prerequisites, serialize and recheck the matching 0000-0010 ledger, apply only 0011-0013, and verify the resulting 14 journal rows before merging or promoting release code.",
+    "runnerConstraint": "scripts/migrate.ts is a development runner; assertSafeMigrationTarget intentionally rejects the protected production project",
+    "reviewedSource": "a4f78f45fe65cad89b8e58a1d22f4213e31e02f2",
+    "pendingMigrations": [
+      "0011_r31_xr_studio",
+      "0012_cooing_shatterstar",
+      "0013_r4_partners"
+    ]
+  }
+}

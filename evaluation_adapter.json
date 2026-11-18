@@ -1,7 +1,7 @@
 {
   "release": "R4",
-  "status": "DRAFT_NOT_DEPLOYED",
-  "deployment_url": null,
+  "status": "DEPLOYED_STAFF_ACCEPTANCE_PASS_STUDENT_AND_FREEZE_PENDING",
+  "deployment_url": "https://immxrsive-talent-platform.vercel.app",
   "repository_url": "https://github.com/JashSojitra/immxrsive-talent-platform",
   "chosen_challenge": "R4.14 - Duplicate Domain Warning",
   "fixture_source_mapping": "docs/course/r4/fixture-sources.md",
@@ -27,7 +27,7 @@
       "entry_point": "/admin/partners#companies",
       "method_or_action": "Create manual draft; fetch URL; review/apply proposal; save draft; publish explicitly",
       "role": "XR admin",
-      "setup": "Four hosted fixture URLs PENDING; sources in docs/course/r4/fixture-sources.md",
+      "setup": "Four production fixture URLs verified; sources in docs/course/r4/fixture-sources.md",
       "expected_behavior": "Failure retains manual form; import never grants status/roles; source URL and timestamp retained"
     },
     {
@@ -76,7 +76,7 @@
       "method_or_action": "Run cumulative regressions and verify deployed SHA before tag",
       "role": "release operator",
       "setup": "Existing R1-R3 tests; ld; authorized deployment",
-      "expected_behavior": "Full Windows cycle 4 engineering gates PASS; caller review/local commit authorized. Hosted/manual acceptance, later authorized deployment and immutable R4-submission tag PENDING; no tag created."
+      "expected_behavior": "Full Windows cycle 4 engineering gates PASS; caller review/local commit authorized. Hosted/manual acceptance, production deployment complete; immutable R4-submission tag and manual acceptance PENDING; no tag created."
     }
   ],
   "regression_checks": [
@@ -297,9 +297,9 @@
       "expected_behavior": "Tag exists and identifies exact assessed deployed commit"
     }
   ],
-  "evidence_limits": "Routes exist in implementation; placeholders need actual installed IDs. No official adapter schema was supplied; this extends the repository format and is not a claim of Moodle schema validation.",
+  "evidence_limits": "Official R4 brief, deadline email, assignment instructions and supplied generic templates reviewed. Checks map routes and expected behavior; they are not pass assertions. Live student request/review, reviewer access, tag and Moodle receipt remain pending.",
   "validation": {
-    "status": "WINDOWS_CYCLE4_ENGINEERING_PASS_EXTERNAL_ACCEPTANCE_PENDING",
+    "status": "CURRENT_STAFF_PASS_STUDENT_REVIEW_AND_FREEZE_PENDING",
     "report": "docs/course/r4/validation-report.md",
     "acceptance_matrix": "docs/course/r4/acceptance-matrix.md",
     "candidate_fingerprint_record": "docs/course/r4/validation-evidence/candidate.json",
@@ -308,7 +308,7 @@
     "full_unit_frontend_suite_executed": true,
     "full_integration_suite_executed": true,
     "production_build_executed": true,
-    "fixture_urls_verified": false,
+    "fixture_urls_verified": true,
     "premerge_ready": true,
     "browser_passed_cases": 149,
     "browser_failed_cases": 0,
@@ -322,7 +322,30 @@
     "latest_windows_rerun": "PASS",
     "windows_evidence": "docs/course/r4/validation-evidence/windows-cycle4",
     "external_course_acceptance_complete": false,
-    "production_release_ready": false,
-    "candidate_fingerprint": "6f6dde98f90e129106386ba45f731890aa230bebd1d1ec5cb52b0c32d31b7ca4"
+    "production_release_ready": true,
+    "candidate_fingerprint": "6f6dde98f90e129106386ba45f731890aa230bebd1d1ec5cb52b0c32d31b7ca4",
+    "production_deployed": true,
+    "production_migration_count": 14,
+    "production_http_checks_passed": 29,
+    "production_browser_checks_passed": 20,
+    "authenticated_production_staff_acceptance": true,
+    "production_evidence": "docs/course/r4/production-evidence/closeout-2026-11-18/closeout.json",
+    "latest_closeout_unit_frontend_passed": 411,
+    "latest_closeout_http_passed": 23,
+    "latest_closeout_browser_passed": 20,
+    "live_student_request_review": false,
+    "release_tag_created": false,
+    "candidate_fingerprint_scope": "Historical Windows cycle 4, before PR #12"
+  },
+  "deployed_commit": "34426d89060b500ceeb7f7c9be866fc49cfb09cc",
+  "fixture_setup": "Four unchanged instructor HTML pages are hosted at /fixtures/r4/<filename>. Use staff import/review/apply/save; publish separately. Exact URLs/hashes and installed IDs are in docs/course/r4/fixture-sources.md. Do not run disposable seeding scripts against production.",
+  "test_access": "Staff: /admin/sign-in with own GitHub account; share internal account ID privately for independent identity verification and approved staff assignment. Owner staff access is verified; reviewer access remains pending. Student: existing legitimately verified maintainer, separate from reviewing staff. Never commit credentials.",
+  "installed_fixtures": {
+    "published_company_id": "4912f68c-6ca7-403f-8f9e-6c9e713b02bd",
+    "partner_url": "https://immxrsive-talent-platform.vercel.app/partners/4912f68c-6ca7-403f-8f9e-6c9e713b02bd",
+    "sparse_draft_id": "8fa3db85-3ec5-4530-9585-1cd269dac3b0",
+    "COL01": "3719463f-6832-426f-a112-9dc4a3b0eeb7",
+    "COL02": "af393cdc-3da9-4b90-b394-bf13f01f3fb6",
+    "student_request_id": null
   }
 }
