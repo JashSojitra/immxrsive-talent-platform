@@ -1,4 +1,5 @@
 import { beforeEach, expect, test, vi } from "vitest";
+import { request } from "node:https";
 const upstream=vi.hoisted(()=>({status:200,type:"text/html; charset=utf-8",encoding:"identity",body:"<h1>Company</h1>",pinned:"",lookupHost:"",destroyed:false}));
 vi.mock("node:dns/promises",()=>({lookup:vi.fn(async()=>[{address:"8.8.8.8",family:4}])}));
 vi.mock("node:https",async()=>{
@@ -17,3 +18,5 @@ test("pins validated DNS IP while retaining original HTTPS URL",async()=>{expect
 test.each([302,301,404,500])("does not follow response %s",async status=>{upstream.status=status;await expect(fetchCompanyHtml("https://example.org")).rejects.toThrow("redirects are not followed");expect(upstream.destroyed).toBe(true);});
 test("rejects non-HTML and compressed responses",async()=>{upstream.type="application/json";await expect(fetchCompanyHtml("https://example.org")).rejects.toThrow("HTML");upstream.type="text/html";upstream.encoding="gzip";await expect(fetchCompanyHtml("https://example.org")).rejects.toThrow("HTML");});
 test("caps response bytes before returning a proposal",async()=>{upstream.body="x".repeat(512001);await expect(fetchCompanyHtml("https://example.org")).rejects.toThrow("500 KB");});
+
+test("uses IPv4-only connection selection for the pinned single-address lookup",async()=>{await fetchCompanyHtml("https://example.org");expect(request).toHaveBeenLastCalledWith(expect.any(URL),expect.objectContaining({family:4,agent:false}),expect.any(Function));});

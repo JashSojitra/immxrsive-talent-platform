@@ -21,7 +21,7 @@ export async function fetchCompanyHtml(value: string): Promise<string> {
   if (!addresses.length || addresses.some(a => !publicIPv4(a.address))) throw new Error("Website must resolve only to public IPv4 addresses.");
   // Pin validated DNS address at connection time, preserving TLS hostname validation.
   return new Promise((resolve, reject) => {
-    const req = request(url, { method: "GET", agent: false, lookup: (_host, _options, cb) => cb(null, addresses[0].address, 4), headers: { Accept: "text/html", "Accept-Encoding": "identity", "User-Agent": "ImmXrsive-Company-Proposal/1.0" } }, res => {
+    const req = request(url, { method: "GET", agent: false, family: 4, lookup: (_host, _options, cb) => cb(null, addresses[0].address, 4), headers: { Accept: "text/html", "Accept-Encoding": "identity", "User-Agent": "ImmXrsive-Company-Proposal/1.0" } }, res => {
       if (res.statusCode !== 200 || !/^text\/html(?:;|$)/i.test(res.headers["content-type"] ?? "") || res.headers["content-encoding"] && res.headers["content-encoding"] !== "identity") { res.destroy(); reject(new Error("Expected an HTML page (redirects are not followed).")); return; }
       const chunks: Buffer[] = []; let size = 0;
       res.on("data", (chunk: Buffer) => { size += chunk.length; if (size > 512000) { const error = new Error("Website exceeds 500 KB."); reject(error); req.destroy(error); } else chunks.push(chunk); });
