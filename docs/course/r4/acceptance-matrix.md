@@ -34,3 +34,7 @@ Chosen challenge: **R4.14 - Duplicate Domain Warning**. Official Project 1 R4 br
 | R4.28 | Assessed version | PENDING R4-submission tag and exact assessed build freeze; no Moodle receipt. |
 
 See validation-report.md and production-evidence/closeout-2026-11-18/. Source remains under src/partners, src/admin, src/auth and the existing student/project services; unit, frontend, integration and browser tests retain their execution scope. Unchosen Challenges earn no completion claim.
+
+## Live student acceptance update — November 18, 2026
+
+On student-managed Demo project 610a8803-f7e0-4b59-a97b-b7f6aa393367, the student submitted a North Shore Simulations course-fixture association request; Pending state and the staff queue were visually observed. The operator reports that a separate authorized staff account approved the request. This completes the demonstrated R4.20–R4.21 request/review journey. The older zero-request read-back predates this event. No real external company collaboration is asserted.

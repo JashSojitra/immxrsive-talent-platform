@@ -1,351 +1,358 @@
 {
-  "release": "R4",
-  "status": "DEPLOYED_STAFF_ACCEPTANCE_PASS_STUDENT_AND_FREEZE_PENDING",
-  "deployment_url": "https://immxrsive-talent-platform.vercel.app",
-  "repository_url": "https://github.com/JashSojitra/immxrsive-talent-platform",
-  "chosen_challenge": "R4.14 - Duplicate Domain Warning",
-  "fixture_source_mapping": "docs/course/r4/fixture-sources.md",
-  "checks": [
-    {
-      "requirement_or_scenario": "R4.01-R4.03",
-      "entry_point": "/admin",
-      "method_or_action": "Open dashboard and follow queue counts",
-      "role": "staff",
-      "setup": "Existing Better Auth account with studio role",
-      "expected_behavior": "No role -> 403 APIs; unauthenticated -> 401 APIs / sign-in page; counts link to actual task queues"
-    },
-    {
-      "requirement_or_scenario": "R4.04-R4.06",
-      "entry_point": "/student/projects/<projectId>/requests",
-      "method_or_action": "Submit verification note/evidence; independent staff reviews at /admin/partners#verification",
-      "role": "verified student maintainer / XR admin",
-      "setup": "STUDENT_MANAGED owned project and separate staff actor",
-      "expected_behavior": "No IDOR or self-review; only staff-approved request displays official marker at /projects/<projectId>"
-    },
-    {
-      "requirement_or_scenario": "R4.07-R4.09,R4.11-R4.12",
-      "entry_point": "/admin/partners#companies",
-      "method_or_action": "Create manual draft; fetch URL; review/apply proposal; save draft; publish explicitly",
-      "role": "XR admin",
-      "setup": "Four production fixture URLs verified; sources in docs/course/r4/fixture-sources.md",
-      "expected_behavior": "Failure retains manual form; import never grants status/roles; source URL and timestamp retained"
-    },
-    {
-      "requirement_or_scenario": "R4.14",
-      "entry_point": "/admin/partners#companies",
-      "method_or_action": "Save same normalized website host, then similar name with another host",
-      "role": "XR admin",
-      "setup": "One existing company with website",
-      "expected_behavior": "Same domain warns and links to existing record; separate creation requires acknowledgement; different domain never auto-merges"
-    },
-    {
-      "requirement_or_scenario": "R4.15-R4.18",
-      "entry_point": "/admin/partners",
-      "method_or_action": "Create/edit multiple dated collaborations, choose projects/participants and visibility",
-      "role": "XR admin",
-      "setup": "Exact collaboration_seed.json with explicit resolved ID mapping",
-      "expected_behavior": "Public narrative/links; limited label/year/status only; private omitted; unpublished students/projects omitted on public pages"
-    },
-    {
-      "requirement_or_scenario": "R4.20-R4.21",
-      "entry_point": "/student/projects/<projectId>/requests",
-      "method_or_action": "Select existing or suggest company, explain; staff selects published company and decides",
-      "role": "verified maintainer / separate XR admin",
-      "setup": "Owned project and independently provisioned accounts",
-      "expected_behavior": "Pending request grants no official association; approved associations support multiple partners"
-    },
-    {
-      "requirement_or_scenario": "R4.22-R4.24",
-      "entry_point": "/partners",
-      "method_or_action": "Open published partner, inspect current/past work; follow contextual inquiry",
-      "role": "public",
-      "setup": "Published company and public collaborations",
-      "expected_behavior": "Detail and public links available; /inquiry/partner/<companyId> stores source-locked inquiry via POST /api/v1/inquiries"
-    },
-    {
-      "requirement_or_scenario": "R4.25-R4.26",
-      "entry_point": "/admin/partners and /partners/<companyId>",
-      "method_or_action": "Complete staff journey at 1280/768px and public inquiry at 390px",
-      "role": "staff / public",
-      "setup": "Disposable PG17 + production build; tests/browser/r4-partners.spec.ts",
-      "expected_behavior": "Full Windows cycle 4: all 10 R4 cases passed; 390px privacy/inquiry HTTP201 and DB assertions, staff1280/768 draft/publication and student/curator denial plus independent decisions/markers. Human acceptance pending."
-    },
-    {
-      "requirement_or_scenario": "R4.27-R4.28",
-      "entry_point": "docs/course/r4/overnight-sprint-report.md",
-      "method_or_action": "Run cumulative regressions and verify deployed SHA before tag",
-      "role": "release operator",
-      "setup": "Existing R1-R3 tests; ld; authorized deployment",
-      "expected_behavior": "Full Windows cycle 4 engineering gates PASS; caller review/local commit authorized. Hosted/manual acceptance, production deployment complete; immutable R4-submission tag and manual acceptance PENDING; no tag created."
-    }
-  ],
-  "regression_checks": [
-    {
-      "requirement_or_scenario": "R3.01",
-      "entry_point": "/student/projects/new",
-      "method_or_action": "Create project",
-      "role": "verified student",
-      "setup": "Authenticated, verified student",
-      "expected_behavior": "New canonical draft owned by creator"
-    },
-    {
-      "requirement_or_scenario": "R3.02",
-      "entry_point": "/student/projects/new",
-      "method_or_action": "Fill manual project fields and save",
-      "role": "verified student",
-      "setup": "New project",
-      "expected_behavior": "Title, description, type, technologies, date/status, links and media can be saved"
-    },
-    {
-      "requirement_or_scenario": "R3.03",
-      "entry_point": "/student/projects/new",
-      "method_or_action": "Import public GitHub repository, review suggestions",
-      "role": "verified student",
-      "setup": "Use public repository https://github.com/JashSojitra/immxrsive-talent-platform",
-      "expected_behavior": "Editable title, description, repository and technology suggestions; no silent save"
-    },
-    {
-      "requirement_or_scenario": "R3.04",
-      "entry_point": "/student/projects/{projectId}/edit",
-      "method_or_action": "Change/remove/add repositories",
-      "role": "maintainer",
-      "setup": "Student-owned project",
-      "expected_behavior": "Project ID and URL unchanged with zero, one or multiple repositories"
-    },
-    {
-      "requirement_or_scenario": "R3.05",
-      "entry_point": "/projects/{projectId}",
-      "method_or_action": "Open from two contributor profiles",
-      "role": "public",
-      "setup": "Published project with two accepted, publicly visible contributors",
-      "expected_behavior": "Both profiles link to one shared canonical project"
-    },
-    {
-      "requirement_or_scenario": "R3.06",
-      "entry_point": "/student/projects/{projectId}/edit",
-      "method_or_action": "Edit shared fields",
-      "role": "maintainer",
-      "setup": "Creator of a student project",
-      "expected_behavior": "Creator starts as maintainer; outsider edits denied"
-    },
-    {
-      "requirement_or_scenario": "R3.07",
-      "entry_point": "/student/projects/{projectId}/team",
-      "method_or_action": "Offer maintenance transfer and accept",
-      "role": "maintainer and accepted contributor",
-      "setup": "Two verified accepted accounts",
-      "expected_behavior": "Maintainer changes with no project ID/URL change"
-    },
-    {
-      "requirement_or_scenario": "R3.08",
-      "entry_point": "/student/projects/{projectId}/team",
-      "method_or_action": "Add teammate with standardized role",
-      "role": "maintainer",
-      "setup": "Second eligible verified student",
-      "expected_behavior": "Private invitation with proposed standard role"
-    },
-    {
-      "requirement_or_scenario": "R3.09",
-      "entry_point": "/student/project-invitations",
-      "method_or_action": "Accept or decline invite",
-      "role": "invited verified student",
-      "setup": "Pending invitation to student",
-      "expected_behavior": "Pending not public; acceptance required to become contributor"
-    },
-    {
-      "requirement_or_scenario": "R3.10",
-      "entry_point": "/student/projects/{projectId}/team",
-      "method_or_action": "Edit accepted role and optional description",
-      "role": "accepted contributor",
-      "setup": "Accepted membership",
-      "expected_behavior": "Standardized role and optional personal contribution detail"
-    },
-    {
-      "requirement_or_scenario": "R3.11",
-      "entry_point": "/api/v1/student/project-memberships/{membershipId}/contribution",
-      "method_or_action": "PATCH contribution; attempt unauthorized PATCH",
-      "role": "accepted contributor / outsider",
-      "setup": "Two accepted students",
-      "expected_behavior": "Only owning contributor can change own statement"
-    },
-    {
-      "requirement_or_scenario": "R3.12",
-      "entry_point": "/student/projects/{projectId}/team",
-      "method_or_action": "Feature/hide on personal profile",
-      "role": "accepted contributor",
-      "setup": "Public profile and accepted relationship",
-      "expected_behavior": "Personal portfolio placement changes without deleting relationship"
-    },
-    {
-      "requirement_or_scenario": "R3.13",
-      "entry_point": "/student/projects/{projectId}/team",
-      "method_or_action": "Remove and restore membership",
-      "role": "maintainer / accepted contributor",
-      "setup": "Published collaborative project",
-      "expected_behavior": "Removal reversible; history not silently erased"
-    },
-    {
-      "requirement_or_scenario": "R3.14",
-      "entry_point": "/projects/{projectId}",
-      "method_or_action": "Compare project technologies to personal skills",
-      "role": "public",
-      "setup": "Published project with multiple contributors",
-      "expected_behavior": "Project technologies do not automatically become each person\u2019s skills"
-    },
-    {
-      "requirement_or_scenario": "R3.15",
-      "entry_point": "/projects/{projectId}",
-      "method_or_action": "Inspect contributor evidence",
-      "role": "public",
-      "setup": "Accepted visible contributors",
-      "expected_behavior": "Per-contributor standardized role and permitted statement visible"
-    },
-    {
-      "requirement_or_scenario": "R3.16",
-      "entry_point": "/student/projects/new",
-      "method_or_action": "Enter duplicate repo and inspect warning",
-      "role": "verified student",
-      "setup": "Use project_duplicate_cases.json; seed existing matching project",
-      "expected_behavior": "Warning, View Project / Request to Join; similar names not automatically merged"
-    },
-    {
-      "requirement_or_scenario": "R3.17",
-      "entry_point": "/api/v1/student/projects/{projectId}",
-      "method_or_action": "PATCH same stale version after another update",
-      "role": "maintainer",
-      "setup": "Two stale editor sessions or API revisions",
-      "expected_behavior": "Structured conflict; first newer save not silently overwritten"
-    },
-    {
-      "requirement_or_scenario": "R3.18",
-      "entry_point": "/student/projects/{projectId}/edit",
-      "method_or_action": "Save playable, video, source links",
-      "role": "maintainer",
-      "setup": "Student project",
-      "expected_behavior": "Distinct typed URLs; any type optional"
-    },
-    {
-      "requirement_or_scenario": "R3.19",
-      "entry_point": "/student/projects/{projectId}/edit",
-      "method_or_action": "Try raw iframe/script input",
-      "role": "maintainer",
-      "setup": "Project editor",
-      "expected_behavior": "No arbitrary embed HTML is executed or injected"
-    },
-    {
-      "requirement_or_scenario": "R3.20",
-      "entry_point": "/projects/{projectId}",
-      "method_or_action": "Click Play Demo",
-      "role": "public",
-      "setup": "Published project with playable URL",
-      "expected_behavior": "Visitor receives clearly labeled playable action"
-    },
-    {
-      "requirement_or_scenario": "R3.21",
-      "entry_point": "/projects/{projectId}",
-      "method_or_action": "View fallback",
-      "role": "public",
-      "setup": "Project configured with fallback.svg, video or link",
-      "expected_behavior": "Alternate evidence remains accessible"
-    },
-    {
-      "requirement_or_scenario": "R3.22",
-      "entry_point": "/projects/{projectId}",
-      "method_or_action": "Open broken/blocked demo then fallback",
-      "role": "public",
-      "setup": "Published project with unavailable demo URL and fallback",
-      "expected_behavior": "Project details and navigation remain functional"
-    },
-    {
-      "requirement_or_scenario": "R3.23",
-      "entry_point": "/projects/{projectId}",
-      "method_or_action": "Inspect at 390 CSS px",
-      "role": "public",
-      "setup": "Published project with contributors and fallback",
-      "expected_behavior": "Details, roles, fallback and navigation remain usable"
-    },
-    {
-      "requirement_or_scenario": "R3.24",
-      "entry_point": "/api/v1/student/projects/{projectId}",
-      "method_or_action": "PATCH another student project ID",
-      "role": "authenticated non-maintainer",
-      "setup": "Two verified student accounts",
-      "expected_behavior": "Forbidden shared-field edit"
-    },
-    {
-      "requirement_or_scenario": "R3.25",
-      "entry_point": "/talent",
-      "method_or_action": "Exercise directory, profile privacy, inquiry",
-      "role": "public / verified student",
-      "setup": "R1/R2 fixture and eligible published R2 profile",
-      "expected_behavior": "Discovery, privacy, publication and inquiry remain functional"
-    },
-    {
-      "requirement_or_scenario": "R3.26",
-      "entry_point": "/projects/{projectId}",
-      "method_or_action": "Compare before/after transfer/repository change",
-      "role": "public / maintainer",
-      "setup": "Canonical student project",
-      "expected_behavior": "Same public identity and URL"
-    },
-    {
-      "requirement_or_scenario": "R3.27",
-      "entry_point": "https://github.com/JashSojitra/immxrsive-talent-platform/releases/tag/R3-submission",
-      "method_or_action": "Verify assessed tag and deployed commit",
-      "role": "public",
-      "setup": "Existing immutable R3-submission tag; compare its commit to deployment records without moving or recreating it",
-      "expected_behavior": "Tag exists and identifies exact assessed deployed commit"
-    }
-  ],
-  "evidence_limits": "Official R4 brief, deadline email, assignment instructions and supplied generic templates reviewed. Checks map routes and expected behavior; they are not pass assertions. Live student request/review, reviewer access, tag and Moodle receipt remain pending.",
-  "validation": {
-    "status": "CURRENT_STAFF_PASS_STUDENT_REVIEW_AND_FREEZE_PENDING",
-    "report": "docs/course/r4/validation-report.md",
-    "acceptance_matrix": "docs/course/r4/acceptance-matrix.md",
-    "candidate_fingerprint_record": "docs/course/r4/validation-evidence/candidate.json",
-    "executed_browser_cases": 149,
-    "browser_discovered_cases": 154,
-    "full_unit_frontend_suite_executed": true,
-    "full_integration_suite_executed": true,
-    "production_build_executed": true,
-    "fixture_urls_verified": true,
-    "premerge_ready": true,
-    "browser_passed_cases": 149,
-    "browser_failed_cases": 0,
-    "browser_existing_skipped_cases": 5,
-    "browser_flaky_cases": 0,
-    "executed_unit_cases": 293,
-    "executed_frontend_cases": 117,
-    "executed_integration_cases": 216,
-    "exact_seed_cli_executed": true,
-    "staff_student_browser_authorization_executed": true,
-    "latest_windows_rerun": "PASS",
-    "windows_evidence": "docs/course/r4/validation-evidence/windows-cycle4",
-    "external_course_acceptance_complete": false,
-    "production_release_ready": true,
-    "candidate_fingerprint": "6f6dde98f90e129106386ba45f731890aa230bebd1d1ec5cb52b0c32d31b7ca4",
-    "production_deployed": true,
-    "production_migration_count": 14,
-    "production_http_checks_passed": 29,
-    "production_browser_checks_passed": 20,
-    "authenticated_production_staff_acceptance": true,
-    "production_evidence": "docs/course/r4/production-evidence/closeout-2026-11-18/closeout.json",
-    "latest_closeout_unit_frontend_passed": 411,
-    "latest_closeout_http_passed": 23,
-    "latest_closeout_browser_passed": 20,
-    "live_student_request_review": false,
-    "release_tag_created": false,
-    "candidate_fingerprint_scope": "Historical Windows cycle 4, before PR #12"
-  },
-  "deployed_commit": "34426d89060b500ceeb7f7c9be866fc49cfb09cc",
-  "fixture_setup": "Four unchanged instructor HTML pages are hosted at /fixtures/r4/<filename>. Use staff import/review/apply/save; publish separately. Exact URLs/hashes and installed IDs are in docs/course/r4/fixture-sources.md. Do not run disposable seeding scripts against production.",
-  "test_access": "Staff: /admin/sign-in with own GitHub account; share internal account ID privately for independent identity verification and approved staff assignment. Owner staff access is verified; reviewer access remains pending. Student: existing legitimately verified maintainer, separate from reviewing staff. Never commit credentials.",
-  "installed_fixtures": {
-    "published_company_id": "4912f68c-6ca7-403f-8f9e-6c9e713b02bd",
-    "partner_url": "https://immxrsive-talent-platform.vercel.app/partners/4912f68c-6ca7-403f-8f9e-6c9e713b02bd",
-    "sparse_draft_id": "8fa3db85-3ec5-4530-9585-1cd269dac3b0",
-    "COL01": "3719463f-6832-426f-a112-9dc4a3b0eeb7",
-    "COL02": "af393cdc-3da9-4b90-b394-bf13f01f3fb6",
-    "student_request_id": null
-  }
+    "release":  "R4",
+    "status":  "R4_STAFF_AND_STUDENT_ACCEPTANCE_COMPLETED_FREEZE_PENDING",
+    "deployment_url":  "https://immxrsive-talent-platform.vercel.app",
+    "repository_url":  "https://github.com/JashSojitra/immxrsive-talent-platform",
+    "chosen_challenge":  "R4.14 - Duplicate Domain Warning",
+    "fixture_source_mapping":  "docs/course/r4/fixture-sources.md",
+    "checks":  [
+                   {
+                       "requirement_or_scenario":  "R4.01-R4.03",
+                       "entry_point":  "/admin",
+                       "method_or_action":  "Open dashboard and follow queue counts",
+                       "role":  "staff",
+                       "setup":  "Existing Better Auth account with studio role",
+                       "expected_behavior":  "No role -\u003e 403 APIs; unauthenticated -\u003e 401 APIs / sign-in page; counts link to actual task queues"
+                   },
+                   {
+                       "requirement_or_scenario":  "R4.04-R4.06",
+                       "entry_point":  "/student/projects/\u003cprojectId\u003e/requests",
+                       "method_or_action":  "Submit verification note/evidence; independent staff reviews at /admin/partners#verification",
+                       "role":  "verified student maintainer / XR admin",
+                       "setup":  "STUDENT_MANAGED owned project and separate staff actor",
+                       "expected_behavior":  "No IDOR or self-review; only staff-approved request displays official marker at /projects/\u003cprojectId\u003e"
+                   },
+                   {
+                       "requirement_or_scenario":  "R4.07-R4.09,R4.11-R4.12",
+                       "entry_point":  "/admin/partners#companies",
+                       "method_or_action":  "Create manual draft; fetch URL; review/apply proposal; save draft; publish explicitly",
+                       "role":  "XR admin",
+                       "setup":  "Four production fixture URLs verified; sources in docs/course/r4/fixture-sources.md",
+                       "expected_behavior":  "Failure retains manual form; import never grants status/roles; source URL and timestamp retained"
+                   },
+                   {
+                       "requirement_or_scenario":  "R4.14",
+                       "entry_point":  "/admin/partners#companies",
+                       "method_or_action":  "Save same normalized website host, then similar name with another host",
+                       "role":  "XR admin",
+                       "setup":  "One existing company with website",
+                       "expected_behavior":  "Same domain warns and links to existing record; separate creation requires acknowledgement; different domain never auto-merges"
+                   },
+                   {
+                       "requirement_or_scenario":  "R4.15-R4.18",
+                       "entry_point":  "/admin/partners",
+                       "method_or_action":  "Create/edit multiple dated collaborations, choose projects/participants and visibility",
+                       "role":  "XR admin",
+                       "setup":  "Exact collaboration_seed.json with explicit resolved ID mapping",
+                       "expected_behavior":  "Public narrative/links; limited label/year/status only; private omitted; unpublished students/projects omitted on public pages"
+                   },
+                   {
+                       "requirement_or_scenario":  "R4.20-R4.21",
+                       "entry_point":  "/student/projects/\u003cprojectId\u003e/requests",
+                       "method_or_action":  "Select existing or suggest company, explain; staff selects published company and decides",
+                       "role":  "verified maintainer / separate XR admin",
+                       "setup":  "Owned project and independently provisioned accounts",
+                       "expected_behavior":  "Pending request grants no official association; approved associations support multiple partners"
+                   },
+                   {
+                       "requirement_or_scenario":  "R4.22-R4.24",
+                       "entry_point":  "/partners",
+                       "method_or_action":  "Open published partner, inspect current/past work; follow contextual inquiry",
+                       "role":  "public",
+                       "setup":  "Published company and public collaborations",
+                       "expected_behavior":  "Detail and public links available; /inquiry/partner/\u003ccompanyId\u003e stores source-locked inquiry via POST /api/v1/inquiries"
+                   },
+                   {
+                       "requirement_or_scenario":  "R4.25-R4.26",
+                       "entry_point":  "/admin/partners and /partners/\u003ccompanyId\u003e",
+                       "method_or_action":  "Complete staff journey at 1280/768px and public inquiry at 390px",
+                       "role":  "staff / public",
+                       "setup":  "Disposable PG17 + production build; tests/browser/r4-partners.spec.ts",
+                       "expected_behavior":  "Full Windows cycle 4: all 10 R4 cases passed; 390px privacy/inquiry HTTP201 and DB assertions, staff1280/768 draft/publication and student/curator denial plus independent decisions/markers. Human acceptance pending."
+                   },
+                   {
+                       "requirement_or_scenario":  "R4.27-R4.28",
+                       "entry_point":  "docs/course/r4/overnight-sprint-report.md",
+                       "method_or_action":  "Run cumulative regressions and verify deployed SHA before tag",
+                       "role":  "release operator",
+                       "setup":  "Existing R1-R3 tests; ld; authorized deployment",
+                       "expected_behavior":  "Full Windows cycle 4 engineering gates PASS; caller review/local commit authorized. Hosted/manual acceptance, production deployment complete; immutable R4-submission tag and manual acceptance PENDING; no tag created."
+                   }
+               ],
+    "regression_checks":  [
+                              {
+                                  "requirement_or_scenario":  "R3.01",
+                                  "entry_point":  "/student/projects/new",
+                                  "method_or_action":  "Create project",
+                                  "role":  "verified student",
+                                  "setup":  "Authenticated, verified student",
+                                  "expected_behavior":  "New canonical draft owned by creator"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.02",
+                                  "entry_point":  "/student/projects/new",
+                                  "method_or_action":  "Fill manual project fields and save",
+                                  "role":  "verified student",
+                                  "setup":  "New project",
+                                  "expected_behavior":  "Title, description, type, technologies, date/status, links and media can be saved"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.03",
+                                  "entry_point":  "/student/projects/new",
+                                  "method_or_action":  "Import public GitHub repository, review suggestions",
+                                  "role":  "verified student",
+                                  "setup":  "Use public repository https://github.com/JashSojitra/immxrsive-talent-platform",
+                                  "expected_behavior":  "Editable title, description, repository and technology suggestions; no silent save"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.04",
+                                  "entry_point":  "/student/projects/{projectId}/edit",
+                                  "method_or_action":  "Change/remove/add repositories",
+                                  "role":  "maintainer",
+                                  "setup":  "Student-owned project",
+                                  "expected_behavior":  "Project ID and URL unchanged with zero, one or multiple repositories"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.05",
+                                  "entry_point":  "/projects/{projectId}",
+                                  "method_or_action":  "Open from two contributor profiles",
+                                  "role":  "public",
+                                  "setup":  "Published project with two accepted, publicly visible contributors",
+                                  "expected_behavior":  "Both profiles link to one shared canonical project"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.06",
+                                  "entry_point":  "/student/projects/{projectId}/edit",
+                                  "method_or_action":  "Edit shared fields",
+                                  "role":  "maintainer",
+                                  "setup":  "Creator of a student project",
+                                  "expected_behavior":  "Creator starts as maintainer; outsider edits denied"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.07",
+                                  "entry_point":  "/student/projects/{projectId}/team",
+                                  "method_or_action":  "Offer maintenance transfer and accept",
+                                  "role":  "maintainer and accepted contributor",
+                                  "setup":  "Two verified accepted accounts",
+                                  "expected_behavior":  "Maintainer changes with no project ID/URL change"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.08",
+                                  "entry_point":  "/student/projects/{projectId}/team",
+                                  "method_or_action":  "Add teammate with standardized role",
+                                  "role":  "maintainer",
+                                  "setup":  "Second eligible verified student",
+                                  "expected_behavior":  "Private invitation with proposed standard role"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.09",
+                                  "entry_point":  "/student/project-invitations",
+                                  "method_or_action":  "Accept or decline invite",
+                                  "role":  "invited verified student",
+                                  "setup":  "Pending invitation to student",
+                                  "expected_behavior":  "Pending not public; acceptance required to become contributor"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.10",
+                                  "entry_point":  "/student/projects/{projectId}/team",
+                                  "method_or_action":  "Edit accepted role and optional description",
+                                  "role":  "accepted contributor",
+                                  "setup":  "Accepted membership",
+                                  "expected_behavior":  "Standardized role and optional personal contribution detail"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.11",
+                                  "entry_point":  "/api/v1/student/project-memberships/{membershipId}/contribution",
+                                  "method_or_action":  "PATCH contribution; attempt unauthorized PATCH",
+                                  "role":  "accepted contributor / outsider",
+                                  "setup":  "Two accepted students",
+                                  "expected_behavior":  "Only owning contributor can change own statement"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.12",
+                                  "entry_point":  "/student/projects/{projectId}/team",
+                                  "method_or_action":  "Feature/hide on personal profile",
+                                  "role":  "accepted contributor",
+                                  "setup":  "Public profile and accepted relationship",
+                                  "expected_behavior":  "Personal portfolio placement changes without deleting relationship"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.13",
+                                  "entry_point":  "/student/projects/{projectId}/team",
+                                  "method_or_action":  "Remove and restore membership",
+                                  "role":  "maintainer / accepted contributor",
+                                  "setup":  "Published collaborative project",
+                                  "expected_behavior":  "Removal reversible; history not silently erased"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.14",
+                                  "entry_point":  "/projects/{projectId}",
+                                  "method_or_action":  "Compare project technologies to personal skills",
+                                  "role":  "public",
+                                  "setup":  "Published project with multiple contributors",
+                                  "expected_behavior":  "Project technologies do not automatically become each person’s skills"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.15",
+                                  "entry_point":  "/projects/{projectId}",
+                                  "method_or_action":  "Inspect contributor evidence",
+                                  "role":  "public",
+                                  "setup":  "Accepted visible contributors",
+                                  "expected_behavior":  "Per-contributor standardized role and permitted statement visible"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.16",
+                                  "entry_point":  "/student/projects/new",
+                                  "method_or_action":  "Enter duplicate repo and inspect warning",
+                                  "role":  "verified student",
+                                  "setup":  "Use project_duplicate_cases.json; seed existing matching project",
+                                  "expected_behavior":  "Warning, View Project / Request to Join; similar names not automatically merged"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.17",
+                                  "entry_point":  "/api/v1/student/projects/{projectId}",
+                                  "method_or_action":  "PATCH same stale version after another update",
+                                  "role":  "maintainer",
+                                  "setup":  "Two stale editor sessions or API revisions",
+                                  "expected_behavior":  "Structured conflict; first newer save not silently overwritten"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.18",
+                                  "entry_point":  "/student/projects/{projectId}/edit",
+                                  "method_or_action":  "Save playable, video, source links",
+                                  "role":  "maintainer",
+                                  "setup":  "Student project",
+                                  "expected_behavior":  "Distinct typed URLs; any type optional"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.19",
+                                  "entry_point":  "/student/projects/{projectId}/edit",
+                                  "method_or_action":  "Try raw iframe/script input",
+                                  "role":  "maintainer",
+                                  "setup":  "Project editor",
+                                  "expected_behavior":  "No arbitrary embed HTML is executed or injected"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.20",
+                                  "entry_point":  "/projects/{projectId}",
+                                  "method_or_action":  "Click Play Demo",
+                                  "role":  "public",
+                                  "setup":  "Published project with playable URL",
+                                  "expected_behavior":  "Visitor receives clearly labeled playable action"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.21",
+                                  "entry_point":  "/projects/{projectId}",
+                                  "method_or_action":  "View fallback",
+                                  "role":  "public",
+                                  "setup":  "Project configured with fallback.svg, video or link",
+                                  "expected_behavior":  "Alternate evidence remains accessible"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.22",
+                                  "entry_point":  "/projects/{projectId}",
+                                  "method_or_action":  "Open broken/blocked demo then fallback",
+                                  "role":  "public",
+                                  "setup":  "Published project with unavailable demo URL and fallback",
+                                  "expected_behavior":  "Project details and navigation remain functional"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.23",
+                                  "entry_point":  "/projects/{projectId}",
+                                  "method_or_action":  "Inspect at 390 CSS px",
+                                  "role":  "public",
+                                  "setup":  "Published project with contributors and fallback",
+                                  "expected_behavior":  "Details, roles, fallback and navigation remain usable"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.24",
+                                  "entry_point":  "/api/v1/student/projects/{projectId}",
+                                  "method_or_action":  "PATCH another student project ID",
+                                  "role":  "authenticated non-maintainer",
+                                  "setup":  "Two verified student accounts",
+                                  "expected_behavior":  "Forbidden shared-field edit"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.25",
+                                  "entry_point":  "/talent",
+                                  "method_or_action":  "Exercise directory, profile privacy, inquiry",
+                                  "role":  "public / verified student",
+                                  "setup":  "R1/R2 fixture and eligible published R2 profile",
+                                  "expected_behavior":  "Discovery, privacy, publication and inquiry remain functional"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.26",
+                                  "entry_point":  "/projects/{projectId}",
+                                  "method_or_action":  "Compare before/after transfer/repository change",
+                                  "role":  "public / maintainer",
+                                  "setup":  "Canonical student project",
+                                  "expected_behavior":  "Same public identity and URL"
+                              },
+                              {
+                                  "requirement_or_scenario":  "R3.27",
+                                  "entry_point":  "https://github.com/JashSojitra/immxrsive-talent-platform/releases/tag/R3-submission",
+                                  "method_or_action":  "Verify assessed tag and deployed commit",
+                                  "role":  "public",
+                                  "setup":  "Existing immutable R3-submission tag; compare its commit to deployment records without moving or recreating it",
+                                  "expected_behavior":  "Tag exists and identifies exact assessed deployed commit"
+                              }
+                          ],
+    "evidence_limits":  "Official R4 brief, deadline email, assignment instructions and supplied generic templates reviewed. Checks map routes and expected behavior; they are not pass assertions. Live student request/review, reviewer access, tag and Moodle receipt remain pending.",
+    "validation":  {
+                       "status":  "LIVE_STAFF_AND_STUDENT_REVIEW_OPERATOR_CONFIRMED_TAG_PENDING",
+                       "report":  "docs/course/r4/validation-report.md",
+                       "acceptance_matrix":  "docs/course/r4/acceptance-matrix.md",
+                       "candidate_fingerprint_record":  "docs/course/r4/validation-evidence/candidate.json",
+                       "executed_browser_cases":  149,
+                       "browser_discovered_cases":  154,
+                       "full_unit_frontend_suite_executed":  true,
+                       "full_integration_suite_executed":  true,
+                       "production_build_executed":  true,
+                       "fixture_urls_verified":  true,
+                       "premerge_ready":  true,
+                       "browser_passed_cases":  149,
+                       "browser_failed_cases":  0,
+                       "browser_existing_skipped_cases":  5,
+                       "browser_flaky_cases":  0,
+                       "executed_unit_cases":  293,
+                       "executed_frontend_cases":  117,
+                       "executed_integration_cases":  216,
+                       "exact_seed_cli_executed":  true,
+                       "staff_student_browser_authorization_executed":  true,
+                       "latest_windows_rerun":  "PASS",
+                       "windows_evidence":  "docs/course/r4/validation-evidence/windows-cycle4",
+                       "external_course_acceptance_complete":  true,
+                       "production_release_ready":  true,
+                       "candidate_fingerprint":  "6f6dde98f90e129106386ba45f731890aa230bebd1d1ec5cb52b0c32d31b7ca4",
+                       "production_deployed":  true,
+                       "production_migration_count":  14,
+                       "production_http_checks_passed":  29,
+                       "production_browser_checks_passed":  20,
+                       "authenticated_production_staff_acceptance":  true,
+                       "production_evidence":  "docs/course/r4/production-evidence/closeout-2026-11-18/closeout.json",
+                       "latest_closeout_unit_frontend_passed":  411,
+                       "latest_closeout_http_passed":  23,
+                       "latest_closeout_browser_passed":  20,
+                       "live_student_request_review":  false,
+                       "release_tag_created":  false,
+                       "candidate_fingerprint_scope":  "Historical Windows cycle 4, before PR #12"
+                   },
+    "deployed_commit":  "34426d89060b500ceeb7f7c9be866fc49cfb09cc",
+    "fixture_setup":  "Four unchanged instructor HTML pages are hosted at /fixtures/r4/\u003cfilename\u003e. Use staff import/review/apply/save; publish separately. Exact URLs/hashes and installed IDs are in docs/course/r4/fixture-sources.md. Do not run disposable seeding scripts against production.",
+    "test_access":  "Staff: /admin/sign-in with own GitHub account; share internal account ID privately for independent identity verification and approved staff assignment. Owner staff access is verified; reviewer access remains pending. Student: existing legitimately verified maintainer, separate from reviewing staff. Never commit credentials.",
+    "installed_fixtures":  {
+                               "published_company_id":  "4912f68c-6ca7-403f-8f9e-6c9e713b02bd",
+                               "partner_url":  "https://immxrsive-talent-platform.vercel.app/partners/4912f68c-6ca7-403f-8f9e-6c9e713b02bd",
+                               "sparse_draft_id":  "8fa3db85-3ec5-4530-9585-1cd269dac3b0",
+                               "COL01":  "3719463f-6832-426f-a112-9dc4a3b0eeb7",
+                               "COL02":  "af393cdc-3da9-4b90-b394-bf13f01f3fb6",
+                               "student_request_id":  null
+                           },
+    "live_student_review_evidence":  {
+                                         "student_project_id":  "610a8803-f7e0-4b59-a97b-b7f6aa393367",
+                                         "partner_id":  "4912f68c-6ca7-403f-8f9e-6c9e713b02bd",
+                                         "student_request":  "submitted and pending state observed",
+                                         "staff_decision":  "approved by separate authorized reviewer, operator-confirmed November 18 2026",
+                                         "evidence_scope":  "operator confirmation; no independent DB readback provided"
+                                     }
 }
