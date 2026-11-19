@@ -1,0 +1,203 @@
+{
+  "verifiedAtUtc": "2026-11-17T20:07:58.3049974Z",
+  "origin": "https://immxrsive-talent-platform.vercel.app",
+  "deployment": "dpl_8jSxtNFhcnojKmhBUqRftYtGLLzN",
+  "sha": "27fb2a3ca3dd7a44076fafcda6d27c85b7c56672",
+  "checks": [
+    {
+      "path": "/talent",
+      "expected": 200,
+      "actual": 200,
+      "passed": true
+    },
+    {
+      "path": "/projects/P01",
+      "expected": 200,
+      "actual": 200,
+      "passed": true
+    },
+    {
+      "path": "/students/S01",
+      "expected": 200,
+      "actual": 200,
+      "passed": true
+    },
+    {
+      "path": "/inquiry/project/P01",
+      "expected": 200,
+      "actual": 200,
+      "passed": true
+    },
+    {
+      "path": "/inquiry/student/S01",
+      "expected": 200,
+      "actual": 200,
+      "passed": true
+    },
+    {
+      "path": "/showcase",
+      "expected": 200,
+      "actual": 200,
+      "passed": true
+    },
+    {
+      "path": "/partners",
+      "expected": 200,
+      "actual": 200,
+      "passed": true
+    },
+    {
+      "path": "/student/sign-in",
+      "expected": 200,
+      "actual": 200,
+      "passed": true
+    },
+    {
+      "path": "/admin/sign-in",
+      "expected": 200,
+      "actual": 200,
+      "passed": true
+    },
+    {
+      "path": "/api/v1/talent",
+      "expected": 200,
+      "actual": 200,
+      "passed": true
+    },
+    {
+      "path": "/api/v1/skills",
+      "expected": 200,
+      "actual": 200,
+      "passed": true
+    },
+    {
+      "path": "/api/v1/projects/P01",
+      "expected": 200,
+      "actual": 200,
+      "passed": true
+    },
+    {
+      "path": "/student/dashboard",
+      "expected": 307,
+      "actual": 307,
+      "passed": true
+    },
+    {
+      "path": "/student/projects",
+      "expected": 307,
+      "actual": 200,
+      "passed": true,
+      "streamedRedirectToExpectedSignIn": true,
+      "protectedHeadingPresent": false
+    },
+    {
+      "path": "/studio",
+      "expected": 307,
+      "actual": 307,
+      "passed": true
+    },
+    {
+      "path": "/admin",
+      "expected": 307,
+      "actual": 200,
+      "passed": true,
+      "streamedRedirectToExpectedSignIn": true,
+      "protectedHeadingPresent": false
+    },
+    {
+      "path": "/admin/partners",
+      "expected": 307,
+      "actual": 200,
+      "passed": true,
+      "streamedRedirectToExpectedSignIn": true,
+      "protectedHeadingPresent": false
+    },
+    {
+      "path": "/api/studio",
+      "expected": 401,
+      "actual": 401,
+      "passed": true
+    },
+    {
+      "path": "/api/admin/projects",
+      "expected": 401,
+      "actual": 401,
+      "passed": true
+    },
+    {
+      "path": "/api/admin/identity",
+      "expected": 401,
+      "actual": 401,
+      "passed": true
+    },
+    {
+      "path": "/api/admin/access",
+      "expected": 401,
+      "actual": 401,
+      "passed": true
+    },
+    {
+      "path": "/api/admin/partners/companies",
+      "expected": 401,
+      "actual": 401,
+      "passed": true
+    },
+    {
+      "path": "/api/v1/student/partner-requests",
+      "expected": 401,
+      "actual": 401,
+      "passed": true
+    },
+    {
+      "path": "/api/v1/student/profile/me",
+      "expected": 401,
+      "actual": 401,
+      "passed": true
+    },
+    {
+      "path": "/api/v1/projects/not-a-project",
+      "expected": 404,
+      "actual": 404,
+      "passed": true
+    },
+    {
+      "path": "/fixtures/r4/company_normal.html",
+      "url": "https://immxrsive-talent-platform.vercel.app/fixtures/r4/company_normal.html",
+      "actual": 200,
+      "sha256": "01b62107d07d95e8b66612a79e94b55365e35cd457fb601f80b0920f679cfcea",
+      "contentType": "text/html",
+      "compressed": false,
+      "passed": true
+    },
+    {
+      "path": "/fixtures/r4/company_prompt_injection.html",
+      "url": "https://immxrsive-talent-platform.vercel.app/fixtures/r4/company_prompt_injection.html",
+      "actual": 200,
+      "sha256": "e8c3a40b2f338e23ee6ba9e706ae00870e4069356c8ad24b2cc8c54de2a404a4",
+      "contentType": "text/html",
+      "compressed": false,
+      "passed": true
+    },
+    {
+      "path": "/fixtures/r4/company_same_name_other_domain.html",
+      "url": "https://immxrsive-talent-platform.vercel.app/fixtures/r4/company_same_name_other_domain.html",
+      "actual": 200,
+      "sha256": "38dbf4191a84050feee17296c1f3788c9ae024ea40342680e1315e9397eb17e5",
+      "contentType": "text/html",
+      "compressed": false,
+      "passed": true
+    },
+    {
+      "path": "/fixtures/r4/company_sparse.html",
+      "url": "https://immxrsive-talent-platform.vercel.app/fixtures/r4/company_sparse.html",
+      "actual": 200,
+      "sha256": "8b760e00b903a40e88f5bae079af79f266569b534132a0e23e5a1cc45e30ea0a",
+      "contentType": "text/html",
+      "compressed": false,
+      "passed": true
+    }
+  ],
+  "passed": 29,
+  "failed": 0,
+  "authenticatedApplicationWrites": 0
+}

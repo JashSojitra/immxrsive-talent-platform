@@ -1,17 +1,21 @@
 Chosen challenge: R4.14 - Duplicate Domain Warning
 
-# R4 draft release notes
+# R4 release notes — deployed; final authentication gates pending
 
-Adds task-oriented staff review queues; maintainer verification requests with evidence; independent approval/rejection and official project markers; manual company drafts; bounded HTTPS website import as editable metadata proposals; explicit staff publication; source URL/time history; normalized website-host duplicate warnings with existing record links; multiple collaborations with dates, year, outcomes, current/past status, many projects and public participants; public/limited/private read models; maintainer association requests; public partner directory/detail; contextual partner inquiry through existing intake.
+Production: https://immxrsive-talent-platform.vercel.app; actual deployed candidate `34426d89060b500ceeb7f7c9be866fc49cfb09cc`. First super-admin bootstrap and owner UI access are verified. Four fixture sources are hosted and hash-verified. North Shore Simulations is published with two exact current/past fixture collaborations; the sparse company remains private draft.
 
-No import or student request publishes, assigns roles, approves verification or creates an official partner link. Imported HTML is parsed to strings and rendered through React text nodes. Requests use the authenticated Better Auth actor; staff writes require XR admin or platform super admin, while XR curators inspect queues. Current student ownership and affiliation are checked server-side. Concurrent revisions and repeated decisions fail with conflicts.
+R4 provides task-oriented staff queues, independent verification/association review, manual and imported company drafts, explicit publication, source history, normalized-domain warning/existing-record links, dated collaboration history, project/public-student associations, visibility choices, public directory/detail and contextual inquiry. Admin-managed projects retain their existing direct staff publication behavior.
 
-Migration 0013 is additive, with deny-by-default RLS on nine new tables, revoked public/Data API privileges, foreign keys, checked states, audit immutability and deferred independent-review constraints. Existing 0000–0012 migrations and historical journal entries are preserved. Admin-managed project consent rules remain unchanged.
+## Closeout repair and verification
 
-This release is a remote patch, not a deployed release. See validation-report.md for current validation and release_submission.md for remaining deployment/Moodle gates. Four exact fixture HTML files are included at public/fixtures/r4; their public source URLs are PENDING hosting and verification.
+PR #12 fixes the live importer transport failure `Invalid IP address: undefined`: explicit IPv4 selection matches the single pinned validated lookup result. DNS validation, TLS hostname checks, public-address restrictions, size/time bounds and no-redirect behavior remain. Regression test added. No schema or authorization changes.
 
-## Independent validation repairs
+411 unit/frontend tests and 31 overlapping importer tests passed; typecheck, full lint, production build and fixture validation passed. All four live source fetches succeeded. 23 HTTP and 20 fresh-session browser checks passed at 390px/1280px; six screenshots saved. Limited/private/public states were exercised through staff UI and independently checked in public HTML. Earlier disposable PG17 regression evidence remains scoped to its historical tested build.
 
-Approved associations now require the exact company reviewed by staff at the database constraint boundary. Opening an existing duplicate company clears unapplied import provenance. Malformed public partner inquiry UUIDs return unavailable instead of reaching a DB cast error. Upgrade regressions now cover both 0011 and 0012 prefixes.
+## Known limitations and remaining gates
 
-Full Windows cycle 4 engineering verification PASS: 293 unit, 117 frontend, 216 integration; Playwright 154 configured, 149 passed, 5 desktop mobile-only skips, 0 failed/flaky. All 10 R4 browser cases passed, including HTTP201/DB inquiry assertions and independent student/staff approval. All 12 runner checks including cleanup exit 0. Windows runtime: Node 24.14.1, npm 11.11.0, disposable PG17, Docker 29.9.2. Final source review found no remaining confirmed defect; this cycle changes documentation only. Ready for caller review and authorized local commit; four hosted fixture URLs/hashes, manual course acceptance and later authorized production operations remain pending. See [current validation report](validation-report.md); overnight reports and prior failures remain historical. No deployment, tag, merge, commit or push occurred.
+A separately authenticated eligible student must create the required relationship request, then an independent staff actor reviews it. Production request count remains zero. No participation or affiliation was invented. Reviewer staff access must be arranged through the approved private course channel after identity verification. R4-submission and Moodle Submit receipt remain pending, so this is not a completed freeze.
+
+Company `.example.test` websites are reserved fixture metadata, not live business websites. Fetch-source URLs are the four production fixture paths. The importer deliberately rejects IPv6/mixed private address results, redirects and compressed/non-HTML responses; manual completion remains available. No unchosen Challenge is claimed.
+
+See [submission](../../../release_submission.md), [acceptance](acceptance-matrix.md), [fixture sources](fixture-sources.md) and [current evidence](production-evidence/closeout-2026-11-18/closeout.json). Previous tags and historical evidence are preserved.

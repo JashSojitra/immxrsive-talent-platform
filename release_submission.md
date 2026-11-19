@@ -1,44 +1,42 @@
 Chosen challenge: R4.14 - Duplicate Domain Warning
 
-# R4 release submission — DRAFT, not deployed
+# Release Submission
 
-Project 1 / ImmXrsive Talent Platform / team-01 (solo student)
+Release: R4
+Team: team-01
+Project Option: Project 1
+Deployment: https://immxrsive-talent-platform.vercel.app
 Repository: https://github.com/JashSojitra/immxrsive-talent-platform
-Intended integration branch: feat/r4-staff-industry-collaborations, from feat/admin-student-project-onboarding at 8bbf9228a7b59602297f3d53697e1ca4a23b66dd.
-R4 live URL: PENDING deployment and public verification.
-R4 deployed commit: PENDING.
-Immutable R4-submission tag: PENDING; create only after deployed SHA is independently verified.
-Deadline: Friday November 20, 2026, 11:59 PM America/Toronto, per supplied brief summarizing the Nov 16 instructor email.
+Release tag: R4-submission - to be created after verified production deployment of final assessed commit
+Commit: 34426d89060b500ceeb7f7c9be866fc49cfb09cc (actual currently deployed candidate; freeze pending)
+Adapter: evaluation_adapter.json
+Known issues: No verified Moodle submission receipt yet. Live student request was approved by a separately authorized reviewer according to the operator; final public read-back should be checked.
+Test notes: Core requirements and chosen R4.14 were checked against the official brief. Live student request and pending queue were observed; a separate authorized account approved the request per the operator on November 18. Release freeze and Moodle receipt are separate final steps. No unchosen Challenge is claimed.
 
-This document is a preparation draft, not evidence of a completed Moodle submission, hosted fixture import, production migration, release tag or deployment. Historical R3 submission and adapter are retained under docs/archive/r4-preparation/.
+## Test accounts
 
-## Implemented evaluation paths
+Staff entry: https://immxrsive-talent-platform.vercel.app/admin/sign-in (existing GitHub OAuth). The owner account JashSojitra has independently verified platform_super_admin access; production UI access is confirmed. Do not share its credentials. A reviewer signs in with their own GitHub identity, shares their displayed internal account ID through the approved private course channel, and the operator independently verifies the linked identity before granting the minimum approved staff role through /admin/settings/access. The operator confirms that a separately authorized reviewer signed in and completed the course-fixture decision on November 18, 2026.
 
-- `/admin`: task counts and links to verification, company draft/import and association queues.
-- `/admin/partners`: review student explanation/evidence, independently approve/reject, prepare manual company drafts, fetch/apply editable website proposals, publish reviewed company records, manage multiple collaborations and provenance history.
-- `/student/projects/<projectId>/requests`: current verified student maintainer requests official verification or association with an existing/suggested company. Student forms cannot grant official state.
-- `/partners` and `/partners/<companyId>`: published company profiles, current/past collaborations, related public projects and participating public profiles. Limited entries are anonymized; private entries and identifying links are omitted server-side.
-- `/inquiry/partner/<companyId>`: contextual existing inquiry form, stored through `/api/v1/inquiries`; no account required. Storage confirms intake only, not email delivery or a promised collaboration.
-- `/projects/<projectId>`: staff-approved official marker and multiple independently approved company associations.
+Student entry: https://immxrsive-talent-platform.vercel.app/student/sign-in. Use an existing legitimately verified student maintainer and their eligible owned student-managed project. A different staff actor must review; staff status never creates student eligibility. No student session is impersonated or provisioned synthetically.
 
-See evaluation_adapter.json for route-specific scenarios and docs/course/r4/acceptance-matrix.md for evidence status. Public fixture source mappings are all PENDING in docs/course/r4/fixture-sources.md.
+## Release-specific evidence
 
-## Test accounts and evidence to complete
+- Published imported fixture partner: https://immxrsive-talent-platform.vercel.app/partners/4912f68c-6ca7-403f-8f9e-6c9e713b02bd; company ID `4912f68c-6ca7-403f-8f9e-6c9e713b02bd`. Normal fixture fetched, proposed values reviewed/applied, saved as private draft, then explicitly published. Source/time persisted.
+- Sparse fixture: Algoma Field Systems, ID `8fa3db85-3ec5-4530-9585-1cd269dac3b0`, remains private draft after honest manual correction; missing sector/location were marked unspecified.
+- COL01: `3719463f-6832-426f-a112-9dc4a3b0eeb7`, Industrial Safety Training Prototype, 2025/past/public/P01.
+- COL02: `af393cdc-3da9-4b90-b394-bf13f01f3fb6`, XR Maintenance Training Study, 2026/current/public/P04. Both belong to the same published company. Narratives explicitly identify course fixtures; outcomes/real students were not invented.
+- Public students: none attached; instructor seed supplies none and no verified real participation was established.
+- Visibility: COL01 temporarily changed through staff UI to limited, then private; actual public HTML anonymized/omitted it correctly. Restored public. Evidence: `docs/course/r4/production-evidence/closeout-2026-11-18/visibility-*.json`.
+- Inquiry context: https://immxrsive-talent-platform.vercel.app/inquiry/partner/4912f68c-6ca7-403f-8f9e-6c9e713b02bd. Source-locked form verified at 390px/1280px. No new inquiry was submitted in this read-only production smoke run; previous disposable integration/browser intake assertions remain separately scoped.
+- R4.14: repeated normal import warned and linked the existing company; the similar-name/different-domain fixture remained a separate proposal. No unnecessary duplicate record was saved or published.
+- Four exact original fixture sources and hashes: `docs/course/r4/fixture-sources.md`. Original instructor ZIP HTML bytes independently match all four deployed fixtures.
+- Student requested relationship: The existing student-managed Demo project (`610a8803-f7e0-4b59-a97b-b7f6aa393367`) submitted a North Shore Simulations fixture association request. Pending state and staff review queue were seen in the UI. The operator confirmed that a different authorized staff account approved it on November 18, 2026. The earlier zero-request database snapshot predates this action. This is course-fixture acceptance, not evidence of a real external partnership.
+- Live evidence/screenshots and exact IDs: `docs/course/r4/production-evidence/closeout-2026-11-18/`. Current validation: `docs/course/r4/validation-report.md`; requirements: `docs/course/r4/acceptance-matrix.md`; release notes: `docs/course/r4/release-notes.md`.
 
-Use existing Better Auth GitHub sign-in and independently provisioned staff roles. Arrange actual staff access privately through the operator; no credentials are included or newly provisioned here. Use two eligible verified student accounts to test ownership denial and a different staff account to review requests. ADMIN_MANAGED projects retain direct staff publication without student authorization or consent gates.
+## Verification and freeze
 
-Before submission record: staff access instructions; four verified public fixture URLs; one imported/published fixture company; one company with current and past collaborations; one actual student association request and independent staff decision; screenshots at 390px, tablet and laptop; live URL; deployed SHA; immutable tag and Moodle receipt. None of these human/production evidence items is implied by synthetic tests.
+The live importer defect was repaired in PR #12 by explicit IPv4 transport selection while retaining validated DNS pinning, TLS validation and SSRF restrictions. Actual closeout checks: 411 unit/frontend tests, 31 overlapping affected importer tests, typecheck, full lint, production build and fixture validation passed; all four real hosted fetches succeeded. Fresh isolated production checks: 23 HTTP and 20 browser passed; six screenshots at 390px/1280px. Previous isolated PG17 evidence: 216 integration and 149 browser passed with five intentional skips; these suites were not rerun against production.
 
-## Release gates / known limits
+Database remains at 14 migrations. No schema changes, unrelated role grants, student identity edits or destructive operations occurred in closeout. Historical release tags are preserved. The repository is public with issues enabled; assigned reviewer issue creation still requires their own authenticated confirmation.
 
-- This worker returns an uncommitted patch from a synthetic snapshot. Windows integration, feature branch, independent review, commits, push and draft PR remain operator actions.
-- Full Windows cycle 4 local engineering gates PASS: 293 unit, 117 frontend, 216 integration; 149 browser passed, 5 configured skips, 0 failures/flaky (154 configured). All 10 R4 cases passed. Caller review and authorized local commit may proceed; hosted/manual acceptance and production operations remain pending. See docs/course/r4/validation-report.md.
-- Import accepts public standard-port HTTPS HTML up to 500 KB; redirects, compressed responses and any DNS result containing IPv6 or private/reserved IPv4 are rejected conservatively. Manual draft completion remains available. No JavaScript rendering or AI extraction is used.
-- Last 100 import proposals/activity events are shown in the staff console. Saved company source history remains attached to the record. Large installations need pagination beyond this course release.
-- Production migrations 0011/0012/0013, backup/PITR, actual database identity, role bootstrap and auto-deployment ordering are unverified. Never run fixture setup against production.
-- PR #9 and #10 remain dependencies; no merge, old tag change or live write was performed here.
-
-
-## Final engineering verification
-
-Full evidence and all command logs: `docs/course/r4/validation-evidence/windows-cycle4/`. Runtime: Windows Node 24.14.1 / npm 11.11.0 / disposable PG17 / Docker 29.9.2. All 12 runner checks and cleanup exit 0. No confirmed source/security defect remains from final review. Canonical tested fingerprint: `6f6dde98f90e129106386ba45f731890aa230bebd1d1ec5cb52b0c32d31b7ca4`. This final patch changes documentation only. Missing hosted fixture URLs are pending external acceptance requirements, not a failed engineering gate. No commit, push, merge, deployment, grant or tag was performed.
+R4-submission will be created only after the final documentation commit is merged and its exact commit is deployed and healthy. The official instructor email sets the deadline to Friday November 20, 2026, 11:59 PM Toronto; the older assignment PDF dates are superseded. Moodle draft upload is not submission: a confirmed Submit receipt is required. This package is prepared for completion, not represented as a finished course submission.

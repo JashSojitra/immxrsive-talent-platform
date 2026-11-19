@@ -18,14 +18,26 @@ A 3d6399a6a1bb159b57b1c90542d12a8f1b1c2913e0c295147f4fbab1bfdb7ec2 docs/archive/
 A eecae11c8e49bb04ca9f3c81ef37d2e333574701cba80086c781d3db566550fd docs/archive/r4-validation/operator-validation.supplied.md
 A cb440e920238cc6340bbe6ec9c9aac03152a7fe09be868dcdb71d63ef31a3f3c docs/archive/r4-validation/release-notes.supplied.md
 A 9ab1063ec63782ce64cd430a7efe468904d28ccb37690d544cc4c97f41d43447 docs/archive/r4-validation/release_submission.supplied.md
-A 6596749d0705b9e71f945b86c3455d6b1c0c3bda787b1c6118ce4298b47a2c8f docs/course/r4/acceptance-matrix.md
+A e439479c95be65838c8cc50a9aed1262e12edfee6498afece5b53a6cc6d2ab46 docs/course/r4/acceptance-matrix.md
 A SELF docs/course/r4/changed-files.txt
-A 410f7a4fd8c93e938482bdcc41dbdce31255f17692995ac610ae322464173c39 docs/course/r4/fixture-sources.md
-A f543b48de42a8ab54e3f4829dc27bb80739e748cc64baf6973f84c9b252ca470 docs/course/r4/operator-validation.md
+A a2af0c50bd39b23ee6890f7ee863e419b920bd95b58ce3346204763d7713e19d docs/course/r4/fixture-sources.md
+A 5cb65c9cd6559ab01fba42be4dd892b4abeecc9411601894da345961e4a243e2 docs/course/r4/operator-validation.md
 A 5353d88f9210af64a7305d646c48e9efda3d60d51aecdb74742b6d8513cd95f0 docs/course/r4/overnight-sprint-report.md
-A 42b705f0a4d734c828cde82d226d5d45faa4266b2437b3925079fa197687dd2b docs/course/r4/release-notes.md
+A 1ef636ca5c2742704abb80ea6b603aed3f8c2867440f024a995272110e8e3382 docs/course/r4/production-evidence/aliases.json
+A 6158b0f901ca2e661cd3fb942b80d2527164908220b9802b063cf2a3f49d290b docs/course/r4/production-evidence/browser-smoke.json
+A 1c8cb67acafe927729390261ba6db17f7d59d13dcc93cecc45844ef9295650ec docs/course/r4/production-evidence/http-smoke.json
+A 7045986f7bd9408157889a90fd657698145b31437ce05f29546c6813c5b2759d docs/course/r4/production-evidence/migration-rehearsal.txt
+A a6feca815ec1cd26a605bf14f4cad9ed1ab791715bfa4a5f9fee6af4ea7fe89d docs/course/r4/production-evidence/migration-result.json
+A cff5e3d0f53a0bae08f49f07812cebdb4f9f713530da2d10a29631904fc658b1 docs/course/r4/production-evidence/migration-verification.json
+A 7f3febb941e1fb3e9972d03f21963e8d7bf00312b12cf88d9c128498c9051c2b docs/course/r4/production-evidence/partners-1280.png
+A 5c4d58dd5ae7b0bd693f24a6c2a0f5b2a69ce89b25993f93fa6b02b0a97df94c docs/course/r4/production-evidence/partners-390.png
+A 8149d1d6455ec1944b4b373effaabb6dcebbcce992056599e7a481424267fae7 docs/course/r4/production-evidence/phase-a-readiness.json
+A afdeafe723f6863173f34b79d920053b040d9398f44184fa27cc595a23b9e2ad docs/course/r4/production-evidence/project-inquiry-1280.png
+A d233e43b192555f4b2fa242609693dd4f97224ae5d11d0acb573c78fe6e82c8f docs/course/r4/production-evidence/project-inquiry-390.png
+A 577126870b6a31fbae2f19f175e7425dc9809260a5b469680364e62bfed58e02 docs/course/r4/production-evidence/release.json
+A 1e21ee9bd722044c1a276c7e5269fc7038676ace1c3db0f92f52c67ae718310a docs/course/r4/release-notes.md
 A 6bd2a1423ae97dac11b9e8cf26c8fe06446ff1a6c43f1bab7d58998eaeccf4dc docs/course/r4/validation-evidence/browser-discovery.txt
-A 34953250a32726d367977dfedd597382015ef9f2b0b551ec3276ebba71650bd6 docs/course/r4/validation-evidence/candidate.json
+A 2a36c5ff3a89cf6bc4f577323406bd22758d499c0f31b19397c28ecd16b9162d docs/course/r4/validation-evidence/candidate.json
 A 48196c148e079d2dacc31fa3b35b879a7432d7e2265796d8d14d9cd85e74d656 docs/course/r4/validation-evidence/commands.json
 A e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 docs/course/r4/validation-evidence/cycle4/lint.txt
 A a6d184cb02462ee78d768e23e5d974c333f083c60f44345bca162904f0211405 docs/course/r4/validation-evidence/cycle4/targeted-tests.txt
@@ -72,16 +84,16 @@ A e83cb7e5176f8855a51c3012652d90d4723f449999e53b567af19f8308a995a2 docs/course/r
 A 3d2cb2ad8cc77586ad8aae80273c15b4ffe87405f0a0542f95ea1460bae4b359 docs/course/r4/validation-evidence/windows-cycle4/results.json
 A 4a310b207f409bc33dae1eeecc315e821875fe85a533d83871ea93397844f05c docs/course/r4/validation-evidence/windows-cycle4/typecheck.txt
 A 4572aca1ff1b902612555b27c74c5311030d6897de983571926fe306a4157b81 docs/course/r4/validation-evidence/windows-cycle4/unit.txt
-A 89c7d4c6bd66c18af463fc8b8ed78da84d90c11c93cb70b186fe462ed0538c7d docs/course/r4/validation-report.md
+A 320bcbbbb18144026b337d10a3f2cc5ac32f2ab69e1d408794349f3a2826772b docs/course/r4/validation-report.md
 A bab182e7e5dc4f0cdb9bbf77056f0050ef2e523233b4f7cf7427738b3bd05565 drizzle/0013_r4_partners.sql
 A d199f4a1060dfaea87667ea8e6185b21a07e8bae30c7fc7a8bb95ad7cb21d979 drizzle/meta/0013_snapshot.json
 M fe045381f5c8d65e666de8e5f353c6097073c85a79edcd5ee6f6050dfc1467f4 drizzle/meta/_journal.json
-M 9ef274354bd6e692e5ab774b145468d512e48774a2407695e2c2c221a5a8d605 evaluation_adapter.json
+M 5131a53c740d4289489a15c659d4ff59f85791465a2f58a82d8cdda38da4851c evaluation_adapter.json
 A 01b62107d07d95e8b66612a79e94b55365e35cd457fb601f80b0920f679cfcea public/fixtures/r4/company_normal.html
 A e8c3a40b2f338e23ee6ba9e706ae00870e4069356c8ad24b2cc8c54de2a404a4 public/fixtures/r4/company_prompt_injection.html
 A 38dbf4191a84050feee17296c1f3788c9ae024ea40342680e1315e9397eb17e5 public/fixtures/r4/company_same_name_other_domain.html
 A 8b760e00b903a40e88f5bae079af79f266569b534132a0e23e5a1cc45e30ea0a public/fixtures/r4/company_sparse.html
-M 6c7aeed8568ca7d73278dc4061f8bc5e674b1b465bb762b6c63aa41ed67aa04e release_submission.md
+M ec54ba64f692ef77d3464f5d8d35797166871e4605a5bf285dc4b5a8534d3c82 release_submission.md
 A 5c58862b443fa290542251bc0e0b4812fcb83009a280b3b422dc224dd995d1dd scripts/lib/git-canonical.d.mts
 A f2d9994d475fcbc5216d1ace0485f199fbfff6a7ad4981cdd7b8ccdfa07c15e6 scripts/lib/git-canonical.mjs
 A b2edf2051b8dca1581544a9d976ec32f4b402eac2615590ac0b1f356639e9e37 scripts/seed-r4-collaborations.ts
@@ -123,3 +135,42 @@ A 7e06d923f53943a01a52cac172af64a2328c02d11c55d80b82c6e214eea6e305 tests/unit/r4
 A 8f79459d83333cbe0106a76dcdd68b321d0a8163b4ac6f347847ba12ec014e30 tests/unit/r4-import.test.ts
 A ed02fc6bd81538b4c4da26263ac590f43077fbce84ba5d0b24b067977fad4f42 tests/unit/r4-inquiry.test.ts
 A a2dda4cd120ef613851f68b8325e23f220c8e422f9fb353f0545d73f496c905d tests/unit/r4-network.test.ts
+# Production closeout evidence update — 2026-11-18
+docs/course/r4/acceptance-matrix.md
+docs/course/r4/changed-files.txt
+docs/course/r4/fixture-sources.md
+docs/course/r4/operator-validation.md
+docs/course/r4/overnight-sprint-report.md
+docs/course/r4/release-notes.md
+docs/course/r4/validation-evidence/candidate.json
+docs/course/r4/validation-report.md
+evaluation_adapter.json
+release_submission.md
+docs/course/r4/production-evidence/aliases.json
+docs/course/r4/production-evidence/browser-smoke.json
+docs/course/r4/production-evidence/closeout-2026-11-18/closeout.json
+docs/course/r4/production-evidence/closeout-2026-11-18/database-readback.json
+docs/course/r4/production-evidence/closeout-2026-11-18/directory-1280.png
+docs/course/r4/production-evidence/closeout-2026-11-18/directory-390.png
+docs/course/r4/production-evidence/closeout-2026-11-18/moodle-submission-notes.md
+docs/course/r4/production-evidence/closeout-2026-11-18/official-source-audit.json
+docs/course/r4/production-evidence/closeout-2026-11-18/partner-detail-1280.png
+docs/course/r4/production-evidence/closeout-2026-11-18/partner-detail-390.png
+docs/course/r4/production-evidence/closeout-2026-11-18/partner-inquiry-1280.png
+docs/course/r4/production-evidence/closeout-2026-11-18/partner-inquiry-390.png
+docs/course/r4/production-evidence/closeout-2026-11-18/public-smoke.json
+docs/course/r4/production-evidence/closeout-2026-11-18/visibility-limited.json
+docs/course/r4/production-evidence/closeout-2026-11-18/visibility-private.json
+docs/course/r4/production-evidence/http-smoke.json
+docs/course/r4/production-evidence/migration-rehearsal.txt
+docs/course/r4/production-evidence/migration-result.json
+docs/course/r4/production-evidence/migration-verification.json
+docs/course/r4/production-evidence/partners-1280.png
+docs/course/r4/production-evidence/partners-390.png
+docs/course/r4/production-evidence/phase-a-readiness.json
+docs/course/r4/production-evidence/project-inquiry-1280.png
+docs/course/r4/production-evidence/project-inquiry-390.png
+docs/course/r4/production-evidence/release.json
+docs/production-admin-bootstrap-2026-11-17.md
+docs/production-rollout-2026-11-17.json
+docs/production-runtime-diagnostic-2026-11-17.json

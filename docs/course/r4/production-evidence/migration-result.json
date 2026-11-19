@@ -1,0 +1,18 @@
+{
+  "projectRef": "acnwbxqzkcdqgbohvpil",
+  "migrationCount": 14,
+  "journalHashesVerified": true,
+  "tablesVerified": 15,
+  "constraintsVerified": 50,
+  "functionsVerified": 8,
+  "triggersVerified": 11,
+  "rlsAndGrantsVerified": true,
+  "managementModeVerified": true,
+  "applied": [
+    "0011_r31_xr_studio",
+    "0012_cooing_shatterstar",
+    "0013_r4_partners"
+  ],
+  "existingRecordCountsPreserved": true,
+  "alreadyApplied": false
+}

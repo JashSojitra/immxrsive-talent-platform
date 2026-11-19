@@ -1,0 +1,107 @@
+{
+  "projectRef": "acnwbxqzkcdqgbohvpil",
+  "connectionMode": "pooler",
+  "databaseMatches": true,
+  "readOnly": true,
+  "serverMajor": 17,
+  "journalPresent": true,
+  "migrationCount": 11,
+  "migrations": [
+    {
+      "index": 0,
+      "tag": "0000_lonely_guardian",
+      "matchesSource": true
+    },
+    {
+      "index": 1,
+      "tag": "0001_tearful_agent_brand",
+      "matchesSource": true
+    },
+    {
+      "index": 2,
+      "tag": "0002_rainy_wallflower",
+      "matchesSource": true
+    },
+    {
+      "index": 3,
+      "tag": "0003_wise_rockslide",
+      "matchesSource": true
+    },
+    {
+      "index": 4,
+      "tag": "0004_salty_the_call",
+      "matchesSource": true
+    },
+    {
+      "index": 5,
+      "tag": "0005_little_giant_girl",
+      "matchesSource": true
+    },
+    {
+      "index": 6,
+      "tag": "0006_adorable_lord_tyger",
+      "matchesSource": true
+    },
+    {
+      "index": 7,
+      "tag": "0007_harden_data_api",
+      "matchesSource": true
+    },
+    {
+      "index": 8,
+      "tag": "0008_r2_profile_inquiry",
+      "matchesSource": true
+    },
+    {
+      "index": 9,
+      "tag": "0009_r3_shared_projects",
+      "matchesSource": true
+    },
+    {
+      "index": 10,
+      "tag": "0010_r3_project_join_requests",
+      "matchesSource": true
+    }
+  ],
+  "gates": {
+    "historicalJournalMatches": true,
+    "postgres17": true,
+    "pendingObjectsAbsent": true,
+    "ddlPrivileges": true,
+    "existingProjectConstraintValid": true,
+    "existingProjectDataCompatible": true,
+    "uuidFunctionAvailable": true
+  },
+  "criticalPassed": true,
+  "privileges": {
+    "public_schema": true,
+    "migration_schema": true,
+    "language_usage": true,
+    "migration_table": true,
+    "migration_sequence": true,
+    "writes_enabled": true,
+    "required_roles": true
+  },
+  "ownedPrerequisiteTables": [
+    {
+      "table": "auth_users",
+      "canAlter": true,
+      "requiredAccess": true
+    },
+    {
+      "table": "project_memberships",
+      "canAlter": true,
+      "requiredAccess": true
+    },
+    {
+      "table": "projects",
+      "canAlter": true,
+      "requiredAccess": true
+    },
+    {
+      "table": "student_profiles",
+      "canAlter": true,
+      "requiredAccess": true
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+
+ RUN  v5.0.2 C:/Users/JASH2/AppData/Local/Temp/immxrsive-production-release-gb9ajm60/source
+
+
+ Test Files  2 passed (2)
+      Tests  16 passed (16)
+   Start at  14:55:24
+   Duration  2.45s (import 55%, tests 40%, transform 4%, worker 1%)
