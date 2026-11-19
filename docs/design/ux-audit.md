@@ -1,6 +1,6 @@
 # UX audit — 18 November 2026
 
-Base: `34426d89060b500ceeb7f7c9be866fc49cfb09cc`, isolated `feat/immxrsive-ux-overhaul`. PR #13 remains draft/unmerged and untouched. No production writes or deployment.
+Base: `34426d89060b500ceeb7f7c9be866fc49cfb09cc`, isolated `feat/immxrsive-ux-overhaul`. At initial discovery, PR #13 was draft/unmerged and untouched by this task. Its later external merge is recorded in the handoff report. No production writes or deployment.
 
 ## Evidence and coverage
 

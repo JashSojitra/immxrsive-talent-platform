@@ -80,7 +80,7 @@ Webpack was used because the isolated worktree shares the existing dependency in
 - No Lighthouse score or real-user performance claim is made. The removal of GSAP/Three background loops and absence of new dependencies are directly verifiable; existing dependencies remain in the lockfile.
 - The existing student-profile loading boundary can stream its unavailable view with HTTP 200. This pre-existing behavior was not changed; project-detail 404 protections remain tested.
 - No AutoDemo converter, fabricated project skills, false production affiliations or automatic approvals were introduced.
-- Production was not deployed or merged. R4 PR #13 remains separate and untouched. Do not merge this design branch until the assessed R4 state has been reconciled by the user.
+- This task did not merge or deploy the redesign. PR #14 remains draft. PR #13 was draft at initial discovery, but separate activity merged it on 18 November 2026 at 22:10 America/Toronto (merge commit `d94cfd856b36ba9cbfd2ab9cd4079aeb8e090f99`). This task performed no action on PR #13. The design branch remains based on the original healthy `34426d8` baseline and has not absorbed the separate R4 submission work. Do not merge or deploy the design until the user reconciles that assessed state.
 
 Commit and PR: Implementation commit: `f2010d9c0eac3ada6d3342a3ca7fc6c6ec755639`. Draft review PR: [#14](https://github.com/JashSojitra/immxrsive-talent-platform/pull/14). Handoff metadata is recorded in the following documentation commit. No production deployment.
 
