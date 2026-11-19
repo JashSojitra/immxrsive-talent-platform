@@ -134,7 +134,7 @@ test("verified student creates and returns to a private profile draft", async ({
     await page.getByRole("link", { name: "Preview saved public profile" }).click();
     await expect(page.getByText("Private preview — not public")).toBeVisible();
     await expect(page.locator("main#profile-content")).toHaveAttribute("data-preset", "editorial");
-    await expect(page.locator('[data-media="contours"]')).toBeVisible();
+    await expect(page.locator('[data-media="contours"]')).toBeAttached();
     await expect(page.getByRole("heading", { name: "Browser Profile Student", exact: true }))
       .toBeVisible();
     await expect(page.getByText("Sault Ste. Marie, ON")).toBeVisible();
@@ -167,12 +167,12 @@ test("verified student creates and returns to a private profile draft", async ({
     });
     await page.goto(`/students/${publicId}`);
     await expect(page.locator("main#profile-content")).toHaveAttribute("data-preset", "editorial");
-    await expect(page.locator('[data-media="contours"]')).toBeVisible();
+    await expect(page.locator('[data-media="contours"]')).toBeAttached();
     await expect(page.getByRole("heading", { name: "Browser Profile Student", exact: true }))
       .toBeVisible();
     await expect(page.getByRole("link", { name: /employer inquiry for browser profile student/i }))
       .toHaveAttribute("href", `/inquiry/student/${publicId}`);
-    await expect(page.getByText(/No canonical project evidence is connected/)).toBeVisible();
+    await expect(page.getByText(/No public projects are connected/)).toBeVisible();
     await page.getByRole("link", { name: /employer inquiry for browser profile student/i }).click();
     await expect(page.getByRole("heading", {
       level: 1, name: "Browser Profile Student", exact: true,

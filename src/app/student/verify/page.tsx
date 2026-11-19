@@ -6,7 +6,6 @@ import {
   requireAuthenticatedUser,
 } from "@/auth/server";
 import { AffiliationVerificationPanel } from "@/components/auth/AffiliationVerificationPanel";
-import { BrandLogo } from "@/components/brand/BrandLogo";
 
 import styles from "../auth.module.css";
 
@@ -31,7 +30,6 @@ export default async function StudentVerifyPage({ searchParams }: VerifyPageProp
   return (
     <div className={styles.shell}>
       <nav className={styles.nav} aria-label="Student verification">
-        <BrandLogo className={styles.brand} />
         <Link className={styles.backLink} href="/student/dashboard">Dashboard</Link>
       </nav>
       <main className={styles.main}>

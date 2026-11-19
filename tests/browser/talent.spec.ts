@@ -52,10 +52,10 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
-test("root redirects to the talent experience", async ({ page }) => {
+test("homepage introduces the platform and links to discovery", async ({ page }) => {
   await page.goto("/");
-  await expect(page).toHaveURL(/\/talent$/);
-  await expect(page.getByRole("heading", { name: /discover the people/i })).toBeVisible();
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.getByRole("main").getByRole("link", { name: "Discover talent", exact: true })).toBeVisible();
 });
 
 test("directory workflow remains functional and URL-addressable", async ({ page }) => {
@@ -76,9 +76,11 @@ test("directory workflow remains functional and URL-addressable", async ({ page 
 
 test("student access is discoverable and keyboard-operable in public navigation", async ({ page }) => {
   await page.goto("/talent");
-  const studentAccess = page.getByRole("link", { name: "Student Login / Create Profile" });
+  const menu = page.getByRole("button", { name: "Open navigation menu" });
+  if (await menu.isVisible()) await menu.click();
+  const studentAccess = page.getByRole("link", { name: "Student sign in" });
   await expect(studentAccess).toBeVisible();
-  await expect(studentAccess).toHaveAttribute("href", "/student");
+  await expect(studentAccess).toHaveAttribute("href", "/student/sign-in");
   await studentAccess.focus();
   await expect(studentAccess).toBeFocused();
   await page.keyboard.press("Enter");
@@ -127,13 +129,14 @@ test("keyboard focus is visible and filters operate without a pointer", async ({
   await page.goto("/talent#directory");
   const search = page.getByRole("searchbox", { name: /search talent/i });
   await page.locator("body").focus();
-  for (let index = 0; index < 8; index += 1) {
+  for (let index = 0; index < 30; index += 1) {
     if (await search.evaluate((element) => element === document.activeElement)) break;
     await page.keyboard.press("Tab");
   }
   await expect(search).toBeFocused();
-  const outline = await search.evaluate((element) => getComputedStyle(element).boxShadow);
-  expect(outline).not.toBe("none");
+  const outline = await search.evaluate((element) => ({ style: getComputedStyle(element).outlineStyle, width: getComputedStyle(element).outlineWidth }));
+  expect(outline.style).not.toBe("none");
+  expect(parseFloat(outline.width)).toBeGreaterThan(0);
 
   const unity = page.getByRole("checkbox", { name: "Unity" });
   await unity.focus();
@@ -179,15 +182,12 @@ test("a WebGL context failure leaves the directory intact", async ({ page }) => 
   await expect(page.getByRole("link", { name: /view avery chen/i })).toBeVisible();
 });
 
-test("GSAP fallback exposes every chapter and preserves filtering", async ({ page }) => {
+test("motion-disabled directory preserves filtering", async ({ page }) => {
   await page.addInitScript(() => {
     window.__IMMXRSIVE_DISABLE_MOTION__ = true;
   });
   await page.goto("/talent");
   await expect(page.locator("main")).toHaveAttribute("data-motion", "fallback");
-  await expect(page.getByRole("heading", { name: /one field.*many dimensions/i })).toBeAttached();
-  await expect(page.getByRole("heading", { name: /talent is more than.*a list of skills/i })).toBeAttached();
-  await expect(page.getByRole("heading", { name: /find the person.*behind the possibility/i })).toBeAttached();
   await page.getByRole("checkbox", { name: "Alumni" }).focus();
   await page.keyboard.press("Space");
   await expect(page.getByLabel("3 matches")).toBeVisible();
@@ -205,23 +205,19 @@ test("focused removed card hands focus to the result summary", async ({ page }) 
   await expect(avery).toHaveCount(0);
 });
 
-test("native scroll advances the authored field sequence", async ({ page }) => {
+test("directory responds to reduced motion changes without navigation", async ({ page }) => {
   await page.goto("/talent");
   await expect(page.locator("main")).toHaveAttribute("data-motion", "ready");
-
-  const fieldWord = page.locator("[data-field-word='near']").first();
-  const before = await fieldWord.evaluate((element) => getComputedStyle(element).transform);
-  await page.locator("[data-chapter='field']").scrollIntoViewIfNeeded();
-  await page.waitForTimeout(250);
-  const after = await fieldWord.evaluate((element) => getComputedStyle(element).transform);
-
-  expect(after).not.toBe(before);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(page.locator("main")).toHaveAttribute("data-motion", "reduced");
+  await expect(page.getByRole("searchbox", { name: /search talent/i })).toBeEnabled();
 });
 
-test("motion cleanup runs when the talent page unmounts", async ({ page }) => {
+test("directory navigation does not start a background rendering loop", async ({ page }) => {
   await page.goto("/talent");
-  await expect.poll(() => page.evaluate(() => window.__IMMXRSIVE_MOTION_ACTIVE__)).toBe(true);
+  await expect(page.getByLabel("17 matches")).toBeVisible();
+  await expect(page.locator("canvas")).toHaveCount(0);
   await page.getByRole("link", { name: /view avery chen/i }).click();
   await expect(page).toHaveURL(/\/students\/S01$/);
-  await expect.poll(() => page.evaluate(() => window.__IMMXRSIVE_MOTION_ACTIVE__ === true)).toBe(false);
+  await expect(page.getByRole("heading", { level: 1, name: "Avery Chen" })).toBeVisible();
 });

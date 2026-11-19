@@ -42,7 +42,7 @@ test("independent students consent, own their evidence, restore relationships an
     await page.getByRole("button", { name: "Send invitation" }).click();
     await expect(page.getByRole("status")).toHaveText("Invitation sent. They decide whether to accept.");
     expect((await (await page.request.get(`/api/v1/projects/${id}`)).json()).contributors).toHaveLength(1);
-    await other.goto("/student/dashboard"); await other.getByRole("link", { name: "Project invitations", exact: true }).click();
+    await other.goto("/student/dashboard"); await other.getByRole("link", { name: "Invitations & collaboration", exact: true }).click();
     await other.getByRole("link", { name: "Review invitation", exact: true }).click();
     await expect(other.getByText(/featured by default/)).toBeVisible();
     await expect(other.getByText("Software Developer", { exact: true })).toBeVisible();

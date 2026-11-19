@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { requireVerifiedStudent } from "@/auth/server";
-import { BrandLogo } from "@/components/brand/BrandLogo";
 import { ProfileEditor } from "@/components/student-editor/ProfileEditor";
 import { getRuntimeDatabase } from "@/db/runtime";
 import {
@@ -35,9 +34,8 @@ export default async function StudentProfileEditorPage() {
   } : null;
 
   return (
-    <div className={authStyles.shell}>
+    <main className={authStyles.shell}>
       <nav className={`${authStyles.nav} ${authStyles.profileNav}`} aria-label="Student profile editor">
-        <BrandLogo className={authStyles.brand} />
         <Link className={authStyles.backLink} href="/student/dashboard">Dashboard</Link> <Link className={authStyles.backLink} href="/student/projects">My Projects</Link>
       </nav>
       <ProfileEditor
@@ -45,6 +43,6 @@ export default async function StudentProfileEditorPage() {
         vocabulary={vocabulary}
         githubIdentity={{ name: user.name, email: user.email }}
       />
-    </div>
+    </main>
   );
 }

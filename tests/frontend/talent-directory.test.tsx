@@ -80,9 +80,6 @@ describe("talent directory", () => {
     expect(screen.getAllByText("Project evidence").length).toBeGreaterThan(0);
     expect(screen.getByLabelText("2 matches")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "View Avery Chen's profile" })).toHaveAttribute("href", "/students/S01");
-    expect(screen.getByRole("heading", { name: /one field.*many dimensions/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /talent is more than.*a list of skills/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /find the person.*behind the possibility/i })).toBeInTheDocument();
   });
 
   it("submits search to the API and serializes it into the URL", async () => {
@@ -249,13 +246,9 @@ describe("talent directory", () => {
     await user.tab();
     expect(screen.getByRole("link", { name: /skip to talent directory/i })).toHaveFocus();
     await user.tab();
-    expect(screen.getByRole("link", { name: /directory home/i })).toHaveFocus();
+    expect(screen.getByRole("link", { name: /explore their projects/i })).toHaveFocus();
     await user.tab();
-    expect(screen.getByRole("link", { name: /^talent index$/i })).toHaveFocus();
-    await user.tab();
-    expect(screen.getByRole("link", { name: /student login \/ create profile/i })).toHaveFocus();
-    await user.tab();
-    expect(screen.getByRole("link", { name: /enter the field/i })).toHaveFocus();
+    expect(screen.getByRole("link", { name: /create your profile/i })).toHaveFocus();
     await user.tab();
     expect(screen.getByRole("button", { name: "Search tips" })).toHaveFocus();
     await user.tab();
@@ -265,7 +258,7 @@ describe("talent directory", () => {
     expect(screen.getByRole("checkbox", { name: "Unity" })).toBeChecked();
   });
 
-  it("keeps every chapter and the directory functional when GSAP does not initialize", async () => {
+  it("keeps the directory functional without animation", async () => {
     window.__IMMXRSIVE_DISABLE_MOTION__ = true;
     mockApi();
     const user = userEvent.setup();
@@ -273,7 +266,6 @@ describe("talent directory", () => {
 
     expect(await screen.findByText("Avery Chen")).toBeInTheDocument();
     expect(container.querySelector("main")).toHaveAttribute("data-motion", "fallback");
-    expect(screen.getByText("Spatial Computing")).toBeInTheDocument();
     expect(screen.getByText(/shared projects, real contributor roles/i)).toBeInTheDocument();
     await user.click(screen.getByRole("checkbox", { name: "Alumni" }));
     expect(screen.getByRole("checkbox", { name: "Alumni" })).toBeChecked();
@@ -313,7 +305,7 @@ describe("talent directory", () => {
     const { container } = render(<TalentDirectory />);
     expect(await screen.findByText("Avery Chen")).toBeInTheDocument();
     expect(container.querySelector("main")).toHaveAttribute("data-motion", "reduced");
-    expect(screen.getByRole("heading", { name: /the spatial field becomes.*a searchable index/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: /discover the people/i })).toBeInTheDocument();
   });
 });
 

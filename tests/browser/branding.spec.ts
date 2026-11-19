@@ -8,24 +8,13 @@ const routes = [
   "/student/sign-in",
 ];
 
-test("supplied NOT ImmXrsive identity spans public, inquiry, and student access pages", async ({ page }) => {
+test("shared NOT ImmXrsive identity spans public, inquiry, and student access pages", async ({ page }) => {
   for (const route of routes) {
     await page.goto(route);
-    const logo = page.getByAltText("NOT ImmXrsive").first();
-    await expect(logo).toBeVisible();
-    await expect(logo).toHaveAttribute("src", /not-immxrsive-logo\.png/);
-    expect(await logo.evaluate((image: HTMLImageElement) => ({
-      width: image.naturalWidth,
-      height: image.naturalHeight,
-    }))).toEqual({ width: 2_000, height: 2_000 });
-    const logoLink = page.getByRole("link", {
-      name: "NOT ImmXrsive talent directory home",
-    }).first();
-    const logoBounds = await logoLink.boundingBox();
-    expect(logoBounds).not.toBeNull();
-    expect(logoBounds!.width).toBeGreaterThanOrEqual(
-      test.info().project.name === "mobile-390" ? 150 : 210,
-    );
+    const home = page.getByRole("banner").getByRole("link", { name: "NOT ImmXrsive home", exact: true });
+    await expect(home).toBeVisible();
+    await expect(home).toHaveAttribute("href", "/");
+    expect((await home.boundingBox())!.height).toBeGreaterThanOrEqual(44);
     await expect(page.getByLabel("Project status")).toContainText(
       "Not an official ImmXrsive or Algoma University service",
     );

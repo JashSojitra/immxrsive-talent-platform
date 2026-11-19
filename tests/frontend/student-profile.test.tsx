@@ -97,7 +97,7 @@ describe("public student profile", () => {
     await user.tab();
     expect(screen.getByRole("link", { name: /skip to profile details/i })).toHaveFocus();
     await user.tab();
-    expect(screen.getByRole("link", { name: /immxrsive talent directory/i })).toHaveFocus();
+    expect(screen.getByRole("link", { name: /^talent$/i })).toHaveFocus();
 
     const projectLink = screen.getByRole("link", { name: "View project Industrial Safety VR Trainer" });
     projectLink.focus();
@@ -140,7 +140,7 @@ describe("public student profile", () => {
       .toBeVisible();
     expect(screen.getByText("<script>plain profile text</script>")).toBeVisible();
     expect(document.querySelector("script")).toBeNull();
-    expect(screen.getByText(/No canonical project evidence is connected/)).toBeVisible();
+    expect(screen.getByText(/No public projects are connected/)).toBeVisible();
     expect(screen.queryByText("Available for")).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Return to editor" }))
       .toHaveAttribute("href", "/student/profile/edit");

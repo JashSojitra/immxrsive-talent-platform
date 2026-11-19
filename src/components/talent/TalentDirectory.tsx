@@ -4,15 +4,8 @@ import Link from "next/link";
 import { createPortal } from "react-dom";
 import { FormEvent, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
-import { BrandLogo } from "@/components/brand/BrandLogo";
 
-import { ImmersiveField } from "./ImmersiveField";
 import styles from "./talent.module.css";
-import {
-  useCinematicMotion,
-  type MotionController,
-  type SceneMotionState,
-} from "./useCinematicMotion";
 import type {
   FilterMetadata,
   TalentDirectoryItem,
@@ -82,22 +75,9 @@ async function fetchJson<T>(url: string, signal: AbortSignal): Promise<T> {
 
 export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string }) {
   const pageRef = useRef<HTMLElement>(null);
-  const cardGridRef = useRef<HTMLDivElement>(null);
   const resultSummaryRef = useRef<HTMLParagraphElement>(null);
   const historyReadyRef = useRef(false);
   const restoringHistoryRef = useRef(false);
-  const sceneState = useRef<SceneMotionState>({
-    progress: 0,
-    chapter: 0,
-    intensity: 0.55,
-    spread: 0,
-    grid: 0.35,
-    parallax: 1,
-  });
-  const motionController = useRef<MotionController>({
-    captureGrid: () => undefined,
-    playGrid: () => undefined,
-  });
   const [filters, setFilters] = useState<TalentFilters>(() => parseTalentFilters(initialSearch));
   const [searchDraft, setSearchDraft] = useState(() => parseTalentFilters(initialSearch).q);
   const [metadata, setMetadata] = useState<FilterMetadata | null>(null);
@@ -108,9 +88,16 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
   const [invalidFilters, setInvalidFilters] = useState(false);
   const [retryKey, setRetryKey] = useState(0);
   const query = serializeTalentFilters(filters);
-  const resultIds = results?.items.map((student) => student.id).join("|") ?? "";
 
-  useCinematicMotion(pageRef, cardGridRef, sceneState, motionController);
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const settle = () => {
+      if (pageRef.current) pageRef.current.dataset.motion = media.matches ? "reduced" : window.__IMMXRSIVE_DISABLE_MOTION__ ? "fallback" : "ready";
+    };
+    settle();
+    media.addEventListener("change", settle);
+    return () => media.removeEventListener("change", settle);
+  }, []);
 
   useEffect(() => {
     const abort = new AbortController();
@@ -126,7 +113,6 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
     const abort = new AbortController();
     fetchJson<TalentDirectoryResponse>(`/api/v1/talent${query ? `?${query}` : ""}`, abort.signal)
       .then((response) => {
-        motionController.current.captureGrid();
         const focusedCard = document.activeElement?.closest<HTMLElement>("[data-student-id]");
         if (focusedCard && !response.items.some((student) => student.id === focusedCard.dataset.studentId)) {
           resultSummaryRef.current?.focus({ preventScroll: true });
@@ -157,10 +143,6 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
       });
     return () => abort.abort();
   }, [query, retryKey]);
-
-  useLayoutEffect(() => {
-    motionController.current.playGrid();
-  }, [resultIds]);
 
   useEffect(() => {
     const nextUrl = `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`;
@@ -243,85 +225,13 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
   return (
     <main ref={pageRef} className={styles.page} data-motion="pending">
       <a className={styles.skipLink} href="#directory">Skip to talent directory</a>
-      <div className={styles.worldLayer} aria-hidden="true">
-        <ImmersiveField sceneState={sceneState} />
-      </div>
-
-      <header className={styles.siteHeader} data-nav>
-        <BrandLogo className={styles.brand} />
-        <nav aria-label="Primary navigation">
-          <a href="#directory" className={`${styles.navLink} ${styles.directoryNavLink}`}>
-            Talent <span>Index</span>
-          </a>
-          <Link href="/student" className={`${styles.navLink} ${styles.studentAccessLink}`}>
-            Student Login / Create Profile
-          </Link>
-        </nav>
-        <div className={styles.chapterProgress} aria-hidden="true">
-          <span /><span /><span /><span /><span /><span />
-        </div>
-      </header>
-
-      <section id="signal" className={styles.hero} aria-labelledby="hero-title" data-chapter="signal">
-        <div className={styles.heroGrid} data-hero-grid aria-hidden="true" />
-        <div className={styles.heroContent} data-hero-copy>
-          <p className={styles.eyebrow} data-hero-kicker>Chapter 01 / Signal</p>
-          <h1 id="hero-title" className={styles.heroTitle}>
-            <span className={styles.lineMask}><span data-hero-line>Discover the people</span></span>
-            <span className={styles.lineMask}><span data-hero-line>building what&apos;s <em>next.</em></span></span>
-          </h1>
-          <div className={styles.heroFoot}>
-            <p data-hero-support>
-              Student and alumni talent across immersive technology, software, design,
-              spatial computing, AI, and interactive experiences.
-            </p>
-            <a href="#field" className={styles.primaryCta} data-hero-cta>
-              Enter the field <span aria-hidden="true">↘</span>
-            </a>
-          </div>
-        </div>
-        <p className={styles.scrollCue} aria-hidden="true">Scroll to discover <span /></p>
+      <section className={styles.hero} aria-labelledby="hero-title">
+        <p className={styles.eyebrow}>The talent directory</p>
+        <h1 id="hero-title">Discover the people<br />building what&apos;s <em>next.</em></h1>
+        <p>Explore published student and alumni portfolios. Find skills, see the work, and start a conversation.</p>
+        <div className={styles.directoryLinks}><Link href="/projects">Explore their projects <span aria-hidden="true">&#8599;</span></Link><Link href="/student">Create your profile <span aria-hidden="true">&#8599;</span></Link></div>
       </section>
-
-      <section id="field" className={styles.fieldChapter} aria-labelledby="field-title" data-chapter="field">
-        <div className={styles.fieldStage}>
-          <div className={styles.fieldHeading}>
-            <p className={styles.chapter}>Chapter 02 — The field</p>
-            <h2 id="field-title">One field.<br /><em>Many dimensions.</em></h2>
-            <p>Real disciplines intersect here. These are signals in the talent landscape, not artificial categories.</p>
-          </div>
-          <ul className={styles.disciplineField} aria-label="Talent disciplines represented in NOT ImmXrsive">
-            <li data-field-word="far">Spatial Computing</li>
-            <li data-field-word="near">XR</li>
-            <li data-field-word="far">Accessibility</li>
-            <li data-field-word="near">3D</li>
-            <li data-field-word="far">Artificial Intelligence</li>
-            <li data-field-word="near">Web</li>
-            <li data-field-word="far">Interactive Systems</li>
-          </ul>
-          <div className={styles.fieldOrbit} data-field-orbit aria-hidden="true"><span>07</span></div>
-        </div>
-      </section>
-
-      <section className={styles.discoveryTransition} aria-labelledby="transition-title" data-chapter="transition">
-        <p className={styles.chapter}>Chapter 03 — From atmosphere to action</p>
-        <div className={styles.transitionLine} data-transition-line aria-hidden="true" />
-        <h2 id="transition-title" data-transition-word>
-          The spatial field becomes<br />a <em>searchable index.</em>
-        </h2>
-        <p>Move from possibility to evidence. Search the same world without leaving it.</p>
-      </section>
-
-      <section id="directory" className={styles.directory} aria-labelledby="directory-title" data-chapter="directory">
-        <div className={styles.transitionBand} aria-hidden="true">
-          <span>Spatial thinkers</span><span>Creative engineers</span><span>Future builders</span>
-        </div>
-        <div className={styles.directoryIntro} data-motion-section>
-          <p className={styles.chapter} data-section-part>Chapter 04 — Talent index</p>
-          <h2 id="directory-title" data-section-part>Find the signal<br />in the <em>field.</em></h2>
-          <p data-section-part>Search published talent, combine evidence-based filters, and open a stable profile route.</p>
-        </div>
-
+      <section id="directory" className={styles.directory} aria-label="Talent directory">
         <div className={styles.discoveryGrid}>
           <aside className={styles.filterPanel} aria-label="Talent filters">
             <form className={styles.searchForm} onSubmit={submitSearch} role="search">
@@ -367,7 +277,7 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
                 />
               </div>
             ) : (
-              <p className={styles.metadataLoading}>Loading filter system…</p>
+              <p className={styles.metadataLoading}>Loading filters…</p>
             )}
           </aside>
 
@@ -423,7 +333,7 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
               ) : results?.items.length === 0 ? (
                 <EmptyState onClear={clearAll} />
               ) : (
-                <div ref={cardGridRef} className={styles.cardGrid}>
+                <div className={styles.cardGrid}>
                   {(results?.items ?? []).map((student, index) => (
                     <StudentCard key={student.id} student={student} index={index} />
                   ))}
@@ -435,33 +345,7 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
         </div>
       </section>
 
-      <section className={styles.evidenceChapter} aria-labelledby="evidence-title" data-chapter="evidence" data-motion-section>
-        <div className={styles.evidenceCopy}>
-          <p className={styles.chapter} data-section-part>Chapter 05 — Evidence</p>
-          <h2 id="evidence-title" data-section-part>Talent is more than<br />a list of <em>skills.</em></h2>
-          <p data-section-part>See the work behind the profile. Shared projects, real contributor roles, and clear evidence connect capability to practice.</p>
-        </div>
-        <div className={styles.evidenceDiagram} data-section-part aria-hidden="true">
-          <div className={styles.evidenceOrbit} data-evidence-orbit>
-            <span>Profile</span><span>Role</span><span>Project</span>
-          </div>
-          <strong>WORK<br />BECOMES<br />EVIDENCE</strong>
-        </div>
-      </section>
-
-      <section className={styles.continueChapter} aria-labelledby="continue-title" data-chapter="continue" data-motion-section>
-        <p className={styles.chapter} data-section-part>Chapter 06 — Continue discovery</p>
-        <h2 id="continue-title" data-section-part>Find the person<br />behind the <em>possibility.</em></h2>
-        <a href="#directory" className={styles.finalCta} data-section-part>
-          Return to talent index <span aria-hidden="true">↑</span>
-        </a>
-      </section>
-
-      <footer className={styles.footer}>
-        <span>NOT ImmXrsive</span>
-        <Link href="/showcase">Explore project showcases</Link>
-        <p>Independent student-built course project for Algoma-connected talent.</p>
-      </footer>
+      <aside className={styles.directoryNote}><strong>People, backed by their work.</strong><p>Shared projects, real contributor roles, and published portfolios connect capability to practice. Profile skills are supplied by each student.</p></aside>
     </main>
   );
 }
@@ -628,23 +512,14 @@ function FilterGroup({
 }
 
 function StudentCard({ student, index }: { student: TalentDirectoryItem; index: number }) {
-  const onPointerMove = (event: React.PointerEvent<HTMLElement>) => {
-    if (event.pointerType === "touch") return;
-    const bounds = event.currentTarget.getBoundingClientRect();
-    event.currentTarget.style.setProperty("--pointer-x", `${event.clientX - bounds.left}px`);
-    event.currentTarget.style.setProperty("--pointer-y", `${event.clientY - bounds.top}px`);
-  };
-
   return (
     <article
       className={styles.studentCard}
-      style={{ "--card-index": index } as React.CSSProperties}
       data-student-id={student.id}
-      onPointerMove={onPointerMove}
     >
       <Link href={`/students/${student.id}`} aria-label={`View ${student.name}'s profile`}>
         <div className={styles.cardTopline}>
-          <span>{student.id}</span>
+          <span>Portfolio {String(index + 1).padStart(2, "0")}</span>
           <span>{prettyValue(student.status)}</span>
         </div>
         <div className={styles.cardIdentity}>
@@ -667,9 +542,9 @@ function StudentCard({ student, index }: { student: TalentDirectoryItem; index: 
 function EmptyState({ onClear }: { onClear: () => void }) {
   return (
     <div className={styles.statePanel} role="status">
-      <span className={styles.stateCode}>00 / No signal</span>
+      <span className={styles.stateCode}>No results</span>
       <h3>No matching students.</h3>
-      <p>Your filters are still active. Remove one or clear the field to broaden the search.</p>
+      <p>Your filters are still active. Remove one or clear all filters to broaden the search.</p>
       <button type="button" onClick={onClear}>Clear all filters</button>
     </div>
   );

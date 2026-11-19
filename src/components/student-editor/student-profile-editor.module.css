@@ -645,3 +645,25 @@
     transition: none;
   }
 }
+
+/* Match the editorial workspace without slowing frequent editing. */
+.editor { width:var(--content); max-width:1180px; padding:40px 0 72px; }
+.editorHeader { grid-template-columns:minmax(0,1fr) 220px; gap:32px; padding-bottom:32px; }
+.editorHeader h1 { font-size:clamp(2.5rem,5vw,4.7rem); line-height:1.04; letter-spacing:-.05em; font-weight:480; }
+.kicker,.section > header > span { color:var(--signal); font-weight:600; letter-spacing:.13em; }
+.section { padding:40px 0; gap:clamp(28px,5vw,72px); }
+.section h2 { font-size:clamp(1.4rem,2.5vw,2rem); font-weight:500; }
+.section > header { grid-template-columns:24px 1fr; gap:12px; }
+.field input,.field select,.field textarea,.linkRow input { background:var(--surface); border-radius:4px; }
+.field input,.field select,.linkRow input { min-height:48px; }
+.choice span { border-radius:4px; transition:none; }
+.draftStatus,.publicationPanel,.identityCard { background:var(--surface); border-radius:4px; }
+.visibilityChoice,.presetChoice,.mediaChoice { border-radius:4px; }
+.saveBar { background:var(--surface-raised); backdrop-filter:none; border-radius:4px; box-shadow:0 12px 32px rgb(0 0 0 / .22); }
+.saveBar button { border-radius:4px; background:var(--signal); font-weight:650; }
+.publicationActions a,.publicationActions button { border-radius:4px; }
+@media(max-width:850px) { .editorHeader,.section { grid-template-columns:1fr; } .section { gap:24px; } }
+@media(max-width:600px) { .editor { padding-top:32px; } .editorHeader h1 { font-size:clamp(2.3rem,11vw,3.8rem); } .section { padding-block:32px; } }
+
+@media(max-width:600px) { .choiceGrid { grid-template-columns:repeat(2,minmax(0,1fr)); } .choice span { height:100%; line-height:1.5; } }
+.presetChoice[data-preset="spatial"] .presetPreview { transform:none; border-top:3px solid var(--electric); }

@@ -14,7 +14,7 @@ test("R4 public 390px directory, privacy and contextual inquiry",async({page})=>
   await c.db.insert(s.partnerCollaborations).values([{companyId:company.id,content},{companyId:company.id,content:{...content,title:"Past public study",year:2025,status:"past"}},{companyId:company.id,content:{...content,title:"SECRET LIMITED",description:"SECRET",outcome:"SECRET",visibility:"limited"}},{companyId:company.id,content:{...content,title:"SECRET PRIVATE",visibility:"private"}}]);
   await page.setViewportSize({width:390,height:844});await page.goto("/partners");await page.getByRole("link",{name:company.content.name,exact:true}).click();await expect(page.getByRole("heading",{name:"Current public study"})).toBeVisible();await expect(page.getByRole("heading",{name:"Past public study"})).toBeVisible();await expect(page.getByText("Anonymized collaboration",{exact:true})).toBeVisible();expect(await page.content()).not.toContain("SECRET");
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
-  await page.getByRole("link",{name:`Discuss a collaboration with ${company.content.name}`}).click();await expect(page.getByRole("heading",{level:1})).toContainText(company.content.name);
+  await page.getByRole("link",{name:"Discuss a collaboration",exact:true}).click();await expect(page.getByRole("heading",{level:1})).toContainText(company.content.name);
   await page.getByLabel("Company name").fill("Synthetic employer");await page.getByLabel("Contact name").fill("Synthetic contact");await page.getByLabel("Contact email").fill("contact@example.test");await page.getByLabel("Inquiry description").fill("We would like to discuss a research collaboration and a student training prototype.");const submitted = page.waitForResponse(r => r.url().endsWith("/api/v1/inquiries") && r.request().method() === "POST");
   await page.getByRole("button",{name:/submit inquiry/i}).click();
   const response = await submitted;
@@ -29,6 +29,16 @@ test("R4 public 390px directory, privacy and contextual inquiry",async({page})=>
   expect(stored).toMatchObject({companyId:company.id,sourceName:company.content.name,content:{companyName:"Synthetic employer",contactName:"Synthetic contact",contactEmail:"contact@example.test",description:"We would like to discuss a research collaboration and a student training prototype."}});
  }finally{await c.client.end();}
 });
+test("partner without an optional website keeps its portfolio and inquiry available", async ({ page }) => {
+ const c = createDatabase(process.env.TEST_DATABASE_URL!);
+ try {
+  const [company] = await c.db.insert(s.partnerCompanies).values({ status:"published", content:{name:`Website optional ${randomUUID()}`,website:"",description:"Published partner with no website",sector:"XR",location:"Ontario"} }).returning();
+  expect((await page.goto(`/partners/${company.id}`))?.status()).toBe(200);
+  await expect(page.getByRole("heading", { level:1, name:company.content.name, exact:true })).toBeVisible();
+  await expect(page.getByText("Company website not listed.", { exact:true })).toBeVisible();
+  await expect(page.getByRole("link", { name:"Discuss a collaboration", exact:true })).toHaveAttribute("href", `/inquiry/partner/${company.id}`);
+ } finally { await c.client.end(); }
+});
 for(const width of [1280,768])test(`R4 staff manual draft/publish at ${width}px`,async({page})=>{
  const c=createDatabase(process.env.TEST_DATABASE_URL!);
  try{
@@ -36,7 +46,7 @@ for(const width of [1280,768])test(`R4 staff manual draft/publish at ${width}px`
   const response=await auth.handler(new Request(`${origin}/api/auth/sign-up/email`,{method:"POST",headers:{"Content-Type":"application/json",Origin:origin},body:JSON.stringify({name:"Synthetic R4 staff",email:`r4-${randomUUID()}@example.test`,password:"test-only-password-long-enough"})}));expect(response.status).toBe(200);const {user}=await response.json() as {user:{id:string}};
   await c.db.insert(s.studioRoles).values({userId:user.id,role:"xr_admin"});
   const cookie=response.headers.getSetCookie().find(v=>v.split("=",1)[0].includes("session_token"))!.split(";",1)[0];const sep=cookie.indexOf("=");await page.context().addCookies([{name:cookie.slice(0,sep),value:cookie.slice(sep+1),url:origin,httpOnly:true,sameSite:"Lax"}]);
-  await page.setViewportSize({width,height:900});await page.goto("/admin/partners");await expect(page.getByRole("heading",{name:"Industry partnerships and review tasks"})).toBeVisible();
+  await page.setViewportSize({width,height:900});await page.goto("/admin/partners");await expect(page.getByRole("heading",{name:"Partnerships & review tasks"})).toBeVisible();
   const name=`R4 Manual ${randomUUID()}`;await page.getByLabel("name",{exact:true}).fill(name);await page.getByLabel("website",{exact:true}).fill(`https://company-${randomUUID()}.example.org`);await page.getByLabel("description",{exact:true}).first().fill("Manually reviewed partner description");await page.getByRole("button",{name:"Save draft",exact:true}).click();await expect(page.getByRole("status")).toContainText("Company saved");await page.getByRole("button",{name:"Publish reviewed company"}).click();await expect(page.getByRole("status")).toContainText("Company saved");
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);await page.goto("/partners");await expect(page.getByRole("link",{name,exact:true})).toBeVisible();
  }finally{await c.client.end();}
@@ -69,7 +79,7 @@ for (const width of [1280,768]) test(`R4 student requests require independent st
    }
    const p=await context.newPage();await p.goto(`${origin}/admin/partners`);await expect(p.getByRole("button",{name:"Save draft",exact:true})).toHaveCount(0);await expect(p.getByRole("button",{name:"Record staff decision"})).toHaveCount(0);
    if(context===student)await expect(p.getByRole("heading",{name:"Administrator access required"})).toBeVisible();
-   else await expect(p.getByRole("heading",{name:"Industry partnerships and review tasks"})).toBeVisible();
+   else await expect(p.getByRole("heading",{name:"Partnerships & review tasks"})).toBeVisible();
   }
   const sp=await student.newPage();const rp=await staff.newPage();
   for(const kind of ["verification","association"]){
