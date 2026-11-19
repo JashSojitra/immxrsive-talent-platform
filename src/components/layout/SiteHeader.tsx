@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getAuthenticatedUser, getStudentVerificationStatus } from "@/auth/server";
 import { getRuntimeDatabase } from "@/db/runtime";
 import { staffRole } from "@/studio/service";
+import { BrandMark } from "./BrandMark";
 import { SiteNavigation, type AccountLink } from "./SiteNavigation";
 import styles from "./site.module.css";
 export async function SiteHeader() {
@@ -14,10 +15,15 @@ export async function SiteHeader() {
   } else accountLinks.push({ href: "/student/sign-in", label: "Student sign in" });
   return <header className={styles.header}>
     <a className={styles.skip} href="#site-content">Skip to content</a>
-    <div className={styles.headerInner}>
-      <Link className={styles.wordmark} href="/" aria-label="NOT ImmXrsive home"><span className={styles.brandMark} aria-hidden="true">X</span><span><small>NOT</small>Imm<span className={styles.brandAccent}>X</span>rsive</span></Link>
-      <SiteNavigation accountLinks={accountLinks} />
+    <div className={styles.portalBar}>
+      <span><i aria-hidden="true" />Talent &amp; Industry Platform</span>
+      <Link href="/admin">Staff / Admin Portal <span aria-hidden="true">&#8599;</span></Link>
     </div>
-    <div className={styles.portalBar}><span>Talent &amp; Industry Platform</span><Link href="/admin">Staff / Admin Portal <span aria-hidden="true">&#8599;</span></Link></div>
+    <div className={styles.headerBar}>
+      <div className={styles.headerInner}>
+        <Link className={styles.wordmark} href="/" aria-label="NOT ImmXrsive home"><BrandMark className={styles.brandMark} /><span className={styles.wordmarkText}><small>NOT</small>Imm<span className={styles.brandAccent}>X</span>rsive</span></Link>
+        <SiteNavigation accountLinks={accountLinks} />
+      </div>
+    </div>
   </header>;
 }

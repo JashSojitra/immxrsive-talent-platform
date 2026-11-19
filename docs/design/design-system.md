@@ -1,5 +1,7 @@
 ﻿# ImmXrsive design system
 
+> **Phase 1 update (2026-11-19):** identity, tokens, typography, motion system, homepage, header, navigation and footer are now defined in [phase-1-spatial-identity.md](phase-1-spatial-identity.md), which supersedes the token table, the homepage interaction notes and the header/footer notes below. Legacy token names remain valid. Operational guidance for directory, student and staff screens below still applies until Phase 2.
+
 ## Identity and surfaces
 
 The product retains its independent student-course identity and dark theme. Use warm editorial typography with quiet, precise working surfaces. Coral identifies the primary action; sage communicates published evidence and positive status. Do not use student skills or affiliations inferred from project technologies.

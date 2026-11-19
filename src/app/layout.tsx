@@ -6,6 +6,10 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 
 import "../../public/threeui/fonts.css";
+import "@fontsource-variable/bricolage-grotesque/standard.css";
+import "@fontsource-variable/jetbrains-mono/wght.css";
+import "@fontsource/instrument-serif/latin-400.css";
+import "@fontsource/instrument-serif/latin-400-italic.css";
 import "./globals.css";
 
 export const metadata: Metadata = {

@@ -1,0 +1,9 @@
+.kinetic { display: inline; white-space: nowrap; }
+/* --k: 0 at rest, 1 under the pointer. Bricolage Grotesque Variable: wdth 75–100, wght 200–800. */
+.glyph {
+  display: inline-block;
+  font-stretch: calc(var(--rest-stretch, 84%) + var(--k, 0) * (100% - var(--rest-stretch, 84%)));
+  font-weight: calc(var(--rest-weight, 540) + var(--k, 0) * 220);
+  color: color-mix(in oklab, currentColor calc(100% - var(--k, 0) * 70%), var(--flare-hot));
+  transition: font-stretch 600ms var(--ease-spring), font-weight 600ms var(--ease-spring), color 400ms var(--ease-out);
+}
