@@ -37,5 +37,8 @@
       1440
     ]
   },
-  "productionDeployment": false
+  "productionDeployment": false,
+  "implementationCommit": "f2010d9c0eac3ada6d3342a3ca7fc6c6ec755639",
+  "pullRequest": "https://github.com/JashSojitra/immxrsive-talent-platform/pull/14",
+  "pullRequestDraft": true
 }

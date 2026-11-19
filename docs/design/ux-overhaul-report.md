@@ -82,7 +82,7 @@ Webpack was used because the isolated worktree shares the existing dependency in
 - No AutoDemo converter, fabricated project skills, false production affiliations or automatic approvals were introduced.
 - Production was not deployed or merged. R4 PR #13 remains separate and untouched. Do not merge this design branch until the assessed R4 state has been reconciled by the user.
 
-Commit and PR: Implementation commit and draft PR will be recorded in the handoff metadata commit. No production deployment.
+Commit and PR: Implementation commit: `f2010d9c0eac3ada6d3342a3ca7fc6c6ec755639`. Draft review PR: [#14](https://github.com/JashSojitra/immxrsive-talent-platform/pull/14). Handoff metadata is recorded in the following documentation commit. No production deployment.
 
 ## Files changed
 
@@ -95,6 +95,7 @@ Commit and PR: Implementation commit and draft PR will be recorded in the handof
 - `docs/design/review.html`
 - `docs/design/ux-audit.md`
 - `docs/design/ux-overhaul-report.md`
+- `docs/design/validation-summary.json`
 - `next.config.ts`
 - `scripts/capture-design.mjs`
 - `src/admin/AdminNavigation.tsx`
@@ -149,10 +150,10 @@ Commit and PR: Implementation commit and draft PR will be recorded in the handof
 - `src/components/student-profile/StudentProfileMotion.tsx`
 - `src/components/student-profile/StudentProfileView.tsx`
 - `src/components/student-profile/student-profile.module.css`
-- `src/components/talent/ImmersiveField.tsx`
+- `src/components/talent/ImmersiveField.tsx` (deleted)
 - `src/components/talent/TalentDirectory.tsx`
 - `src/components/talent/talent.module.css`
-- `src/components/talent/useCinematicMotion.ts`
+- `src/components/talent/useCinematicMotion.ts` (deleted)
 - `src/partners/partners.module.css`
 - `src/projects/public-directory.ts`
 - `tests/browser/admin-onboarding.spec.ts`
