@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
 import { ProjectDisclaimer } from "@/components/brand/BrandLogo";
+import { SiteHeader } from "@/components/layout/SiteHeader";
+import { SiteFooter } from "@/components/layout/SiteFooter";
 
 import "../../public/threeui/fonts.css";
 import "./globals.css";
@@ -18,7 +20,9 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
   return (
     <html lang="en">
       <body>
-        {children}
+        <SiteHeader />
+        <div id="site-content" className="site-content" tabIndex={-1}>{children}</div>
+        <SiteFooter />
         <ProjectDisclaimer />
       </body>
     </html>

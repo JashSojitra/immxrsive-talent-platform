@@ -1,4 +1,5 @@
 import Link from "next/link";
+import styles from "@/partners/partners.module.css";
 import { publicProjectPartners } from "@/partners/service";
 import { getRuntimeDatabase } from "@/db/runtime";
 import type { Metadata } from "next";
@@ -32,6 +33,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   if (!project) notFound();
 
   const relationships = await publicProjectPartners(getRuntimeDatabase(),projectId);
-  return <><ProjectDetailView project={project} /><section aria-label="Official project relationships" style={{padding:24,background:"#142339",color:"white"}}>{relationships.official&&<p>✓ Official project verification — approved by staff</p>}<h2>Verified industry partners</h2>{relationships.companies.map(c=><p key={c.id}><Link href={`/partners/${c.id}`}>{c.content.name}</Link></p>)}{!relationships.companies.length&&<p>No staff-approved partner associations yet.</p>}<Link href="/partners">Explore industry partners</Link></section></>;
+  return <><ProjectDetailView project={project} /><section aria-label="Official project relationships" className={styles.relationships}>{relationships.official&&<p>✓ Official project verification — approved by staff</p>}<h2>Verified industry partners</h2>{relationships.companies.map(c=><p key={c.id}><Link href={`/partners/${c.id}`}>{c.content.name}</Link></p>)}{!relationships.companies.length&&<p>No staff-approved partner associations yet.</p>}<Link href="/partners">Explore industry partners</Link></section></>;
 
 }

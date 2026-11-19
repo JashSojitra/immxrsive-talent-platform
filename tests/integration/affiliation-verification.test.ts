@@ -9,7 +9,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from "vit
 vi.mock("server-only", () => ({}));
 
 import { AuthenticationRequiredError } from "@/auth/server";
-import { createVerificationRequestHandler } from "@/app/api/v1/student/verification/request/route";
+import { createVerificationRequestHandler } from "@/app/api/v1/student/verification/request/handlers";
 import type { Database } from "@/db/client";
 import { createDatabase } from "@/db/client";
 import type { VerificationMailer, VerificationEmail } from "@/email/affiliation-verification";

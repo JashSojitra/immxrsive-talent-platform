@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import { BrandLogo } from "@/components/brand/BrandLogo";
 import { InquiryForm } from "./InquiryForm";
 import styles from "./inquiry.module.css";
 
@@ -19,8 +18,7 @@ export function InquiryPage({ source }: { source: InquirySourceView }) {
       <a className={styles.skipLink} href="#inquiry-form">Skip to inquiry form</a>
       <div className={styles.spatialBackdrop} aria-hidden="true"><span /><span /><span /></div>
       <header className={styles.siteHeader}>
-        <BrandLogo className={styles.brand} />
-        <nav aria-label="Primary navigation">
+        <nav aria-label="Breadcrumb">
           <Link href={source.sourceUrl}>{isStudent ? "Profile" : source.type === "partner" ? "Partner" : "Project"}</Link>
           <span aria-current="page">Inquiry</span>
         </nav>
@@ -40,7 +38,7 @@ export function InquiryPage({ source }: { source: InquirySourceView }) {
           <p className={styles.eyebrow}>{isStudent ? "Interested in working with" : "Inquiry about"}</p>
           <h1 id="inquiry-title">{source.name}</h1>
           <p className={styles.contextDetail}>{source.detail}</p>
-          <p className={styles.lockedContext}>Context locked to this {source.type}. The form cannot redirect the inquiry elsewhere.</p>
+          <p className={styles.lockedContext}>Your message includes this {source.type} so the team has the right context.</p>
         </div>
       </section>
 

@@ -1,0 +1,41 @@
+{
+  "date": "2026-11-18",
+  "base": "34426d89060b500ceeb7f7c9be866fc49cfb09cc",
+  "branch": "feat/immxrsive-ux-overhaul",
+  "typecheck": "passed",
+  "lint": "passed",
+  "unitFrontend": {
+    "files": 51,
+    "passed": 419
+  },
+  "integration": {
+    "files": 20,
+    "passed": 218
+  },
+  "routeRegression": {
+    "files": 3,
+    "passed": 22
+  },
+  "browser": {
+    "passed": 173,
+    "skipped": 5,
+    "failed": 0,
+    "exitCode": 0,
+    "server": "explicitly managed local production server; original Playwright configuration otherwise preserved"
+  },
+  "build": {
+    "result": "passed",
+    "command": "npm run build -- --webpack"
+  },
+  "screenshots": {
+    "before": 60,
+    "after": 72,
+    "widths": [
+      390,
+      768,
+      1280,
+      1440
+    ]
+  },
+  "productionDeployment": false
+}

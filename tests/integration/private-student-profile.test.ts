@@ -12,9 +12,9 @@ import {
   AffiliationVerificationRequiredError,
   AuthenticationRequiredError,
 } from "@/auth/server";
-import { createStudentProfileHandlers } from "@/app/api/v1/student/profile/me/route";
-import { createPublicationHandler } from "@/app/api/v1/student/profile/publication/route";
-import { createResumeExtractionHandler } from "@/app/api/v1/student/profile/resume/extract/route";
+import { createStudentProfileHandlers } from "@/app/api/v1/student/profile/me/handlers";
+import { createPublicationHandler } from "@/app/api/v1/student/profile/publication/handlers";
+import { createResumeExtractionHandler } from "@/app/api/v1/student/profile/resume/extract/handlers";
 import { createDatabase, type Database } from "@/db/client";
 import { queryPublicStudentProfile } from "@/db/queries/student-profile";
 import { queryTalentDirectory } from "@/db/queries/talent";

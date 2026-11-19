@@ -36,7 +36,12 @@ test("staff import, configure, credit, preview and publish without student accou
       if (previous === null) body.removeAttribute("tabindex");
       else body.setAttribute("tabindex", previous);
     });
-    await page.keyboard.press("Tab"); await expect(page.getByRole("link", { name: "Skip to administration" })).toBeFocused();
+    const skipAdmin = page.getByRole("link", { name: "Skip to administration" });
+    for (let step = 0; step < 30; step++) {
+      await page.keyboard.press("Tab");
+      if (await skipAdmin.evaluate(link => link === document.activeElement)) break;
+    }
+    await expect(skipAdmin).toBeFocused();
     await page.keyboard.press("Enter"); await expect(page.getByRole("main")).toBeFocused();
     await page.keyboard.press("Tab"); await expect(page.getByLabel("Public GitHub repository URL")).toBeFocused();
     await page.getByLabel("Public GitHub repository URL").fill("https://github.com/qa/xr-studio");

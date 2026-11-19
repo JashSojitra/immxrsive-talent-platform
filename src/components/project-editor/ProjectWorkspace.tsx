@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { BrandLogo } from "@/components/brand/BrandLogo";
 import { ProjectDetailMotion } from "@/components/project-detail/ProjectDetailMotion";
 import styles from "./project-editor.module.css";
 
@@ -8,10 +7,9 @@ export function ProjectWorkspace({ title, intro, children, audience = "student" 
   return <ProjectDetailMotion>
     <a className={styles.skip} href="#project-workspace">Skip to project workspace</a>
     <div className={styles.workspace}>
-      <header className={styles.nav} data-project-nav><BrandLogo /><nav aria-label={audience === "public" ? "Showcase navigation" : "Student projects"}>{audience === "public" ? <><Link href="/talent">Talent</Link><Link href="/showcase">Showcases</Link><Link href="/partners">Industry partners</Link></> : <><Link href="/student/dashboard">Dashboard</Link><Link href="/student/projects">My Projects</Link></>}</nav></header>
-      <section className={styles.hero}><p className={styles.eyebrow} data-project-lead>{audience === "public" ? "Project experiences / Showcase" : "Student studio / Project evidence"}</p><h1 data-project-title>{title}</h1><p data-project-lead>{intro}</p><span className={styles.orbit} aria-hidden="true" /></section>
-      <div id="project-workspace">{children}</div>
-      <footer className={styles.footer}><span>NOT ImmXrsive / Your work, in context.</span><Link href="/talent">Explore talent</Link></footer>
+      <nav className={styles.nav} aria-label="Breadcrumb">{audience === "public" ? <><Link href="/">Home</Link><span aria-hidden="true">/</span><Link href="/projects">Projects</Link><span aria-hidden="true">/</span><span>Showcase</span></> : <><Link href="/student/dashboard">Student dashboard</Link><span aria-hidden="true">/</span><Link href="/student/projects">My Projects</Link></>}</nav>
+      <section className={styles.hero}><p className={styles.eyebrow}>{audience === "public" ? "Project experiences / Showcase" : "Student workspace"}</p><h1>{title}</h1><p>{intro}</p></section>
+      <div id="project-workspace" tabIndex={-1}>{children}</div>
     </div>
   </ProjectDetailMotion>;
 }
