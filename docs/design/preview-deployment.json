@@ -1,0 +1,44 @@
+{
+  "id": "dpl_9oStAvbDMFDYN4cHN4CEmBbQVWCd",
+  "url": "immxrsive-talent-platform-biq2mv3ki-three-flow.vercel.app",
+  "target": "preview",
+  "state": "READY",
+  "projectId": "prj_wtCE2vz4SZEQ49n1z9H1szl3G71f",
+  "sourceCommit": "1edaafc542277c76a55ec3792b3450e6095c587a",
+  "gitSource": {
+    "type": "github",
+    "repoId": 1396257515,
+    "ref": "feat/immxrsive-ux-overhaul",
+    "sha": "1edaafc542277c76a55ec3792b3450e6095c587a"
+  },
+  "previewRuntimeConfigured": false,
+  "warning": "User accepted build-only Preview. Preview DATABASE_URL and OAuth/email configuration are absent; homepage returns 500 and authenticated/data-backed flows are unavailable.",
+  "errorCode": null,
+  "errorMessage": null,
+  "httpChecks": [
+    {
+      "path": "/contact",
+      "status": 200
+    },
+    {
+      "path": "/student/sign-in",
+      "status": 200
+    },
+    {
+      "path": "/admin",
+      "status": 200
+    },
+    {
+      "path": "/api/admin/identity",
+      "status": 401
+    },
+    {
+      "path": "/",
+      "status": 500
+    }
+  ],
+  "hostedOptimizedBuild": "passed Next.js 16.4.6 Turbopack",
+  "userAcceptedBuildOnly": true,
+  "temporaryAutomationBypassRevoked": true,
+  "deploymentProtectionPreserved": true
+}

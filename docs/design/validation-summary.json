@@ -47,5 +47,30 @@
     "mergeCommit": "d94cfd856b36ba9cbfd2ab9cd4079aeb8e090f99",
     "mergedAtToronto": "2026-11-18 22:10:35 America/Toronto",
     "changedByThisTask": false
+  },
+  "integrationReview": {
+    "mergeCommit": "1edaafc542277c76a55ec3792b3450e6095c587a",
+    "frozenR4Commit": "d94cfd856b36ba9cbfd2ab9cd4079aeb8e090f99",
+    "tag": "R4-submission",
+    "tagObject": "4d41de783069b4afcad8e43e87a26f19648e6d38",
+    "conflicts": false,
+    "forcePush": false,
+    "r4EvidenceUnchanged": true,
+    "unitFrontendPassed": 419,
+    "integrationPassed": 218,
+    "browserPassed": 173,
+    "browserSkipped": 5,
+    "browserFailed": 0,
+    "typecheck": "passed",
+    "lint": "passed",
+    "optimizedBuild": "passed",
+    "previewStatus": "READY; build-only accepted by user",
+    "productionDeployment": false,
+    "previewUrl": "https://immxrsive-talent-platform-biq2mv3ki-three-flow.vercel.app",
+    "previewDeploymentId": "dpl_9oStAvbDMFDYN4cHN4CEmBbQVWCd",
+    "previewSourceCommit": "1edaafc542277c76a55ec3792b3450e6095c587a",
+    "hostedOptimizedBuild": "passed Next.js 16.4.6 Turbopack",
+    "previewRuntimeConfigured": false,
+    "temporaryAutomationBypassRevoked": true
   }
 }
