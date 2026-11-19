@@ -1,3 +1,5 @@
+> Historical implementation snapshot. Current deployed/accepted state is in validation-report.md and production-evidence/closeout-2026-11-18/closeout.json; pending deployment statements below describe that earlier run only.
+
 # R4 remote implementation report — 2026-11-17
 
 ## Result and provenance

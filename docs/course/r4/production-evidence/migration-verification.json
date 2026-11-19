@@ -1,0 +1,11 @@
+{
+  "projectRef": "acnwbxqzkcdqgbohvpil",
+  "migrationCount": 14,
+  "journalHashesVerified": true,
+  "tablesVerified": 15,
+  "constraintsVerified": 50,
+  "functionsVerified": 8,
+  "triggersVerified": 11,
+  "rlsAndGrantsVerified": true,
+  "managementModeVerified": true
+}

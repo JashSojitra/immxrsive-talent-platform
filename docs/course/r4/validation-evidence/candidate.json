@@ -17,7 +17,7 @@
       "tag": "0000_lonely_guardian",
       "breakpoints": true,
       "canonicalSha256": "8bbc92d4b3872fcd3cd6af660e994ff92ac5af24e525266337375a48ec11bc47",
-      "rawMigratorSha256": "8bbc92d4b3872fcd3cd6af660e994ff92ac5af24e525266337375a48ec11bc47"
+      "rawMigratorSha256": "8412c875ae05cc6304ea6ffbb190c030fb8ce2f3b7f11b3674c9dedda1781f1e"
     },
     {
       "idx": 1,
@@ -26,7 +26,7 @@
       "tag": "0001_tearful_agent_brand",
       "breakpoints": true,
       "canonicalSha256": "b790d71ce457de1482655dfc122999898f394ffb24548ab0f130866b8a1e5ac6",
-      "rawMigratorSha256": "b790d71ce457de1482655dfc122999898f394ffb24548ab0f130866b8a1e5ac6"
+      "rawMigratorSha256": "7ec03d3043aa48172f63fb1f1f31cd2eb898ce430a5d8113e3f6aaf86f556249"
     },
     {
       "idx": 2,
@@ -35,7 +35,7 @@
       "tag": "0002_rainy_wallflower",
       "breakpoints": true,
       "canonicalSha256": "5a910e33d6e20793ed4c893affeaa459b7ca0b09e49a84e882cdaf0d1be000ac",
-      "rawMigratorSha256": "5a910e33d6e20793ed4c893affeaa459b7ca0b09e49a84e882cdaf0d1be000ac"
+      "rawMigratorSha256": "f54d33873f77f75ffab04b42546165c96409671e13a54561718a1486f2b12ba1"
     },
     {
       "idx": 3,
@@ -44,7 +44,7 @@
       "tag": "0003_wise_rockslide",
       "breakpoints": true,
       "canonicalSha256": "6883f65cef7465ee5426d67f438f20907cec243327bec78a62fb8f76af6a0dd3",
-      "rawMigratorSha256": "6883f65cef7465ee5426d67f438f20907cec243327bec78a62fb8f76af6a0dd3"
+      "rawMigratorSha256": "b6d85fcf87ec91929f140be91cc0675edde0b0a3b97e2ea5f0320455b1bb8b67"
     },
     {
       "idx": 4,
@@ -53,7 +53,7 @@
       "tag": "0004_salty_the_call",
       "breakpoints": true,
       "canonicalSha256": "e291a5a15cef439a4f51c86f6cdfb4f98b1811f68b7e9a9dbd916cd629549e1b",
-      "rawMigratorSha256": "e291a5a15cef439a4f51c86f6cdfb4f98b1811f68b7e9a9dbd916cd629549e1b"
+      "rawMigratorSha256": "8aa2541e8501431464892acc44d0eee335483123ee54a38e24f8b021e4070d69"
     },
     {
       "idx": 5,
@@ -62,7 +62,7 @@
       "tag": "0005_little_giant_girl",
       "breakpoints": true,
       "canonicalSha256": "3c9735a25f174f1c7055c3059a88ea8b79baccdf0073ef43f02d54c52a9f05d2",
-      "rawMigratorSha256": "3c9735a25f174f1c7055c3059a88ea8b79baccdf0073ef43f02d54c52a9f05d2"
+      "rawMigratorSha256": "de19b92421d7eab06282c5e805ac0aea0be1cff76029a9bda5610b66a4535ed4"
     },
     {
       "idx": 6,
@@ -71,7 +71,7 @@
       "tag": "0006_adorable_lord_tyger",
       "breakpoints": true,
       "canonicalSha256": "0babe26b8388427908f680578fee6f379e8006a31ac0c65a7e87eb25f7b5df26",
-      "rawMigratorSha256": "0babe26b8388427908f680578fee6f379e8006a31ac0c65a7e87eb25f7b5df26"
+      "rawMigratorSha256": "e8803eac5f7ef3394f9f687b14a779eaa545bbbb9c2b220cbd3efdbcefb2b0a7"
     },
     {
       "idx": 7,
@@ -80,7 +80,7 @@
       "tag": "0007_harden_data_api",
       "breakpoints": true,
       "canonicalSha256": "3d9c718bef8edb14d3bcbd8bff858f6f5d822776548d69ed6c1532a63df9fe92",
-      "rawMigratorSha256": "3d9c718bef8edb14d3bcbd8bff858f6f5d822776548d69ed6c1532a63df9fe92"
+      "rawMigratorSha256": "52849fdd5d44e54f8e712f128ccd065812dd0cbd9a6c7920f422774050e047b2"
     },
     {
       "idx": 8,
@@ -89,7 +89,7 @@
       "tag": "0008_r2_profile_inquiry",
       "breakpoints": true,
       "canonicalSha256": "0dcd6c114ff14cf320d2893282706f85185445ac42807bdbba9adb55608ba99d",
-      "rawMigratorSha256": "0dcd6c114ff14cf320d2893282706f85185445ac42807bdbba9adb55608ba99d"
+      "rawMigratorSha256": "287450e92ea5eb6b81d6f3e52588b07cc4759ba145d631bedcaf6988581474b0"
     },
     {
       "idx": 9,
@@ -98,7 +98,7 @@
       "tag": "0009_r3_shared_projects",
       "breakpoints": true,
       "canonicalSha256": "7ebbca1ce1239b6cfd83d1bf0b0180c97c2efca1cafcd54d4486605f0b336e20",
-      "rawMigratorSha256": "7ebbca1ce1239b6cfd83d1bf0b0180c97c2efca1cafcd54d4486605f0b336e20"
+      "rawMigratorSha256": "c8920daafcec3c5eea1b17b0867210c46f01fab56bf652a5d8663050ef6b98cb"
     },
     {
       "idx": 10,
@@ -107,7 +107,7 @@
       "tag": "0010_r3_project_join_requests",
       "breakpoints": true,
       "canonicalSha256": "4196ef7c9dd9adbe4cc37568d95316f388b72e6de9ac7a74c10d3bb1ad896d24",
-      "rawMigratorSha256": "4196ef7c9dd9adbe4cc37568d95316f388b72e6de9ac7a74c10d3bb1ad896d24"
+      "rawMigratorSha256": "c221e0ff8c7ae4dee0fd91ba497dccd43d74901667884f0b9cace12cfc2e14fd"
     },
     {
       "idx": 11,
@@ -116,7 +116,7 @@
       "tag": "0011_r31_xr_studio",
       "breakpoints": true,
       "canonicalSha256": "877abf92ab4c5a5538bb8708ea5309020e69de71185136f6d5edb3ad9a5d6b83",
-      "rawMigratorSha256": "877abf92ab4c5a5538bb8708ea5309020e69de71185136f6d5edb3ad9a5d6b83"
+      "rawMigratorSha256": "cd47dc344a8bb4156b033d8e03afecacf2f2dd7d9eb72c0202be1ae9ca295906"
     },
     {
       "idx": 12,
@@ -125,7 +125,7 @@
       "tag": "0012_cooing_shatterstar",
       "breakpoints": true,
       "canonicalSha256": "41a93c3e48eb4695219074dd6be2dd7ea90189106b1f40327c1c064ea6a4111d",
-      "rawMigratorSha256": "41a93c3e48eb4695219074dd6be2dd7ea90189106b1f40327c1c064ea6a4111d"
+      "rawMigratorSha256": "4a1912017030a72540114ae3c98f7ba842c5d35b1f7e1c10c486c5f5dc9bffad"
     },
     {
       "idx": 13,
@@ -134,7 +134,7 @@
       "tag": "0013_r4_partners",
       "breakpoints": true,
       "canonicalSha256": "bab182e7e5dc4f0cdb9bbf77056f0050ef2e523233b4f7cf7427738b3bd05565",
-      "rawMigratorSha256": "bab182e7e5dc4f0cdb9bbf77056f0050ef2e523233b4f7cf7427738b3bd05565"
+      "rawMigratorSha256": "c98734f31204d3e4fb034858c71645750f43911e382583cdec7651095ec1b981"
     }
   ],
   "candidateFiles": [
@@ -489,5 +489,8 @@
     "d005b93528d0daaa8cb94c6dbe5107a2dadbe881dfdee1192c4b9fcce6eb4cb3  tests/unit/talent-route.test.ts",
     "ee5e9442f26a9f6408356e9cbf9449693c8c85998c9db1e7fe7ebc5bc247cbdc  tsconfig.json",
     "a51aa6c0d05f9a49c5ced6ebf177c3ea5308f77d0d2021d136270d875ec8ca0f  vitest.config.ts"
-  ]
+  ],
+  "recordScope": "Historical Windows cycle 4 executable inventory; fingerprint predates the narrowly reviewed PR #12 repair",
+  "currentDeployedCommit": "34426d89060b500ceeb7f7c9be866fc49cfb09cc",
+  "currentCloseoutEvidence": "docs/course/r4/production-evidence/closeout-2026-11-18/closeout.json"
 }

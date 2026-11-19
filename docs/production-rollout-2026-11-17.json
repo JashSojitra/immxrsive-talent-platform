@@ -1,0 +1,166 @@
+{
+  "verifiedAtUtc": "2026-11-17T20:16:12.904509+00:00",
+  "productionUrl": "https://immxrsive-talent-platform.vercel.app",
+  "deployedSha": "27fb2a3ca3dd7a44076fafcda6d27c85b7c56672",
+  "deploymentId": "dpl_8jSxtNFhcnojKmhBUqRftYtGLLzN",
+  "immutableDeploymentUrl": "https://immxrsive-talent-platform-dri9z82g0-three-flow.vercel.app",
+  "approvedImplementationSha": "a4f78f45fe65cad89b8e58a1d22f4213e31e02f2",
+  "mergedTreeExactlyMatchesApprovedTree": true,
+  "merges": [
+    {
+      "pr": 9,
+      "sha": "d59e5a1121fcf44becf18b284f2dcac95cf9f5cb"
+    },
+    {
+      "pr": 10,
+      "sha": "f375788d1df4627e4630ef7694d5dcf3fd462d21"
+    },
+    {
+      "pr": 11,
+      "sha": "27fb2a3ca3dd7a44076fafcda6d27c85b7c56672"
+    }
+  ],
+  "runtimeNode": "26.x",
+  "productionProjectNodeSetting": "24.x",
+  "runtimeNodeExplanation": "The Vercel build selected Node 26 for the repository engine range >=22.12.0; the project setting remains unchanged.",
+  "databaseProjectRef": "acnwbxqzkcdqgbohvpil",
+  "databaseServerMajor": 17,
+  "migration": {
+    "projectRef": "acnwbxqzkcdqgbohvpil",
+    "migrationCount": 14,
+    "journalHashesVerified": true,
+    "tablesVerified": 15,
+    "constraintsVerified": 50,
+    "functionsVerified": 8,
+    "triggersVerified": 11,
+    "rlsAndGrantsVerified": true,
+    "managementModeVerified": true,
+    "applied": [
+      "0011_r31_xr_studio",
+      "0012_cooing_shatterstar",
+      "0013_r4_partners"
+    ],
+    "existingRecordCountsPreserved": true,
+    "alreadyApplied": false
+  },
+  "independentMigrationVerification": {
+    "projectRef": "acnwbxqzkcdqgbohvpil",
+    "migrationCount": 14,
+    "journalHashesVerified": true,
+    "tablesVerified": 15,
+    "constraintsVerified": 50,
+    "functionsVerified": 8,
+    "triggersVerified": 11,
+    "rlsAndGrantsVerified": true,
+    "managementModeVerified": true
+  },
+  "pendingMigrationCanonicalHashes": [
+    {
+      "tag": "0011_r31_xr_studio",
+      "timestamp": 1794000688635,
+      "sha256": "877abf92ab4c5a5538bb8708ea5309020e69de71185136f6d5edb3ad9a5d6b83"
+    },
+    {
+      "tag": "0012_cooing_shatterstar",
+      "timestamp": 1794846746452,
+      "sha256": "41a93c3e48eb4695219074dd6be2dd7ea90189106b1f40327c1c064ea6a4111d"
+    },
+    {
+      "tag": "0013_r4_partners",
+      "timestamp": 1794870000000,
+      "sha256": "bab182e7e5dc4f0cdb9bbf77056f0050ef2e523233b4f7cf7427738b3bd05565"
+    }
+  ],
+  "migrationRunner": "Temporary production-specific entry using the existing Drizzle migrator, exact project and hash checks, transaction-scoped advisory/ledger locks, public search_path, 2s lock timeout, 20s statement timeout, atomic outer transaction and nested savepoint.",
+  "migrationRehearsalPassed": 16,
+  "late0013FailureRollbackVerified": true,
+  "backupCreated": false,
+  "backupCreationDeclinedByUser": true,
+  "backupRestoreClaimed": false,
+  "applicationRollbackAvailable": "dpl_4fKdJxBmMiSpTKz7p62zoedfEb64 remains READY; migrated schema is retained on application rollback.",
+  "productionHttpChecksPassed": 29,
+  "productionBrowserChecksPassed": 20,
+  "productionBrowserWidths": [
+    390,
+    1280
+  ],
+  "authenticatedProductionTestWrites": 0,
+  "runtimeErrorQuery": {
+    "type": "summary",
+    "recordsReturned": 0,
+    "timeRange": {
+      "start": "2026-11-17T20:02:50.121Z",
+      "end": "2026-11-17T20:12:50.121Z"
+    },
+    "pagination": {
+      "hasMore": false,
+      "next": null
+    },
+    "excludedIntervals": []
+  },
+  "verifiedFixtureSources": [
+    {
+      "path": "/fixtures/r4/company_normal.html",
+      "url": "https://immxrsive-talent-platform.vercel.app/fixtures/r4/company_normal.html",
+      "actual": 200,
+      "sha256": "01b62107d07d95e8b66612a79e94b55365e35cd457fb601f80b0920f679cfcea",
+      "contentType": "text/html",
+      "compressed": false,
+      "passed": true
+    },
+    {
+      "path": "/fixtures/r4/company_prompt_injection.html",
+      "url": "https://immxrsive-talent-platform.vercel.app/fixtures/r4/company_prompt_injection.html",
+      "actual": 200,
+      "sha256": "e8c3a40b2f338e23ee6ba9e706ae00870e4069356c8ad24b2cc8c54de2a404a4",
+      "contentType": "text/html",
+      "compressed": false,
+      "passed": true
+    },
+    {
+      "path": "/fixtures/r4/company_same_name_other_domain.html",
+      "url": "https://immxrsive-talent-platform.vercel.app/fixtures/r4/company_same_name_other_domain.html",
+      "actual": 200,
+      "sha256": "38dbf4191a84050feee17296c1f3788c9ae024ea40342680e1315e9397eb17e5",
+      "contentType": "text/html",
+      "compressed": false,
+      "passed": true
+    },
+    {
+      "path": "/fixtures/r4/company_sparse.html",
+      "url": "https://immxrsive-talent-platform.vercel.app/fixtures/r4/company_sparse.html",
+      "actual": 200,
+      "sha256": "8b760e00b903a40e88f5bae079af79f266569b534132a0e23e5a1cc45e30ea0a",
+      "contentType": "text/html",
+      "compressed": false,
+      "passed": true
+    }
+  ],
+  "cleanup": {
+    "temporaryDeploymentsDeletedAnd404Verified": [
+      "dpl_43Yj7JvGJ9Cy8XM3RtahYG11H9Sr",
+      "dpl_3x4ZKQUUn6vegAUr7CxbMkP5QScU",
+      "dpl_8iuXpYcfd56zGk2y7emHMLJEALCw"
+    ],
+    "temporarySharesRevoked": true,
+    "localMigrationTokensRemoved": true,
+    "disposableRehearsalContainersRemoved": true,
+    "automaticPromotionRestored": true,
+    "developmentMigrationGuardsUnchanged": true,
+    "productionSecretsChanged": false,
+    "newProjectsCreated": 0,
+    "rolesBootstrapped": 0,
+    "R3SubmissionTagObjectPreserved": "cadaa1301583ea9884ebf3c8ffa16529d7d1792f"
+  },
+  "remainingAcceptance": [
+    "Independently verify the intended real Better Auth internal account identity before first staff bootstrap; email alone is insufficient.",
+    "Use authorized staff to import the verified fixture URLs, review proposals and provenance, test duplicate-domain warning/fallback, and publish an appropriate company.",
+    "Create/review current, past, limited and private collaboration examples and verify actual public detail/inquiry journeys.",
+    "Use a verified student maintainer and independent staff reviewer for real verification/association acceptance.",
+    "Capture authenticated staff tablet/laptop evidence and supply private assessor access instructions.",
+    "Confirm the assessed build, then create the immutable R4-submission tag and record the Moodle receipt."
+  ],
+  "publicPartnerDirectoryAtVerification": "No partners have been published yet.",
+  "R4SubmissionTagCreated": false,
+  "moodleSubmissionComplete": false
+}
