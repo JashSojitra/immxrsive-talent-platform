@@ -93,6 +93,8 @@ a { color: inherit; }
 button { touch-action: manipulation; }
 img, video { max-width: 100%; }
 [id] { scroll-margin-top: calc(var(--header-h) + 32px); }
+[data-skiper], h1, h2, h3 { scroll-margin-top: calc(var(--header-h) + 24px); }
+html { scroll-padding-top: calc(var(--header-h) + 16px); }
 .site-content { min-height: 55vh; }
 html:has(dialog[open]) { overflow: hidden; }
 

@@ -62,6 +62,7 @@ export function SpatialCanvas({ scene = "crossing", still = false, className, on
     gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
     const u = {
       res: gl.getUniformLocation(program, "u_res"),
+      cssSize: gl.getUniformLocation(program, "u_cssSize"),
       time: gl.getUniformLocation(program, "u_time"),
       pointer: gl.getUniformLocation(program, "u_pointer"),
       scroll: gl.getUniformLocation(program, "u_scroll"),
@@ -86,6 +87,7 @@ export function SpatialCanvas({ scene = "crossing", still = false, className, on
       canvas.width = Math.max(1, Math.round(rect.width * dpr));
       canvas.height = Math.max(1, Math.round(rect.height * dpr));
       gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.uniform2f(u.cssSize, rect.width, rect.height);
     };
     const scrollProgress = () => {
       const rect = host.getBoundingClientRect();

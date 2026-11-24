@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { SpatialStage } from "@/components/spatial/SpatialStage";
+import { Skiper31 } from "@/components/v1/skiper31";
 import { createPortal } from "react-dom";
 import { FormEvent, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
@@ -226,11 +228,13 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
     <main ref={pageRef} className={styles.page} data-motion="pending">
       <a className={styles.skipLink} href="#directory">Skip to talent directory</a>
       <section className={styles.hero} aria-labelledby="hero-title">
+        <SpatialStage className={styles.talentStage} />
         <p className={styles.eyebrow}>The talent directory</p>
         <h1 id="hero-title">Discover the people<br />building what&apos;s <em>next.</em></h1>
         <p>Explore published student and alumni portfolios. Find skills, see the work, and start a conversation.</p>
         <div className={styles.directoryLinks}><Link href="/projects">Explore their projects <span aria-hidden="true">&#8599;</span></Link><Link href="/student">Create your profile <span aria-hidden="true">&#8599;</span></Link></div>
       </section>
+      <Skiper31 text="One field. Many dimensions." />
       <section id="directory" className={styles.directory} aria-label="Talent directory">
         <div className={styles.discoveryGrid}>
           <aside className={styles.filterPanel} aria-label="Talent filters">

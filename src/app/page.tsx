@@ -8,6 +8,10 @@ import { HomeHero } from "@/components/home/HomeHero";
 import { Manifesto } from "@/components/home/Manifesto";
 import { PeopleRail } from "@/components/home/PeopleRail";
 import { WorkIndex } from "@/components/home/WorkIndex";
+import { isReviewRecord } from "@/components/home/featured-content";
+import { ProjectExhibition } from "@/components/home/ProjectExhibition";
+import { Skiper28 } from "@/components/v1/skiper28";
+import { Skiper31 } from "@/components/v1/skiper31";
 import { MotionRoot } from "@/components/motion/MotionRoot";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import styles from "@/components/home/home.module.css";
@@ -22,15 +26,19 @@ export default async function Home() {
     publicCompanies(db),
   ]);
   // Only published, public fields cross into client components.
-  const featured = projects.slice(0, 6).map(({ id, title, description, domain, status, managementMode, technologies }) => ({ id, title, description, domain, status, managementMode, technologies }));
+  const editorialProjects = projects.filter(project => !isReviewRecord(project.title));
+  const featured = editorialProjects.slice(0, 6).map(({ id, title, description, domain, status, managementMode, technologies }) => ({ id, title, description, domain, status, managementMode, technologies }));
   const people = talent.items.slice(0, 8).map(({ id, name, headline, status, skills, projectEvidenceCount }) => ({ id, name, headline, status, skills, projectEvidenceCount }));
-  const partnerNames = partners.map(company => ({ id: company.id, name: company.content.name }));
+  const partnerNames = partners.filter(company => !isReviewRecord(company.content.name)).map(company => ({ id: company.id, name: company.content.name }));
   return <MotionRoot>
     <SmoothScroll />
     <main className={styles.home}>
       <HomeHero stats={{ projects: projects.length, portfolios: talent.count, partners: partners.length }} />
       <Manifesto />
+      <Skiper28 text="Talent is more than a list of skills. See the work behind the profile: shared projects, visible contributions, and the people building what comes next." />
+      <ProjectExhibition projects={editorialProjects.slice(0, 8)} />
       <WorkIndex projects={featured} />
+      <Skiper31 text="Find the person behind the possibility." />
       <PeopleRail people={people} />
       <Connection partners={partnerNames} />
       <section className={styles.studentCallout} aria-labelledby="student-callout-title">

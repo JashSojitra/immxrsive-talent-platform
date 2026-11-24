@@ -17,7 +17,7 @@ test("homepage hero exposes one accessible headline, real published counts and e
   const telemetry = main.locator("dl");
   await expect(telemetry.getByText("Published projects")).toBeVisible();
   await expect(telemetry.locator("dd").first()).toHaveText(/^\d{2,}$/);
-  await expect(main.getByRole("link", { name: /Campus Service Request Platform/ })).toHaveAttribute("href", "/projects/P02");
+  await expect(main.locator("ol").getByRole("link", { name: /Campus Service Request Platform/ })).toHaveAttribute("href", "/projects/P02");
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(test.info().project.name === "mobile-390" ? 390 : 1_280);
 });
 

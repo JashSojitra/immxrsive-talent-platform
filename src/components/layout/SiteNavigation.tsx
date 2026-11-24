@@ -3,6 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRef, useState, type CSSProperties } from "react";
 import styles from "./site.module.css";
+import { TextRoll } from "@/components/v1/skiper58";
 export type AccountLink = { href: string; label: string };
 const destinations = [{href:"/",label:"Home"},{href:"/talent",label:"Talent"},{href:"/projects",label:"Projects"},{href:"/showcase",label:"Showcase"},{href:"/partners",label:"Industry partners"},{href:"/contact",label:"Inquiries"}];
 export function SiteNavigation({ accountLinks }: { accountLinks: AccountLink[] }) {
@@ -13,7 +14,7 @@ export function SiteNavigation({ accountLinks }: { accountLinks: AccountLink[] }
   const close = () => { if (dialog.current) { dialog.current.inert = true; dialog.current.close(); } setOpen(false); trigger.current?.focus(); };
   const isActive = (href: string) => href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
   return <>
-    <nav className={styles.desktopNav} aria-label="Main navigation">{destinations.map(({href,label}) => <Link key={href} href={href} aria-current={isActive(href) ? "page" : undefined}>{label}</Link>)}</nav>
+    <nav className={styles.desktopNav} aria-label="Main navigation">{destinations.map(({href,label}) => <Link key={href} href={href} aria-current={isActive(href) ? "page" : undefined}><TextRoll>{label}</TextRoll></Link>)}</nav>
     <div className={styles.accountNav}>{accountLinks.map(link => <Link key={link.href} href={link.href}>{link.label}</Link>)}</div>
     <button className={styles.menuTrigger} ref={trigger} type="button" onClick={() => { if (dialog.current) { dialog.current.inert = false; dialog.current.showModal(); setOpen(true); } }} aria-label="Open navigation menu" aria-haspopup="dialog" aria-expanded={open} aria-controls="site-navigation-menu"><span className={styles.menuGlyph} aria-hidden="true"><i /><i /></span><span>Menu</span></button>
     <dialog id="site-navigation-menu" ref={dialog} className={styles.mobileMenu} aria-labelledby="menu-title" data-lenis-prevent="" onClick={event => { if (event.target === dialog.current) close(); }} onClose={() => { if (dialog.current) dialog.current.inert = true; setOpen(false); trigger.current?.focus(); }} onKeyDown={event => {
@@ -25,7 +26,7 @@ export function SiteNavigation({ accountLinks }: { accountLinks: AccountLink[] }
     }}>
       <div className={styles.menuInner}>
         <div className={styles.menuHeading}><h2 id="menu-title">Explore ImmXrsive</h2><button type="button" onClick={close} aria-label="Close navigation menu">Close <span aria-hidden="true">×</span></button></div>
-        <nav className={styles.menuPrimary} aria-label="Mobile navigation">{destinations.map(({href,label}, index) => <Link key={href} href={href} aria-current={isActive(href) ? "page" : undefined} onClick={close} style={{ "--i": index } as CSSProperties}><span className={styles.menuIndex} aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>{label}</Link>)}</nav>
+        <nav className={styles.menuPrimary} aria-label="Mobile navigation">{destinations.map(({href,label}, index) => <Link key={href} href={href} aria-current={isActive(href) ? "page" : undefined} onClick={close} style={{ "--i": index } as CSSProperties}><span className={styles.menuIndex} aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><TextRoll>{label}</TextRoll></Link>)}</nav>
         <nav className={styles.mobileAccount} aria-label="Your workspaces">{accountLinks.map(link => <Link key={link.href} href={link.href} onClick={close}>{link.label}<span aria-hidden="true">&#8599;</span></Link>)}{!accountLinks.some(link => link.href === "/admin") && <Link href="/admin" onClick={close}>Staff / Admin Portal<span aria-hidden="true">&#8599;</span></Link>}</nav>
         <p>Student talent. Immersive ideas. Real connections.</p>
       </div>

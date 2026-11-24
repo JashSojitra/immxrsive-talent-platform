@@ -1,6 +1,7 @@
 import { and, asc, eq, ne, or } from "drizzle-orm";
 import type { Database } from "@/db/client";
 import { adminProjectDetails, projects, projectTechnologies } from "@/db/schema";
+import { safeAdminUrl } from "@/admin/policy";
 
 // Public index uses the same publication/lifecycle gates as public project detail.
 export async function listPublicProjects(db: Database) {
@@ -21,6 +22,6 @@ export async function listPublicProjects(db: Database) {
     names.push(tech.name);
     technologyIndex.set(tech.projectId, names);
   }
-  return rows.map(({ presentation, ...row }) => ({ ...row, technologies: row.managementMode === "ADMIN_MANAGED" ? presentation?.technologies ?? [] : technologyIndex.get(row.id) ?? [] }));
+  return rows.map(({ presentation, ...row }) => ({ ...row, media: row.managementMode === "ADMIN_MANAGED" && presentation ? [...(presentation.thumbnail ? [{ url: presentation.thumbnail, alt: presentation.thumbnailAlt }] : []), ...presentation.gallery].filter(image => image.alt && safeAdminUrl(image.url)) : [], technologies: row.managementMode === "ADMIN_MANAGED" ? presentation?.technologies ?? [] : technologyIndex.get(row.id) ?? [] }));
 }
 export type PublicProjectListItem = Awaited<ReturnType<typeof listPublicProjects>>[number];

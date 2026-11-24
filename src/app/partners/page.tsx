@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getRuntimeDatabase } from "@/db/runtime";
 import { publicCompanies } from "@/partners/service";
+import { Skiper28 } from "@/components/v1/skiper28";
 import styles from "@/partners/partners.module.css";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Industry partners" };
@@ -11,6 +12,7 @@ export default async function PartnersPage() {
     <h1>Connections that<br />move work forward.</h1>
     <p>Meet our industry partners. Explore the organizations, student projects, and collaborations bringing ideas into practice.</p>
     <div className={styles.actions}><Link href="/projects">Explore connected work <span aria-hidden="true"> &#8599;</span></Link></div>
+    <Skiper28 text="A shared field of possibility. Explore the people, projects and organizations bringing ideas into practice." />
     <section aria-labelledby="partners-title" className={styles.section}>
       <h2 id="partners-title">Industry partners</h2>
       <p>Published organizations and their public collaborations.</p>

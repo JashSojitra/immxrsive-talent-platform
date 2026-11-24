@@ -34,12 +34,12 @@
 @keyframes cue { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
 
 /* ---------- Manifesto ---------- */
-.manifesto { position: relative; padding: clamp(96px, 14vw, 180px) 0 clamp(72px, 10vw, 120px); background: linear-gradient(var(--ink), var(--ink)); }
+.manifesto { position: relative; padding: clamp(48px, 7vw, 96px) 0 clamp(36px, 5vw, 64px); background: linear-gradient(var(--ink), var(--ink)); }
 .manifestoKicker { width: var(--content); margin: 0 auto 28px; display: flex; gap: 14px; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
 .manifestoKicker span { color: var(--flare); }
 .manifestoText { width: var(--content); margin: 0 auto; max-width: 1180px; font-family: var(--font-display); font-size: var(--step-3); font-weight: 480; font-stretch: 88%; line-height: 1.08; letter-spacing: -.035em; text-wrap: balance; }
 .manifestoText > span[aria-hidden] { will-change: opacity, transform; }
-.drift { margin-top: clamp(64px, 9vw, 120px); display: grid; gap: 6px; border-block: 1px solid var(--line); padding: 18px 0; }
+.drift { margin-top: clamp(32px, 4vw, 56px); display: grid; gap: 6px; border-block: 1px solid var(--line); padding: 18px 0; }
 .driftRow { display: flex; gap: 28px; white-space: nowrap; font-family: var(--font-display); font-size: clamp(2rem, 5.5vw, 4.8rem); font-weight: 600; font-stretch: 76%; letter-spacing: -.04em; line-height: 1.05; text-transform: uppercase; will-change: transform; }
 .driftRow span { display: inline-flex; align-items: center; gap: 28px; }
 .driftRow i { font-style: normal; font-size: .4em; color: var(--flare); }
@@ -55,7 +55,7 @@
 .sectionHeading > div:last-child a { display: inline-flex; min-height: 44px; align-items: center; gap: 28px; color: var(--flare); font-size: .88rem; font-weight: 600; text-decoration: none; border-bottom: 1px solid currentColor; }
 
 /* ---------- Work: spatial index ---------- */
-.work { padding: clamp(80px, 10vw, 140px) 0 40px; }
+.work { padding: clamp(40px, 5vw, 72px) 0 32px; }
 .workGrid { width: var(--content); margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); align-items: start; }
 .workList { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); counter-reset: work; }
 .workRow { position: relative; border-bottom: 1px solid var(--line); }
@@ -87,7 +87,7 @@
 .glyphLabel { position: absolute; top: 22px; left: 24px; font-family: var(--font-mono); font-size: .62rem; letter-spacing: .16em; text-transform: uppercase; color: var(--ion); }
 
 /* ---------- People: portfolio plates ---------- */
-.people { padding: clamp(80px, 10vw, 140px) 0 40px; }
+.people { padding: clamp(40px, 5vw, 72px) 0 32px; }
 .rail { display: grid; grid-auto-flow: column; grid-auto-columns: clamp(250px, 24vw, 310px); gap: 18px; margin: 0; padding: 12px max(16px, calc((100% - 1320px) / 2)) 28px; list-style: none; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: max(16px, calc((100% - 1320px) / 2)); scrollbar-width: none; overscroll-behavior-x: contain; }
 .rail::-webkit-scrollbar { display: none; }
 .rail > li { scroll-snap-align: start; perspective: 1000px; }
@@ -106,7 +106,7 @@
 .railTrack span { display: block; height: 100%; background: linear-gradient(90deg, var(--flare), var(--ion)); transform-origin: 0 50%; transform: scaleX(0); }
 
 /* ---------- Connection ---------- */
-.connect { position: relative; margin-top: clamp(80px, 10vw, 140px); padding: 0 0 clamp(72px, 9vw, 120px); background: radial-gradient(70% 60% at 85% 100%, rgb(142 240 212 / .08), transparent 70%), radial-gradient(60% 60% at 10% 0%, rgb(255 122 89 / .1), transparent 70%), var(--void); border-block: 1px solid var(--line); overflow: clip; }
+.connect { position: relative; margin-top: clamp(40px, 5vw, 72px); padding: 0 0 clamp(48px, 6vw, 80px); background: radial-gradient(70% 60% at 85% 100%, rgb(142 240 212 / .08), transparent 70%), radial-gradient(60% 60% at 10% 0%, rgb(255 122 89 / .1), transparent 70%), var(--void); border-block: 1px solid var(--line); overflow: clip; }
 .connectBand { padding: 28px 0; border-bottom: 1px solid var(--line); }
 .connectBand > div { display: flex; gap: 36px; white-space: nowrap; font-family: var(--font-serif); font-style: italic; font-size: clamp(2.6rem, 7vw, 6.4rem); line-height: 1.1; color: rgb(244 240 232 / .85); will-change: transform; }
 .connectBand span { display: inline-flex; align-items: center; gap: 36px; }
@@ -117,7 +117,7 @@
 .partnerList a { display: inline-flex; min-height: 36px; align-items: center; padding: 0 14px; border: 1px solid var(--line-strong); border-radius: var(--radius-pill); font-size: .8rem; text-decoration: none; transition: border-color var(--motion-fast) ease, color var(--motion-fast) ease; }
 
 /* ---------- Student callout ---------- */
-.studentCallout { position: relative; width: var(--content); margin: clamp(80px, 10vw, 140px) auto 0; padding: clamp(56px, 8vw, 100px) 24px; display: grid; justify-items: center; text-align: center; gap: 14px; isolation: isolate; }
+.studentCallout { position: relative; width: var(--content); margin: clamp(40px, 5vw, 72px) auto 0; padding: clamp(48px, 6vw, 80px) 24px; display: grid; justify-items: center; text-align: center; gap: 14px; isolation: isolate; }
 .studentCallout > p { margin: 0; }
 .studentCallout h2 { margin: 0; font-family: var(--font-display); font-size: var(--step-3); font-weight: 540; font-stretch: 84%; letter-spacing: -.045em; line-height: 1; }
 .studentCallout > p:not(:global(.ui-eyebrow)) { max-width: 420px; color: var(--muted); font-size: .92rem; line-height: 1.7; margin-bottom: 14px; }
@@ -141,8 +141,8 @@
   .portal { width: 250px; }
 }
 @media (max-width: 900px) {
-  .hero { min-height: max(720px, 100svh); grid-template-rows: auto 1fr auto auto; }
-  .heroCopy { align-self: end; padding: 38vh 0 20px; }
+  .hero { min-height: 0; grid-template-rows: auto 1fr auto auto; }
+  .heroCopy { align-self: end; padding: 260px 0 20px; }
   .heroHud .hudCenter { display: none; }
   .portalWrap { position: relative; right: auto; top: auto; bottom: auto; width: var(--content); margin: 0 auto 18px; }
   .portal { width: 100%; }
@@ -155,8 +155,10 @@
   .connectBody { grid-template-columns: 1fr; align-items: start; }
 }
 @media (max-width: 700px) {
-  .heroCopy { padding-top: 34vh; }
-  .heroTitle { font-size: clamp(3.1rem, 15vw, 4.6rem); margin: 20px 0 18px; }
+  .heroCopy { padding-top: 220px; }
+  .heroTitle { font-size: clamp(2.7rem, 12.5vw, 3.6rem); margin: 18px 0; line-height: .96; }
+  .actions { flex-wrap: nowrap; gap: 10px; margin-top: 20px; }
+  .actions :global(.ui-button) { padding-inline: 15px; gap: 12px; min-height: 46px; font-size: .8rem; white-space: nowrap; }
   .heroIntro { font-size: .95rem; }
   .heroHud { font-size: .58rem; letter-spacing: .14em; }
   .heroHud span:last-child { display: none; }

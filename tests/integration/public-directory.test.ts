@@ -40,7 +40,7 @@ test("staff-curated projects enter and leave discovery with their publication li
   const staffId = randomUUID();
   await db.insert(authUsers).values({ id: staffId, name: "Synthetic curator", email: `${staffId}@example.test` });
   await db.insert(studioRoles).values({ userId: staffId, role: "xr_admin" });
-  const content = { ...emptyContent, title: "Synthetic staff collection", summary: "Public summary", description: "Published curated work", technologies: ["WebXR", "Three.js"], fallbackText: "A descriptive alternative to the experience." };
+  const content = { ...emptyContent, title: "Synthetic staff collection", summary: "Public summary", description: "Published curated work", technologies: ["WebXR", "Three.js"], thumbnail: "https://example.org/approved-project.jpg", thumbnailAlt: "Test-only approved thumbnail", gallery: [{ url: "https://example.org/approved-gallery.jpg", alt: "Test-only published gallery" }], fallbackText: "A descriptive alternative to the experience." };
   const { project } = await adminCreate(db, staffId, content);
   expect((await listPublicProjects(db)).some(row => row.id === project.id)).toBe(false);
   const act = async (action: "publish" | "unpublish" | "archive") => {
@@ -48,7 +48,7 @@ test("staff-curated projects enter and leave discovery with their publication li
     await adminCommand(db, staffId, project.id, { action, version: current.project.version });
   };
   await act("publish");
-  expect((await listPublicProjects(db)).find(row => row.id === project.id)).toMatchObject({ managementMode: "ADMIN_MANAGED", technologies: ["WebXR", "Three.js"] });
+  expect((await listPublicProjects(db)).find(row => row.id === project.id)).toMatchObject({ managementMode: "ADMIN_MANAGED", technologies: ["WebXR", "Three.js"], media: [{ url: content.thumbnail, alt: content.thumbnailAlt }, ...content.gallery] });
   await act("unpublish");
   expect((await listPublicProjects(db)).some(row => row.id === project.id)).toBe(false);
   await act("publish");

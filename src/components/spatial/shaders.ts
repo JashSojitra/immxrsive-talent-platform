@@ -11,6 +11,7 @@ void main() { gl_Position = vec4(a_position, 0.0, 1.0); }
 export const crossingShader = `#version 300 es
 precision highp float;
 uniform vec2 u_res;
+uniform vec2 u_cssSize;
 uniform float u_time;
 uniform vec2 u_pointer;
 uniform float u_scroll;
@@ -81,10 +82,12 @@ vec3 floorField(vec3 ro, vec3 rd) {
 void main() {
   vec2 uv = (gl_FragCoord.xy - 0.5 * u_res) / u_res.y;
   float aspect = u_res.x / u_res.y;
-  float wide = smoothstep(1.05, 1.6, aspect);
+  float wide = smoothstep(900.0, 1200.0, u_cssSize.x);
   // Wide viewports: monolith sits right of the headline. Narrow: centered high, camera pulled back.
-  float dist = mix(11.5, 7.3, smoothstep(0.45, 1.6, aspect)) - u_scroll * 4.2;
-  vec3 ta = vec3(mix(0.0, -1.85, wide), mix(-1.9, 0.0, wide), 0.0);
+  float portraitDist = 7.38 * u_cssSize.y / min(300.0, u_cssSize.x * 0.68);
+  float dist = mix(portraitDist, 7.3, wide) - u_scroll * 4.2;
+  float portraitAim = -(0.5 - 170.0 / u_cssSize.y) * dist / 1.8;
+  vec3 ta = vec3(mix(0.0, -1.85, wide), mix(portraitAim, 0.0, wide), 0.0);
   vec3 ro = vec3(ta.x + u_pointer.x * 0.7, 0.45 + u_pointer.y * 0.3, dist);
   vec3 ww = normalize(ta - ro), uu = normalize(cross(ww, vec3(0.0, 1.0, 0.0))), vv = cross(uu, ww);
   vec3 rd = normalize(uv.x * uu + uv.y * vv + 1.8 * ww);
@@ -96,7 +99,7 @@ void main() {
     vec3 p = ro + rd * t;
     h = scene(p);
     if (h.y > 1.5) glow += 1.0 / (1.0 + h.x * h.x * 900.0);
-    if (h.x < 0.001 || t > 20.0) break;
+    if (h.x < 0.001 || t > 50.0) break;
     t += h.x * 0.85;
   }
 
@@ -107,7 +110,7 @@ void main() {
   vec2 gateCenter = vec2(-ta.x, -ta.y) * 1.8 / dist;
   col += mix(FLARE, ION, 0.35) * 0.09 * exp(-2.2 * length(uv - gateCenter));
 
-  if (t < 20.0) {
+  if (t < 50.0) {
     vec3 p = ro + rd * t;
     vec3 n = normalAt(p);
     if (h.y < 1.5) {

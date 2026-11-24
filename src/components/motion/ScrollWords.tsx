@@ -5,7 +5,7 @@ import { useRef } from "react";
 function Word({ word, index, total, progress }: { word: string; index: number; total: number; progress: MotionValue<number> }) {
   const start = index / total;
   const end = Math.min(1, start + 1.5 / total);
-  const opacity = useTransform(progress, [start, end], [0.16, 1]);
+  const opacity = useTransform(progress, [start, end], [0.65, 1]);
   const y = useTransform(progress, [start, end], ["0.18em", "0em"]);
   return <motion.span data-motion-static="" aria-hidden="true" style={{ opacity, y, display: "inline-block" }}>{word}&nbsp;</motion.span>;
 }

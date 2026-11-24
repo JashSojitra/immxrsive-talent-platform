@@ -1,0 +1,44 @@
+.textRoll { position: relative; display: inline-block; overflow: hidden; vertical-align: middle; white-space: pre; }
+.rollLine { display: block; }
+.rollDuplicate { position: absolute; inset: 0; }
+:global(a:focus-visible) .rollLine .character { transform: translateY(-100%) !important; }
+:global(a:focus-visible) .rollDuplicate .character { transform: translateY(0) !important; }
+.character, .space { display: inline-block; }
+.space { width: .3em; }
+.perspective { position: relative; isolation: isolate; border-block: 1px solid var(--line); background: var(--void); }
+.perspectiveTrack { position: relative; }
+.perspectiveStage { position: relative; display: flex; justify-content: center; padding: clamp(40px, 6vw, 80px) clamp(24px, 5vw, 72px); }
+.perspectiveText { width: 100%; max-width: 28ch; margin: 0; font: 520 clamp(1.65rem, 3.8vw, 3.6rem)/1.22 var(--font-display); letter-spacing: -.025em; color: var(--flare); text-align: center; text-wrap: balance; transform-origin: center; overflow-wrap: anywhere; }
+.textStory { position: relative; display: flex; flex-direction: column; justify-content: center; gap: 16px; padding: clamp(32px, 5vw, 64px) max(24px, 5vw); border-block: 1px solid var(--line); }
+.textStory > p { margin: 0; }
+.textStage { perspective: 1200px; max-width: 25ch; font: 540 clamp(1.85rem, 4.5vw, 4.5rem)/1.2 var(--font-display); letter-spacing: 0; text-transform: uppercase; color: var(--ion); }
+.word { display: inline-block; margin-right: .24em; white-space: nowrap; }
+.textStage .character { letter-spacing: 0; }
+.carousel { width: 100%; min-width: 0; --swiper-theme-color: var(--flare); --swiper-navigation-size: 24px; }
+.carousel :global(.swiper) { padding: 2rem 0 3.5rem; }
+.carousel :global(.swiper-button-next), .carousel :global(.swiper-button-prev) { width: 44px; height: 44px; border-radius: 50%; background: #101519; }
+.carousel :global(.swiper-pagination-bullet) { width: 14px; height: 14px; background: var(--flare); }
+.slide { height: auto !important; border: 1px solid var(--line); background: #101519; }
+.projectSlide { display: flex; flex-direction: column; height: 100%; position: relative; color: var(--bone); text-decoration: none; }
+.projectSlide:focus-visible { outline: 3px solid var(--ion); outline-offset: -4px; }
+.projectGraphic { position: relative; display: grid; grid-template-columns: 1fr auto; align-items: end; height: clamp(190px, 22vw, 290px); padding: 24px; isolation: isolate; color: var(--flare); background: radial-gradient(ellipse at 80% 20%, #24453d, transparent 70%), linear-gradient(140deg, #211913, #0a1018); }
+.projectGraphic::before, .projectGraphic::after { content: ""; position: absolute; z-index: -1; width: 48%; aspect-ratio: 1; border: 1px solid var(--ion); top: 18%; left: 32%; transform: rotate(35deg) skew(-8deg); opacity: .5; }
+.projectGraphic::after { left: 43%; top: 25%; border-color: var(--flare); transform: rotate(35deg) skew(-8deg) scale(.75); }
+.projectNumber { font: 450 clamp(4rem, 8vw, 7rem)/1 var(--font-display); letter-spacing: -.07em; }
+.graphicLabel { align-self: start; max-width: 16ch; font: 500 .64rem/1.5 var(--font-mono); text-transform: uppercase; letter-spacing: .1em; text-align: right; color: var(--ion); }
+.graphicCaption { position: absolute; top: 22px; left: 24px; font: .6rem/1.5 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.slideImage { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.slideCopy { display: grid; grid-template-rows: auto auto 1fr auto; flex: 1; gap: 12px; padding: 24px; }
+.slideCopy strong { font: 540 clamp(1.4rem, 2.2vw, 2.25rem)/1.14 var(--font-display); letter-spacing: -.025em; overflow-wrap: anywhere; }
+.slideCopy > span:not(:first-child):not(:last-child) { font-size: .875rem; line-height: 1.6; color: var(--muted); }
+.slideCopy > span:last-child { color: var(--ion); }
+.exhibition { padding: clamp(36px, 5vw, 72px) max(20px, 4vw); min-width: 0; }
+.exhibition h2 { font: 540 clamp(2rem, 4.5vw, 4.5rem)/1.08 var(--font-display); letter-spacing: -.035em; margin: 16px 0 24px; }
+.exhibition > p { max-width: 62ch; margin-bottom: 2rem; }
+.imageStory { display: flex; flex-direction: column; gap: 12vh; padding: 5vh 0 15vh; }
+.stickyCard { position: sticky; width: 100%; max-width: 1100px; margin: 0 auto; overflow: hidden; background: #101519; border: 1px solid var(--line); }
+.stickyImage { width: 100%; height: 100%; object-fit: cover; transform: scale(1.1); }
+.caption { position: absolute; inset: auto 0 0; padding: 2rem; background: linear-gradient(transparent, #080b0fed 30%); font: 500 clamp(1.5rem, 4vw, 3rem)/1.1 var(--font-display); }
+.caption a { color: white; }
+@media (max-width: 600px) { .slideCopy { padding: 20px; } .projectGraphic { padding: 20px; } .graphicCaption { left: 20px; } .exhibition { padding-inline: 16px; } }
+@media (prefers-reduced-motion: reduce) { :global(a:focus-visible) .rollLine .character { transform: none !important; } .perspectiveTrack { height: auto; } .perspectiveStage { position: static; } .textStory { min-height: 0; padding-block: 4rem; } .stickyCard { position: relative; top: auto !important; height: 65vh !important; } .imageStory { gap: 2rem; } .rollDuplicate { display: none; } .carousel :global(.swiper-wrapper) { transition-duration: 0ms !important; } }
