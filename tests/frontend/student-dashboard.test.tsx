@@ -3,13 +3,14 @@ import "./setup";
 import { render, screen, within } from "@testing-library/react";
 import { beforeEach, expect, test, vi } from "vitest";
 
-const { requireAuthenticatedUser, verification, profile, relationships } = vi.hoisted(() => ({
-  requireAuthenticatedUser: vi.fn(), verification: vi.fn(), profile: vi.fn(), relationships: vi.fn(),
+const { requireAuthenticatedUser, verification, profile, relationships, credits } = vi.hoisted(() => ({
+  requireAuthenticatedUser: vi.fn(), verification: vi.fn(), profile: vi.fn(), relationships: vi.fn(), credits: vi.fn(),
 }));
 vi.mock("@/auth/server", () => ({ requireAuthenticatedUser, getStudentVerificationStatus: verification, getInternalUserId: (user: { id: string }) => user.id }));
 vi.mock("@/db/runtime", () => ({ getRuntimeDatabase: () => ({}) }));
 vi.mock("@/profile/service", () => ({ getPrivateStudentProfile: profile }));
 vi.mock("@/projects/service", () => ({ listProjectRelationships: relationships }));
+vi.mock("@/admin/public", () => ({ queryCuratedCredits: credits }));
 vi.mock("@/components/auth/SignOutButton", () => ({ SignOutButton: () => <button>Sign out</button> }));
 import StudentDashboardPage from "@/app/student/dashboard/page";
 
@@ -19,6 +20,7 @@ beforeEach(() => {
   verification.mockResolvedValue({ status: "verified", institutionalEmail: "student@algomau.ca" });
   profile.mockResolvedValue({ id: "profile-1", headline: "Creative developer", biography: "My work", skillIds: ["skill-1"], publicationStatus: "unpublished" });
   relationships.mockResolvedValue([]);
+  credits.mockResolvedValue([]);
 });
 
 test("dashboard counts accepted work separately from pending invitations", async () => {
@@ -52,4 +54,22 @@ test("a saved private profile is never presented as publicly discoverable", asyn
   expect(within(overview).getByText("Private")).toBeInTheDocument();
   expect(screen.queryByRole("link", { name: "View public portfolio" })).not.toBeInTheDocument();
   expect(screen.getByRole("link", { name: "Preview profile" })).toHaveAttribute("href", "/student/profile/preview");
+});
+
+test("staff-curated credits are read-only and never counted as owned projects", async () => {
+  credits.mockResolvedValue([{ projectId: "curated-1", title: "Curated showcase", summary: "", domain: "XR", roles: ["Designer"], technologies: [] }]);
+  render(await StudentDashboardPage());
+  expect(credits).toHaveBeenCalledWith(expect.anything(), "profile-1");
+  const panel = screen.getByRole("region", { name: "Credited in curated projects" });
+  expect(within(panel).getByRole("link", { name: /Curated showcase/ })).toHaveAttribute("href", "/projects/curated-1");
+  expect(within(panel).getByText(/do not add you to the project team or give you editing access/)).toBeInTheDocument();
+  expect(within(panel).queryByRole("link", { name: /edit/i })).not.toBeInTheDocument();
+  expect(screen.getByText("0 published · 0 private")).toBeInTheDocument();
+});
+
+test("unverified accounts never query curated credits", async () => {
+  verification.mockResolvedValue({ status: "unverified" });
+  render(await StudentDashboardPage());
+  expect(credits).not.toHaveBeenCalled();
+  expect(screen.queryByRole("region", { name: "Credited in curated projects" })).not.toBeInTheDocument();
 });

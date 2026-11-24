@@ -439,7 +439,8 @@
 
 .projectTopline span:last-child { color: var(--muted); }
 
-.projectCard h3 {
+.projectCard h3,
+.projectCard h4 {
   max-width: 620px;
   margin: 28px 0 18px;
   font-size: clamp(2rem, 3vw, 3.6rem);
@@ -692,7 +693,7 @@
   .projectGrid { margin-top: 52px; }
   .projectCard { min-height: 0; padding: 24px; }
   .projectTopline { flex-direction: column; gap: 8px; }
-  .projectCard h3 { margin-top: 42px; }
+  .projectCard h3, .projectCard h4 { margin-top: 42px; }
   .projectActions { align-items: flex-start; flex-direction: column; }
   .professionalLinks { margin-top: 52px; }
   .inquirySection { min-height: auto; padding: 100px 0; }
@@ -738,7 +739,7 @@
 .projectCard { background: var(--surface); border-radius: 8px; transition: none; }
 .projectCard:hover,.projectCard:focus-within { transform: none; border-color: var(--signal); }
 .projectTopline { font-size: .75rem; letter-spacing: 0; text-transform: none; gap: 16px; }
-.projectCard h3 { font-size: clamp(1.6rem,2.5vw,2.3rem); }
+.projectCard h3,.projectCard h4 { font-size: clamp(1.6rem,2.5vw,2.3rem); }
 .projectActions { flex-wrap: wrap; }
 .projectActions a,.professionalLinks a { min-height: 44px; font-size: .8rem; letter-spacing: .035em; }
 .technologyBlock li { font-size: .75rem; color: var(--bone); border-radius: 3px; }
@@ -773,3 +774,8 @@
   .sectionLead { margin-top: 0; }
   .heroMeta div,.heroMeta div + div { min-height: 0; }
 }
+
+/* Staff-curated attribution sits apart from recorded project evidence. */
+.curatedCredits { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--hairline); }
+.curatedCredits > h3 { margin: 0; font-size: clamp(1.4rem, 2.2vw, 2rem); font-weight: 400; letter-spacing: -0.02em; }
+.curatedCredits .projectCard { min-height: 0; }

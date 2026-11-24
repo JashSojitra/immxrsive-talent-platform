@@ -187,3 +187,19 @@ describe("student profile route states", () => {
     expect(reset).toHaveBeenCalledOnce();
   });
 });
+
+describe("staff-curated credits", () => {
+  beforeEach(() => { window.__IMMXRSIVE_DISABLE_MOTION__ = true; });
+  it("renders credits separately from recorded project evidence", () => {
+    render(<StudentProfileView profile={{ ...profile, projects: [], curatedCredits: [{ projectId: "A01", title: "Curated XR showcase", summary: "Staff narrative", domain: "XR", roles: ["Designer", "Tester"], technologies: ["WebXR"] }] }} />);
+    expect(screen.getByText("No recorded contributor roles are public yet.")).toBeInTheDocument();
+    const credits = screen.getByRole("region", { name: "Credited in curated projects" });
+    expect(credits).toHaveTextContent("descriptive attribution, not verified contribution records");
+    expect(credits).toHaveTextContent("Designer / Tester");
+    expect(screen.getByRole("link", { name: "View curated project Curated XR showcase" })).toHaveAttribute("href", "/projects/A01");
+  });
+  it("omits the credits block when there are none", () => {
+    render(<StudentProfileView profile={profile} />);
+    expect(screen.queryByRole("region", { name: "Credited in curated projects" })).not.toBeInTheDocument();
+  });
+});

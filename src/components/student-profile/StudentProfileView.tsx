@@ -82,7 +82,9 @@ export function StudentProfileView({
         </SectionHeading>
         <p className={styles.sectionLead} data-profile-reveal>{profile.projects.length > 0
           ? "Projects connected to this portfolio through recorded contributor roles."
-          : "No public projects are connected to this profile yet."}</p>
+          : profile.curatedCredits?.length
+            ? "No recorded contributor roles are public yet."
+            : "No public projects are connected to this profile yet."}</p>
         <div className={styles.projectGrid}>
           {profile.projects.map((project, index) => (
             <article className={styles.projectCard} key={project.id} data-profile-reveal>
@@ -109,7 +111,7 @@ export function StudentProfileView({
                   View project <span aria-hidden="true">↗</span>
                 </Link>
                 {project.links.map((link) => (
-                  <a key={link.type} href={link.url} target="_blank" rel="noopener noreferrer">
+                  <a key={`${link.type}-${link.url}`} href={link.url} target="_blank" rel="noopener noreferrer">
                     {link.label} <span className={styles.visuallyHidden}>(opens in a new tab)</span>
                   </a>
                 ))}
@@ -117,6 +119,45 @@ export function StudentProfileView({
             </article>
           ))}
         </div>
+        {profile.curatedCredits?.length ? (
+          <section className={styles.curatedCredits} aria-labelledby="curated-credits-title">
+            <h3 id="curated-credits-title" data-profile-reveal>Credited in curated projects</h3>
+            <p className={styles.sectionLead} data-profile-reveal>
+              Platform staff credited {profile.name} on these showcases. Credits are descriptive attribution, not verified contribution records.
+            </p>
+            <div className={styles.projectGrid}>
+              {profile.curatedCredits.map((credit) => (
+                <article className={styles.projectCard} key={credit.projectId} data-profile-reveal>
+                  <div className={styles.projectTopline}>
+                    <span>Staff-curated credit</span>
+                    <span>{credit.domain}</span>
+                  </div>
+                  <h4>{credit.title}</h4>
+                  {credit.summary ? <p>{credit.summary}</p> : null}
+                  <dl className={styles.projectRole}>
+                    <div>
+                      <dt>Credited role</dt>
+                      <dd>{credit.roles.join(" / ") || "Contributor"}</dd>
+                    </div>
+                  </dl>
+                  {credit.technologies.length ? (
+                    <div className={styles.technologyBlock}>
+                      <span>Project technologies</span>
+                      <ul aria-label={`${credit.title} technologies`}>
+                        {credit.technologies.map((technology) => <li key={technology}>{technology}</li>)}
+                      </ul>
+                    </div>
+                  ) : null}
+                  <div className={styles.projectActions}>
+                    <Link href={`/projects/${credit.projectId}`} aria-label={`View curated project ${credit.title}`}>
+                      View project <span aria-hidden="true">↗</span>
+                    </Link>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : null}
       </section>
 
       <div id="portfolio-sections" className={styles.portfolioSections}>

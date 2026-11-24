@@ -6,6 +6,7 @@ import { SignOutButton } from "@/components/auth/SignOutButton";
 import { getRuntimeDatabase } from "@/db/runtime";
 import { getPrivateStudentProfile } from "@/profile/service";
 import { listProjectRelationships } from "@/projects/service";
+import { queryCuratedCredits } from "@/admin/public";
 import styles from "./dashboard.module.css";
 
 export const metadata: Metadata = {
@@ -22,6 +23,8 @@ export default async function StudentDashboardPage() {
   const db = getRuntimeDatabase();
   const profile = verified ? await getPrivateStudentProfile(db, user.id) : null;
   const relationships = profile ? await listProjectRelationships({ db, actorUserId: user.id }) : [];
+  // Read-only: staff credits grant no membership, editing or ownership.
+  const credits = profile ? await queryCuratedCredits(db, profile.id) : [];
   const projects = relationships.filter(project => project.state === "accepted");
   const invitations = relationships.filter(project => project.state === "pending" || project.pendingMaintenance);
   const checklist = [
@@ -63,6 +66,11 @@ export default async function StudentDashboardPage() {
         {verified && <div className={styles.actions}><Link href="/student/project-invitations">Invitations & collaboration</Link><Link href="/student/projects">Industry & verification requests</Link></div>}
       </section>
     </div>
+    {credits.length > 0 && <section className={`${styles.panel} ${styles.credits}`} aria-labelledby="credits-heading">
+      <div className={styles.sectionHeading}><h2 id="credits-heading">Credited in curated projects</h2><span className={styles.badge}>Read-only</span></div>
+      <p>Platform staff credited your public profile on these showcases. Credits link to your portfolio but do not add you to the project team or give you editing access. Contact platform staff to correct or remove a credit.</p>
+      <ul className={styles.projects}>{credits.map(credit => <li key={credit.projectId}><Link href={`/projects/${credit.projectId}`}>{credit.title}<span aria-hidden="true">↗</span></Link><p>{credit.roles.join(" / ") || "Contributor"} · Staff-curated credit</p></li>)}</ul>
+    </section>}
     <details className={styles.account}><summary>Account & sign-in details</summary><p>{user.name} · {user.email}</p>{verified && <p>Verified email: {verification.institutionalEmail}</p>}<p>Account reference: <code>{getInternalUserId(user)}</code></p><SignOutButton /></details>
   </main>;
 }

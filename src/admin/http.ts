@@ -6,8 +6,8 @@ import type { Database } from "@/db/client";
 import { readBody, errorResponse } from "@/projects/http";
 import { GitHubImportError } from "@/projects/github-import";
 import { adminGitHubSuggestions } from "./github";
-import { accessList, adminActivity, adminCommand, adminCreate, adminDetail, adminDuplicates, adminIdentity, adminList, changeAccess, lockStaff } from "./service";
-type Operation = "list" | "create" | "detail" | "command" | "import" | "activity" | "access" | "identity" | "duplicates";
+import { accessList, adminActivity, adminCommand, adminCreate, adminDetail, adminDuplicates, adminIdentity, adminList, adminProfileLookup, changeAccess, lockStaff } from "./service";
+type Operation = "list" | "create" | "detail" | "command" | "import" | "activity" | "access" | "identity" | "duplicates" | "profiles";
 export function createAdminHandler(deps: { authorize: (r: Request) => Promise<{ id: string }>; database: () => Database; origin?: string; fetcher?: typeof fetch }) {
   return async (request: Request, operation: Operation, id?: string) => {
     const headers = { "Cache-Control": "private, no-store", "Vary": "Cookie" };
@@ -20,6 +20,7 @@ export function createAdminHandler(deps: { authorize: (r: Request) => Promise<{ 
         else if (operation === "activity") result = await adminActivity(db, actor);
         else if (operation === "access") result = await accessList(db, actor);
         else if (operation === "identity") result = await adminIdentity(db, actor);
+        else if (operation === "profiles") result = await adminProfileLookup(db, actor, new URL(request.url).searchParams.get("q") ?? "");
         else return Response.json({ error: { message: "Method not allowed" } }, { status: 405, headers });
       } else if (request.method === "POST") {
         const raw = await readBody(request, deps.origin);

@@ -49,6 +49,8 @@ export interface PublicStudentProfile {
   heroMedia?: "default" | "aurora" | "contours" | "prism";
   sectionOrder?: Array<"about" | "skills" | "background" | "links">;
   projects: StudentProjectEvidence[];
+  /** Staff-curated attribution; deliberately separate from project evidence. */
+  curatedCredits?: import("@/admin/public").CuratedCredit[];
 }
 
 export async function queryPublicStudentProfile(

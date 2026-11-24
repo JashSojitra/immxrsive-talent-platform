@@ -1,0 +1,25 @@
+PR #14 — Claude resume pass (project intake linking) — 2026-11-24
+
+Branch: feat/immxrsive-ux-overhaul
+Frozen R4-submission: not touched.
+
+npm run typecheck: PASS, exit 0
+npm run lint: PASS, exit 0, no warnings
+npm test (unit + frontend): PASS, exit 0 — 53 files, 430 tests (previous 422 + 8 new)
+npm run build: PASS, exit 0 — includes new dynamic route /api/admin/profiles
+
+BLOCKED — integration suite (tests/integration, including the new
+"linked credits surface read-only…" test in admin-onboarding.test.ts):
+  connect ECONNREFUSED 127.0.0.1:5546. Postgres 18 is installed at
+  C:\Program Files\PostgreSQL\18 as command-line tools only (no share/ directory,
+  no server component, no service), so initdb fails and no local cluster can run.
+  Per sprint rules, no PostgreSQL was installed or downloaded.
+BLOCKED — Playwright browser suite: needs the same database for seeding and auth.
+
+The new integration test has been typechecked but not executed. Run it when the database is available:
+  node --env-file=.env.browser.local node_modules/vitest/vitest.mjs run tests/integration
+  node --env-file=.env.browser.local node_modules/@playwright/test/cli.js test --reporter=line
+
+Raw outputs (local only, untracked): output/resume-*.txt
+No new screenshots: the new profile/dashboard blocks render only with database-backed data.
+No production data, schema or migration changes. No merge or deployment.
