@@ -37,7 +37,30 @@ export function buildSky() {
   const starGeometry = new THREE.BufferGeometry();
   starGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
   starGeometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-  const stars = new THREE.Points(starGeometry, new THREE.PointsMaterial({ size: 1.6, vertexColors: true, sizeAttenuation: false, fog: false, transparent: true, opacity: 0.9, depthWrite: false }));
+  const seeds = new Float32Array(count);
+  for (let i = 0; i < count; i++) seeds[i] = rng() * 100;
+  starGeometry.setAttribute("aSeed", new THREE.BufferAttribute(seeds, 1));
+  const starMaterial = new THREE.ShaderMaterial({
+    uniforms: { uTime: { value: 0 }, uPixel: { value: 1 } },
+    vertexShader: /* glsl */ `
+      attribute float aSeed; attribute vec3 color; uniform float uTime; uniform float uPixel; varying vec3 vColor; varying float vTwinkle;
+      void main() {
+        vColor = color;
+        vTwinkle = 0.55 + 0.45 * sin(uTime * (0.6 + fract(aSeed) * 1.8) + aSeed);
+        gl_PointSize = (1.2 + fract(aSeed * 7.3) * 2.2) * uPixel * (0.7 + vTwinkle * 0.5);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }`,
+    fragmentShader: /* glsl */ `
+      varying vec3 vColor; varying float vTwinkle;
+      void main() {
+        float d = length(gl_PointCoord - 0.5);
+        gl_FragColor = vec4(vColor, smoothstep(0.5, 0.1, d) * vTwinkle);
+      }`,
+    transparent: true,
+    depthWrite: false,
+    fog: false,
+  });
+  const stars = new THREE.Points(starGeometry, starMaterial);
   group.add(stars);
 
   // Nebula clouds in brand colours.
@@ -83,7 +106,9 @@ export function buildSky() {
     drones.push({ object, axis: frame.n.clone(), base: frame.front.clone(), speed: 0.4 + rng() * 0.4, light });
   }
 
-  const update = (time: number) => {
+  const update = (time: number, pixel = 1) => {
+    starMaterial.uniforms.uTime.value = time;
+    starMaterial.uniforms.uPixel.value = pixel;
     ring.rotation.y = time * 0.02;
     stars.rotation.y = time * 0.002;
     for (const drone of drones) {

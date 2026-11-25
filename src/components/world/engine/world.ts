@@ -3,14 +3,16 @@ import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
 
 import type { PlaceId } from "../world-content";
+import { buildAmbient } from "./ambient";
 import { buildBuildings, type Building } from "./buildings";
 import { clamp, damp } from "./noise";
 import { brand } from "./palette";
 import { buildSky } from "./sky";
 import { createSpark } from "./spark";
-import { buildAtmosphere, buildPaths, buildPlanet, buildScatter, buildWater, doorstep, frames, PLANET_RADIUS, stepAlong, surfaceRadius, WATER_RADIUS } from "./terrain";
+import { buildAtmosphere, buildPaths, buildPlanet, buildScatter, buildWater, doorstep, frames, PLANET_RADIUS, stepAlong, surfaceRadius, terrainUniforms, WATER_RADIUS } from "./terrain";
 
 export type WorldMode = "intro" | "explore" | "map" | "focus";
 export type FocusLayout = "side" | "bottom";
@@ -43,6 +45,25 @@ const pose = (): Pose => ({ position: new THREE.Vector3(), target: new THREE.Vec
 const copyPose = (to: Pose, from: Pose) => { to.position.copy(from.position); to.target.copy(from.target); to.up.copy(from.up); return to; };
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
+/** Final colour grade: purple-lifted shadows, gentle S-curve, vignette and fine film grain. */
+const GradeShader = {
+  uniforms: { tDiffuse: { value: null }, uTime: { value: 0 }, uRes: { value: new THREE.Vector2(1, 1) } },
+  vertexShader: /* glsl */ `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+  fragmentShader: /* glsl */ `
+    uniform sampler2D tDiffuse; uniform float uTime; uniform vec2 uRes; varying vec2 vUv;
+    void main() {
+      vec4 c = texture2D(tDiffuse, vUv);
+      c.rgb += vec3(0.03, 0.015, 0.065) * (1.0 - c.rgb);
+      c.rgb = mix(c.rgb, c.rgb * c.rgb * (3.0 - 2.0 * c.rgb), 0.2);
+      vec2 p = vUv - 0.5;
+      p.x *= uRes.x / uRes.y;
+      c.rgb *= mix(0.58, 1.0, smoothstep(1.05, 0.35, length(p)));
+      float n = fract(sin(dot(gl_FragCoord.xy + fract(uTime) * 91.0, vec2(12.9898, 78.233))) * 43758.5453);
+      c.rgb += (n - 0.5) * 0.022;
+      gl_FragColor = c;
+    }`,
+};
+
 const WALK_SPEED = 9;
 const BOOST_SPEED = 15;
 const FLY_SPEED = 26;
@@ -66,18 +87,25 @@ export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion:
   renderer.toneMappingExposure = 1.15;
   let pixelRatio = Math.min(window.devicePixelRatio || 1, 1.75);
   renderer.setPixelRatio(pixelRatio);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x05051a);
+  scene.background = new THREE.Color(0x060820);
   scene.fog = new THREE.Fog(0x080724, 70, 330);
   const camera = new THREE.PerspectiveCamera(52, 1, 0.1, 1400);
 
-  scene.add(new THREE.HemisphereLight(0x9a8cff, 0x1a1240, 1.7));
-  const moonLight = new THREE.DirectionalLight(0xd9ccff, 2.2);
-  moonLight.position.set(-180, 120, -220);
+  scene.add(new THREE.HemisphereLight(0x9a8cff, 0x1a1240, 1.45));
+  // Key light follows the camera so whatever you look at is lit from the upper left, with soft shadows.
+  const keyLight = new THREE.DirectionalLight(0xe4d8ff, 2.6);
+  keyLight.castShadow = true;
+  keyLight.shadow.mapSize.set(window.innerWidth < 700 ? 1024 : 2048, window.innerWidth < 700 ? 1024 : 2048);
+  keyLight.shadow.bias = -0.0004;
+  keyLight.shadow.normalBias = 0.04;
+  keyLight.shadow.radius = 4;
   const rimLight = new THREE.DirectionalLight(brand.pink, 1.1);
   rimLight.position.set(160, -40, 200);
-  scene.add(moonLight, rimLight);
+  scene.add(keyLight, keyLight.target, rimLight);
 
   const planet = buildPlanet();
   scene.add(planet, buildWater(), buildAtmosphere());
@@ -88,17 +116,21 @@ export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion:
   const buildingById = new Map<PlaceId, Building>(buildings.map(b => [b.id, b]));
   const sky = buildSky();
   scene.add(sky.group);
+  const ambient = buildAmbient();
+  scene.add(ambient.group);
 
   const spark = createSpark();
   scene.add(spark.root, spark.trail, spark.shadow);
 
   // Post-processing: bloom makes the neon and Spark glow.
-  const composer = new EffectComposer(renderer);
+  // Multisampled HDR target keeps edges smooth through post-processing.
+  const composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 }));
   composer.addPass(new RenderPass(scene, camera));
   const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.62, 0.5, 0.86);
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
-  let bloomEnabled = true;
+  const grade = new ShaderPass(GradeShader);
+  composer.addPass(grade);
 
   /* ---------- state ---------- */
   let reducedMotion = options.reducedMotion;
@@ -144,8 +176,12 @@ export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion:
       const a = reducedMotion ? 0.9 : 0.9 + time * 0.045;
       const elevation = 0.62;
       desired.position.set(Math.sin(a) * Math.cos(elevation), Math.sin(elevation), Math.cos(a) * Math.cos(elevation)).multiplyScalar(150);
-      desired.target.set(0, 4, 0);
       desired.up.set(0, 1, 0);
+      // Editorial composition: planet on the right on wide screens, raised on narrow ones.
+      if (width > 900) {
+        const right = tmp.copy(desired.position).negate().cross(desired.up).normalize();
+        desired.target.set(0, 4, 0).addScaledVector(right, -34);
+      } else desired.target.set(0, -20, 0);
     } else if (mode === "map") {
       desired.position.set(Math.sin(mapYaw) * Math.cos(mapPitch), Math.sin(mapPitch), Math.cos(mapYaw) * Math.cos(mapPitch)).multiplyScalar(128);
       desired.target.set(0, 0, 0);
@@ -286,6 +322,29 @@ export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion:
     if (nearest !== near) { near = nearest; events.onNear?.(near); }
   };
 
+  /* ---------- key light ---------- */
+  const lightFocus = new THREE.Vector3();
+  const camForward = new THREE.Vector3();
+  const camRight = new THREE.Vector3();
+  const updateKeyLight = () => {
+    const close = mode === "explore" || mode === "focus";
+    if (mode === "focus" && focusId) lightFocus.copy(frames[focusId].n).multiplyScalar(surfaceRadius(frames[focusId].n));
+    else if (close) lightFocus.copy(sparkPosition);
+    else lightFocus.set(0, 0, 0);
+    camera.getWorldDirection(camForward);
+    camRight.crossVectors(camForward, camera.up).normalize();
+    const dir = tmp.copy(camera.up).addScaledVector(camRight, -0.6).addScaledVector(camForward, -0.45).normalize();
+    keyLight.position.copy(lightFocus).addScaledVector(dir, 95);
+    keyLight.target.position.copy(lightFocus);
+    const half = close ? 30 : 50;
+    const shadowCamera = keyLight.shadow.camera;
+    if (shadowCamera.right !== half) {
+      shadowCamera.left = -half; shadowCamera.right = half; shadowCamera.top = half; shadowCamera.bottom = -half;
+      shadowCamera.near = 20; shadowCamera.far = 190;
+      shadowCamera.updateProjectionMatrix();
+    }
+  };
+
   /* ---------- labels ---------- */
   const projected = new THREE.Vector3();
   const updateLabels = (width: number, height: number) => {
@@ -395,6 +454,7 @@ export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion:
     composer.setPixelRatio(pixelRatio);
     composer.setSize(width, height);
     bloom.resolution.set(width, height);
+    grade.uniforms.uRes.value.set(width, height);
     camera.aspect = width / height;
     camera.fov = width < 700 ? 62 : 52;
     camera.updateProjectionMatrix();
@@ -435,11 +495,15 @@ export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion:
     spark.shadow.scale.setScalar(shadowScale);
 
     for (const building of buildings) building.update(ambientTime, dt);
-    sky.update(ambientTime);
+    sky.update(ambientTime, pixelRatio);
+    ambient.update(ambientTime, pixelRatio * (height / 900));
+    terrainUniforms.uTime.value = ambientTime;
     computeDesired(clockTime);
     applyCamera(dt);
+    updateKeyLight();
     updateLabels(width, height);
-    if (bloomEnabled) composer.render(dt); else renderer.render(scene, camera);
+    grade.uniforms.uTime.value = clockTime;
+    composer.render(dt);
 
     // Adaptive quality: drop resolution, then bloom, if frames are consistently slow.
     sampled++;
@@ -447,7 +511,8 @@ export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion:
     if (sampled >= 90 && !options.fixedQuality) {
       if (slowFrames > 45) {
         if (pixelRatio > 1) { pixelRatio = Math.max(1, pixelRatio - 0.35); resize(); }
-        else if (bloomEnabled) bloomEnabled = false;
+        else if (keyLight.castShadow) keyLight.castShadow = false;
+        else if (bloom.enabled) bloom.enabled = false;
       }
       sampled = 0; slowFrames = 0;
     }

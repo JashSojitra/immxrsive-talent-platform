@@ -27,9 +27,30 @@ export function createSpark(): Spark {
   const body = new THREE.Group();
   root.add(body);
 
+  // Glassy shell: dim in the middle, glowing at the rim (fresnel).
   const shell = new THREE.Mesh(
-    new THREE.SphereGeometry(0.72, 32, 24),
-    new THREE.MeshStandardMaterial({ color: brand.coldPurple, emissive: new THREE.Color(brand.warmPurple), emissiveIntensity: 0.55, roughness: 0.25, metalness: 0.1, transparent: true, opacity: 0.55, depthWrite: false }),
+    new THREE.SphereGeometry(0.72, 40, 28),
+    new THREE.ShaderMaterial({
+      uniforms: { uCore: { value: new THREE.Color(brand.coldPurple) }, uRim: { value: new THREE.Color(brand.pink).multiplyScalar(1.8) } },
+      vertexShader: /* glsl */ `
+        varying vec3 vNormal; varying vec3 vView;
+        void main() {
+          vec4 world = modelMatrix * vec4(position, 1.0);
+          vNormal = normalize(mat3(modelMatrix) * normal);
+          vView = normalize(cameraPosition - world.xyz);
+          gl_Position = projectionMatrix * viewMatrix * world;
+        }`,
+      fragmentShader: /* glsl */ `
+        uniform vec3 uCore; uniform vec3 uRim; varying vec3 vNormal; varying vec3 vView;
+        void main() {
+          float f = pow(1.0 - max(dot(normalize(vNormal), normalize(vView)), 0.0), 2.2);
+          vec3 color = mix(uCore * 0.9, uRim, f);
+          gl_FragColor = vec4(color, 0.22 + f * 0.78);
+        }`,
+      transparent: true,
+      depthWrite: false,
+      toneMapped: false,
+    }),
   );
   const core = new THREE.Mesh(new THREE.SphereGeometry(0.3, 20, 16), new THREE.MeshBasicMaterial({ color: new THREE.Color(accent.bone).multiplyScalar(1.5), toneMapped: false }));
   const glowMaterial = new THREE.MeshBasicMaterial({ color: new THREE.Color(brand.pink).multiplyScalar(2.2), toneMapped: false });
@@ -51,6 +72,7 @@ export function createSpark(): Spark {
   halo.rotation.x = Math.PI / 2;
   const glow = new THREE.PointLight(brand.pink, 14, 9, 1.5);
   body.add(core, x, shell, eyes, halo, glow);
+  core.castShadow = true;
 
   // Soft contact shadow + glow ring on the ground (positioned by the controller).
   const shadow = new THREE.Mesh(

@@ -234,7 +234,7 @@ function buildStories(): Omit<Building, "id"> {
   group.add(mesh(new THREE.TorusGeometry(3.72, 0.07, 6, 40), neon(brand.pink, 2), 0, 3.82, 0).rotateX(Math.PI / 2));
 
   // Lit doorway facing the hub.
-  group.add(mesh(new THREE.BoxGeometry(1.7, 2.5, 0.5), neon(accent.warmWindow, 1.1), 0, 1.25, 3.45));
+  group.add(mesh(new THREE.BoxGeometry(1.7, 2.5, 0.5), neon(accent.warmWindow, 1.35), 0, 1.25, 3.45));
   group.add(mesh(new THREE.TorusGeometry(0.85, 0.12, 6, 16, Math.PI), neon(brand.pink, 2), 0, 2.5, 3.55));
 
   // Portrait frames around the facade.
@@ -250,19 +250,19 @@ function buildStories(): Omit<Building, "id"> {
   const bubble = new THREE.Group();
   bubble.position.y = 7.1;
   const quote = canvasTexture(512, 256, ctx => {
-    ctx.fillStyle = "#f4f0e8";
-    ctx.fillRect(0, 0, 512, 256);
     ctx.fillStyle = "#e31c79";
+    ctx.fillRect(0, 0, 512, 256);
+    ctx.fillStyle = "#fff4fa";
     ctx.font = `700 210px Georgia, serif`;
     ctx.textAlign = "center";
     ctx.fillText("“ ”", 256, 230);
   });
-  bubble.add(mesh(new RoundedBoxGeometry(3.4, 1.7, 0.55, 3, 0.4), [solid(0xc9b3e0, { emissive: new THREE.Color(0xff8cc0), emissiveIntensity: 0.06 })]));
+  bubble.add(mesh(new RoundedBoxGeometry(3.4, 1.7, 0.55, 3, 0.4), [solid(brand.pink, { emissive: new THREE.Color(brand.plum), emissiveIntensity: 0.5, roughness: 0.35 })]));
   const face = mesh(new THREE.PlaneGeometry(3.0, 1.5), new THREE.MeshBasicMaterial({ map: quote }), 0, 0, 0.29);
   const back = face.clone();
   back.position.z = -0.29;
   back.rotation.y = Math.PI;
-  const tail = mesh(new THREE.ConeGeometry(0.42, 0.9, 4), solid(0xc9b3e0, { emissive: new THREE.Color(0xff8cc0), emissiveIntensity: 0.06 }), -0.9, -1.1, 0);
+  const tail = mesh(new THREE.ConeGeometry(0.42, 0.9, 4), solid(brand.pink, { emissive: new THREE.Color(brand.plum), emissiveIntensity: 0.5, roughness: 0.35 }), -0.9, -1.1, 0);
   tail.rotation.z = Math.PI + 0.35;
   bubble.add(face, back, tail);
   group.add(bubble);
@@ -503,7 +503,8 @@ function buildLaunchpad(): Omit<Building, "id"> {
   };
   qrImage.src = "/world/join-qr.svg";
   const stand = new THREE.Group();
-  stand.position.set(0, 0, 4.4);
+  stand.position.set(-3.1, 0, 3.6);
+  stand.rotation.y = -0.55;
   stand.add(mesh(new THREE.BoxGeometry(1.5, 2.2, 0.18), solid(0x221d3e), 0, 1.4, 0));
   stand.add(mesh(new THREE.PlaneGeometry(1.32, 1.98), new THREE.MeshBasicMaterial({ map: tablet, toneMapped: false }), 0, 1.4, 0.1));
   group.add(stand);
@@ -543,7 +544,15 @@ export function buildBuildings(): Building[] {
     const frame = frames[id];
     placeOnSurface(built.group, frame.n, frame.front);
     built.group.name = `place:${id}`;
-    built.group.traverse(object => { object.userData.placeId = id; });
+    built.group.traverse(object => {
+      object.userData.placeId = id;
+      const mesh = object as THREE.Mesh;
+      if (mesh.isMesh) {
+        const basic = (Array.isArray(mesh.material) ? mesh.material[0] : mesh.material) instanceof THREE.MeshBasicMaterial;
+        mesh.castShadow = !basic;
+        mesh.receiveShadow = !basic;
+      }
+    });
     return { id, ...built };
   });
 }

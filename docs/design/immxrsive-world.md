@@ -39,6 +39,19 @@ Everything in `world-content.ts` is real, approved content or an explicit placeh
 
 All geometry is generated in code: no paid 3D services and no external model files. `three` (MIT) is the only new runtime dependency.
 
+## Visual pipeline
+
+- Multisampled HDR composer: bloom → output → colour grade (purple-lifted shadows, gentle S-curve, vignette, fine grain).
+- A key light follows the camera so whatever you look at is lit from the upper left, with soft PCF shadows near Spark.
+- A holographic grid and a pulse that ripples out from the hub on the planet. Paths carry light flowing outward. Fireflies, slow clouds, twinkling stars and a fresnel glass shell on Spark.
+- Environment-map reflections (PMREM) were tried and dropped: they rendered lit materials black on software/older GPUs, a risk for event laptops and projectors.
+- Adaptive quality ladder: lower resolution → shadows off → bloom off.
+
+## Credits
+
+- The magnetic dock (`WorldDock.tsx`) and the kinetic title reveal are native reimplementations inspired by [Componentry](https://componentry.dev) (MIT, © 2026 Harsh Jadhav). No Componentry source is copied, and no Tailwind/shadcn was added.
+- The world reuses the three.ui-derived architecture already documented in `docs/threeui-kage-provenance.md`: a full-viewport WebGL scene behind semantic DOM, damping, adaptive pixel ratio, reduced motion and explicit cleanup.
+
 ## Tests
 
 - `tests/unit/world-content.test.ts`: content integrity, no invented content

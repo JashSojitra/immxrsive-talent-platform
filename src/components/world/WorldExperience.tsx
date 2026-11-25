@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type RefObject } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type RefObject } from "react";
 
 import type { FocusLayout, WorldHandle, WorldMode } from "./engine/world";
 import { PlaceContent } from "./PlaceContent";
+import { DockIcons, WorldDock } from "./WorldDock";
 import { placeById, places, tourOrder, WORLD_TITLE, type PlaceId } from "./world-content";
 import styles from "./world.module.css";
 
@@ -41,6 +42,7 @@ export function WorldExperience() {
   const [coarse, setCoarse] = useState(false);
   const [kiosk, setKiosk] = useState(false);
   const [announcement, setAnnouncement] = useState("");
+  const [arrived, setArrived] = useState<{ id: PlaceId; key: number } | null>(null);
   const tourIndex = useRef(0);
   const tourTimer = useRef<number | null>(null);
   const lastInput = useRef(0);
@@ -111,6 +113,7 @@ export function WorldExperience() {
           onArrive: id => {
             if (!id) return;
             setAnnouncement(`Arrived at ${placeById(id).name}.`);
+            setArrived({ id, key: performance.now() });
             if (!touringRef.current) return;
             setCaption(id);
             tourTimer.current = window.setTimeout(() => {
@@ -224,12 +227,24 @@ export function WorldExperience() {
         ))}
       </div>
 
-      {phase === "loading" && <div className={styles.loading} role="status"><span className={styles.loadingDot} />Building the world…</div>}
+      <div className={styles.letterbox} aria-hidden="true"><span /><span /></div>
+
+      {phase === "loading" && (
+        <div className={styles.loading} role="status">
+          <span className={styles.loadingMark} aria-hidden="true" />
+          <span className={styles.loadingTitle}>{WORLD_TITLE}</span>
+          <span className={styles.loadingBar} aria-hidden="true"><i /></span>
+          <span className={styles.srOnly}>Building the world…</span>
+        </div>
+      )}
 
       {phase === "intro" && (
         <section className={styles.intro} aria-labelledby="world-title">
           <p className={styles.introKicker}>Algoma University · NCoE ImmXrsive</p>
-          <h1 id="world-title" className={styles.introTitle}>Immerse yourself.<br /><em>Meet ImmXrsive.</em></h1>
+          <h1 id="world-title" className={styles.introTitle} aria-label="Immerse yourself. Meet ImmXrsive.">
+            <KineticLine text="Immerse yourself." offset={0} />
+            <em><KineticLine text="Meet ImmXrsive." offset={17} /></em>
+          </h1>
           <p className={styles.introBody}>A small world of student stories, real projects and ways to connect. Guide Spark around the planet and step into any building.</p>
           <div className={styles.introActions}>
             <button type="button" className={styles.primary} onClick={enter} autoFocus>Enter the world</button>
@@ -243,17 +258,23 @@ export function WorldExperience() {
         <header className={styles.topbar}>
           <Link href="/" className={styles.back}><span aria-hidden="true">←</span> Main site</Link>
           <p className={styles.brand}>{WORLD_TITLE}</p>
-          {phase === "explore" && (
-            <nav className={styles.tools} aria-label="World controls">
-              <button type="button" onClick={() => setShowPlaces(value => !value)} aria-expanded={showPlaces} aria-controls="world-places">Places</button>
-              <button type="button" onClick={() => { noteInput(); worldRef.current?.setMap(mode !== "map"); }} aria-pressed={mode === "map"}>{mode === "map" ? "Close map" : "Map"}</button>
-              <button type="button" onClick={() => (touring ? stopTour() : startTour())} aria-pressed={touring}>{touring ? "Stop tour" : "Tour"}</button>
-              <button type="button" onClick={() => setListView(true)}>List</button>
-              <button type="button" onClick={() => setShowHelp(value => !value)} aria-expanded={showHelp} aria-label="How to explore">?</button>
-            </nav>
-          )}
         </header>
       )}
+
+      {phase === "explore" && (
+        <WorldDock
+          magnetic={!coarse}
+          items={[
+            { id: "places", label: "Places", icon: DockIcons.places, expanded: showPlaces, controls: "world-places", onClick: () => { setShowHelp(false); setShowPlaces(value => !value); } },
+            { id: "map", label: mode === "map" ? "Close map" : "Map", icon: DockIcons.map, active: mode === "map", onClick: () => { noteInput(); setShowPlaces(false); worldRef.current?.setMap(mode !== "map"); } },
+            { id: "tour", label: touring ? "Stop tour" : "Tour", icon: touring ? DockIcons.stop : DockIcons.tour, active: touring, onClick: () => { setShowPlaces(false); if (touring) stopTour(); else startTour(); } },
+            { id: "list", label: "List", icon: DockIcons.list, onClick: () => setListView(true) },
+            { id: "help", label: "Help", icon: DockIcons.help, expanded: showHelp, controls: "world-help", onClick: () => { setShowPlaces(false); setShowHelp(value => !value); } },
+          ]}
+        />
+      )}
+
+      {arrived && !panel && !caption && <p key={arrived.key} className={styles.arrived} aria-hidden="true"><span>Arrived</span>{placeById(arrived.id).name}</p>}
 
       {showPlaces && phase === "explore" && (
         <nav id="world-places" className={styles.placesMenu} aria-label="Places">
@@ -271,7 +292,7 @@ export function WorldExperience() {
       )}
 
       {showHelp && phase === "explore" && (
-        <aside className={styles.help} aria-label="How to explore">
+        <aside id="world-help" className={styles.help} aria-label="How to explore">
           <ul>
             <li><kbd>W A S D</kbd> or arrows: move</li>
             <li><kbd>Shift</kbd>: boost · <kbd>Space</kbd>: hop</li>
@@ -314,6 +335,27 @@ export function WorldExperience() {
       <p className={styles.disclaimer}>Independent student-built course project. Not an official ImmXrsive or Algoma University service.</p>
       <p className={styles.srOnly} aria-live="polite">{announcement}</p>
     </div>
+  );
+}
+
+/** Letters rise out of a mask with a soft blur, one after another (kinetic text reveal). */
+function KineticLine({ text, offset }: { text: string; offset: number }) {
+  return (
+    <span className={styles.kineticLine} aria-hidden="true">
+      {text.split(" ").map((word, w, words) => {
+        const before = words.slice(0, w).join(" ").length + (w > 0 ? 1 : 0);
+        return (
+          <Fragment key={`${word}-${w}`}>
+            <span className={styles.kineticWord}>
+              {[...word].map((letter, i) => (
+                <span key={i} className={styles.kineticLetter} style={{ "--i": offset + before + i } as CSSProperties}>{letter}</span>
+              ))}
+            </span>
+            {w < words.length - 1 && " "}
+          </Fragment>
+        );
+      })}
+    </span>
   );
 }
 

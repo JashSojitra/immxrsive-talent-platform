@@ -5,6 +5,8 @@ import { brand, accent } from "./palette";
 import { fbm, mulberry32, smoothstep } from "./noise";
 
 export const PLANET_RADIUS = 40;
+/** Animated uniforms shared by the planet grid and the path shaders. */
+export const terrainUniforms = { uTime: { value: 0 } };
 export const WATER_RADIUS = PLANET_RADIUS + 0.05;
 /** Height of every flattened plaza above the base radius. */
 export const PLAZA_LIFT = 0.55;
@@ -115,10 +117,31 @@ export function buildPlanet() {
   }
   geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
   geometry.computeVertexNormals();
-  const material = new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: 0.88, metalness: 0.02, emissive: new THREE.Color(0x120c30), emissiveIntensity: 1 });
+  const material = new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: 0.82, metalness: 0.05, emissive: new THREE.Color(0x120c30), emissiveIntensity: 1 });
+  // Holographic latitude/longitude grid and a pulse that ripples out from the hub (north pole).
+  material.onBeforeCompile = shader => {
+    shader.uniforms.uTime = terrainUniforms.uTime;
+    shader.vertexShader = shader.vertexShader
+      .replace("#include <common>", "#include <common>\nvarying vec3 vPlanetPos;")
+      .replace("#include <worldpos_vertex>", "#include <worldpos_vertex>\nvPlanetPos = (modelMatrix * vec4(transformed, 1.0)).xyz;");
+    shader.fragmentShader = shader.fragmentShader
+      .replace("#include <common>", "#include <common>\nvarying vec3 vPlanetPos;\nuniform float uTime;")
+      .replace("#include <emissivemap_fragment>", `#include <emissivemap_fragment>
+        vec3 dir = normalize(vPlanetPos);
+        float lat = asin(clamp(dir.y, -1.0, 1.0));
+        float lon = atan(dir.z, dir.x);
+        vec2 g = vec2(lon * 12.0 / 3.14159, lat * 12.0 / 3.14159);
+        vec2 gw = fwidth(g) * 0.9;
+        vec2 gl = smoothstep(gw, vec2(0.0), abs(fract(g + 0.5) - 0.5));
+        float grid = max(gl.x, gl.y) * (1.0 - smoothstep(0.86, 0.995, abs(dir.y)));
+        float fromPole = acos(clamp(dir.y, -1.0, 1.0));
+        float wave = fract(uTime * 0.11);
+        float ring = smoothstep(0.06, 0.0, abs(fromPole - wave * 3.14159)) * (1.0 - wave);
+        totalEmissiveRadiance += vec3(0.89, 0.11, 0.47) * (grid * 0.045 + ring * 0.5 * (0.35 + grid * 2.5));`);
+  };
   const mesh = new THREE.Mesh(geometry, material);
   mesh.name = "planet";
-  mesh.receiveShadow = false;
+  mesh.receiveShadow = true;
   return mesh;
 }
 
@@ -171,7 +194,27 @@ export function buildAtmosphere() {
 export function buildPaths() {
   const group = new THREE.Group();
   group.name = "paths";
-  const material = new THREE.MeshBasicMaterial({ color: brand.pink, transparent: true, opacity: 0.32, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
+  // Light that flows outward from the hub along every path.
+  const material = new THREE.ShaderMaterial({
+    uniforms: { uTime: terrainUniforms.uTime, uColor: { value: new THREE.Color(brand.pink) } },
+    vertexShader: /* glsl */ `
+      varying vec2 vUv;
+      void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+    fragmentShader: /* glsl */ `
+      uniform float uTime; uniform vec3 uColor; varying vec2 vUv;
+      void main() {
+        float edge = 1.0 - abs(vUv.y * 2.0 - 1.0);
+        float core = smoothstep(0.0, 0.6, edge);
+        float pulse = pow(fract(vUv.x * 6.0 - uTime * 0.45), 6.0);
+        float alpha = core * (0.2 + pulse * 0.9);
+        gl_FragColor = vec4(uColor * (1.0 + pulse * 1.6), alpha);
+      }`,
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+    toneMapped: false,
+  });
   const start = doorstep("hub", 4);
   const arcs: Array<[THREE.Vector3, THREE.Vector3]> = [];
   for (const place of places) {
@@ -180,17 +223,19 @@ export function buildPaths() {
     arcs.push([start, end]);
     const steps = 90;
     const vertices: number[] = [];
+    const uvs: number[] = [];
     const indices: number[] = [];
     const point = new THREE.Vector3();
     const axis = new THREE.Vector3().crossVectors(start, end).normalize();
     const total = start.angleTo(end);
     for (let i = 0; i <= steps; i++) {
       const dir = start.clone().applyAxisAngle(axis, (total * i) / steps);
-      const width = 0.2 + 0.05 * Math.sin(i * 0.9);
+      const width = 0.42;
       surfacePoint(dir, 0.07, point);
       const a = point.clone().addScaledVector(axis, width);
       const b = point.clone().addScaledVector(axis, -width);
       vertices.push(a.x, a.y, a.z, b.x, b.y, b.z);
+      uvs.push(i / steps, 0, i / steps, 1);
       if (i < steps) {
         const k = i * 2;
         indices.push(k, k + 1, k + 2, k + 1, k + 3, k + 2);
@@ -198,6 +243,7 @@ export function buildPaths() {
     }
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
+    geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
     geometry.setIndex(indices);
     group.add(new THREE.Mesh(geometry, material));
   }
@@ -241,6 +287,7 @@ export function buildScatter(arcs: Array<[THREE.Vector3, THREE.Vector3]>) {
       placed++;
     }
     mesh.count = placed;
+    mesh.castShadow = true;
     mesh.instanceMatrix.needsUpdate = true;
     if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
     group.add(mesh);
