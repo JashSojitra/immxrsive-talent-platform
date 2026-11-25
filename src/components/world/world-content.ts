@@ -34,6 +34,8 @@ export type Place = {
 };
 
 export const WORLD_TITLE = "ImmXrsive World";
+/** The Stories House shelf (adapted ThreeUI Complete Shelf, see docs/design/immxrsive-world.md). */
+export const STORIES_SHELF_URL = "/world/stories-shelf.html";
 
 export const places: readonly Place[] = [
   {
@@ -71,6 +73,7 @@ export const places: readonly Place[] = [
         name: "Jash Sojitra",
         role: "Developer of this platform · XR Program & Partnership Student Coordinator",
         initials: "JS",
+        photo: "/world/students/jash-sojitra.jpg",
         href: "https://www.linkedin.com/in/jashsojitra/",
       },
       { kind: "coming-soon" },

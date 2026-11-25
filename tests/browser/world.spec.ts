@@ -25,3 +25,12 @@ test("/world?list renders every place without WebGL", async ({ page }) => {
   expect(await page.evaluate(() => document.documentElement.scrollWidth))
     .toBeLessThanOrEqual(test.info().project.name === "mobile-390" ? 390 : 1_280);
 });
+
+test("the Stories House shelf renders the student volumes", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", error => errors.push(error.message));
+  await page.goto("/world/stories-shelf.html");
+  await expect(page.locator("#selection-title")).toHaveText("Jash Sojitra", { timeout: 20_000 });
+  await expect(page.getByRole("tablist", { name: "Choose a volume" }).getByRole("tab")).toHaveCount(7);
+  expect(errors).toEqual([]);
+});

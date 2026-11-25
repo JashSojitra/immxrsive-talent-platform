@@ -6,7 +6,7 @@ import { Fragment, useCallback, useEffect, useRef, useState, type CSSProperties,
 import type { FocusLayout, WorldHandle, WorldMode } from "./engine/world";
 import { PlaceContent } from "./PlaceContent";
 import { DockIcons, WorldDock } from "./WorldDock";
-import { placeById, places, tourOrder, WORLD_TITLE, type PlaceId } from "./world-content";
+import { placeById, places, STORIES_SHELF_URL, tourOrder, WORLD_TITLE, type PlaceId } from "./world-content";
 import styles from "./world.module.css";
 
 type Phase = "loading" | "intro" | "explore" | "fallback";
@@ -39,6 +39,7 @@ export function WorldExperience() {
   const [listView, setListView] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [showPlaces, setShowPlaces] = useState(false);
+  const [shelfOpen, setShelfOpen] = useState(false);
   const [coarse, setCoarse] = useState(false);
   const [kiosk, setKiosk] = useState(false);
   const [announcement, setAnnouncement] = useState("");
@@ -75,11 +76,34 @@ export function WorldExperience() {
   const openPanel = useCallback((id: PlaceId) => {
     const world = worldRef.current;
     returnFocusRef.current = document.activeElement as HTMLElement | null;
+    if (id === "stories") {
+      // Stories House opens the student shelf full screen.
+      world?.setPaused(true);
+      setShelfOpen(true);
+      setAnnouncement("Stories House shelf opened. Press Escape or Back to the world to return.");
+      return;
+    }
     const layout: FocusLayout = window.innerWidth < 900 ? "bottom" : "side";
     world?.focus(id, layout);
     setPanel(id);
     setAnnouncement(`${placeById(id).name} opened.`);
   }, []);
+
+  const closeShelf = useCallback(() => {
+    worldRef.current?.setPaused(false);
+    setShelfOpen(false);
+    window.setTimeout(() => returnFocusRef.current?.focus?.(), 0);
+  }, []);
+
+  /* The shelf (same-origin iframe) asks to close with Escape. */
+  useEffect(() => {
+    if (!shelfOpen) return;
+    const onMessage = (event: MessageEvent) => {
+      if (event.origin === window.location.origin && event.data?.type === "immxrsive:shelf-escape") closeShelf();
+    };
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, [shelfOpen, closeShelf]);
 
   const closePanel = useCallback(() => {
     worldRef.current?.focus(null);
@@ -168,16 +192,17 @@ export function WorldExperience() {
     if (phase !== "explore") return;
     const id = window.setInterval(() => {
       const idle = performance.now() - lastInput.current;
-      if (!touringRef.current && !panel && idle > (kiosk ? KIOSK_IDLE_MS : IDLE_TOUR_MS)) startTour();
+      if (!touringRef.current && !panel && !shelfOpen && idle > (kiosk ? KIOSK_IDLE_MS : IDLE_TOUR_MS)) startTour();
     }, 2_000);
     return () => window.clearInterval(id);
-  }, [phase, panel, kiosk, startTour]);
+  }, [phase, panel, shelfOpen, kiosk, startTour]);
 
   /* Keyboard: Escape closes panels / help / map. */
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
-      if (panel) closePanel();
+      if (shelfOpen) closeShelf();
+      else if (panel) closePanel();
       else if (showPlaces) setShowPlaces(false);
       else if (showHelp) setShowHelp(false);
       else if (mode === "map") worldRef.current?.setMap(false);
@@ -185,7 +210,7 @@ export function WorldExperience() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [panel, showPlaces, showHelp, mode, closePanel, noteInput]);
+  }, [panel, shelfOpen, showPlaces, showHelp, mode, closePanel, closeShelf, noteInput]);
 
   useEffect(() => {
     if (panel) panelHeadingRef.current?.focus({ preventScroll: true });
@@ -331,6 +356,15 @@ export function WorldExperience() {
       )}
 
       {phase === "explore" && coarse && !panel && <Joystick world={worldRef} onInput={noteInput} />}
+
+      {shelfOpen && (
+        <div className={styles.shelf} role="dialog" aria-modal="true" aria-label="Stories House shelf">
+          <iframe className={styles.shelfFrame} src={STORIES_SHELF_URL} title="Stories House: student volumes" />
+          <button type="button" className={styles.shelfBack} onClick={closeShelf} autoFocus>
+            <span aria-hidden="true">←</span> Back to the world
+          </button>
+        </div>
+      )}
 
       <p className={styles.disclaimer}>Independent student-built course project. Not an official ImmXrsive or Algoma University service.</p>
       <p className={styles.srOnly} aria-live="polite">{announcement}</p>

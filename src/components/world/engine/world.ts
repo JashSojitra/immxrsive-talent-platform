@@ -32,6 +32,8 @@ export type WorldHandle = {
   focus: (id: PlaceId | null, layout?: FocusLayout) => void;
   setMap: (on: boolean) => void;
   setReducedMotion: (on: boolean) => void;
+  /** Stop rendering while another full-screen scene (the shelf) is open. */
+  setPaused: (on: boolean) => void;
   setLabel: (id: PlaceId, element: HTMLElement | null) => void;
   /** Analog input from the on-screen joystick, each in [-1, 1]. */
   setStick: (forward: number, turn: number) => void;
@@ -465,6 +467,7 @@ export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion:
   resize();
 
   let frame = 0;
+  let paused = false;
   let last = performance.now();
   let ambientTime = 0;
   let clockTime = 0;
@@ -473,7 +476,7 @@ export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion:
 
   const tick = (now: number) => {
     frame = requestAnimationFrame(tick);
-    if (document.hidden) { last = now; return; }
+    if (document.hidden || paused) { last = now; return; }
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
     clockTime += dt;
@@ -552,6 +555,7 @@ export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion:
       } else if (!on && mode === "map") setMode("explore", 1.8);
     },
     setReducedMotion: on => { reducedMotion = on; },
+    setPaused: on => { paused = on; keys.clear(); },
     setLabel: (id, element) => { if (element) labels.set(id, element); else labels.delete(id); },
     setStick: (forward, turn) => {
       stick.forward = forward;

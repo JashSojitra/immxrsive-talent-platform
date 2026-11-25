@@ -205,8 +205,8 @@ function buildQueen(): Omit<Building, "id"> {
 
 /* ---------- Stories House ---------- */
 
-function portraitTexture(initials: string | null) {
-  return canvasTexture(256, 320, ctx => {
+function portraitTexture(initials: string | null, photo?: string) {
+  const texture = canvasTexture(256, 320, ctx => {
     const gradient = ctx.createLinearGradient(0, 0, 256, 320);
     gradient.addColorStop(0, initials ? "#e31c79" : "#3b2a6e");
     gradient.addColorStop(1, initials ? "#582c83" : "#1d1a3d");
@@ -224,6 +224,22 @@ function portraitTexture(initials: string | null) {
     ctx.globalAlpha = 0.8;
     ctx.fillText(initials ? "STUDENT STORY" : "NEXT STORY", 128, 262);
   });
+  if (photo) {
+    const image = new Image();
+    image.onload = () => {
+      const ctx = (texture.image as HTMLCanvasElement).getContext("2d")!;
+      const scale = Math.max(220 / image.width, 230 / image.height);
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(18, 18, 220, 230);
+      ctx.clip();
+      ctx.drawImage(image, 128 - (image.width * scale) / 2, 18, image.width * scale, image.height * scale);
+      ctx.restore();
+      texture.needsUpdate = true;
+    };
+    image.src = photo;
+  }
+  return texture;
 }
 
 function buildStories(): Omit<Building, "id"> {
@@ -238,9 +254,9 @@ function buildStories(): Omit<Building, "id"> {
   group.add(mesh(new THREE.TorusGeometry(0.85, 0.12, 6, 16, Math.PI), neon(brand.pink, 2), 0, 2.5, 3.55));
 
   // Portrait frames around the facade.
-  const frames3d: Array<[number, string | null]> = [[-0.75, "JS"], [0.75, null], [Math.PI, null], [-2, null], [2, null]];
-  for (const [angle, initials] of frames3d) {
-    const frame = mesh(new THREE.PlaneGeometry(1.25, 1.56), new THREE.MeshBasicMaterial({ map: portraitTexture(initials), toneMapped: false }));
+  const frames3d: Array<[number, string | null, string?]> = [[-0.75, "JS", "/world/students/jash-sojitra.jpg"], [0.75, null], [Math.PI, null], [-2, null], [2, null]];
+  for (const [angle, initials, photo] of frames3d) {
+    const frame = mesh(new THREE.PlaneGeometry(1.25, 1.56), new THREE.MeshBasicMaterial({ map: portraitTexture(initials, photo), toneMapped: false }));
     frame.position.set(Math.sin(angle) * 3.78, 2.05, Math.cos(angle) * 3.78);
     frame.rotation.y = angle;
     group.add(frame);

@@ -9,7 +9,7 @@ A standalone, explorable 3D world for events and first meetings. It does not cha
 - **Places** (`src/components/world/world-content.ts`):
   - **The X** (hub, north pole): what ImmXrsive is.
   - **24 Queen St E**: Algoma University's Brampton campus with Garden Square. A stylized building; replace it with a closer model once reference photos are approved.
-  - **Stories House**: student story cards (Jash Sojitra; the others say "coming soon").
+  - **Stories House**: opens the **student shelf** full screen (see below). The list view keeps the story cards.
   - **Showcase Lab**: SYNC, Canon DNA, Project Nexus, plus a "coming soon" slot.
   - **Industry Dock**: partners and inquiries (bay, ferry, lighthouse).
   - **Launchpad**: join and sign in, with a real QR code (`public/world/join-qr.svg`).
@@ -18,6 +18,26 @@ A standalone, explorable 3D world for events and first meetings. It does not cha
 - **Kiosk mode:** `/world?kiosk` enters automatically and starts the tour after 25 s idle. Use it at event tables.
 - **List view:** `/world?list`, or the "List" button. The same content without WebGL. This is also the automatic fallback when WebGL is unavailable.
 - **Quality:** resolution and then bloom drop automatically on slow devices. `/world?hq` locks full quality (use it for recordings).
+
+## Stories House shelf (`/world/stories-shelf.html`)
+
+An adaptation of ThreeUI's **Complete Shelf** (`complete-shelf-v2.html`, SHA-256 `606f200fed8602c243f40a11c8c364f0e625c57f80e7c97dc76419da207f198e`), taken from the MIT-licensed npm package `@designcodeio/threeui@1.2.0` (© 2026 Meng To; licence in `public/world/THREEUI-LICENSE.txt`). Its scene, shaders, motion and interactions are kept verbatim. `scripts/threeui/adapt-complete-shelf.py` records every change and can regenerate the page from the original HTML:
+
+```
+npm pack @designcodeio/threeui@1.2.0 && tar -xzf designcodeio-threeui-1.2.0.tgz
+python3 scripts/threeui/adapt-complete-shelf.py package/lib-dist/assets/landing-pages/complete-shelf-v2.html public/world/stories-shelf.html
+```
+
+Changes made:
+- Seven student volumes replace the seven tools: Jash Sojitra (with photo), plus six explicit **Coming Soon** volumes.
+- The tool cover-art atlas was removed. Covers are drawn in code from each volume's colours and motif, and a student photo goes in an arched window.
+- The ImmXrsive accent replaces copper, and the editorial copy is rebranded.
+- A hover preview card (avatar, name, preview text) for mouse users. On touch devices the selected volume's preview shows in the bottom bar instead.
+- Flat-printed cover text instead of the floating foil text, so covers stay readable on any GPU.
+- three.js r165 is self-hosted in `public/world/vendor/three-0.165.0` (MIT), so it doesn't depend on a CDN.
+- Escape with no open volume tells the parent world to close the shelf, and the world stops rendering while the shelf is open.
+
+To add a student, edit the `books` list in the adaptation script (`photo` points to `public/world/students/<id>.jpg`, about 720×792) and regenerate. Also update `world-content.ts`.
 
 ## Content rules
 
