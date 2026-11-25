@@ -8,7 +8,7 @@ A standalone, explorable 3D world for events and first meetings. It does not cha
 - **Spark:** an original, gender-neutral guide (a floating ball of energy with an X-shaped core, eyes and a light trail). It is deliberately *not* the Algoma Thunderbird (a sacred Anishinaabe symbol and the university's dodem) or Boomer the Thunderbolt (an official mascot that would need university approval).
 - **Places** (`src/components/world/world-content.ts`):
   - **The X** (hub, north pole): what ImmXrsive is.
-  - **24 Queen St E**: Algoma University's Brampton campus with Garden Square. A stylized building; replace it with a closer model once reference photos are approved.
+  - **24 Queen St E**: Algoma University's Brampton campus with Garden Square, modelled from Google Street View: a cream 11-storey tower with a full-height blue glass bay, a two-storey podium, a green glass canopy and the Algoma University sign band. Other tenants' signs are left blank on purpose.
   - **Stories House**: opens the **student shelf** full screen (see below). The list view keeps the story cards.
   - **Showcase Lab**: SYNC, Canon DNA, Project Nexus, plus a "coming soon" slot.
   - **Industry Dock**: partners and inquiries (bay, ferry, lighthouse).

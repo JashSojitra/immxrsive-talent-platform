@@ -31,8 +31,7 @@ test("stories and showcase never invent content: unknown slots are explicit plac
   const showcase = places.find(place => place.id === "showcase")!.showcase!;
   const projects = showcase.filter(item => item.kind === "project");
   expect(projects.map(item => item.name)).toEqual(["SYNC", "Canon DNA", "Project Nexus"]);
-  // Project Nexus has no approved summary yet, so it must not carry one.
-  expect(projects.find(item => item.name === "Project Nexus")).not.toHaveProperty("summary");
+  for (const project of projects) expect(project.summary).toBeTruthy();
 });
 
 test("latitude/longitude map to unit vectors with the hub on the north pole", () => {

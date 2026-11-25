@@ -102,7 +102,12 @@ export const places: readonly Place[] = [
         summary: "A reuse-driven application design studio concept, built for a Canon hackathon challenge.",
         tags: ["Software", "Design systems"],
       },
-      { kind: "project", name: "Project Nexus", tags: ["Details coming soon"] },
+      {
+        kind: "project",
+        name: "Project Nexus",
+        summary: "An AI-assisted employee onboarding platform that turns a fragmented onboarding process into a smoother, more efficient start for new employees.",
+        tags: ["AI", "Software", "Onboarding"],
+      },
       { kind: "coming-soon" },
     ],
   },

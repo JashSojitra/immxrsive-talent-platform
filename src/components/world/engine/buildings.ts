@@ -129,53 +129,120 @@ function buildHub(): Omit<Building, "id"> {
 
 /* ---------- 24 Queen St E (Algoma University, Brampton) ---------- */
 
-function facadeTexture(columns: number, signage: boolean) {
-  const rng = mulberry32(columns * 97 + (signage ? 1 : 0));
-  return canvasTexture(1024, 820, ctx => {
-    ctx.fillStyle = "#34344a";
-    ctx.fillRect(0, 0, 1024, 820);
-    // Banding between floors.
-    ctx.fillStyle = "#3f3f58";
-    for (let floor = 0; floor < 4; floor++) ctx.fillRect(0, 40 + floor * 160, 1024, 18);
-    const colW = 1024 / columns;
-    for (let floor = 0; floor < 3; floor++) {
+type FacadeDraw = (ctx: CanvasRenderingContext2D, glow: boolean) => void;
+
+/** Colour + glow maps from one drawing: glow=true paints only what is lit at night. */
+function facadeMaps(width: number, height: number, draw: FacadeDraw) {
+  const map = canvasTexture(width, height, ctx => draw(ctx, false));
+  const emissiveMap = canvasTexture(width, height, ctx => {
+    ctx.fillStyle = "#000";
+    ctx.fillRect(0, 0, width, height);
+    draw(ctx, true);
+  });
+  return new THREE.MeshStandardMaterial({ map, emissiveMap, emissive: 0xffffff, emissiveIntensity: 0.9, roughness: 0.62 });
+}
+
+/** Cream precast tower with a grid of blue-tinted punched windows (24 Queen St E, from Street View). */
+function towerFacade(columns: number, floors: number, seed: number) {
+  const rng = mulberry32(seed);
+  const lit = Array.from({ length: columns * floors }, () => rng() > 0.62);
+  return facadeMaps(512, 1024, (ctx, glow) => {
+    if (!glow) {
+      ctx.fillStyle = "#ddd3c1";
+      ctx.fillRect(0, 0, 512, 1024);
+      ctx.fillStyle = "rgba(0,0,0,.06)";
+      for (let f = 0; f <= floors; f++) ctx.fillRect(0, f * (1024 / floors) - 2, 512, 4);
+    }
+    const cellW = 512 / columns;
+    const cellH = 1024 / floors;
+    for (let f = 0; f < floors; f++) {
       for (let c = 0; c < columns; c++) {
-        const lit = rng() > 0.38;
-        ctx.fillStyle = lit ? (rng() > 0.3 ? "#ffd29a" : "#b9d4ff") : "#1c2346";
-        ctx.fillRect(c * colW + 10, 72 + floor * 160, colW - 20, 112);
-        ctx.fillStyle = "rgba(255,255,255,.08)";
-        ctx.fillRect(c * colW + 10, 72 + floor * 160, colW - 20, 10);
+        const x = c * cellW + cellW * 0.16;
+        const y = f * cellH + cellH * 0.2;
+        const on = lit[f * columns + c];
+        if (glow) {
+          if (!on) continue;
+          ctx.fillStyle = "#ffcf94";
+        } else {
+          const gradient = ctx.createLinearGradient(x, y, x, y + cellH * 0.6);
+          gradient.addColorStop(0, on ? "#f3c993" : "#3b5684");
+          gradient.addColorStop(1, on ? "#d9a56d" : "#1b2a4a");
+          ctx.fillStyle = gradient;
+        }
+        ctx.fillRect(x, y, cellW * 0.68, cellH * 0.6);
       }
     }
-    // Ground-floor glazing.
-    ctx.fillStyle = "#9fc4ff";
-    ctx.fillRect(0, 588, 1024, 232);
-    ctx.fillStyle = "#24283f";
-    for (let c = 0; c <= 8; c++) ctx.fillRect(c * 128 - 4, 588, 8, 232);
-    if (signage) {
-      ctx.fillStyle = "#14141f";
-      ctx.fillRect(150, 520, 724, 64);
-      ctx.fillStyle = "#f4f0e8";
-      ctx.font = `600 38px ${FONT}`;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText("ALGOMA UNIVERSITY  ·  24 QUEEN ST E", 512, 553);
+  });
+}
+
+/** Two-storey podium: upper windows, ground-floor storefronts and the Algoma University sign band. */
+function podiumFront() {
+  return facadeMaps(1024, 512, (ctx, glow) => {
+    if (!glow) {
+      ctx.fillStyle = "#e2d8c6";
+      ctx.fillRect(0, 0, 1024, 512);
     }
+    // Second-floor windows.
+    for (const x of [40, 250, 640, 850]) {
+      ctx.fillStyle = glow ? "#ffd7a3" : "#33507f";
+      ctx.fillRect(x, 40, 134, 120);
+    }
+    // Ground floor: stone piers between dark storefront glass.
+    const bays = [[20, 300], [330, 370], [654, 370]] as const;
+    if (!glow) {
+      ctx.fillStyle = "#b48d87";
+      ctx.fillRect(0, 230, 1024, 282);
+    }
+    for (const [x, w] of bays) {
+      ctx.fillStyle = glow ? "#8fb6ff" : "#1b2338";
+      ctx.fillRect(x, 300, w, 212);
+      if (!glow) {
+        ctx.fillStyle = "rgba(255,255,255,.08)";
+        for (let m = x + 60; m < x + w; m += 70) ctx.fillRect(m, 300, 4, 212);
+      }
+    }
+    // Black sign band; only the Algoma University sign is shown.
+    ctx.fillStyle = glow ? "#000" : "#111118";
+    ctx.fillRect(0, 238, 1024, 52);
+    ctx.fillStyle = "#e31c79";
+    ctx.fillRect(655, 246, 18, 36);
+    ctx.fillStyle = "#f4f0e8";
+    ctx.font = `600 30px ${FONT}`;
+    ctx.textBaseline = "middle";
+    ctx.fillText("ALGOMA UNIVERSITY", 690, 265);
+    // Entrance doors under the canopy.
+    ctx.fillStyle = glow ? "#ffe6c2" : "#2a2f40";
+    ctx.fillRect(470, 360, 84, 152);
   });
 }
 
 function buildQueen(): Omit<Building, "id"> {
   const group = new THREE.Group();
-  const front = facadeTexture(8, true);
-  const side = facadeTexture(5, false);
-  const wall = (map: THREE.Texture) => new THREE.MeshStandardMaterial({ map, emissiveMap: map, emissive: 0xffffff, emissiveIntensity: 0.32, roughness: 0.6 });
-  const roof = solid(0x2a2a3a);
-  const tower = mesh(new THREE.BoxGeometry(10, 8, 6), [wall(side), wall(side), roof, roof, wall(front), wall(front)], 0, 4, -2.5);
-  group.add(tower);
-  group.add(mesh(new THREE.BoxGeometry(10.4, 0.35, 6.4), solid(0x1d1d2b), 0, 8.15, -2.5));
-  group.add(edges(new THREE.BoxGeometry(10.4, 0.35, 6.4), brand.pink, 0.6).translateY(8.15).translateZ(-2.5));
-  group.add(mesh(new THREE.BoxGeometry(2.2, 1, 1.6), solid(0x3a3a4c), -2.5, 8.8, -3));
-  group.add(mesh(new THREE.BoxGeometry(1.4, 0.8, 1.2), solid(0x3a3a4c), 2.8, 8.7, -2));
+  const roof = solid(0x2c2a36);
+
+  // Podium (two storeys) across the full frontage.
+  const podiumSide = towerFacade(4, 2, 7);
+  const podium = mesh(new THREE.BoxGeometry(12, 3.6, 7), [podiumSide, podiumSide, roof, roof, podiumFront(), podiumSide], 0, 1.8, -4.5);
+  group.add(podium);
+  group.add(mesh(new THREE.BoxGeometry(12.3, 0.22, 7.3), solid(0xcfc4b0), 0, 3.66, -4.5));
+
+  // Tower: nine more storeys, set back from the podium face.
+  const front = towerFacade(8, 9, 21);
+  const side = towerFacade(6, 9, 33);
+  group.add(mesh(new THREE.BoxGeometry(8.4, 9, 5.6), [side, side, roof, roof, front, side], 0, 3.6 + 4.5, -5.2));
+  group.add(mesh(new THREE.BoxGeometry(8.7, 0.3, 5.9), solid(0xcfc4b0), 0, 12.75, -5.2));
+  group.add(edges(new THREE.BoxGeometry(8.7, 0.3, 5.9), brand.pink, 0.5).translateY(12.75).translateZ(-5.2));
+  group.add(mesh(new THREE.BoxGeometry(3.2, 1.1, 2.4), solid(0x3a3846), 1.6, 13.45, -5.6));
+
+  // Full-height blue glass bay down the centre of the tower, with mullions and a cap.
+  const bayGlass = new THREE.MeshStandardMaterial({ color: 0x2f5fa6, emissive: new THREE.Color(0x173a7a), emissiveIntensity: 0.7, roughness: 0.12, metalness: 0.65 });
+  group.add(mesh(new THREE.BoxGeometry(2.4, 10.4, 0.7), bayGlass, 0, 3.4 + 5.2, -2.2));
+  for (let f = 0; f <= 10; f++) group.add(mesh(new THREE.BoxGeometry(2.46, 0.06, 0.74), solid(0x9fb2c9), 0, 3.4 + f * 1.04, -2.2));
+  group.add(mesh(new THREE.BoxGeometry(2.8, 0.35, 1.0), solid(0xcfc4b0), 0, 13.8, -2.3));
+
+  // Green glass entrance canopy.
+  const canopy = mesh(new THREE.BoxGeometry(3.4, 0.18, 1.8), new THREE.MeshStandardMaterial({ color: 0x4f9a86, emissive: new THREE.Color(0x1f5a4a), emissiveIntensity: 0.5, roughness: 0.2, metalness: 0.3, transparent: true, opacity: 0.85 }), 0, 2.35, -0.3);
+  group.add(canopy);
 
   // Garden Square in front.
   const square = new THREE.Group();
@@ -190,13 +257,15 @@ function buildQueen(): Omit<Building, "id"> {
   for (const [x, z] of [[-2.6, 4.6], [2.6, 4.6], [-5.6, 1.6], [5.6, 1.6]]) square.add(lamp(x, z));
   for (const x of [-2.2, 2.2]) square.add(mesh(new THREE.BoxGeometry(1.6, 0.35, 0.5), solid(0x5b4a6e), x, 0.3, -2.4));
   group.add(square);
-  group.add(light(accent.warmWindow, 40, 22, 4));
+  const plazaLight = light(accent.warmWindow, 22, 20, 5);
+  plazaLight.position.z = 5;
+  group.add(plazaLight);
 
   return {
     group,
     extras: [],
-    height: 10,
-    footprint: 6,
+    height: 14.6,
+    footprint: 7,
     update: time => {
       jet.scale.y = 0.85 + Math.sin(time * 3.1) * 0.15;
     },

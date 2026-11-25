@@ -26,11 +26,20 @@ test("/world?list renders every place without WebGL", async ({ page }) => {
     .toBeLessThanOrEqual(test.info().project.name === "mobile-390" ? 390 : 1_280);
 });
 
-test("the Stories House shelf renders the student volumes", async ({ page }) => {
+test("the Stories House shelf renders the student volumes (3D, or the static shelf without WebGL)", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", error => errors.push(error.message));
   await page.goto("/world/stories-shelf.html");
-  await expect(page.locator("#selection-title")).toHaveText("Jash Sojitra", { timeout: 20_000 });
-  await expect(page.getByRole("tablist", { name: "Choose a volume" }).getByRole("tab")).toHaveCount(7);
+  const tabs = page.getByRole("tablist", { name: "Choose a volume" }).getByRole("tab");
+  const fallback = page.locator("#static-fallback:not([hidden])");
+  await expect(tabs.first().or(fallback)).toBeVisible({ timeout: 20_000 });
+  if (await fallback.count()) {
+    // CI runners often have no WebGL: the shelf must still list every volume.
+    await expect(fallback.locator(".fallback-book")).toHaveCount(7);
+    await expect(fallback).toContainText("Jash Sojitra");
+  } else {
+    await expect(tabs).toHaveCount(7);
+    await expect(page.locator("#selection-title")).toHaveText("Jash Sojitra");
+  }
   expect(errors).toEqual([]);
 });
