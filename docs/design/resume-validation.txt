@@ -23,3 +23,15 @@ The new integration test has been typechecked but not executed. Run it when the 
 Raw outputs (local only, untracked): output/resume-*.txt
 No new screenshots: the new profile/dashboard blocks render only with database-backed data.
 No production data, schema or migration changes. No merge or deployment.
+
+UPDATE 2026-11-25 — blocked suites now validated in GitHub Actions
+Workflow: .github/workflows/release-validation.yml (ephemeral postgres:17 service, 17.12)
+Run 45517894586 on 1a15033: every step passed.
+  Test migrations: PASS
+  Unit/frontend: 430 passed, 0 failed
+  Integration: 219 passed, 0 failed (includes the new linked-credit test)
+  Browser: 200 passed, 6 existing viewport-specific skips, 0 failed (206 total)
+    including the new end-to-end "staff link a verified student profile as a
+    read-only credit" test in both the desktop and mobile-390 projects.
+First run 45517337318 (37292ea) failed only because the container lacked
+Supabase's anon/authenticated roles; the workflow now creates them as NOLOGIN.

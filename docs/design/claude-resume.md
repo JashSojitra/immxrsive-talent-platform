@@ -13,12 +13,13 @@ Branch: `feat/immxrsive-ux-overhaul`, PR #14 (draft).
 - Tests: unit (HTTP boundary), frontend (editor lookup, dashboard, profile view), and one integration test covering authorization, visibility and no ownership/membership.
 - Docs: `project-intake-handoff.md` (R.I.S.E CRM and personal projects) and `resume-validation.txt`.
 
-## Blocked
+## Release-candidate validation (2026-11-25)
 
-- Integration and browser suites: no runnable local PostgreSQL. The install is command-line tools only. See `resume-validation.txt`.
+- The integration and browser suites, which were blocked locally, now run in GitHub Actions on an ephemeral PostgreSQL 17 database (`.github/workflows/release-validation.yml`). All green: see `resume-validation.txt`.
+- Release steps, smoke tests and rollback: `release-checklist.md`.
 
 ## Next
 
-1. Start a PostgreSQL 17 test server on `127.0.0.1:5546`. `admin-onboarding.test.ts` asserts a server version of at least 17 and below 18. Then run the integration and browser suites.
+1. Human review of PR #14, then merge. **Merging deploys production through the Vercel Git integration.**
 2. Decide whether students can hide staff credits. That needs a migration.
-3. Fill in the intake checklist with real R.I.S.E CRM and personal-project details.
+3. After release, fill in the intake checklist with real R.I.S.E CRM and personal-project details.
