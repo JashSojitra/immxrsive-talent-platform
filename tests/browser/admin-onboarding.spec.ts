@@ -104,3 +104,77 @@ test("staff import, configure, credit, preview and publish without student accou
     const denied = await page.request.post(`/api/admin/projects/${id}`, { headers: { Origin: origin }, data: { action: "publish", version: 4 } }); expect(denied.status()).toBe(403);
   } finally { await c.client.end(); }
 });
+test("staff link a verified student profile as a read-only credit", async ({ browser }) => {
+  test.setTimeout(90000);
+  const c = createDatabase(process.env.TEST_DATABASE_URL!); const db = c.db;
+  const contexts: Awaited<ReturnType<typeof browser.newContext>>[] = [];
+  try {
+    const auth = betterAuth({ baseURL: origin, secret: "browser-test-secret-with-at-least-thirty-two-characters", database: drizzleAdapter(db, { provider: "pg", schema: { user: s.authUsers, session: s.authSessions, account: s.authAccounts, verification: s.authVerifications } }), emailAndPassword: { enabled: true }, advanced: { cookiePrefix: "immxrsive" } });
+    const signedIn = async (name: string) => {
+      const response = await auth.handler(new Request(`${origin}/api/auth/sign-up/email`, { method: "POST", headers: { "Content-Type": "application/json", Origin: origin }, body: JSON.stringify({ name, email: `credit-${randomUUID()}@example.test`, password: "test-only-credit-password-long-enough" }) }));
+      expect(response.status).toBe(200); const { user } = await response.json() as { user: { id: string } };
+      const cookie = response.headers.getSetCookie().find(v => v.split("=", 1)[0].includes("session_token"))!.split(";", 1)[0]; const separator = cookie.indexOf("=");
+      const context = await browser.newContext({ reducedMotion: "reduce" }); contexts.push(context);
+      await context.addCookies([{ name: cookie.slice(0, separator), value: cookie.slice(separator + 1), url: origin, httpOnly: true, sameSite: "Lax" }]);
+      return { id: user.id, page: await context.newPage() };
+    };
+    const staff = await signedIn("Synthetic Credit Administrator");
+    await db.insert(s.studioRoles).values({ userId: staff.id, role: "xr_admin" });
+    const studentName = `Credited Student ${randomUUID().slice(0, 8)}`;
+    const student = await signedIn(studentName);
+    // Synthetic verified, published profile exists only in the disposable browser test database.
+    await db.insert(s.studentAffiliations).values({ userId: student.id, institutionalEmail: `${student.id}@algomau.ca`, status: "verified", verifiedAt: new Date() });
+    const [profile] = await db.insert(s.studentProfiles).values({ ownerUserId: student.id, publicationStatus: "published", studentStatus: "current", headline: "Synthetic credited student", biography: "Synthetic biography" }).returning();
+
+    const page = staff.page; const title = `Credited showcase ${randomUUID().slice(0, 8)}`;
+    await page.goto(`${origin}/admin/projects/new`);
+    await expect(page.locator("[data-editor-ready]")).toHaveAttribute("data-editor-ready", "true");
+    await page.getByLabel("Title", { exact: true }).fill(title);
+    await page.getByLabel("Summary", { exact: true }).fill("Synthetic curated summary.");
+    await page.getByLabel("Full description", { exact: true }).fill("Synthetic curated description.");
+    await page.getByLabel("Fallback narrative (required to publish)").fill("Synthetic fallback narrative.");
+    await page.getByLabel("Find a verified public profile").fill(studentName);
+    await page.getByRole("button", { name: "Search profiles" }).click();
+    await page.getByRole("button", { name: `Add linked credit for ${studentName}` }).click();
+    await expect(page.getByLabel("Public profile internal ID (optional) — credit 1")).toHaveValue(profile.id);
+    await expect(page.getByLabel("Project role — credit 1")).toHaveValue("");
+    await page.getByLabel("Project role — credit 1").fill("Interaction designer");
+    await page.getByRole("button", { name: "Save draft", exact: true }).click();
+    await expect(page).toHaveURL(/\/admin\/projects\/[^/]+\/edit$/); const id = page.url().split("/").at(-2)!;
+    await page.getByRole("button", { name: "Publish directly", exact: true }).click(); await expect(page.getByRole("status").first()).toContainText("published");
+
+    // Public: the project links to the profile and the profile links back, labelled as attribution.
+    const project = await (await page.request.get(`${origin}/api/v1/projects/${id}`)).json();
+    expect(project.contributors[0]).toMatchObject({ name: studentName, role: "Interaction designer", profileUrl: `/students/${profile.id}` });
+    const anonymous = await browser.newContext({ reducedMotion: "reduce" }); contexts.push(anonymous);
+    const visitor = await anonymous.newPage(); await visitor.goto(`${origin}/students/${profile.id}`);
+    const publicCredits = visitor.getByRole("region", { name: "Credited in curated projects" });
+    await expect(publicCredits).toContainText("descriptive attribution, not verified contribution records");
+    await expect(publicCredits).toContainText("Interaction designer");
+    await expect(publicCredits.getByRole("link", { name: `View curated project ${title}` })).toHaveAttribute("href", `/projects/${id}`);
+
+    // Student: read-only dashboard credit; no membership, admin access or editor access.
+    const studentPage = student.page; await studentPage.goto(`${origin}/student/dashboard`);
+    const panel = studentPage.getByRole("region", { name: "Credited in curated projects" });
+    await expect(panel.getByRole("link", { name: new RegExp(title) })).toHaveAttribute("href", `/projects/${id}`);
+    await expect(panel).toContainText("do not add you to the project team or give you editing access");
+    expect(await studentPage.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    expect((await studentPage.request.get(`${origin}/api/admin/projects/${id}`)).status()).toBe(403);
+    expect((await studentPage.request.get(`${origin}/api/admin/profiles?q=Credited`)).status()).toBe(403);
+    expect((await studentPage.request.post(`${origin}/api/admin/projects/${id}`, { headers: { Origin: origin }, data: { action: "unpublish", version: 2 } })).status()).toBe(403);
+    await studentPage.goto(`${origin}/student/projects/${id}/edit`);
+    await expect(studentPage.getByRole("heading", { name: "Project unavailable." })).toBeVisible();
+    expect(await db.select().from(s.projectMemberships).where(eq(s.projectMemberships.projectId, id))).toHaveLength(0);
+    expect((await db.select().from(s.projects).where(eq(s.projects.id, id)))[0]).toMatchObject({ managementMode: "ADMIN_MANAGED", maintainerUserId: null });
+
+    // Privacy: unpublishing the profile removes the credit from both surfaces.
+    await db.update(s.studentProfiles).set({ publicationStatus: "unpublished" }).where(eq(s.studentProfiles.id, profile.id));
+    expect((await visitor.request.get(`${origin}/api/v1/students/${profile.id}`)).status()).toBe(404);
+    await visitor.goto(`${origin}/students/${profile.id}`);
+    await expect(visitor.getByText("not available.")).toBeVisible();
+    await expect(visitor.getByRole("region", { name: "Credited in curated projects" })).toHaveCount(0);
+    await studentPage.goto(`${origin}/student/dashboard`);
+    await expect(studentPage.getByRole("heading", { name: "My profile" })).toBeVisible();
+    await expect(studentPage.getByRole("region", { name: "Credited in curated projects" })).toHaveCount(0);
+  } finally { for (const context of contexts) await context.close(); await c.client.end(); }
+});

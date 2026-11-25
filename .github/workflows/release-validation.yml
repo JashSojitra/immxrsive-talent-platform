@@ -68,13 +68,16 @@ jobs:
       - name: Install Playwright Chromium and Linux dependencies
         run: npx playwright install --with-deps chromium
 
-      - name: Create disposable development database identity
+      - name: Prepare disposable database cluster
         env:
           PGPASSWORD: ci-disposable-test-password
         run: |
           mkdir -p "$CI_OUT"
           psql -h 127.0.0.1 -U postgres -d immxrsive_test_ci -tAc "SHOW server_version" | tee "$CI_OUT/postgres-version.txt"
           createdb -h 127.0.0.1 -U postgres immxrsive_ci_development
+          # Migrations harden grants for Supabase's built-in API roles. Create
+          # them cluster-wide as NOLOGIN, matching scripts/verify-*.mjs.
+          psql -h 127.0.0.1 -U postgres -d immxrsive_test_ci -v ON_ERROR_STOP=1 -c "CREATE ROLE anon NOLOGIN; CREATE ROLE authenticated NOLOGIN;"
 
       - name: Test migrations
         run: npm run db:migrate:test 2>&1 | tee "$CI_OUT/migrate-test.txt"
