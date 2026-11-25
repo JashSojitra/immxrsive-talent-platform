@@ -1,0 +1,117 @@
+name: Release validation
+
+# Full regression on an ephemeral PostgreSQL 17 service container.
+# Every credential below is a throwaway value for this job's disposable
+# loopback database. No repository or production secrets are referenced.
+on:
+  push:
+    branches: [feat/immxrsive-ux-overhaul]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        # Explicit bash runs with -eo pipefail, so `| tee` never masks a failure.
+        shell: bash
+    services:
+      postgres:
+        # admin-onboarding.test.ts pins the server to major version 17.
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ci-disposable-test-password
+          POSTGRES_DB: immxrsive_test_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      # Separate logical identities: src/db/safety.ts refuses overlap and
+      # only allows loopback immxrsive_test_* targets for destructive tests.
+      TEST_DATABASE_URL: postgres://postgres:ci-disposable-test-password@127.0.0.1:5432/immxrsive_test_ci
+      DATABASE_URL: postgres://postgres:ci-disposable-test-password@127.0.0.1:5432/immxrsive_test_ci
+      DEVELOPMENT_DATABASE_URL: postgres://postgres:ci-disposable-test-password@127.0.0.1:5432/immxrsive_ci_development
+      BETTER_AUTH_URL: http://127.0.0.1:3100
+      BETTER_AUTH_SECRET: ci-disposable-auth-secret-at-least-32-characters
+      GITHUB_CLIENT_ID: browser-test-client-id
+      GITHUB_CLIENT_SECRET: browser-test-client-secret
+      EMAIL_PROVIDER: console
+      IMMXRSIVE_BROWSER_TEST_RUNTIME: "1"
+      NEXT_TELEMETRY_DISABLED: "1"
+      CI_OUT: ci-output
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium and Linux dependencies
+        run: npx playwright install --with-deps chromium
+
+      - name: Create disposable development database identity
+        env:
+          PGPASSWORD: ci-disposable-test-password
+        run: |
+          mkdir -p "$CI_OUT"
+          psql -h 127.0.0.1 -U postgres -d immxrsive_test_ci -tAc "SHOW server_version" | tee "$CI_OUT/postgres-version.txt"
+          createdb -h 127.0.0.1 -U postgres immxrsive_ci_development
+
+      - name: Test migrations
+        run: npm run db:migrate:test 2>&1 | tee "$CI_OUT/migrate-test.txt"
+
+      - name: Typecheck
+        if: ${{ !cancelled() }}
+        run: set -o pipefail; npm run typecheck 2>&1 | tee "$CI_OUT/typecheck.txt"
+
+      - name: Lint
+        if: ${{ !cancelled() }}
+        run: set -o pipefail; npm run lint 2>&1 | tee "$CI_OUT/lint.txt"
+
+      - name: Unit and frontend tests
+        if: ${{ !cancelled() }}
+        run: set -o pipefail; npm test -- --reporter=default --reporter=junit --outputFile.junit="$CI_OUT/unit-frontend.junit.xml" 2>&1 | tee "$CI_OUT/unit-frontend.txt"
+
+      - name: Integration tests
+        if: ${{ !cancelled() }}
+        run: set -o pipefail; npm run test:integration -- --reporter=default --reporter=junit --outputFile.junit="$CI_OUT/integration.junit.xml" 2>&1 | tee "$CI_OUT/integration.txt"
+
+      - name: Production build
+        if: ${{ !cancelled() }}
+        run: set -o pipefail; npm run build 2>&1 | tee "$CI_OUT/build.txt"
+
+      - name: Browser tests
+        if: ${{ !cancelled() }}
+        env:
+          PLAYWRIGHT_JUNIT_OUTPUT_NAME: ci-output/browser.junit.xml
+        run: set -o pipefail; npx playwright test --reporter=line,junit 2>&1 | tee "$CI_OUT/browser.txt"
+
+      # Logs and JUnit only. Playwright traces, test-results/ and .next are
+      # excluded because traces capture cookies and session storage.
+      - name: Upload test outputs
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-validation-${{ github.sha }}
+          path: ci-output/
+          retention-days: 14
+          if-no-files-found: warn
