@@ -1,0 +1,39 @@
+PR #14 visual correction — final validation
+
+Branch: feat/immxrsive-ux-overhaul
+Frozen R4-submission: 4d41de783069b4afcad8e43e87a26f19648e6d38 (unchanged)
+
+npm run build: PASS, exit 0
+npm run typecheck: PASS, exit 0
+npm run lint: PASS, exit 0, no warnings
+npm test: PASS, exit 0 — 53 files, 422 tests
+node --env-file=.env.browser.local node_modules/vitest/vitest.mjs run tests/integration:
+  PASS, exit 0 — COMPLETE integration suite, 20 files, 218 tests
+node --env-file=.env.browser.local node_modules/@playwright/test/cli.js test --reporter=line:
+  PASS, exit 0 — COMPLETE browser suite, 198 passed, 6 existing viewport-specific skips, 0 failures (4.5m)
+Final opaque-header refinement: rebuilt and repeated navigation, geometry, Studio,
+homepage and Skiper interaction regressions — 29 passed, 1 existing mobile Lenis
+skip, 0 failures, exit 0. This final focused run adds an opaque-header paint check.
+
+Browser geometry: 390px, 768px and 1440px; initial headline/header clearance;
+five scroll fractions for every available Skiper28/31 section; section containment;
+adjacent-character intersections; following-content overlap; empty track height;
+document overflow; carousel title clipping; loaded image or graphic fallback;
+review UUIDs excluded from editorial features.
+
+Interaction regressions: mouse dragging, Chromium touch events, pagination/arrows,
+hover, keyboard links and arrow keys, modal focus containment and Escape,
+reduced motion, native scrolling and WebGL failure fallback.
+
+Data: isolated loopback PostgreSQL test databases and existing course fixtures.
+No production data, schema, authentication or authorization changes.
+No push, merge, PR promotion or deployment.
+
+Final screenshots: docs/design/screenshots/visual-qa/index.html
+Manifest: docs/design/screenshots/visual-qa/manifest.json
+Capture script: scripts/capture-visual-qa.mjs
+Full raw command outputs: output/visual-qa-*.txt
+Original review screenshots preserved: docs/design/screenshots/skiper/
+
+Design acceptance remains pending user review. Browser validation uses Chromium
+and emulated touch; physical-device Safari rendering was not tested.

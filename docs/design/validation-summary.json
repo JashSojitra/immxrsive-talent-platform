@@ -1,0 +1,76 @@
+{
+  "date": "2026-11-18",
+  "base": "34426d89060b500ceeb7f7c9be866fc49cfb09cc",
+  "branch": "feat/immxrsive-ux-overhaul",
+  "typecheck": "passed",
+  "lint": "passed",
+  "unitFrontend": {
+    "files": 51,
+    "passed": 419
+  },
+  "integration": {
+    "files": 20,
+    "passed": 218
+  },
+  "routeRegression": {
+    "files": 3,
+    "passed": 22
+  },
+  "browser": {
+    "passed": 173,
+    "skipped": 5,
+    "failed": 0,
+    "exitCode": 0,
+    "server": "explicitly managed local production server; original Playwright configuration otherwise preserved"
+  },
+  "build": {
+    "result": "passed",
+    "command": "npm run build -- --webpack"
+  },
+  "screenshots": {
+    "before": 60,
+    "after": 72,
+    "widths": [
+      390,
+      768,
+      1280,
+      1440
+    ]
+  },
+  "productionDeployment": false,
+  "implementationCommit": "f2010d9c0eac3ada6d3342a3ca7fc6c6ec755639",
+  "pullRequest": "https://github.com/JashSojitra/immxrsive-talent-platform/pull/14",
+  "pullRequestDraft": true,
+  "r4HandoffObservation": {
+    "pr": 13,
+    "state": "MERGED",
+    "mergeCommit": "d94cfd856b36ba9cbfd2ab9cd4079aeb8e090f99",
+    "mergedAtToronto": "2026-11-18 22:10:35 America/Toronto",
+    "changedByThisTask": false
+  },
+  "integrationReview": {
+    "mergeCommit": "1edaafc542277c76a55ec3792b3450e6095c587a",
+    "frozenR4Commit": "d94cfd856b36ba9cbfd2ab9cd4079aeb8e090f99",
+    "tag": "R4-submission",
+    "tagObject": "4d41de783069b4afcad8e43e87a26f19648e6d38",
+    "conflicts": false,
+    "forcePush": false,
+    "r4EvidenceUnchanged": true,
+    "unitFrontendPassed": 419,
+    "integrationPassed": 218,
+    "browserPassed": 173,
+    "browserSkipped": 5,
+    "browserFailed": 0,
+    "typecheck": "passed",
+    "lint": "passed",
+    "optimizedBuild": "passed",
+    "previewStatus": "READY; build-only accepted by user",
+    "productionDeployment": false,
+    "previewUrl": "https://immxrsive-talent-platform-biq2mv3ki-three-flow.vercel.app",
+    "previewDeploymentId": "dpl_9oStAvbDMFDYN4cHN4CEmBbQVWCd",
+    "previewSourceCommit": "1edaafc542277c76a55ec3792b3450e6095c587a",
+    "hostedOptimizedBuild": "passed Next.js 16.4.6 Turbopack",
+    "previewRuntimeConfigured": false,
+    "temporaryAutomationBypassRevoked": true
+  }
+}

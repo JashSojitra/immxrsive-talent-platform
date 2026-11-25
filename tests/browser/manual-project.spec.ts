@@ -36,7 +36,7 @@ test("verified student manually creates, previews, resolves conflicts and publis
     const [profile] = await db.insert(s.studentProfiles).values({ ownerUserId: userId, publicationStatus: "published", studentStatus: "current", headline: "Building XR evidence", biography: "A synthetic portfolio for project browser QA.", program: "Computing" }).returning();
     const [skill] = await db.select().from(s.skills).where(eq(s.skills.name, "Unity"));
     await db.insert(s.studentProfileSkills).values({ profileId: profile.id, skillId: skill.id, displayOrder: 0 });
-    await page.goto("/student/dashboard"); await page.getByRole("link", { name: "My Projects", exact: true }).click();
+    await page.goto("/student/dashboard"); await page.getByRole("region", { name: "My projects", exact: true }).getByRole("link", { name: /^View all/ }).click();
     await page.getByRole("link", { name: "Add Project", exact: true }).click();
     await page.getByLabel("Project title", { exact: true }).fill("Spatial Learning Studio");
     await page.getByLabel("Short description").fill("An interactive spatial-learning prototype with a clear record of the work.");

@@ -1,0 +1,235 @@
+
+[WebServer] (node:39064) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:51380) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P06',
+  message: 'schema "drizzle" already exists, skipping',
+  file: 'schemacmds.c',
+  line: '132',
+  routine: 'CreateSchemaCommand'
+}
+{
+  severity_local: 'NOTICE',
+  severity: 'NOTICE',
+  code: '42P07',
+  message: 'relation "__drizzle_migrations" already exists, skipping',
+  file: 'parse_utilcmd.c',
+  line: '207',
+  routine: 'transformCreateStmt'
+}
+
+Running 198 tests using 1 worker
+
+(node:58152) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/198] [desktop] › tests\browser\admin-onboarding.spec.ts:9:1 › anonymous administrator access and forged requests are denied
+[2/198] [desktop] › tests\browser\admin-onboarding.spec.ts:15:1 › staff import, configure, credit, preview and publish without student account
+[3/198] [desktop] › tests\browser\affiliation-verification.spec.ts:22:1 › authenticated student confirms a single-use affiliation link
+[4/198] [desktop] › tests\browser\auth.spec.ts:3:1 › student sign-in is accessible and keyboard-operable
+[5/198] [desktop] › tests\browser\auth.spec.ts:26:1 › student dashboard redirects unauthenticated visitors
+[6/198] [desktop] › tests\browser\auth.spec.ts:32:1 › student verification and its APIs fail closed when signed out
+[7/198] [desktop] › tests\browser\auth.spec.ts:45:1 › Release 1 public journeys remain unauthenticated
+[8/198] [desktop] › tests\browser\branding.spec.ts:11:1 › shared NOT ImmXrsive identity spans public, inquiry, and student access pages
+[9/198] [desktop] › tests\browser\home-experience.spec.ts:10:1 › homepage hero exposes one accessible headline, real published counts and every primary route
+[10/198] [desktop] › tests\browser\home-experience.spec.ts:24:1 › spatial stage keeps a complete poster when WebGL is unavailable
+[11/198] [desktop] › tests\browser\home-experience.spec.ts:33:1 › reduced motion renders a still scene, static content and native scrolling
+[12/198] [desktop] › tests\browser\home-experience.spec.ts:48:1 › smooth scrolling is limited to the homepage and the project index stays keyboard reachable
+[13/198] [desktop] › tests\browser\inquiry.spec.ts:3:1 › student inquiry renders trusted source context and a locked form
+[14/198] [desktop] › tests\browser\inquiry.spec.ts:18:1 › project inquiry retains the project and never selects a contributor
+[15/198] [desktop] › tests\browser\inquiry.spec.ts:28:1 › template reset protects substantial edits and restores source context
+[16/198] [desktop] › tests\browser\inquiry.spec.ts:44:1 › unresolved prompts are blocked locally while custom bracket text is allowed
+[17/198] [desktop] › tests\browser\inquiry.spec.ts:68:1 › accessible validation feedback retains entered employer values
+[18/198] [desktop] › tests\browser\inquiry.spec.ts:89:1 › duplicate submission is blocked while pending and success is announced
+[19/198] [desktop] › tests\browser\inquiry.spec.ts:110:1 › backend failure is recoverable without losing data
+[20/198] [desktop] › tests\browser\inquiry.spec.ts:124:1 › invalid and unpublished student inquiry routes are indistinguishable
+[21/198] [desktop] › tests\browser\inquiry.spec.ts:133:1 › invalid project inquiry route has a useful unavailable state
+[22/198] [desktop] › tests\browser\inquiry.spec.ts:139:1 › keyboard workflow and visible focus cover every form control
+[23/198] [desktop] › tests\browser\inquiry.spec.ts:155:1 › reduced motion leaves context and form immediately complete
+[24/198] [desktop] › tests\browser\inquiry.spec.ts:163:1 › 390px inquiry form and success state have no horizontal overflow
+[25/198] [desktop] › tests\browser\manual-project.spec.ts:12:1 › verified student manually creates, previews, resolves conflicts and publishes canonical evidence
+[26/198] [desktop] › tests\browser\private-student-profile.spec.ts:22:1 › verified student creates and returns to a private profile draft
+[27/198] [desktop] › tests\browser\project-demo.spec.ts:8:1 › official playable fixture interacts inside an isolated frame while fallback and navigation survive failures
+[28/198] [desktop] › tests\browser\project-detail.spec.ts:3:1 › project supports direct navigation, reload, and its complete evidence shell
+[29/198] [desktop] › tests\browser\project-detail.spec.ts:17:1 › canonical project shows ordered contributor roles and public profile links
+[30/198] [desktop] › tests\browser\project-detail.spec.ts:26:1 › unpublished contributor identifier and role stay out of the public project
+[31/198] [desktop] › tests\browser\project-detail.spec.ts:35:1 › broken optional asset remains an ordinary safe link without breaking the page
+[32/198] [desktop] › tests\browser\project-detail.spec.ts:43:1 › project inquiry handoff preserves project identity without choosing a contributor
+[33/198] [desktop] › tests\browser\project-detail.spec.ts:52:1 › student evidence reaches the canonical page and browser back remains natural
+[34/198] [desktop] › tests\browser\project-detail.spec.ts:62:1 › project links are keyboard reachable with visible focus
+[35/198] [desktop] › tests\browser\project-detail.spec.ts:76:1 › reduced motion leaves every project section immediately available
+[36/198] [desktop] › tests\browser\project-detail.spec.ts:85:1 › 390px project page retains content and has no horizontal overflow
+[37/198] [desktop] › tests\browser\project-detail.spec.ts:99:1 › unknown project has a useful project-specific not-found experience
+[38/198] [desktop] › tests\browser\project-detail.spec.ts:105:1 › WebGL failure cannot remove project content
+[39/198] [desktop] › tests\browser\project-detail.spec.ts:115:3 › missing project not-a-uuid returns HTTP 404 before streaming
+[40/198] [desktop] › tests\browser\project-detail.spec.ts:115:3 › missing project 00000000-0000-4000-8000-000000000000 returns HTTP 404 before streaming
+[41/198] [desktop] › tests\browser\project-detail.spec.ts:122:1 › published fixture still returns HTTP 200
+[42/198] [desktop] › tests\browser\project-import.spec.ts:8:1 › GitHub suggestions remain editable and duplicate view/join leads through independent contributor consent
+[43/198] [desktop] › tests\browser\project-team.spec.ts:8:1 › independent students consent, own their evidence, restore relationships and transfer maintenance
+[44/198] [desktop] › tests\browser\r4-partners.spec.ts:9:1 › R4 public 390px directory, privacy and contextual inquiry
+[45/198] [desktop] › tests\browser\r4-partners.spec.ts:32:1 › partner without an optional website keeps its portfolio and inquiry available
+[46/198] [desktop] › tests\browser\r4-partners.spec.ts:42:31 › R4 staff manual draft/publish at 1280px
+[47/198] [desktop] › tests\browser\r4-partners.spec.ts:42:31 › R4 staff manual draft/publish at 768px
+[48/198] [desktop] › tests\browser\r4-partners.spec.ts:55:33 › R4 student requests require independent staff approval at 1280px
+[49/198] [desktop] › tests\browser\r4-partners.spec.ts:55:33 › R4 student requests require independent staff approval at 768px
+[50/198] [desktop] › tests\browser\release-1-acceptance.spec.ts:3:1 › Scenario A: search and filters lead through project evidence to project inquiry
+[51/198] [desktop] › tests\browser\release-1-acceptance.spec.ts:22:1 › Scenario B: two-skill AND, individual removal, Clear All, and student inquiry
+[52/198] [desktop] › tests\browser\release-1-acceptance.spec.ts:44:1 › Scenario C: stable deep links survive reload and browser back
+[53/198] [desktop] › tests\browser\release-1-acceptance.spec.ts:56:1 › Scenario D: unpublished and invalid routes fail safely
+[54/198] [desktop] › tests\browser\release-1-acceptance.spec.ts:67:1 › Scenario E: P07 remains usable beside its broken optional URL
+[55/198] [desktop] › tests\browser\release-1-acceptance.spec.ts:77:1 › Scenario F: the complete workflow has no overflow at 390px
+[56/198] [desktop] › tests\browser\release-1-acceptance.spec.ts:93:1 › Scenario G: keyboard-only controls expose focus throughout the core workflow
+[57/198] [desktop] › tests\browser\release-1-acceptance.spec.ts:113:1 › Scenario H: reduced motion preserves the complete core workflow
+[58/198] [desktop] › tests\browser\release-1-acceptance.spec.ts:125:1 › Scenario I: missing WebGL leaves the core workflow functional
+[59/198] [desktop] › tests\browser\skiper-exhibition.spec.ts:3:1 › registry carousel responds to buttons, pagination, keyboard and dragging, then opens real project evidence
+[60/198] [desktop] › tests\browser\skiper-exhibition.spec.ts:42:1 › actual scroll components transform as the visitor moves through the story
+[61/198] [desktop] › tests\browser\skiper-exhibition.spec.ts:54:1 › registry navigation rolls on hover and remains keyboard and touch navigable
+[62/198] [desktop] › tests\browser\skiper-exhibition.spec.ts:73:1 › reduced motion stays readable, disables spatial transforms and keeps the carousel functional
+[63/198] [desktop] › tests\browser\skiper-exhibition.spec.ts:90:1 › public routes fit 390px and 1440px with real rendered component captures
+[64/198] [desktop] › tests\browser\skiper-exhibition.spec.ts:123:1 › native scrolling and the server rendered project index remain available without JavaScript
+[65/198] [desktop] › tests\browser\student-profile.spec.ts:3:1 › published profile supports direct navigation and reload
+[66/198] [desktop] › tests\browser\student-profile.spec.ts:13:1 › profile exposes the complete professional shell and project evidence
+[67/198] [desktop] › tests\browser\student-profile.spec.ts:27:1 › browser back preserves the directory URL state
+[68/198] [desktop] › tests\browser\student-profile.spec.ts:60:1 › profile links are keyboard reachable with visible focus
+[69/198] [desktop] › tests\browser\student-profile.spec.ts:73:1 › reduced motion leaves the complete profile immediately available
+[70/198] [desktop] › tests\browser\student-profile.spec.ts:82:1 › 390px profile has no horizontal overflow and retains every action
+[71/198] [desktop] › tests\browser\student-profile.spec.ts:96:1 › unknown and unpublished routes use the same useful not-found state
+[72/198] [desktop] › tests\browser\student-profile.spec.ts:107:1 › WebGL failure cannot remove profile functionality
+[73/198] [desktop] › tests\browser\student-profile.spec.ts:118:1 › inquiry handoff preserves the selected student in the real form
+[74/198] [desktop] › tests\browser\studio.spec.ts:3:1 › anonymous Studio access requires sign-in and API access is denied
+[75/198] [desktop] › tests\browser\studio.spec.ts:15:1 › public showcase supports reduced motion, keyboard navigation and narrow screens
+[76/198] [desktop] › tests\browser\talent.spec.ts:55:1 › homepage introduces the platform and links to discovery
+[77/198] [desktop] › tests\browser\talent.spec.ts:61:1 › directory workflow remains functional and URL-addressable
+[78/198] [desktop] › tests\browser\talent.spec.ts:77:1 › student access is discoverable and keyboard-operable in public navigation
+[79/198] [desktop] › tests\browser\talent.spec.ts:91:1 › advanced expressions remain URL-addressable and browser history restores them
+[80/198] [desktop] › tests\browser\talent.spec.ts:108:1 › search tips are keyboard-accessible and malformed searches retain results
+[81/198] [desktop] › tests\browser\talent.spec.ts:128:1 › keyboard focus is visible and filters operate without a pointer
+[82/198] [desktop] › tests\browser\talent.spec.ts:148:1 › 390px layout has no horizontal document overflow
+[83/198] [desktop] › tests\browser\talent.spec.ts:164:1 › reduced motion keeps the complete directory usable
+[84/198] [desktop] › tests\browser\talent.spec.ts:175:1 › a WebGL context failure leaves the directory intact
+[85/198] [desktop] › tests\browser\talent.spec.ts:185:1 › motion-disabled directory preserves filtering
+[86/198] [desktop] › tests\browser\talent.spec.ts:196:1 › focused removed card hands focus to the result summary
+[87/198] [desktop] › tests\browser\talent.spec.ts:208:1 › directory responds to reduced motion changes without navigation
+[88/198] [desktop] › tests\browser\talent.spec.ts:216:1 › directory navigation does not start a background rendering loop
+[89/198] [desktop] › tests\browser\ux-overhaul.spec.ts:21:3 › workspace navigation preserves independent capabilities: unverified student
+[90/198] [desktop] › tests\browser\ux-overhaul.spec.ts:21:3 › workspace navigation preserves independent capabilities: verified student
+[91/198] [desktop] › tests\browser\ux-overhaul.spec.ts:21:3 › workspace navigation preserves independent capabilities: verified student maintainer
+[92/198] [desktop] › tests\browser\ux-overhaul.spec.ts:21:3 › workspace navigation preserves independent capabilities: staff curator
+[93/198] [desktop] › tests\browser\ux-overhaul.spec.ts:21:3 › workspace navigation preserves independent capabilities: XR admin
+[94/198] [desktop] › tests\browser\ux-overhaul.spec.ts:21:3 › workspace navigation preserves independent capabilities: platform super admin
+[95/198] [desktop] › tests\browser\ux-overhaul.spec.ts:21:3 › workspace navigation preserves independent capabilities: verified student and platform super admin
+[96/198] [desktop] › tests\browser\ux-overhaul.spec.ts:84:1 › public discovery remains usable at mobile, tablet and desktop widths
+[97/198] [desktop] › tests\browser\ux-overhaul.spec.ts:103:1 › mobile navigation contains keyboard focus, exposes destinations and closes with Escape
+[98/198] [desktop] › tests\browser\ux-overhaul.spec.ts:122:1 › project GET filters combine technology, discipline and collection with clear recovery
+[99/198] [desktop] › tests\browser\ux-overhaul.spec.ts:155:1 › homepage talent action and developer credit remain accessible and secure
+
+
+(node:36788) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[100/198] [mobile-390] › tests\browser\admin-onboarding.spec.ts:9:1 › anonymous administrator access and forged requests are denied
+[101/198] [mobile-390] › tests\browser\admin-onboarding.spec.ts:15:1 › staff import, configure, credit, preview and publish without student account
+[102/198] [mobile-390] › tests\browser\affiliation-verification.spec.ts:22:1 › authenticated student confirms a single-use affiliation link
+[103/198] [mobile-390] › tests\browser\auth.spec.ts:3:1 › student sign-in is accessible and keyboard-operable
+[104/198] [mobile-390] › tests\browser\auth.spec.ts:26:1 › student dashboard redirects unauthenticated visitors
+[105/198] [mobile-390] › tests\browser\auth.spec.ts:32:1 › student verification and its APIs fail closed when signed out
+[106/198] [mobile-390] › tests\browser\auth.spec.ts:45:1 › Release 1 public journeys remain unauthenticated
+[107/198] [mobile-390] › tests\browser\branding.spec.ts:11:1 › shared NOT ImmXrsive identity spans public, inquiry, and student access pages
+[108/198] [mobile-390] › tests\browser\home-experience.spec.ts:10:1 › homepage hero exposes one accessible headline, real published counts and every primary route
+[109/198] [mobile-390] › tests\browser\home-experience.spec.ts:24:1 › spatial stage keeps a complete poster when WebGL is unavailable
+[110/198] [mobile-390] › tests\browser\home-experience.spec.ts:33:1 › reduced motion renders a still scene, static content and native scrolling
+[111/198] [mobile-390] › tests\browser\home-experience.spec.ts:48:1 › smooth scrolling is limited to the homepage and the project index stays keyboard reachable
+[112/198] [mobile-390] › tests\browser\inquiry.spec.ts:3:1 › student inquiry renders trusted source context and a locked form
+[113/198] [mobile-390] › tests\browser\inquiry.spec.ts:18:1 › project inquiry retains the project and never selects a contributor
+[114/198] [mobile-390] › tests\browser\inquiry.spec.ts:28:1 › template reset protects substantial edits and restores source context
+[115/198] [mobile-390] › tests\browser\inquiry.spec.ts:44:1 › unresolved prompts are blocked locally while custom bracket text is allowed
+[116/198] [mobile-390] › tests\browser\inquiry.spec.ts:68:1 › accessible validation feedback retains entered employer values
+[117/198] [mobile-390] › tests\browser\inquiry.spec.ts:89:1 › duplicate submission is blocked while pending and success is announced
+[118/198] [mobile-390] › tests\browser\inquiry.spec.ts:110:1 › backend failure is recoverable without losing data
+[119/198] [mobile-390] › tests\browser\inquiry.spec.ts:124:1 › invalid and unpublished student inquiry routes are indistinguishable
+[120/198] [mobile-390] › tests\browser\inquiry.spec.ts:133:1 › invalid project inquiry route has a useful unavailable state
+[121/198] [mobile-390] › tests\browser\inquiry.spec.ts:139:1 › keyboard workflow and visible focus cover every form control
+[122/198] [mobile-390] › tests\browser\inquiry.spec.ts:155:1 › reduced motion leaves context and form immediately complete
+[123/198] [mobile-390] › tests\browser\inquiry.spec.ts:163:1 › 390px inquiry form and success state have no horizontal overflow
+[124/198] [mobile-390] › tests\browser\manual-project.spec.ts:12:1 › verified student manually creates, previews, resolves conflicts and publishes canonical evidence
+[125/198] [mobile-390] › tests\browser\private-student-profile.spec.ts:22:1 › verified student creates and returns to a private profile draft
+[126/198] [mobile-390] › tests\browser\project-demo.spec.ts:8:1 › official playable fixture interacts inside an isolated frame while fallback and navigation survive failures
+[127/198] [mobile-390] › tests\browser\project-detail.spec.ts:3:1 › project supports direct navigation, reload, and its complete evidence shell
+[128/198] [mobile-390] › tests\browser\project-detail.spec.ts:17:1 › canonical project shows ordered contributor roles and public profile links
+[129/198] [mobile-390] › tests\browser\project-detail.spec.ts:26:1 › unpublished contributor identifier and role stay out of the public project
+[130/198] [mobile-390] › tests\browser\project-detail.spec.ts:35:1 › broken optional asset remains an ordinary safe link without breaking the page
+[131/198] [mobile-390] › tests\browser\project-detail.spec.ts:43:1 › project inquiry handoff preserves project identity without choosing a contributor
+[132/198] [mobile-390] › tests\browser\project-detail.spec.ts:52:1 › student evidence reaches the canonical page and browser back remains natural
+[133/198] [mobile-390] › tests\browser\project-detail.spec.ts:62:1 › project links are keyboard reachable with visible focus
+[134/198] [mobile-390] › tests\browser\project-detail.spec.ts:76:1 › reduced motion leaves every project section immediately available
+[135/198] [mobile-390] › tests\browser\project-detail.spec.ts:85:1 › 390px project page retains content and has no horizontal overflow
+[136/198] [mobile-390] › tests\browser\project-detail.spec.ts:99:1 › unknown project has a useful project-specific not-found experience
+[137/198] [mobile-390] › tests\browser\project-detail.spec.ts:105:1 › WebGL failure cannot remove project content
+[138/198] [mobile-390] › tests\browser\project-detail.spec.ts:115:3 › missing project not-a-uuid returns HTTP 404 before streaming
+[139/198] [mobile-390] › tests\browser\project-detail.spec.ts:115:3 › missing project 00000000-0000-4000-8000-000000000000 returns HTTP 404 before streaming
+[140/198] [mobile-390] › tests\browser\project-detail.spec.ts:122:1 › published fixture still returns HTTP 200
+[141/198] [mobile-390] › tests\browser\project-import.spec.ts:8:1 › GitHub suggestions remain editable and duplicate view/join leads through independent contributor consent
+[142/198] [mobile-390] › tests\browser\project-team.spec.ts:8:1 › independent students consent, own their evidence, restore relationships and transfer maintenance
+[143/198] [mobile-390] › tests\browser\r4-partners.spec.ts:9:1 › R4 public 390px directory, privacy and contextual inquiry
+[144/198] [mobile-390] › tests\browser\r4-partners.spec.ts:32:1 › partner without an optional website keeps its portfolio and inquiry available
+[145/198] [mobile-390] › tests\browser\r4-partners.spec.ts:42:31 › R4 staff manual draft/publish at 1280px
+[146/198] [mobile-390] › tests\browser\r4-partners.spec.ts:42:31 › R4 staff manual draft/publish at 768px
+[147/198] [mobile-390] › tests\browser\r4-partners.spec.ts:55:33 › R4 student requests require independent staff approval at 1280px
+[148/198] [mobile-390] › tests\browser\r4-partners.spec.ts:55:33 › R4 student requests require independent staff approval at 768px
+[149/198] [mobile-390] › tests\browser\release-1-acceptance.spec.ts:3:1 › Scenario A: search and filters lead through project evidence to project inquiry
+[150/198] [mobile-390] › tests\browser\release-1-acceptance.spec.ts:22:1 › Scenario B: two-skill AND, individual removal, Clear All, and student inquiry
+[151/198] [mobile-390] › tests\browser\release-1-acceptance.spec.ts:44:1 › Scenario C: stable deep links survive reload and browser back
+[152/198] [mobile-390] › tests\browser\release-1-acceptance.spec.ts:56:1 › Scenario D: unpublished and invalid routes fail safely
+[153/198] [mobile-390] › tests\browser\release-1-acceptance.spec.ts:67:1 › Scenario E: P07 remains usable beside its broken optional URL
+[154/198] [mobile-390] › tests\browser\release-1-acceptance.spec.ts:77:1 › Scenario F: the complete workflow has no overflow at 390px
+[155/198] [mobile-390] › tests\browser\release-1-acceptance.spec.ts:93:1 › Scenario G: keyboard-only controls expose focus throughout the core workflow
+[156/198] [mobile-390] › tests\browser\release-1-acceptance.spec.ts:113:1 › Scenario H: reduced motion preserves the complete core workflow
+[157/198] [mobile-390] › tests\browser\release-1-acceptance.spec.ts:125:1 › Scenario I: missing WebGL leaves the core workflow functional
+[158/198] [mobile-390] › tests\browser\skiper-exhibition.spec.ts:3:1 › registry carousel responds to buttons, pagination, keyboard and dragging, then opens real project evidence
+[159/198] [mobile-390] › tests\browser\skiper-exhibition.spec.ts:42:1 › actual scroll components transform as the visitor moves through the story
+[160/198] [mobile-390] › tests\browser\skiper-exhibition.spec.ts:54:1 › registry navigation rolls on hover and remains keyboard and touch navigable
+[161/198] [mobile-390] › tests\browser\skiper-exhibition.spec.ts:73:1 › reduced motion stays readable, disables spatial transforms and keeps the carousel functional
+[162/198] [mobile-390] › tests\browser\skiper-exhibition.spec.ts:90:1 › public routes fit 390px and 1440px with real rendered component captures
+[163/198] [mobile-390] › tests\browser\skiper-exhibition.spec.ts:123:1 › native scrolling and the server rendered project index remain available without JavaScript
+[164/198] [mobile-390] › tests\browser\student-profile.spec.ts:3:1 › published profile supports direct navigation and reload
+[165/198] [mobile-390] › tests\browser\student-profile.spec.ts:13:1 › profile exposes the complete professional shell and project evidence
+[166/198] [mobile-390] › tests\browser\student-profile.spec.ts:27:1 › browser back preserves the directory URL state
+[167/198] [mobile-390] › tests\browser\student-profile.spec.ts:60:1 › profile links are keyboard reachable with visible focus
+[168/198] [mobile-390] › tests\browser\student-profile.spec.ts:73:1 › reduced motion leaves the complete profile immediately available
+[169/198] [mobile-390] › tests\browser\student-profile.spec.ts:82:1 › 390px profile has no horizontal overflow and retains every action
+[170/198] [mobile-390] › tests\browser\student-profile.spec.ts:96:1 › unknown and unpublished routes use the same useful not-found state
+[171/198] [mobile-390] › tests\browser\student-profile.spec.ts:107:1 › WebGL failure cannot remove profile functionality
+[172/198] [mobile-390] › tests\browser\student-profile.spec.ts:118:1 › inquiry handoff preserves the selected student in the real form
+[173/198] [mobile-390] › tests\browser\studio.spec.ts:3:1 › anonymous Studio access requires sign-in and API access is denied
+[174/198] [mobile-390] › tests\browser\studio.spec.ts:15:1 › public showcase supports reduced motion, keyboard navigation and narrow screens
+[175/198] [mobile-390] › tests\browser\talent.spec.ts:55:1 › homepage introduces the platform and links to discovery
+[176/198] [mobile-390] › tests\browser\talent.spec.ts:61:1 › directory workflow remains functional and URL-addressable
+[177/198] [mobile-390] › tests\browser\talent.spec.ts:77:1 › student access is discoverable and keyboard-operable in public navigation
+[178/198] [mobile-390] › tests\browser\talent.spec.ts:91:1 › advanced expressions remain URL-addressable and browser history restores them
+[179/198] [mobile-390] › tests\browser\talent.spec.ts:108:1 › search tips are keyboard-accessible and malformed searches retain results
+[180/198] [mobile-390] › tests\browser\talent.spec.ts:128:1 › keyboard focus is visible and filters operate without a pointer
+[181/198] [mobile-390] › tests\browser\talent.spec.ts:148:1 › 390px layout has no horizontal document overflow
+[182/198] [mobile-390] › tests\browser\talent.spec.ts:164:1 › reduced motion keeps the complete directory usable
+[183/198] [mobile-390] › tests\browser\talent.spec.ts:175:1 › a WebGL context failure leaves the directory intact
+[184/198] [mobile-390] › tests\browser\talent.spec.ts:185:1 › motion-disabled directory preserves filtering
+[185/198] [mobile-390] › tests\browser\talent.spec.ts:196:1 › focused removed card hands focus to the result summary
+[186/198] [mobile-390] › tests\browser\talent.spec.ts:208:1 › directory responds to reduced motion changes without navigation
+[187/198] [mobile-390] › tests\browser\talent.spec.ts:216:1 › directory navigation does not start a background rendering loop
+[188/198] [mobile-390] › tests\browser\ux-overhaul.spec.ts:21:3 › workspace navigation preserves independent capabilities: unverified student
+[189/198] [mobile-390] › tests\browser\ux-overhaul.spec.ts:21:3 › workspace navigation preserves independent capabilities: verified student
+[190/198] [mobile-390] › tests\browser\ux-overhaul.spec.ts:21:3 › workspace navigation preserves independent capabilities: verified student maintainer
+[191/198] [mobile-390] › tests\browser\ux-overhaul.spec.ts:21:3 › workspace navigation preserves independent capabilities: staff curator
+[192/198] [mobile-390] › tests\browser\ux-overhaul.spec.ts:21:3 › workspace navigation preserves independent capabilities: XR admin
+[193/198] [mobile-390] › tests\browser\ux-overhaul.spec.ts:21:3 › workspace navigation preserves independent capabilities: platform super admin
+[194/198] [mobile-390] › tests\browser\ux-overhaul.spec.ts:21:3 › workspace navigation preserves independent capabilities: verified student and platform super admin
+[195/198] [mobile-390] › tests\browser\ux-overhaul.spec.ts:84:1 › public discovery remains usable at mobile, tablet and desktop widths
+[196/198] [mobile-390] › tests\browser\ux-overhaul.spec.ts:103:1 › mobile navigation contains keyboard focus, exposes destinations and closes with Escape
+[197/198] [mobile-390] › tests\browser\ux-overhaul.spec.ts:122:1 › project GET filters combine technology, discipline and collection with clear recovery
+[198/198] [mobile-390] › tests\browser\ux-overhaul.spec.ts:155:1 › homepage talent action and developer credit remain accessible and secure
+  6 skipped
+  192 passed (4.2m)

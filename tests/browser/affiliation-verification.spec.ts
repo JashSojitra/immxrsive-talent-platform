@@ -85,7 +85,8 @@ test("authenticated student confirms a single-use affiliation link", async ({ pa
     await expect(page.getByText("browser.student@algomau.ca")).toBeVisible();
 
     await page.goto("/student/dashboard");
-    await expect(page.getByText("Algoma affiliation verified")).toBeVisible();
+    await expect(page.getByText("Affiliation verified", { exact: true })).toBeVisible();
+    await page.getByText("Account & sign-in details", { exact: true }).click();
     await expect(page.getByText("browser.student@algomau.ca")).toBeVisible();
 
     const replay = await page.request.post("/api/v1/student/verification/confirm", {

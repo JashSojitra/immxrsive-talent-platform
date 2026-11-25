@@ -9,6 +9,7 @@ import styles from "@/components/project-editor/project-editor.module.css";
 import admin from "./admin.module.css";
 type Suggestions = Awaited<ReturnType<typeof adminGitHubSuggestions>>;
 type RecordState = { id: string; version: number; lifecycle: string };
+type ProfileCandidate = { id: string; name: string; headline: string; program: string };
 export function AdminEditor({ initial = emptyContent, record, role, focusDemo = false }: { initial?: AdminContent; record?: RecordState; role: Role; focusDemo?: boolean }) {
   const editor = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -20,6 +21,7 @@ export function AdminEditor({ initial = emptyContent, record, role, focusDemo = 
   const [busy, setBusy] = useState(false); const [message, setMessage] = useState(""); const [errors, setErrors] = useState<string[]>([]); const feedback = useRef<HTMLDivElement>(null);
   const [repo, setRepo] = useState(""); const [suggestions, setSuggestions] = useState<Suggestions | null>(null);
   const [matches, setMatches] = useState<Array<{ id: string; title: string; exact: boolean; adminManaged: boolean }>>([]);
+  const [profileQuery, setProfileQuery] = useState(""); const [profileResults, setProfileResults] = useState<ProfileCandidate[] | null>(null);
   const [note, setNote] = useState(""); const editable = canManage(role) && current?.lifecycle !== "archived";
   const value = () => ({ ...content, technologies: tech.split(",").map(s => s.trim()).filter(Boolean), tools: tools.split(",").map(s => s.trim()).filter(Boolean) });
   function patch<K extends keyof AdminContent>(key: K, v: AdminContent[K]) { setContent(c => ({ ...c, [key]: v })); }
@@ -58,6 +60,19 @@ export function AdminEditor({ initial = emptyContent, record, role, focusDemo = 
     try { const result = await json("/api/admin/duplicates", { repositoryUrl: content.originalRepository, title: content.title }); setMatches(result.filter((m: { id: string }) => m.id !== current?.id)); setMessage("Project matches checked. Review warnings before creating an independent presentation."); }
     catch (e) { setErrors([(e as Error).message]); } finally { setBusy(false); }
   }
+  async function findProfiles() {
+    setBusy(true); setErrors([]);
+    try {
+      const response = await fetch(`/api/admin/profiles?q=${encodeURIComponent(profileQuery.trim())}`);
+      const data = await response.json(); if (!response.ok) throw new Error(data.error?.details?.[0]?.message ?? data.error?.message ?? "Unable to search profiles.");
+      setProfileResults(data);
+    } catch (e) { setErrors([(e as Error).message]); } finally { setBusy(false); }
+  }
+  function linkProfile(p: ProfileCandidate) {
+    // Pre-fills the name only; staff still enter the role and statement from real records.
+    patch("credits", [...content.credits, { name: p.name, role: "", statement: "", profileId: p.id }]);
+    setMessage(`Added a linked credit for ${p.name}. Enter their project role before saving.`);
+  }
   function applySuggestions() {
     if (!suggestions) return;
     const { title, summary, description, originalRepository, liveUrl, technologies } = suggestions;
@@ -91,6 +106,9 @@ export function AdminEditor({ initial = emptyContent, record, role, focusDemo = 
         {content.gallery.map((g,i) => <div className={styles.row} key={i}><label htmlFor={`gallery-url-${i}`}>Gallery image {i+1} HTTPS URL</label><input id={`gallery-url-${i}`} type="url" value={g.url} onChange={e => patch("gallery", content.gallery.map((v,n) => n === i ? { ...v, url: e.target.value } : v))} /><label htmlFor={`gallery-alt-${i}`}>Gallery image {i+1} description</label><input id={`gallery-alt-${i}`} value={g.alt} onChange={e => patch("gallery", content.gallery.map((v,n) => n === i ? { ...v, alt: e.target.value } : v))} /><button type="button" onClick={() => patch("gallery", content.gallery.filter((_,n) => n !== i))}>Remove gallery image {i+1}</button></div>)}<button type="button" disabled={content.gallery.length >= 12} onClick={() => patch("gallery", [...content.gallery, { url: "", alt: "" }])}>Add gallery image</button>
       </fieldset>
       <fieldset disabled={!editable || busy} className={styles.section}><legend>Descriptive contributor credits</legend><p>Credits do not create accounts, verify identity, grant ownership or generate personal skills. Link only a legitimate existing public profile relationship; leave the profile ID empty for manual credits.</p>
+        <div className={admin.profileLookup}><label htmlFor="credit-profile-search">Find a verified public profile</label><input id="credit-profile-search" type="search" value={profileQuery} onChange={e => setProfileQuery(e.target.value)} onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); if (profileQuery.trim().length >= 2) void findProfiles(); } }} /><button type="button" disabled={busy || profileQuery.trim().length < 2} onClick={findProfiles}>Search profiles</button>
+          {profileResults && (profileResults.length ? <ul aria-label="Matching verified public profiles">{profileResults.map(p => <li key={p.id}><span>{p.name}{p.headline ? ` — ${p.headline}` : ""}{p.program ? ` (${p.program})` : ""}</span> <button type="button" disabled={content.credits.some(c => c.profileId.toLowerCase() === p.id)} onClick={() => linkProfile(p)}>Add linked credit for {p.name}</button></li>)}</ul> : <p role="status">No verified public profiles match. Students must verify their affiliation and publish their profile before they can be linked; a manual credit can still be added.</p>)}
+        </div>
         {content.credits.map((c,i) => <div className={styles.row} key={i}>{([['name','Name'],['role','Project role'],['statement','Contribution description'],['profileId','Public profile internal ID (optional)']] as const).map(([key,label]) => <div key={key}><label htmlFor={`credit-${i}-${key}`}>{label} — credit {i+1}</label><input id={`credit-${i}-${key}`} value={c[key]} onChange={e => patch("credits", content.credits.map((v,n) => n === i ? { ...v, [key]: e.target.value } : v))} /></div>)}<button type="button" onClick={() => patch("credits", content.credits.filter((_,n) => n !== i))}>Remove credit {i+1}</button></div>)}<button type="button" disabled={content.credits.length >= 30} onClick={() => patch("credits", [...content.credits, { name: "", role: "", statement: "", profileId: "" }])}>Add contributor credit</button>
       </fieldset>
       <fieldset disabled={!editable || busy} className={styles.section}><legend>Presentation order</legend><label className={styles.choice}><input type="checkbox" checked={content.featured} onChange={e => patch("featured", e.target.checked)} />Featured showcase</label><label htmlFor="admin-displayOrder">Display order (lower first)</label><input id="admin-displayOrder" type="number" min={0} max={100000} value={content.displayOrder} onChange={e => patch("displayOrder", Number(e.target.value))} /></fieldset>

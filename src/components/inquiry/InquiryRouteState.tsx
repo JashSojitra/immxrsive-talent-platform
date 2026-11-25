@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 
-import { BrandLogo } from "@/components/brand/BrandLogo";
 import styles from "./inquiry.module.css";
 
 export function InquiryUnavailable() {
@@ -39,8 +38,7 @@ function InquiryStateShell({ children }: { children: React.ReactNode }) {
     <main className={styles.page}>
       <div className={styles.spatialBackdrop} aria-hidden="true"><span /><span /><span /></div>
       <header className={styles.siteHeader}>
-        <BrandLogo className={styles.brand} />
-        <nav aria-label="Primary navigation"><Link href="/talent">Talent</Link></nav>
+        <nav aria-label="Breadcrumb"><Link href="/talent">Talent</Link></nav>
       </header>
       {children}
     </main>

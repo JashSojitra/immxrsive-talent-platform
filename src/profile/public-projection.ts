@@ -1,5 +1,6 @@
 import { and, asc, eq, inArray } from "drizzle-orm";
 import { queryFeaturedProjectRows, queryStructuredProjectAssets, publicAssets } from "@/projects/public-evidence";
+import { queryCuratedCredits } from "@/admin/public";
 
 import type { Database } from "@/db/client";
 import {
@@ -88,9 +89,10 @@ export async function querySelfServiceProfileProjection(
 
   const projectRows = await queryFeaturedProjectRows(db, [profile.id]);
   const ids = projectRows.map(project => project.id);
-  const [projectAssets, technologies] = await Promise.all([
+  const [projectAssets, technologies, curatedCredits] = await Promise.all([
     queryStructuredProjectAssets(db, ids),
     ids.length ? db.select({ projectId: projectTechnologies.projectId, name: projectTechnologies.technologyName }).from(projectTechnologies).where(inArray(projectTechnologies.projectId, ids)).orderBy(projectTechnologies.displayOrder) : Promise.resolve([]),
+    queryCuratedCredits(db, profile.id),
   ]);
   return {
     id: profile.id,
@@ -101,6 +103,7 @@ export async function querySelfServiceProfileProjection(
     status: profile.status,
     skills: skillRows.map(({ name }) => name),
     projects: projectRows.map(project => ({ id: project.id, title: project.title, description: project.description, domain: project.domain, role: project.role, technologies: technologies.filter(t => t.projectId === project.id).map(t => t.name), links: publicAssets(projectAssets, project.id) })),
+    curatedCredits,
     presentationPreset: profile.presentationPreset as PublicStudentProfile["presentationPreset"],
     heroMedia: profile.heroMedia as PublicStudentProfile["heroMedia"],
     sectionOrder: profile.sectionOrder,

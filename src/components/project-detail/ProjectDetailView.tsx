@@ -1,7 +1,6 @@
 import { AdminExperience } from "@/admin/Experience";
 import Link from "next/link";
 
-import { BrandLogo } from "@/components/brand/BrandLogo";
 import type { PublicProjectDetail } from "@/db/queries/project-detail";
 
 import { ProjectDemo } from "./ProjectDemo";
@@ -17,24 +16,23 @@ export function ProjectDetailView({ project, preview = false }: { project: Publi
       {preview ? <aside className={styles.preview}><strong>Private preview — saved project</strong><p>This preview does not publish the project. Only published profiles appear as public contributors.</p><Link href={project.managementMode === "ADMIN_MANAGED" ? `/admin/projects/${project.id}/edit` : `/student/projects/${project.id}/edit`}>Return to editor</Link></aside> : null}
 
       <header className={styles.siteHeader} data-project-nav>
-        <BrandLogo className={styles.brand} />
-        <nav aria-label="Primary navigation">
-          <Link href="/talent">Talent</Link>
+        <nav aria-label="Breadcrumb">
+          <Link href="/projects">Projects</Link>
           <span aria-current="page">Project</span>
         </nav>
       </header>
 
       <section className={styles.hero} aria-labelledby="project-title">
         <div className={styles.heroIndex} data-project-index>
-          <span>Project evidence</span>
-          <strong className={project.id.length > 12 ? styles.longId : undefined}>{project.id}</strong>
+          <span>Project collection</span>
+          <strong>{project.managementMode === "ADMIN_MANAGED" ? "Staff-curated" : "Student project"}</strong>
         </div>
         <div className={styles.heroBody}>
           <p className={styles.domain} data-project-lead>{project.domain}</p>
           <h1 id="project-title" data-project-title>{project.title}</h1>
           <p className={styles.description} data-project-lead>{project.description}</p>
           <dl className={styles.heroMeta} data-project-meta>
-            <div><dt>Project</dt><dd>{project.id}</dd></div>
+            <div><dt>Collection</dt><dd>{project.managementMode === "ADMIN_MANAGED" ? "Staff-curated" : "Student-managed"}</dd></div>
             <div><dt>Contributors</dt><dd>{project.contributors.length}</dd></div>
             <div><dt>Technologies</dt><dd>{project.technologies.length}</dd></div>
             {project.projectStatus ? <div><dt>Status</dt><dd>{({ in_progress: "In progress", completed: "Completed", on_hold: "On hold" } as Record<string, string>)[project.projectStatus] ?? project.projectStatus}</dd></div> : null}
@@ -136,10 +134,7 @@ export function ProjectDetailView({ project, preview = false }: { project: Publi
         </Link>
       </section> : null}
 
-      <footer className={styles.footer}>
-        <span>NOT ImmXrsive</span>
-        <Link href="/talent">Return to talent index</Link>
-      </footer>
+
     </ProjectDetailMotion>
   );
 }

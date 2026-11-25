@@ -54,3 +54,29 @@ test("native devices, unavailable media and mobile alternative retain meaningful
   expect(screen.getByText(/does not run automatically/)).toBeDefined(); expect(screen.getByText(/On mobile or unsupported devices/)).toBeDefined();
   fireEvent.error(screen.getByAltText("Narrative screenshot")); expect(screen.getByText("Image unavailable. Narrative screenshot")).toBeDefined();
 });
+test("profile lookup adds a linked credit without inventing role or contribution text", async () => {
+  const profileId = "11111111-2222-4333-8444-555555555555";
+  const fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => [{ id: profileId, name: "Verified Student", headline: "XR developer", program: "CS" }] }); vi.stubGlobal("fetch", fetch);
+  render(<AdminEditor initial={initial} record={record} role="xr_admin" />);
+  const search = screen.getByLabelText("Find a verified public profile");
+  expect((screen.getByRole("button", { name: "Search profiles" }) as HTMLButtonElement).disabled).toBe(true);
+  fireEvent.change(search, { target: { value: "Verified & co" } }); fireEvent.click(screen.getByRole("button", { name: "Search profiles" }));
+  const add = await screen.findByRole("button", { name: "Add linked credit for Verified Student" });
+  expect(fetch.mock.calls[0][0]).toBe("/api/admin/profiles?q=Verified%20%26%20co");
+  fireEvent.click(add);
+  expect((screen.getByLabelText("Name — credit 2") as HTMLInputElement).value).toBe("Verified Student");
+  expect((screen.getByLabelText("Public profile internal ID (optional) — credit 2") as HTMLInputElement).value).toBe(profileId);
+  expect((screen.getByLabelText("Project role — credit 2") as HTMLInputElement).value).toBe("");
+  expect((screen.getByLabelText("Contribution description — credit 2") as HTMLInputElement).value).toBe("");
+  expect((screen.getByRole("button", { name: "Add linked credit for Verified Student" }) as HTMLButtonElement).disabled).toBe(true);
+});
+test("empty profile lookup explains verification and publication requirements", async () => {
+  vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, json: async () => [] }));
+  render(<AdminEditor initial={initial} record={record} role="xr_admin" />);
+  fireEvent.change(screen.getByLabelText("Find a verified public profile"), { target: { value: "Nobody" } }); fireEvent.click(screen.getByRole("button", { name: "Search profiles" }));
+  expect(await screen.findByText(/must verify their affiliation and publish their profile/)).toBeDefined();
+});
+test("curator cannot use profile lookup", () => {
+  render(<AdminEditor initial={initial} record={record} role="xr_curator" />);
+  expect(screen.getByLabelText("Find a verified public profile").closest("fieldset")?.disabled).toBe(true);
+});

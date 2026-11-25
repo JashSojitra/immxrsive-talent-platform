@@ -1,0 +1,527 @@
+[
+  {
+    "file": "home-390-hero.jpg",
+    "width": 390,
+    "route": "/",
+    "state": "hero",
+    "height": 844
+  },
+  {
+    "file": "home-390-full.jpg",
+    "width": 390,
+    "route": "/",
+    "state": "full",
+    "height": 6976
+  },
+  {
+    "file": "home-390-skiper28-start.jpg",
+    "width": 390,
+    "route": "/",
+    "state": "skiper28-start",
+    "height": 844
+  },
+  {
+    "file": "home-390-skiper28-middle.jpg",
+    "width": 390,
+    "route": "/",
+    "state": "skiper28-middle",
+    "height": 844
+  },
+  {
+    "file": "home-390-skiper28-settled.jpg",
+    "width": 390,
+    "route": "/",
+    "state": "skiper28-settled",
+    "height": 844
+  },
+  {
+    "file": "home-390-skiper31-start.jpg",
+    "width": 390,
+    "route": "/",
+    "state": "skiper31-start",
+    "height": 844
+  },
+  {
+    "file": "home-390-skiper31-middle.jpg",
+    "width": 390,
+    "route": "/",
+    "state": "skiper31-middle",
+    "height": 844
+  },
+  {
+    "file": "home-390-skiper31-settled.jpg",
+    "width": 390,
+    "route": "/",
+    "state": "skiper31-settled",
+    "height": 844
+  },
+  {
+    "file": "home-390-carousel.jpg",
+    "width": 390,
+    "route": "/",
+    "state": "carousel",
+    "height": 844
+  },
+  {
+    "file": "home-390-navigation.jpg",
+    "width": 390,
+    "route": "/",
+    "state": "navigation",
+    "height": 844
+  },
+  {
+    "file": "home-390-reduced-motion.jpg",
+    "width": 390,
+    "route": "/",
+    "state": "reduced-motion",
+    "height": 844
+  },
+  {
+    "file": "talent-390-hero.jpg",
+    "width": 390,
+    "route": "/talent",
+    "state": "hero",
+    "height": 844
+  },
+  {
+    "file": "talent-390-full.jpg",
+    "width": 390,
+    "route": "/talent",
+    "state": "full",
+    "height": 7801
+  },
+  {
+    "file": "talent-390-skiper31-start.jpg",
+    "width": 390,
+    "route": "/talent",
+    "state": "skiper31-start",
+    "height": 844
+  },
+  {
+    "file": "talent-390-skiper31-middle.jpg",
+    "width": 390,
+    "route": "/talent",
+    "state": "skiper31-middle",
+    "height": 844
+  },
+  {
+    "file": "talent-390-skiper31-settled.jpg",
+    "width": 390,
+    "route": "/talent",
+    "state": "skiper31-settled",
+    "height": 844
+  },
+  {
+    "file": "projects-390-hero.jpg",
+    "width": 390,
+    "route": "/projects",
+    "state": "hero",
+    "height": 844
+  },
+  {
+    "file": "projects-390-full.jpg",
+    "width": 390,
+    "route": "/projects",
+    "state": "full",
+    "height": 12222
+  },
+  {
+    "file": "partners-390-hero.jpg",
+    "width": 390,
+    "route": "/partners",
+    "state": "hero",
+    "height": 844
+  },
+  {
+    "file": "partners-390-full.jpg",
+    "width": 390,
+    "route": "/partners",
+    "state": "full",
+    "height": 22281
+  },
+  {
+    "file": "partners-390-skiper28-start.jpg",
+    "width": 390,
+    "route": "/partners",
+    "state": "skiper28-start",
+    "height": 844
+  },
+  {
+    "file": "partners-390-skiper28-middle.jpg",
+    "width": 390,
+    "route": "/partners",
+    "state": "skiper28-middle",
+    "height": 844
+  },
+  {
+    "file": "partners-390-skiper28-settled.jpg",
+    "width": 390,
+    "route": "/partners",
+    "state": "skiper28-settled",
+    "height": 844
+  },
+  {
+    "file": "showcase-390-hero.jpg",
+    "width": 390,
+    "route": "/showcase",
+    "state": "hero",
+    "height": 844
+  },
+  {
+    "file": "showcase-390-full.jpg",
+    "width": 390,
+    "route": "/showcase",
+    "state": "full",
+    "height": 1777
+  },
+  {
+    "file": "home-768-hero.jpg",
+    "width": 768,
+    "route": "/",
+    "state": "hero",
+    "height": 1000
+  },
+  {
+    "file": "home-768-full.jpg",
+    "width": 768,
+    "route": "/",
+    "state": "full",
+    "height": 6737
+  },
+  {
+    "file": "home-768-skiper28-start.jpg",
+    "width": 768,
+    "route": "/",
+    "state": "skiper28-start",
+    "height": 1000
+  },
+  {
+    "file": "home-768-skiper28-middle.jpg",
+    "width": 768,
+    "route": "/",
+    "state": "skiper28-middle",
+    "height": 1000
+  },
+  {
+    "file": "home-768-skiper28-settled.jpg",
+    "width": 768,
+    "route": "/",
+    "state": "skiper28-settled",
+    "height": 1000
+  },
+  {
+    "file": "home-768-skiper31-start.jpg",
+    "width": 768,
+    "route": "/",
+    "state": "skiper31-start",
+    "height": 1000
+  },
+  {
+    "file": "home-768-skiper31-middle.jpg",
+    "width": 768,
+    "route": "/",
+    "state": "skiper31-middle",
+    "height": 1000
+  },
+  {
+    "file": "home-768-skiper31-settled.jpg",
+    "width": 768,
+    "route": "/",
+    "state": "skiper31-settled",
+    "height": 1000
+  },
+  {
+    "file": "home-768-carousel.jpg",
+    "width": 768,
+    "route": "/",
+    "state": "carousel",
+    "height": 1000
+  },
+  {
+    "file": "home-768-navigation.jpg",
+    "width": 768,
+    "route": "/",
+    "state": "navigation",
+    "height": 1000
+  },
+  {
+    "file": "home-768-reduced-motion.jpg",
+    "width": 768,
+    "route": "/",
+    "state": "reduced-motion",
+    "height": 1000
+  },
+  {
+    "file": "talent-768-hero.jpg",
+    "width": 768,
+    "route": "/talent",
+    "state": "hero",
+    "height": 1000
+  },
+  {
+    "file": "talent-768-full.jpg",
+    "width": 768,
+    "route": "/talent",
+    "state": "full",
+    "height": 6953
+  },
+  {
+    "file": "talent-768-skiper31-start.jpg",
+    "width": 768,
+    "route": "/talent",
+    "state": "skiper31-start",
+    "height": 1000
+  },
+  {
+    "file": "talent-768-skiper31-middle.jpg",
+    "width": 768,
+    "route": "/talent",
+    "state": "skiper31-middle",
+    "height": 1000
+  },
+  {
+    "file": "talent-768-skiper31-settled.jpg",
+    "width": 768,
+    "route": "/talent",
+    "state": "skiper31-settled",
+    "height": 1000
+  },
+  {
+    "file": "projects-768-hero.jpg",
+    "width": 768,
+    "route": "/projects",
+    "state": "hero",
+    "height": 1000
+  },
+  {
+    "file": "projects-768-full.jpg",
+    "width": 768,
+    "route": "/projects",
+    "state": "full",
+    "height": 7858
+  },
+  {
+    "file": "partners-768-hero.jpg",
+    "width": 768,
+    "route": "/partners",
+    "state": "hero",
+    "height": 1000
+  },
+  {
+    "file": "partners-768-full.jpg",
+    "width": 768,
+    "route": "/partners",
+    "state": "full",
+    "height": 12527
+  },
+  {
+    "file": "partners-768-skiper28-start.jpg",
+    "width": 768,
+    "route": "/partners",
+    "state": "skiper28-start",
+    "height": 1000
+  },
+  {
+    "file": "partners-768-skiper28-middle.jpg",
+    "width": 768,
+    "route": "/partners",
+    "state": "skiper28-middle",
+    "height": 1000
+  },
+  {
+    "file": "partners-768-skiper28-settled.jpg",
+    "width": 768,
+    "route": "/partners",
+    "state": "skiper28-settled",
+    "height": 1000
+  },
+  {
+    "file": "showcase-768-hero.jpg",
+    "width": 768,
+    "route": "/showcase",
+    "state": "hero",
+    "height": 1000
+  },
+  {
+    "file": "showcase-768-full.jpg",
+    "width": 768,
+    "route": "/showcase",
+    "state": "full",
+    "height": 1522
+  },
+  {
+    "file": "home-1440-hero.jpg",
+    "width": 1440,
+    "route": "/",
+    "state": "hero",
+    "height": 1000
+  },
+  {
+    "file": "home-1440-full.jpg",
+    "width": 1440,
+    "route": "/",
+    "state": "full",
+    "height": 7531
+  },
+  {
+    "file": "home-1440-skiper28-start.jpg",
+    "width": 1440,
+    "route": "/",
+    "state": "skiper28-start",
+    "height": 1000
+  },
+  {
+    "file": "home-1440-skiper28-middle.jpg",
+    "width": 1440,
+    "route": "/",
+    "state": "skiper28-middle",
+    "height": 1000
+  },
+  {
+    "file": "home-1440-skiper28-settled.jpg",
+    "width": 1440,
+    "route": "/",
+    "state": "skiper28-settled",
+    "height": 1000
+  },
+  {
+    "file": "home-1440-skiper31-start.jpg",
+    "width": 1440,
+    "route": "/",
+    "state": "skiper31-start",
+    "height": 1000
+  },
+  {
+    "file": "home-1440-skiper31-middle.jpg",
+    "width": 1440,
+    "route": "/",
+    "state": "skiper31-middle",
+    "height": 1000
+  },
+  {
+    "file": "home-1440-skiper31-settled.jpg",
+    "width": 1440,
+    "route": "/",
+    "state": "skiper31-settled",
+    "height": 1000
+  },
+  {
+    "file": "home-1440-carousel.jpg",
+    "width": 1440,
+    "route": "/",
+    "state": "carousel",
+    "height": 1000
+  },
+  {
+    "file": "home-1440-navigation.jpg",
+    "width": 1440,
+    "route": "/",
+    "state": "navigation",
+    "height": 1000
+  },
+  {
+    "file": "home-1440-reduced-motion.jpg",
+    "width": 1440,
+    "route": "/",
+    "state": "reduced-motion",
+    "height": 1000
+  },
+  {
+    "file": "talent-1440-hero.jpg",
+    "width": 1440,
+    "route": "/talent",
+    "state": "hero",
+    "height": 1000
+  },
+  {
+    "file": "talent-1440-full.jpg",
+    "width": 1440,
+    "route": "/talent",
+    "state": "full",
+    "height": 4744
+  },
+  {
+    "file": "talent-1440-skiper31-start.jpg",
+    "width": 1440,
+    "route": "/talent",
+    "state": "skiper31-start",
+    "height": 1000
+  },
+  {
+    "file": "talent-1440-skiper31-middle.jpg",
+    "width": 1440,
+    "route": "/talent",
+    "state": "skiper31-middle",
+    "height": 1000
+  },
+  {
+    "file": "talent-1440-skiper31-settled.jpg",
+    "width": 1440,
+    "route": "/talent",
+    "state": "skiper31-settled",
+    "height": 1000
+  },
+  {
+    "file": "projects-1440-hero.jpg",
+    "width": 1440,
+    "route": "/projects",
+    "state": "hero",
+    "height": 1000
+  },
+  {
+    "file": "projects-1440-full.jpg",
+    "width": 1440,
+    "route": "/projects",
+    "state": "full",
+    "height": 5717
+  },
+  {
+    "file": "partners-1440-hero.jpg",
+    "width": 1440,
+    "route": "/partners",
+    "state": "hero",
+    "height": 1000
+  },
+  {
+    "file": "partners-1440-full.jpg",
+    "width": 1440,
+    "route": "/partners",
+    "state": "full",
+    "height": 7675
+  },
+  {
+    "file": "partners-1440-skiper28-start.jpg",
+    "width": 1440,
+    "route": "/partners",
+    "state": "skiper28-start",
+    "height": 1000
+  },
+  {
+    "file": "partners-1440-skiper28-middle.jpg",
+    "width": 1440,
+    "route": "/partners",
+    "state": "skiper28-middle",
+    "height": 1000
+  },
+  {
+    "file": "partners-1440-skiper28-settled.jpg",
+    "width": 1440,
+    "route": "/partners",
+    "state": "skiper28-settled",
+    "height": 1000
+  },
+  {
+    "file": "showcase-1440-hero.jpg",
+    "width": 1440,
+    "route": "/showcase",
+    "state": "hero",
+    "height": 1000
+  },
+  {
+    "file": "showcase-1440-full.jpg",
+    "width": 1440,
+    "route": "/showcase",
+    "state": "full",
+    "height": 1680
+  }
+]

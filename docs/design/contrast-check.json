@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Primary text/canvas",
+    "foreground": "#f1eee7",
+    "background": "#101214",
+    "ratio": 16.2
+  },
+  {
+    "name": "Secondary text/surface",
+    "foreground": "#b0b4af",
+    "background": "#191d20",
+    "ratio": 8.07
+  },
+  {
+    "name": "Coral/canvas",
+    "foreground": "#ff806b",
+    "background": "#101214",
+    "ratio": 7.64
+  },
+  {
+    "name": "Sage/surface",
+    "foreground": "#b9d3bf",
+    "background": "#191d20",
+    "ratio": 10.61
+  },
+  {
+    "name": "Ink/coral button",
+    "foreground": "#101214",
+    "background": "#ff806b",
+    "ratio": 7.64
+  },
+  {
+    "name": "Control boundary/surface",
+    "foreground": "#6c7475",
+    "background": "#191d20",
+    "ratio": 3.55
+  }
+]

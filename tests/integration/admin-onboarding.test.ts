@@ -6,9 +6,9 @@ import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from "vit
 vi.mock("server-only", () => ({}));
 import { createDatabase, type Database } from "@/db/client";
 import { adminCreditLinks, adminEvents, adminProjectDetails, authUsers, projectMemberships, projects, studentAffiliations, studentProfiles, studioRoles } from "@/db/schema";
-import { accessList, adminActivity, adminCommand, adminCreate, adminDetail, adminDuplicates, adminIdentity, adminList, changeAccess } from "@/admin/service";
+import { accessList, adminActivity, adminCommand, adminCreate, adminDetail, adminDuplicates, adminIdentity, adminList, adminProfileLookup, changeAccess } from "@/admin/service";
 import { emptyContent } from "@/admin/policy";
-import { publicAdminShowcases } from "@/admin/public";
+import { publicAdminShowcases, queryCuratedCredits } from "@/admin/public";
 import { createContextualInquiry } from "@/db/queries/inquiry";
 import { queryPublicProject } from "@/db/queries/project-detail";
 import { queryPublicStudentProfile } from "@/db/queries/student-profile";
@@ -162,6 +162,37 @@ describe("administrator portal on disposable PostgreSQL 17", () => {
     expect(publicLink).toBe(`/students/${profile.id}`);
     expect(projection?.contributors[0]).toMatchObject({ name: "Manual name", profileUrl: "" });
     expect(JSON.stringify(projection).toLowerCase()).not.toContain(profile.id);
+  });
+  test("linked credits surface read-only on the student profile and never grant membership or ownership", async () => {
+    await db.update(authUsers).set({ name: "Synthetic 100%_linked student" }).where(eq(authUsers.id, studentId));
+    await db.insert(studentAffiliations).values({ userId: studentId, institutionalEmail: `${studentId}@algomau.ca`, status: "verified", verifiedAt: new Date() });
+    const [profile] = await db.insert(studentProfiles).values({ ownerUserId: studentId, publicationStatus: "published", studentStatus: "current", headline: "Synthetic" }).returning();
+    // Lookup is write-staff only and returns only profiles that credit validation would accept.
+    for (const actor of [studentId, curatorId]) await expect(adminProfileLookup(db, actor, "Synthetic")).rejects.toMatchObject({ status: 403 });
+    await expect(adminProfileLookup(db, adminId, "x")).rejects.toThrow();
+    expect(await adminProfileLookup(db, adminId, "100%_linked")).toEqual([{ id: profile.id, name: "Synthetic 100%_linked student", headline: "Synthetic", program: "" }]);
+    expect(await adminProfileLookup(db, adminId, "100%x")).toEqual([]);
+    expect(await adminProfileLookup(db, adminId, profile.id.toUpperCase())).toHaveLength(1);
+    const credits = [{ name: "Synthetic 100%_linked student", role: "Interaction designer", statement: "", profileId: profile.id }];
+    const { project } = await adminCreate(db, adminId, { ...content, credits });
+    // Draft admin projects stay invisible.
+    expect(await queryCuratedCredits(db, profile.id)).toEqual([]);
+    await act(project.id, "publish");
+    expect(await queryCuratedCredits(db, profile.id)).toEqual([{ projectId: project.id, title: content.title, summary: content.summary, domain: content.domain, roles: ["Interaction designer"], technologies: [] }]);
+    const projection = await queryPublicStudentProfile(db, profile.id);
+    expect(projection?.curatedCredits?.map(c => c.projectId)).toEqual([project.id]);
+    // Attribution is not evidence: no project evidence, skills, membership or student edit rights.
+    expect(projection?.projects).toEqual([]); expect(projection?.skills).toEqual([]);
+    expect(await db.select().from(projectMemberships).where(eq(projectMemberships.projectId, project.id))).toHaveLength(0);
+    const [row] = await db.select().from(projects).where(eq(projects.id, project.id));
+    expect(row).toMatchObject({ managementMode: "ADMIN_MANAGED", maintainerUserId: null });
+    await expect(adminCommand(db, studentId, project.id, { action: "unpublish", version: row.version })).rejects.toMatchObject({ status: 403 });
+    // Visibility tracks both sides' publication state.
+    await act(project.id, "unpublish"); expect(await queryCuratedCredits(db, profile.id)).toEqual([]);
+    await act(project.id, "publish"); expect(await queryCuratedCredits(db, profile.id)).toHaveLength(1);
+    await db.update(studentProfiles).set({ publicationStatus: "unpublished" }).where(eq(studentProfiles.id, profile.id));
+    expect(await queryCuratedCredits(db, profile.id)).toEqual([]);
+    expect(await adminProfileLookup(db, adminId, profile.id)).toEqual([]);
   });
   const request = (body: unknown, origin = "https://platform.example") => new Request("https://platform.example/api/admin/projects", { method: "POST", headers: { origin, "Content-Type": "application/json" }, body: JSON.stringify(body) });
   test("API derives actor from session, rejects forged actor/role and enforces origin", async () => {

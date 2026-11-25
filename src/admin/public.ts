@@ -29,6 +29,24 @@ export async function queryAdminPublicProject(db: Database, id: string) {
     .where(and(eq(adminCreditLinks.projectId, id), inArray(studentProfiles.id, ids), eq(studentProfiles.publicationStatus, "published"), eq(studentAffiliations.status, "verified"))) : [];
   return projectPresentation(row.id, row.content, new Set(profiles.map(p => p.id)));
 }
+export interface CuratedCredit { projectId: string; title: string; summary: string; domain: string; roles: string[]; technologies: string[] }
+// Read-only reverse view of admin_credit_links. A credit is descriptive
+// attribution: it never counts as project evidence, membership or ownership.
+// Shown only while both the admin project and the verified profile are public.
+export async function queryCuratedCredits(db: Database, profileId: string): Promise<CuratedCredit[]> {
+  const id = profileId.toLowerCase();
+  const rows = await db.select({ projectId: projects.id, title: projects.title, content: adminProjectDetails.content }).from(adminCreditLinks)
+    .innerJoin(adminProjectDetails, eq(adminProjectDetails.projectId, adminCreditLinks.projectId))
+    .innerJoin(projects, eq(projects.id, adminCreditLinks.projectId))
+    .innerJoin(studentProfiles, eq(studentProfiles.id, adminCreditLinks.profileId))
+    .innerJoin(studentAffiliations, eq(studentAffiliations.userId, studentProfiles.ownerUserId))
+    .where(and(eq(adminCreditLinks.profileId, id), eq(projects.managementMode, "ADMIN_MANAGED"), eq(projects.publicationStatus, "published"), eq(adminProjectDetails.lifecycle, "published"), eq(studentProfiles.publicationStatus, "published"), eq(studentAffiliations.status, "verified")))
+    .orderBy(asc(projects.title), asc(projects.id));
+  return rows.map(r => ({
+    projectId: r.projectId, title: r.title, summary: r.content.summary, domain: r.content.domain, technologies: r.content.technologies,
+    roles: [...new Set(r.content.credits.filter(c => c.profileId.toLowerCase() === id).map(c => c.role))],
+  }));
+}
 export async function publicAdminShowcases(db: Database) {
   const rows = await db.select({ projectId: projects.id, title: projects.title, content: adminProjectDetails.content }).from(adminProjectDetails)
     .innerJoin(projects, eq(projects.id, adminProjectDetails.projectId)).where(and(eq(projects.managementMode, "ADMIN_MANAGED"), eq(projects.publicationStatus, "published"), eq(adminProjectDetails.lifecycle, "published"))).orderBy(asc(projects.id));

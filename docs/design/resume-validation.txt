@@ -1,0 +1,37 @@
+PR #14 — Claude resume pass (project intake linking) — 2026-11-24
+
+Branch: feat/immxrsive-ux-overhaul
+Frozen R4-submission: not touched.
+
+npm run typecheck: PASS, exit 0
+npm run lint: PASS, exit 0, no warnings
+npm test (unit + frontend): PASS, exit 0 — 53 files, 430 tests (previous 422 + 8 new)
+npm run build: PASS, exit 0 — includes new dynamic route /api/admin/profiles
+
+BLOCKED — integration suite (tests/integration, including the new
+"linked credits surface read-only…" test in admin-onboarding.test.ts):
+  connect ECONNREFUSED 127.0.0.1:5546. Postgres 18 is installed at
+  C:\Program Files\PostgreSQL\18 as command-line tools only (no share/ directory,
+  no server component, no service), so initdb fails and no local cluster can run.
+  Per sprint rules, no PostgreSQL was installed or downloaded.
+BLOCKED — Playwright browser suite: needs the same database for seeding and auth.
+
+The new integration test has been typechecked but not executed. Run it when the database is available:
+  node --env-file=.env.browser.local node_modules/vitest/vitest.mjs run tests/integration
+  node --env-file=.env.browser.local node_modules/@playwright/test/cli.js test --reporter=line
+
+Raw outputs (local only, untracked): output/resume-*.txt
+No new screenshots: the new profile/dashboard blocks render only with database-backed data.
+No production data, schema or migration changes. No merge or deployment.
+
+UPDATE 2026-11-25 — blocked suites now validated in GitHub Actions
+Workflow: .github/workflows/release-validation.yml (ephemeral postgres:17 service, 17.12)
+Run 45517894586 on 1a15033: every step passed.
+  Test migrations: PASS
+  Unit/frontend: 430 passed, 0 failed
+  Integration: 219 passed, 0 failed (includes the new linked-credit test)
+  Browser: 200 passed, 6 existing viewport-specific skips, 0 failed (206 total)
+    including the new end-to-end "staff link a verified student profile as a
+    read-only credit" test in both the desktop and mobile-390 projects.
+First run 45517337318 (37292ea) failed only because the container lacked
+Supabase's anon/authenticated roles; the workflow now creates them as NOLOGIN.

@@ -1,9 +1,9 @@
 import { afterEach, expect, test, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 vi.mock("@/auth/server", () => ({ requireAuthenticatedRequestUser: vi.fn(), requireVerifiedRequestStudent: vi.fn(), AuthenticationRequiredError: class extends Error {}, AffiliationVerificationRequiredError: class extends Error {} }));
-vi.mock("@/admin/service", () => ({ adminCreate: vi.fn(), adminCommand: vi.fn(), adminList: vi.fn(), adminDetail: vi.fn(), adminActivity: vi.fn(), adminIdentity: vi.fn(), accessList: vi.fn(), changeAccess: vi.fn(), lockStaff: vi.fn(), adminDuplicates: vi.fn() }));
+vi.mock("@/admin/service", () => ({ adminCreate: vi.fn(), adminCommand: vi.fn(), adminList: vi.fn(), adminDetail: vi.fn(), adminActivity: vi.fn(), adminIdentity: vi.fn(), accessList: vi.fn(), changeAccess: vi.fn(), lockStaff: vi.fn(), adminDuplicates: vi.fn(), adminProfileLookup: vi.fn() }));
 import { AuthenticationRequiredError } from "@/auth/server";
-import { adminCreate, adminCommand, changeAccess } from "@/admin/service";
+import { adminCreate, adminCommand, adminProfileLookup, changeAccess } from "@/admin/service";
 import { createAdminHandler } from "@/admin/http";
 import type { Database } from "@/db/client";
 const db = { synthetic: true } as unknown as Database;
@@ -39,4 +39,12 @@ test.each([
   [{}, "x".repeat(65537), 413],
 ] as const)("mutations enforce bounded same-origin JSON: %j", async (headers, body, status) => {
   const response = await authorized(request(body, headers), "create"); expect(response.status).toBe(status); expect(adminCreate).not.toHaveBeenCalled(); expect(response.headers.get("cache-control")).toContain("no-store");
+});
+test("profile lookup derives actor from session, reads only the query string and is GET-only", async () => {
+  vi.mocked(adminProfileLookup).mockResolvedValue([]);
+  const response = await authorized(new Request(`${origin}/api/admin/profiles?q=Avery&actor=forged`), "profiles");
+  expect(response.status).toBe(200); expect(response.headers.get("cache-control")).toContain("no-store");
+  expect(adminProfileLookup).toHaveBeenCalledWith(db, "authenticated-session-user", "Avery");
+  vi.mocked(adminProfileLookup).mockClear();
+  expect((await authorized(request("{}"), "profiles")).status).toBe(405); expect(adminProfileLookup).not.toHaveBeenCalled();
 });

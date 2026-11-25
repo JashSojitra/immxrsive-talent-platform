@@ -1,6 +1,7 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
-import { and, desc, eq, inArray, sql } from "drizzle-orm";
+import { and, asc, desc, eq, ilike, inArray, sql } from "drizzle-orm";
+import { z } from "zod";
 import type { Database } from "@/db/client";
 import { adminCreditLinks, adminEvents, adminProjectDetails, authUsers, projectRepositories, projects, studentAffiliations, studentProfiles, studioEvents, studioRoles } from "@/db/schema";
 import { ProjectError } from "@/projects/service";
@@ -118,6 +119,23 @@ export async function adminDuplicates(db: Database, actor: string, repositoryUrl
     for (const p of candidates) if (!result.has(p.id) && similarProjectName(p.title, title)) result.set(p.id, { ...p, exact: false, adminManaged: staff.some(s => s.id === p.id) });
     for (const p of publicMatches.matches) result.set(p.id, { id: p.id, title: p.title, exact: p.kind === "repository", adminManaged: staff.some(s => s.id === p.id) });
     return [...result.values()];
+  });
+}
+const lookupQuery = z.string().trim().min(2, "Enter at least two characters.").max(120);
+export const escapeLike = (value: string) => value.replace(/[\\%_]/g, c => `\\${c}`);
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+// Credit-link candidates: only profiles that validateCreditLinks would accept.
+// Returns already-public directory fields; never email, owner ID or drafts.
+export async function adminProfileLookup(db: Database, actor: string, raw: unknown) {
+  const q = lookupQuery.parse(raw);
+  return db.transaction(async tx => {
+    await lockStaff(tx, actor, true);
+    const match = UUID.test(q) ? eq(studentProfiles.id, q.toLowerCase()) : ilike(authUsers.name, `%${escapeLike(q)}%`);
+    return tx.select({ id: studentProfiles.id, name: authUsers.name, headline: studentProfiles.headline, program: studentProfiles.program }).from(studentProfiles)
+      .innerJoin(authUsers, eq(authUsers.id, studentProfiles.ownerUserId))
+      .innerJoin(studentAffiliations, eq(studentAffiliations.userId, studentProfiles.ownerUserId))
+      .where(and(match, eq(studentProfiles.publicationStatus, "published"), eq(studentAffiliations.status, "verified")))
+      .orderBy(asc(authUsers.name), asc(studentProfiles.id)).limit(20);
   });
 }
 export async function accessList(db: Database, actor: string) {

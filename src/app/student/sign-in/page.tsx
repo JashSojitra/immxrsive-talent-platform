@@ -6,7 +6,6 @@ import { isGitHubAuthConfigured } from "@/auth/auth";
 import { normalizeAuthCallbackPath } from "@/auth/config";
 import { getAuthenticatedUser } from "@/auth/server";
 import { GitHubSignInButton } from "@/components/auth/GitHubSignInButton";
-import { BrandLogo } from "@/components/brand/BrandLogo";
 
 import styles from "../auth.module.css";
 
@@ -30,7 +29,6 @@ export default async function StudentSignInPage({ searchParams }: SignInPageProp
   return (
     <div className={styles.shell}>
       <nav className={styles.nav} aria-label="Student access">
-        <BrandLogo className={styles.brand} />
         <Link className={styles.backLink} href="/talent">Explore public talent</Link>
       </nav>
       <main className={styles.main}>
@@ -40,7 +38,7 @@ export default async function StudentSignInPage({ searchParams }: SignInPageProp
             Your work.<br /><em>Your identity.</em>
           </h1>
           <p className={styles.intro}>
-            Sign in with GitHub to establish your private NOT ImmXrsive account.
+            Sign in with GitHub to create or return to your private student workspace.
             Public talent discovery and employer inquiries remain open to everyone.
           </p>
         </section>
@@ -49,8 +47,8 @@ export default async function StudentSignInPage({ searchParams }: SignInPageProp
           <p className={styles.eyebrow}>Secure account</p>
           <h2 id="github-sign-in-title">Continue as a student</h2>
           <p className={styles.cardText}>
-            GitHub verifies your sign-in. NOT ImmXrsive assigns a separate internal
-            identity that remains stable if your GitHub username changes.
+            One account for your profile, projects and collaborations.
+            Verify your Algoma affiliation after signing in to access student features.
           </p>
           {error ? (
             <p className={styles.error} role="alert">

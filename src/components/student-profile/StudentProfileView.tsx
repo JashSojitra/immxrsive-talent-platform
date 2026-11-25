@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import { BrandLogo } from "@/components/brand/BrandLogo";
 import type { PublicStudentProfile } from "@/db/queries/student-profile";
 
 import { StudentProfileMotion } from "./StudentProfileMotion";
@@ -26,8 +25,7 @@ export function StudentProfileView({
       </div>
 
       <header className={styles.siteHeader} data-profile-nav>
-        <BrandLogo className={styles.brand} />
-        <nav aria-label="Primary navigation">
+        <nav aria-label="Breadcrumb">
           <Link href="/talent">Talent</Link>
           <span aria-current="page">Profile</span>
         </nav>
@@ -49,7 +47,7 @@ export function StudentProfileView({
       <section className={styles.hero} aria-labelledby="student-name">
         <div className={styles.heroIndex} data-profile-index>
           <span>{preview ? "Public presentation preview" : "Public profile"}</span>
-          <strong>{profile.id}</strong>
+          <strong>Student portfolio</strong>
         </div>
         <div className={styles.heroBody}>
           <p className={styles.statusLine} data-profile-lead>
@@ -78,39 +76,20 @@ export function StudentProfileView({
         </div>
       </section>
 
-      <div id="portfolio-sections" className={styles.portfolioSections}>
-        {visibleSections.map((section, index) => (
-          <PortfolioSection key={section} section={section} profile={profile}
-            index={String(index + 2).padStart(2, "0")} />
-        ))}
-      </div>
-
-      <section className={styles.availabilitySection} aria-labelledby="availability-title" data-profile-section>
-        <SectionHeading index={String(visibleSections.length + 2).padStart(2, "0")} label="Availability" id="availability-title">
-          Ready for the<br /><em>right opportunity.</em>
-        </SectionHeading>
-        <div className={styles.availabilityPanel} data-profile-reveal>
-          <div><span>Academic status</span><strong>{statusLabel}</strong></div>
-          <div><span>Program</span><strong>{profile.program || "Not added"}</strong></div>
-          {profile.availability ? <div>
-            <span>Available for</span>
-            <strong>{profile.availability.map(labelValue).join(" / ") || "Not listed"}</strong>
-          </div> : null}
-        </div>
-      </section>
-
       <section className={styles.projectsSection} aria-labelledby="projects-title" data-profile-section>
-        <SectionHeading index={String(visibleSections.length + 3).padStart(2, "0")} label="Project evidence" id="projects-title">
-          Work made<br /><em>visible.</em>
+        <SectionHeading index="01" label="Project evidence" id="projects-title">
+          Projects and<br /><em>contributions.</em>
         </SectionHeading>
         <p className={styles.sectionLead} data-profile-reveal>{profile.projects.length > 0
-          ? "Canonical project records connected through verified contributor roles."
-          : "No canonical project evidence is connected to this self-service profile yet."}</p>
+          ? "Projects connected to this portfolio through recorded contributor roles."
+          : profile.curatedCredits?.length
+            ? "No recorded contributor roles are public yet."
+            : "No public projects are connected to this profile yet."}</p>
         <div className={styles.projectGrid}>
           {profile.projects.map((project, index) => (
             <article className={styles.projectCard} key={project.id} data-profile-reveal>
               <div className={styles.projectTopline}>
-                <span>{project.id} / {String(index + 1).padStart(2, "0")}</span>
+                <span>Project {String(index + 1).padStart(2, "0")}</span>
                 <span>{project.domain}</span>
               </div>
               <h3>{project.title}</h3>
@@ -132,7 +111,7 @@ export function StudentProfileView({
                   View project <span aria-hidden="true">↗</span>
                 </Link>
                 {project.links.map((link) => (
-                  <a key={link.type} href={link.url} target="_blank" rel="noopener noreferrer">
+                  <a key={`${link.type}-${link.url}`} href={link.url} target="_blank" rel="noopener noreferrer">
                     {link.label} <span className={styles.visuallyHidden}>(opens in a new tab)</span>
                   </a>
                 ))}
@@ -140,10 +119,56 @@ export function StudentProfileView({
             </article>
           ))}
         </div>
+        {profile.curatedCredits?.length ? (
+          <section className={styles.curatedCredits} aria-labelledby="curated-credits-title">
+            <h3 id="curated-credits-title" data-profile-reveal>Credited in curated projects</h3>
+            <p className={styles.sectionLead} data-profile-reveal>
+              Platform staff credited {profile.name} on these showcases. Credits are descriptive attribution, not verified contribution records.
+            </p>
+            <div className={styles.projectGrid}>
+              {profile.curatedCredits.map((credit) => (
+                <article className={styles.projectCard} key={credit.projectId} data-profile-reveal>
+                  <div className={styles.projectTopline}>
+                    <span>Staff-curated credit</span>
+                    <span>{credit.domain}</span>
+                  </div>
+                  <h4>{credit.title}</h4>
+                  {credit.summary ? <p>{credit.summary}</p> : null}
+                  <dl className={styles.projectRole}>
+                    <div>
+                      <dt>Credited role</dt>
+                      <dd>{credit.roles.join(" / ") || "Contributor"}</dd>
+                    </div>
+                  </dl>
+                  {credit.technologies.length ? (
+                    <div className={styles.technologyBlock}>
+                      <span>Project technologies</span>
+                      <ul aria-label={`${credit.title} technologies`}>
+                        {credit.technologies.map((technology) => <li key={technology}>{technology}</li>)}
+                      </ul>
+                    </div>
+                  ) : null}
+                  <div className={styles.projectActions}>
+                    <Link href={`/projects/${credit.projectId}`} aria-label={`View curated project ${credit.title}`}>
+                      View project <span aria-hidden="true">↗</span>
+                    </Link>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : null}
       </section>
 
+      <div id="portfolio-sections" className={styles.portfolioSections}>
+        {visibleSections.map((section, index) => (
+          <PortfolioSection key={section} section={section} profile={profile}
+            index={String(index + 2).padStart(2, "0")} />
+        ))}
+      </div>
+
       <section className={styles.inquirySection} aria-labelledby="inquiry-title" data-profile-section>
-        <p className={styles.chapter} data-profile-reveal>06 / Employer action</p>
+        <p className={styles.chapter} data-profile-reveal>Get in touch</p>
         <h2 id="inquiry-title" data-profile-reveal>
           Interested in working<br />with <em>{profile.name}?</em>
         </h2>
@@ -155,10 +180,7 @@ export function StudentProfileView({
         </Link>
       </section>
 
-      <footer className={styles.footer}>
-        <span>NOT ImmXrsive</span>
-        <Link href="/talent">Return to talent index</Link>
-      </footer>
+
     </StudentProfileMotion>
   );
 }
