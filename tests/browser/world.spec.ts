@@ -1,16 +1,20 @@
 import { expect, test } from "@playwright/test";
 
+// 3D boots in software rendering on CI runners (no GPU), which is far slower than a real device.
+const SLOW_3D_MS = 60_000;
+
 test("/world opens the 3D intro (or the list fallback when WebGL is unavailable)", async ({ page }) => {
+  test.setTimeout(SLOW_3D_MS * 2);
   const errors: string[] = [];
   page.on("pageerror", error => errors.push(error.message));
   await page.goto("/world");
   const enter = page.getByRole("button", { name: "Enter the world" });
   const listHeading = page.getByRole("heading", { level: 1, name: "ImmXrsive World" });
-  await expect(enter.or(listHeading)).toBeVisible({ timeout: 20_000 });
+  await expect(enter.or(listHeading)).toBeVisible({ timeout: SLOW_3D_MS });
   if (await enter.isVisible()) {
     await expect(page.getByRole("link", { name: /Main site/ })).toHaveAttribute("href", "/");
     await enter.click();
-    await page.getByRole("button", { name: "Places" }).click();
+    await page.getByRole("button", { name: "Places" }).click({ timeout: SLOW_3D_MS });
     await expect(page.getByRole("navigation", { name: "Places" }).getByRole("button")).toHaveCount(6);
   }
   expect(errors).toEqual([]);
@@ -27,12 +31,13 @@ test("/world?list renders every place without WebGL", async ({ page }) => {
 });
 
 test("the Stories House shelf renders the student volumes (3D, or the static shelf without WebGL)", async ({ page }) => {
+  test.setTimeout(SLOW_3D_MS * 2);
   const errors: string[] = [];
   page.on("pageerror", error => errors.push(error.message));
   await page.goto("/world/stories-shelf.html");
   const tabs = page.getByRole("tablist", { name: "Choose a volume" }).getByRole("tab");
   const fallback = page.locator("#static-fallback:not([hidden])");
-  await expect(tabs.first().or(fallback)).toBeVisible({ timeout: 20_000 });
+  await expect(tabs.first().or(fallback)).toBeVisible({ timeout: SLOW_3D_MS });
   if (await fallback.count()) {
     // CI runners often have no WebGL: the shelf must still list every volume.
     await expect(fallback.locator(".fallback-book")).toHaveCount(7);
