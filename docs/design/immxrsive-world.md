@@ -17,7 +17,7 @@ A standalone, explorable 3D world for events and first meetings. It does not cha
 - **Tour:** the "Tour" button flies to every place with a caption. It also starts by itself after 45 s idle.
 - **Kiosk mode:** `/world?kiosk` enters automatically and starts the tour after 25 s idle. Use it at event tables.
 - **List view:** `/world?list`, or the "List" button. The same content without WebGL. This is also the automatic fallback when WebGL is unavailable.
-- **Quality:** resolution and then bloom drop automatically on slow devices. `/world?hq` locks full quality (use it for recordings).
+- **Quality:** resolution and then bloom drop automatically on slow devices. On a software renderer (SwiftShader, llvmpipe, Microsoft Basic Render Driver: no GPU, a blocklisted GPU, CI runners) the world starts at half resolution with no shadows, bloom or MSAA. `/world?hq` locks full quality (use it for recordings).
 
 ## Stories House shelf (`/world/stories-shelf.html`)
 
@@ -36,6 +36,7 @@ Changes made:
 - Flat-printed cover text instead of the floating foil text, so covers stay readable on any GPU.
 - three.js r165 is self-hosted in `public/world/vendor/three-0.165.0` (MIT), so it doesn't depend on a CDN.
 - Escape with no open volume tells the parent world to close the shelf, and the world stops rendering while the shelf is open.
+- On a software renderer the shelf shows its static catalog: the 3D scene runs at about 1 fps there.
 
 To add a student, edit the `books` list in the adaptation script (`photo` points to `public/world/students/<id>.jpg`, about 720×792) and regenerate. Also update `world-content.ts`.
 
@@ -75,5 +76,6 @@ All geometry is generated in code: no paid 3D services and no external model fil
 ## Tests
 
 - `tests/unit/world-content.test.ts`: content integrity, no invented content
+- `tests/unit/world-software-renderer.test.ts`: software-renderer detection (world and shelf)
 - `tests/frontend/world-list-view.test.tsx`: accessible list view
 - `tests/browser/world.spec.ts`: `/world` intro and the list fallback on desktop and 390 px

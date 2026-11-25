@@ -6001,6 +6001,17 @@
         return;
       }
 
+      // ImmXrsive: software rendering cannot run this scene interactively; show the static catalog.
+      const gl = renderer.getContext();
+      const rendererInfo = gl.getExtension("WEBGL_debug_renderer_info");
+      const rendererName = String(gl.getParameter(rendererInfo ? rendererInfo.UNMASKED_RENDERER_WEBGL : gl.RENDERER));
+      if (/swiftshader|llvmpipe|softpipe|software|basic render driver|microsoft basic render/i.test(rendererName)) {
+        renderer.dispose();
+        renderer = null;
+        showFallback("This device has no graphics acceleration, so the shelf is shown as a static catalog.");
+        return;
+      }
+
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 0.9;

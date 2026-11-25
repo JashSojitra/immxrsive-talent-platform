@@ -11,6 +11,7 @@ import { buildBuildings, type Building } from "./buildings";
 import { clamp, damp } from "./noise";
 import { brand } from "./palette";
 import { buildSky } from "./sky";
+import { isSoftwareRenderer } from "./software-renderer";
 import { createSpark } from "./spark";
 import { buildAtmosphere, buildPaths, buildPlanet, buildScatter, buildWater, doorstep, frames, PLANET_RADIUS, stepAlong, surfaceRadius, terrainUniforms, WATER_RADIUS } from "./terrain";
 
@@ -87,9 +88,12 @@ export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion:
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.15;
-  let pixelRatio = Math.min(window.devicePixelRatio || 1, 1.75);
+  // A CPU rasterizer (no GPU, CI runners) draws full quality at ~3 fps and starves input. Start below the
+  // bottom of the quality ladder instead: half resolution, no shadows, bloom or MSAA (~23 fps on SwiftShader).
+  const software = !options.fixedQuality && isSoftwareRenderer(renderer.getContext());
+  let pixelRatio = software ? 0.5 : Math.min(window.devicePixelRatio || 1, 1.75);
   renderer.setPixelRatio(pixelRatio);
-  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.enabled = !software;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   const scene = new THREE.Scene();
@@ -100,7 +104,7 @@ export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion:
   scene.add(new THREE.HemisphereLight(0x9a8cff, 0x1a1240, 1.45));
   // Key light follows the camera so whatever you look at is lit from the upper left, with soft shadows.
   const keyLight = new THREE.DirectionalLight(0xe4d8ff, 2.6);
-  keyLight.castShadow = true;
+  keyLight.castShadow = !software;
   keyLight.shadow.mapSize.set(window.innerWidth < 700 ? 1024 : 2048, window.innerWidth < 700 ? 1024 : 2048);
   keyLight.shadow.bias = -0.0004;
   keyLight.shadow.normalBias = 0.04;
@@ -126,9 +130,10 @@ export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion:
 
   // Post-processing: bloom makes the neon and Spark glow.
   // Multisampled HDR target keeps edges smooth through post-processing.
-  const composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 }));
+  const composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: software ? 0 : 4 }));
   composer.addPass(new RenderPass(scene, camera));
   const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.62, 0.5, 0.86);
+  bloom.enabled = !software;
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
   const grade = new ShaderPass(GradeShader);

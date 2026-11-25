@@ -361,6 +361,28 @@ rep("</body>", """  <script>
   </script>
 </body>""")
 
+# 11. A CPU rasterizer (no GPU, a blocklisted GPU, CI runners) draws this scene at about 1 fps and can
+#     take minutes to show the first frame, so show the static catalog instead. Same pattern as
+#     src/components/world/engine/software-renderer.ts.
+rep("""        showFallback("WebGL is unavailable in this browser. The complete static catalog remains available.");
+        return;
+      }
+""", """        showFallback("WebGL is unavailable in this browser. The complete static catalog remains available.");
+        return;
+      }
+
+      // ImmXrsive: software rendering cannot run this scene interactively; show the static catalog.
+      const gl = renderer.getContext();
+      const rendererInfo = gl.getExtension("WEBGL_debug_renderer_info");
+      const rendererName = String(gl.getParameter(rendererInfo ? rendererInfo.UNMASKED_RENDERER_WEBGL : gl.RENDERER));
+      if (/swiftshader|llvmpipe|softpipe|software|basic render driver|microsoft basic render/i.test(rendererName)) {
+        renderer.dispose();
+        renderer = null;
+        showFallback("This device has no graphics acceleration, so the shelf is shown as a static catalog.");
+        return;
+      }
+""")
+
 leftovers = [w for w in ["Working Volumes", "WORKING VOLUMES", "Codex", "Claude Code", "Cursor", "Antigravity", "Figma", "Framer", "Xcode", "imagined edition"] if w in out]
 print("leftover strings:", leftovers)
 open(sys.argv[2], "w").write(out)
