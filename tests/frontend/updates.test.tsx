@@ -13,5 +13,13 @@ test("editor generates an editable slug, previews copy, and limits event fields"
 });
 test("cards link to the article and show category and excerpt",()=>{
   render(<ArticleCard article={{...emptyArticle,id:"test",title:"Test event",slug:"test-event",category:"event",excerpt:"An honest excerpt",publishedAt:new Date("2026-11-26"),updatedAt:new Date()}} />);
-  expect(screen.getByRole("link",{name:"Test event"})).toHaveAttribute("href","/updates/test-event"); expect(screen.getByText("Events")).toBeVisible(); expect(screen.getByText("An honest excerpt")).toBeVisible();
+  expect(screen.getByRole("link",{name:"Test event"})).toHaveAttribute("href","/updates/test-event"); expect(screen.getAllByText("Events")).toHaveLength(2); expect(screen.getByText("An honest excerpt")).toBeVisible();
+});
+
+
+test("coverless cards and article heroes use the branded cover without a fake photo",()=>{
+  const post={...emptyArticle,id:"coverless",title:"Test coverless",slug:"test-coverless",publishedAt:new Date(),updatedAt:new Date()};
+  const {container}=render(<ArticleCard article={post} />);
+  expect(container.querySelector('img[src="/branding/immxrsive-icon-reverse.svg"]')).not.toBeNull();
+  expect(container.querySelector('img[src^="/media/"]')).toBeNull();
 });
