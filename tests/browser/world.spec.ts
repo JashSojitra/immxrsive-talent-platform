@@ -39,7 +39,8 @@ test("/world?kiosk is full screen without the site chrome but keeps the project 
   }
   await expect(page.locator("body > header")).toBeHidden();
   await expect(page.locator("body > footer")).toBeHidden();
-  await expect(page.getByText("Independent student-built course project.")).toBeVisible();
+  // The site's own notice is hidden with the chrome; the world shows its own copy.
+  await expect(page.locator("#site-content").getByText("Independent student-built course project.")).toBeVisible();
   await expect(page.getByRole("link", { name: "Back to main site" })).toHaveCount(0);
 });
 
