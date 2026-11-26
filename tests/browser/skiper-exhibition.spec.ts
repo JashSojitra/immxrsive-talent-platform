@@ -133,8 +133,8 @@ test("native scrolling and the server rendered project index remain available wi
   await page.goto("/");
   await expect(page.getByRole("main").getByRole("heading", { level: 1 })).toBeVisible();
   const story = page.getByRole("list", { name: "Student stories" });
-  await expect(story.getByRole("link", { name: "Meet Jash Sojitra" })).toBeVisible();
-  await expect(story.getByRole("link")).toHaveAttribute("href", "https://www.linkedin.com/in/jashsojitra/");
+  await expect(story.getByRole("heading", { name: "Stories coming soon" })).toBeVisible();
+  await expect(page.getByRole("link", { name: /All updates/ })).toHaveAttribute("href", "/updates");
   await page.getByRole("main").getByRole("link", { name: "View all projects", exact: true }).click();
   await expect(page).toHaveURL(/\/projects$/);
   await expect(page.getByRole("main").getByRole("heading", { level: 1 })).toBeVisible();

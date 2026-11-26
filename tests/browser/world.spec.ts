@@ -127,5 +127,6 @@ test("arrival at the Newsstand opens its paper panel in 3D or the list fallback"
     await page.getByRole("navigation", { name: "Places" }).getByRole("button", { name: /Newsstand/ }).click();
     await expect(page.getByRole("heading", { name: "Fresh off the press." })).toBeVisible({ timeout: SLOW_3D_MS });
   }
+  await expect(page.getByRole("region", { name: "Newsstand papers" })).toHaveCSS("opacity", "1");
   await page.screenshot({ path: `test-results/newsstand-${test.info().project.name}.png` });
 });

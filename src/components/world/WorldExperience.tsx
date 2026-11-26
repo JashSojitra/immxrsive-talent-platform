@@ -153,6 +153,8 @@ export function WorldExperience({ volumes = emptyVolumes, papers = emptyPapers }
               if (!touringRef.current) return;
               tourIndex.current = (tourIndex.current + 1) % tourOrder.length;
               setCaption(null);
+              setPanel(null);
+              worldRef.current?.focus(null);
               worldRef.current?.flyTo(tourOrder[tourIndex.current]);
             }, TOUR_DWELL_MS);
           },

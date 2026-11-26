@@ -4,7 +4,7 @@ export type NewsPaper = { title: string; date: string; excerpt: string; href: st
 export const comingSoonVolume: StoryVolume = { name: "Coming Soon", role: "Student story", photoUrl: null, excerpt: "A student story is being prepared.", href: null };
 export function padStoryVolumes(volumes: StoryVolume[]): StoryVolume[] { return Array.from({ length: 7 }, (_, index) => volumes[index] ?? { ...comingSoonVolume }); }
 export function newsstandPapers(posts: PublicArticle[]): NewsPaper[] {
-  return posts.filter(p => p.category === "event" || p.category === "news").slice(0, 5).map(p => ({ title: p.title, date: p.publishedAt ? new Date(p.publishedAt).toISOString().slice(0, 10) : "", excerpt: p.excerpt, href: `/updates/${p.slug}` }));
+  return posts.filter(p => p.category === "event" || p.category === "news").slice(0, 5).map(p => ({ title: p.title, date: p.publishedAt ? new Date(p.publishedAt).toLocaleDateString("en-CA", { timeZone: "America/Toronto" }) : "", excerpt: p.excerpt, href: `/updates/${p.slug}` }));
 }
 export function storyPosts<T extends PublicArticle>(posts: T[]) { return posts.filter(p => p.category === "student_success").slice(0, 6); }
 export function safeStoryMessage(origin: string, expected: string, data: unknown): string | null {

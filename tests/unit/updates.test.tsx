@@ -1,10 +1,11 @@
 import { expect, test } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import sharp from "sharp";
-import { articleSlug, approvalInvalidated, emptyArticle, publishIssues, safeImageUrl, youtubeId } from "@/updates/policy";
+import { articleInput, articleSlug, approvalInvalidated, emptyArticle, publishIssues, safeImageUrl, youtubeId } from "@/updates/policy";
 import { processImage } from "@/updates/image";
 import { Markdown } from "@/updates/Markdown";
 test("slugs normalize accents and punctuation", () => { expect(articleSlug("  Café: Students & XR! ")).toBe("cafe-students-xr"); expect(articleSlug("---")).toBe(""); expect(articleSlug("a".repeat(140))).toHaveLength(120); });
+test("an article cannot take the share-image route", () => { expect(articleInput.safeParse({ ...emptyArticle, title: "Test title", authorDisplayName: "Test author", slug: "og" }).success).toBe(false); });
 test("student stories require approval and a published linked profile", () => {
   const story = { ...emptyArticle, title: "Test story", excerpt: "Test excerpt", bodyMarkdown: "Test body", category: "student_success" as const, studentProfileId: "00000000-0000-4000-8000-000000000001" };
   for (const [approved,published] of [[false,false],[true,false],[false,true]]) expect(publishIssues(story,approved,published)).not.toHaveLength(0);
