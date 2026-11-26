@@ -34,7 +34,7 @@ test("public relationships are bidirectional, deduplicated by type and never gra
   {id:publicId,title:"Relationship public project",description:"Public",domain:"XR",origin:"student",maintainerUserId:actor,publicationStatus:"published"},
   {id:draftId,title:"SECRET draft project",description:"Draft",domain:"XR",origin:"student",maintainerUserId:actor,publicationStatus:"unpublished"},
  ]);
- const comp=await company(), second=await company(), restricted=await company(), hidden=await company();
+ const [comp,second,restricted,hidden]=await Promise.all(["public","second","restricted","hidden"].map(name=>company({...companyContent,website:`https://${name}-relationships.example.org`})));
  const rolesBefore=await db.select().from(s.studioRoles);
  const content={companyId:comp.id,title:"Public history",description:"Public collaboration",outcome:"Prototype",year:2026,date:null,status:"current",visibility:"public",projectIds:[publicId,publicId,draftId],participantIds:[]};
  await expect(saveCollaboration(db,actor,{content})).rejects.toMatchObject({status:403});
