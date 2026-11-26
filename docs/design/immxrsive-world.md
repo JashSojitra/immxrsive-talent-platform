@@ -1,6 +1,6 @@
 # ImmXrsive World (`/world`)
 
-A standalone, explorable 3D world for events and first meetings. It does not change the main site: it lives at `/world`, and its 3D code is only loaded on that page.
+A standalone, explorable 3D world for events and first meetings. It lives at `/world`, and its 3D code is only loaded on that page. The main navigation (desktop and mobile), homepage hero card and footer link into the world.
 
 ## Experience
 
@@ -76,6 +76,7 @@ All geometry is generated in code: no paid 3D services and no external model fil
 
 ## Tests
 
+- `tests/unit/world-controls.test.ts`: real keyboard/joystick steering, banking, Hop and autopilot arrival/facing, with GPU rendering mocked
 - `tests/unit/world-content.test.ts`: content integrity, no invented content
 - `tests/unit/world-software-renderer.test.ts`: software-renderer detection (world and shelf)
 - `tests/frontend/world-list-view.test.tsx`: accessible list view
