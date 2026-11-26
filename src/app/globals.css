@@ -1,6 +1,6 @@
 /*
  * ImmXrsive design system — "The Crossing".
- * Two-light rig on a blue-black void: --flare (warm key, action) and --ion (cold rim, evidence).
+ * ImmXrsive pink and purple accents on a blue-black void.
  * Legacy token names (--ink, --signal, --electric, …) are kept as the public API for every page.
  * Documentation: docs/design/phase-1-spatial-identity.md
  */
@@ -10,7 +10,15 @@
   background: var(--ink);
   color: var(--bone);
 
-  /* Palette */
+  /* Authorised ImmXrsive palette. Tints below keep small accent text at AA. */
+  --brand-pink: #E31C79;
+  --brand-purple: #981D97;
+  --brand-plum: #991E66;
+  --brand-cold-purple: #582C83;
+  --brand-blue: #00205B;
+  --brand-gray: #3C3C3B;
+  --pink-rgb: 227 28 121;
+  --purple-rgb: 88 44 131;
   --void: #05060a;
   --ink: #0a0c12;
   --surface: #12151d;
@@ -20,16 +28,16 @@
   --line: #2a303c;
   --line-strong: #3d4554;
   --control-border: #687284;
-  --flare: #ff7a59;
-  --flare-hot: #ffb48a;
-  --ion: #8ef0d4;
+  --flare: #ff6fae;
+  --flare-hot: #ff8cc0;
+  --ion: #c6a2ed;
   --signal: var(--flare);
   --electric: var(--ion);
   --danger: #ff9e91;
   --success: var(--ion);
   --glass: rgb(14 17 25 / .62);
   --glass-line: rgb(244 240 232 / .1);
-  --glow-flare: 0 0 0 1px rgb(255 122 89 / .5), 0 10px 40px -8px rgb(255 122 89 / .55);
+  --glow-flare: 0 0 0 1px rgb(var(--pink-rgb) / .5), 0 10px 40px -8px rgb(var(--pink-rgb) / .55);
 
   /* Type */
   --font-sans: "Onest", Arial, Helvetica, sans-serif;
@@ -46,7 +54,7 @@
 
   /* Layout */
   --content: min(1320px, calc(100% - 80px));
-  --header-h: 68px;
+  --header-h: 88px;
   --radius-sm: 6px;
   --radius-md: 14px;
   --radius-lg: 28px;
@@ -101,7 +109,7 @@ html[data-world-kiosk] body > :not(#site-content) { display: none !important; }
 html:has(dialog[open]) { overflow: hidden; }
 
 @media (max-width: 700px) {
-  :root { --content: calc(100% - 32px); --header-h: 60px; }
+  :root { --content: calc(100% - 32px); --header-h: 76px; }
 }
 
 /* ---------- Shared primitives (consumed by every page) ---------- */
@@ -122,7 +130,7 @@ html:has(dialog[open]) { overflow: hidden; }
   letter-spacing: -.01em;
   transition: background var(--motion-fast) ease, border-color var(--motion-fast) ease, box-shadow var(--motion-panel) var(--ease-out), transform var(--motion-fast) var(--ease-out);
 }
-.ui-button-primary { background: var(--flare); border-color: var(--flare); color: var(--ink); }
+.ui-button-primary { background: var(--brand-plum); border-color: var(--brand-plum); color: #fff; }
 .ui-button:active { transform: scale(.97); }
 .ui-eyebrow { color: var(--flare); font-family: var(--font-mono); font-size: .72rem; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; }
 .ui-empty { padding: 28px; border: 1px dashed var(--line-strong); border-radius: var(--radius-md); color: var(--muted); line-height: 1.7; }
@@ -136,7 +144,7 @@ html:has(dialog[open]) { overflow: hidden; }
 
 @media (hover: hover) and (pointer: fine) {
   .ui-button:hover { background: var(--surface-raised); border-color: var(--bone); }
-  .ui-button-primary:hover { background: var(--flare-hot); border-color: var(--flare-hot); box-shadow: var(--glow-flare); }
+  .ui-button-primary:hover { background: var(--brand-cold-purple); border-color: var(--brand-cold-purple); box-shadow: var(--glow-flare); }
 }
 
 @media (prefers-reduced-motion: reduce) {

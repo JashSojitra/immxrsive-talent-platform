@@ -18,9 +18,9 @@ uniform float u_scroll;
 out vec4 outColor;
 
 const vec3 VOID = vec3(0.010, 0.013, 0.026);
-const vec3 FLARE = vec3(1.0, 0.40, 0.26);
-const vec3 EMBER = vec3(1.0, 0.74, 0.55);
-const vec3 ION = vec3(0.42, 0.98, 0.85);
+uniform vec3 FLARE;
+uniform vec3 EMBER;
+uniform vec3 ION;
 const vec3 BAR = vec3(1.3, 0.13, 0.13);
 
 mat2 rot(float a) { float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }

@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("registry carousel responds to buttons, pagination, keyboard and dragging, then opens real project evidence", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/projects");
   const carousel = page.locator('[data-skiper="47"]');
   await carousel.scrollIntoViewIfNeeded();
   const active = carousel.locator(".swiper-slide-active");
@@ -14,7 +14,11 @@ test("registry carousel responds to buttons, pagination, keyboard and dragging, 
   await expect(active).not.toHaveAttribute("aria-label", first!);
   await carousel.getByRole("button", { name: "Go to slide 1", exact: true }).click();
   await expect(active).toHaveAttribute("aria-label", first!);
-  const box = await carousel.locator(".swiper").boundingBox();
+  const swiper = carousel.locator(".swiper");
+  // Pagination can scroll the track under the sticky header; centre the drag surface again.
+  await swiper.evaluate(element => element.scrollIntoView({ block: "center" }));
+  await expect.poll(() => swiper.evaluate(element => (element as HTMLElement & { swiper: { animating: boolean } }).swiper.animating)).toBe(false);
+  const box = await swiper.boundingBox();
   if (!box) throw new Error("Carousel is not rendered");
   await page.mouse.move(box.x + box.width * .7, box.y + 200);
   await page.mouse.down();
@@ -80,6 +84,8 @@ test("reduced motion stays readable, disables spatial transforms and keeps the c
     expect(await section.locator("[data-motion-static]").first().evaluate(element => getComputedStyle(element).transform)).toBe("none");
   }
   expect(await page.evaluate(() => document.documentElement.classList.contains("lenis"))).toBe(false);
+  await expect(page.getByRole("list", { name: "Student stories" })).toBeVisible();
+  await page.goto("/projects");
   const carousel = page.locator('[data-skiper="47"]');
   await carousel.scrollIntoViewIfNeeded();
   const before = await carousel.locator(".swiper-slide-active").innerText();
@@ -100,8 +106,8 @@ test("public routes fit 390px and 1440px with real rendered component captures",
     const name = route === "/" ? "home" : route.slice(1);
     await page.screenshot({ path: `output/skiper-regression/${name}-${width}.png`, fullPage: true });
     if (route === "/") {
-      await page.locator('[data-skiper="47"]').scrollIntoViewIfNeeded();
-      await page.screenshot({ path: `output/skiper-regression/carousel-${width}.png` });
+      await page.getByRole("list", { name: "Student stories" }).scrollIntoViewIfNeeded();
+      await page.screenshot({ path: `output/skiper-regression/stories-${width}.png` });
       await page.locator('[data-skiper="28"]').evaluate(element => window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY + element.clientHeight * .55));
       await page.screenshot({ path: `output/skiper-regression/perspective-${width}.png` });
       await page.locator('[data-skiper="31"]').scrollIntoViewIfNeeded();
@@ -126,8 +132,9 @@ test("native scrolling and the server rendered project index remain available wi
   const page = await context.newPage();
   await page.goto("/");
   await expect(page.getByRole("main").getByRole("heading", { level: 1 })).toBeVisible();
-  await expect(page.locator('[data-skiper="47"]').getByRole("link").first()).toBeVisible();
-  await expect(page.locator('[data-skiper="47"]').getByRole("link").first()).toHaveAttribute("href", /^\/projects\//);
+  const story = page.getByRole("list", { name: "Student stories" });
+  await expect(story.getByRole("link", { name: "Meet Jash Sojitra" })).toBeVisible();
+  await expect(story.getByRole("link")).toHaveAttribute("href", "https://www.linkedin.com/in/jashsojitra/");
   await page.getByRole("main").getByRole("link", { name: "View all projects", exact: true }).click();
   await expect(page).toHaveURL(/\/projects$/);
   await expect(page.getByRole("main").getByRole("heading", { level: 1 })).toBeVisible();

@@ -14,8 +14,13 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "NOT ImmXrsive Talent & Industry Platform",
-    template: "%s | NOT ImmXrsive",
+    default: "ImmXrsive Talent & Industry Platform",
+    template: "%s | ImmXrsive",
+  },
+  manifest: "/manifest.webmanifest",
+  icons: {
+    icon: [{ url: "/branding/immxrsive-icon-tile.svg", type: "image/svg+xml" }],
+    apple: "/branding/immxrsive-icon-180.png",
   },
   description: "Independent student-built course project for discovering talent across immersive technology, software, design, spatial computing, and AI.",
 };

@@ -56,3 +56,28 @@ test("smooth scrolling is limited to the homepage and the project index stays ke
   await expect(page).toHaveURL(/\/projects\/P\d+$/);
   expect(await page.evaluate(() => document.documentElement.classList.contains("lenis"))).toBe(false);
 });
+
+
+test("homepage stories use approved content and preserve project discovery", async ({ page }) => {
+  const width = test.info().project.name === "mobile-390" ? 390 : 1440;
+  await page.setViewportSize({ width, height: width === 390 ? 844 : 1000 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const stories = page.getByRole("list", { name: "Student stories" });
+  await expect(stories.getByRole("img", { name: "Jash Sojitra" })).toBeVisible();
+  await expect(stories).toContainText("Developer of this platform · XR Program & Partnership Student Coordinator");
+  await expect(stories).toContainText("Built this platform and the ImmXrsive World.");
+  await expect(stories.getByRole("link", { name: "Meet Jash Sojitra" })).toHaveAttribute("href", "https://www.linkedin.com/in/jashsojitra/");
+  await expect(stories.getByRole("heading", { name: "Story coming soon" })).toHaveCount(2);
+  await expect(page.locator('[data-skiper="47"]')).toHaveCount(0);
+  const photo = stories.getByRole("img", { name: "Jash Sojitra" });
+  await photo.scrollIntoViewIfNeeded();
+  await expect.poll(() => photo.evaluate(image => (image as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  await page.screenshot({ path: `test-results/brand-refresh/stories-${width}.png` });
+  await page.evaluate(() => { window.scrollTo(0, 0); return document.fonts.ready; });
+  await page.screenshot({ path: `test-results/brand-refresh/home-${width}.png`, fullPage: true });
+  await page.screenshot({ path: `test-results/brand-refresh/hero-${width}.png` });
+  await page.getByRole("main").getByRole("link", { name: "View all projects", exact: true }).click();
+  await expect(page).toHaveURL(/\/projects$/);
+  await expect(page.locator('[data-skiper="47"]')).toBeVisible();
+});

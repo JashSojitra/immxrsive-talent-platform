@@ -11,7 +11,7 @@ import styles from "../auth.module.css";
 
 export const metadata: Metadata = {
   title: "Student sign in",
-  description: "Secure student access to the independent NOT ImmXrsive talent platform.",
+  description: "Secure student access to the independent ImmXrsive talent platform.",
 };
 
 type SignInPageProps = {
@@ -65,7 +65,7 @@ export default async function StudentSignInPage({ searchParams }: SignInPageProp
             </p>
           ) : null}
           <p className={styles.privacy}>
-            Login requests email access only. NOT ImmXrsive does not request access
+            Login requests email access only. ImmXrsive does not request access
             to write to your repositories.
           </p>
         </section>
