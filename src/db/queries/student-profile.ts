@@ -33,6 +33,7 @@ export interface StudentProjectEvidence {
 }
 
 export interface PublicStudentProfile {
+  avatarMediaId?: string | null;
   id: string;
   name: string;
   headline: string;

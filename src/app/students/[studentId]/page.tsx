@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { publicArticles } from "@/updates/service";
+import { getRuntimeDatabase } from "@/db/runtime";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -34,5 +37,6 @@ export default async function StudentProfilePage({ params }: StudentProfilePageP
 
   if (!profile) notFound();
 
-  return <StudentProfileView profile={profile} />;
+  const story = (await publicArticles(getRuntimeDatabase(), "student_success")).find(a => a.studentProfileId === studentId);
+  return <>{story && <aside style={{ padding: "2rem" }}><Link href={`/updates/${story.slug}`}>Featured story: {story.title}</Link></aside>}<StudentProfileView profile={profile} /></>;
 }

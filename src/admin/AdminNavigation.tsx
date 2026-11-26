@@ -8,6 +8,7 @@ export function AdminNavigation({ role }: { role: string }) {
   const pathname = usePathname();
   const links = [
     { href: "/admin", label: "Overview" },
+    { href: "/admin/updates", label: "Updates & Stories" },
     { href: "/admin/partners", label: "Partnerships & requests" },
     { href: "/admin/projects", label: "Project library" },
     ...(["xr_admin", "platform_super_admin"].includes(role) ? [{ href: "/admin/projects/new", label: "Create project" }] : []),

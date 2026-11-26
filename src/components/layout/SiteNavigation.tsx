@@ -5,7 +5,7 @@ import { useRef, useState, type CSSProperties } from "react";
 import styles from "./site.module.css";
 import { TextRoll } from "@/components/v1/skiper58";
 export type AccountLink = { href: string; label: string };
-const destinations = [{href:"/",label:"Home"},{href:"/talent",label:"Talent"},{href:"/projects",label:"Projects"},{href:"/showcase",label:"Showcase"},{href:"/world",label:"World"},{href:"/partners",label:"Industry partners"},{href:"/contact",label:"Inquiries"}];
+const destinations = [{href:"/",label:"Home"},{href:"/talent",label:"Talent"},{href:"/projects",label:"Projects"},{href:"/showcase",label:"Showcase"},{href:"/updates",label:"Updates"},{href:"/world",label:"World"},{href:"/partners",label:"Industry partners"},{href:"/contact",label:"Inquiries"}];
 export function SiteNavigation({ accountLinks }: { accountLinks: AccountLink[] }) {
   const pathname = usePathname();
   const dialog = useRef<HTMLDialogElement>(null);

@@ -10,6 +10,7 @@ export interface FilterMetadata {
 }
 
 export interface TalentDirectoryItem {
+  avatarMediaId?: string | null;
   id: string;
   name: string;
   headline: string;

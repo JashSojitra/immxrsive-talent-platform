@@ -1,0 +1,38 @@
+import "./setup";
+import { randomUUID } from "node:crypto";
+import { migrate } from "drizzle-orm/postgres-js/migrator";
+import { afterAll, beforeAll, expect, test, vi } from "vitest";
+import { eq } from "drizzle-orm";
+import { createDatabase } from "@/db/client";
+import { adminEvents, articles, authUsers, studentProfiles, studioRoles } from "@/db/schema";
+import { emptyArticle } from "@/updates/policy";
+vi.mock("server-only",()=>({}));
+import { publicArticles, respondToStory, saveArticle, studentStoriesForApproval } from "@/updates/service";
+const c=createDatabase(process.env.TEST_DATABASE_URL!);const actor=randomUUID(),owner=randomUUID(),outsider=randomUUID();let profileId:string;
+beforeAll(async()=>{
+  await migrate(c.db,{migrationsFolder:"drizzle"});
+  await c.db.insert(authUsers).values([actor,owner,outsider].map((id,index)=>({id,name:`Synthetic updates user ${index}`,email:`${id}@example.test`})));await c.db.insert(studioRoles).values({userId:actor,role:"platform_super_admin"});
+  const [profile]=await c.db.insert(studentProfiles).values({ownerUserId:owner,publicationStatus:"published"}).returning();profileId=profile.id;
+});
+afterAll(async()=>{await c.client.end();});
+test("approval is owned, revision-bound, audited, and reset by edits",async()=>{
+  const content={...emptyArticle,title:"Synthetic consent story",slug:"synthetic-consent-story",excerpt:"Test excerpt",bodyMarkdown:"Test content",authorDisplayName:"Test staff",category:"student_success" as const,studentProfileId:profileId};
+  await expect(saveArticle(c.db,actor,{action:"published",content})).rejects.toMatchObject({status:422});
+  const draft=await saveArticle(c.db,actor,{action:"request_approval",content});
+  expect(await publicArticles(c.db)).toHaveLength(0);expect(await studentStoriesForApproval(c.db,owner)).toHaveLength(1);expect(await studentStoriesForApproval(c.db,outsider)).toHaveLength(0);
+  await expect(respondToStory(c.db,outsider,{id:draft.id,version:draft.version,approve:true,note:""})).rejects.toMatchObject({status:403});
+  await respondToStory(c.db,owner,{id:draft.id,version:draft.version,approve:false,note:"Please correct the introduction"});
+  const [feedback]=await c.db.select().from(articles).where(eq(articles.id,draft.id));expect(feedback.studentNote).toContain("introduction");
+  const review=await saveArticle(c.db,actor,{id:draft.id,version:feedback.version,action:"request_approval",content});
+  await expect(respondToStory(c.db,owner,{id:draft.id,version:feedback.version,approve:true,note:""})).rejects.toMatchObject({status:409});
+  await respondToStory(c.db,owner,{id:draft.id,version:review.version,approve:true,note:""});
+  const [approved]=await c.db.select().from(articles).where(eq(articles.id,draft.id));
+  const published=await saveArticle(c.db,actor,{id:draft.id,version:approved.version,action:"published",content});
+  const [publicPost]=await publicArticles(c.db);expect(publicPost.slug).toBe(content.slug);expect(publicPost).not.toHaveProperty("studentNote");expect(publicPost).not.toHaveProperty("createdBy");
+  await c.db.update(studentProfiles).set({publicationStatus:"unpublished"}).where(eq(studentProfiles.id,profileId));expect(await publicArticles(c.db)).toHaveLength(0);
+  await c.db.update(studentProfiles).set({publicationStatus:"published"}).where(eq(studentProfiles.id,profileId));
+  await expect(saveArticle(c.db,actor,{id:draft.id,version:published.version,action:"published",content:{...content,title:"Edited copy"}})).rejects.toMatchObject({status:422});
+  const edited=await saveArticle(c.db,actor,{id:draft.id,version:published.version,action:"draft",content:{...content,title:"Edited copy"}});expect(edited.studentApprovedAt).toBeNull();
+  const audit=await c.db.select().from(adminEvents);expect(audit.map(e=>e.action)).toContain("article_published");expect(audit.map(e=>e.action)).toContain("article_changes_requested");
+  await expect(saveArticle(c.db,outsider,{action:"draft",content:{...content,slug:"forbidden"}})).rejects.toMatchObject({status:403});
+});

@@ -202,6 +202,7 @@ async function querySelfServiceTalentDirectory(
   const rows = await db.select({
     id: studentProfiles.id,
     name: authUsers.name,
+    avatarMediaId: studentProfiles.avatarMediaId,
     headline: studentProfiles.headline,
     status: studentProfiles.studentStatus,
     showAvailability: studentProfiles.showAvailability,
@@ -240,6 +241,7 @@ async function querySelfServiceTalentDirectory(
     return [{
       id: profile.id,
       name: profile.name,
+      avatarMediaId: profile.avatarMediaId,
       headline: profile.headline,
       status: profile.status,
       skills: profileSkills,

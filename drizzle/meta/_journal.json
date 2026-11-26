@@ -99,6 +99,13 @@
       "when": 1794870000000,
       "tag": "0013_r4_partners",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1795722092520,
+      "tag": "0014_special_alex_power",
+      "breakpoints": true
     }
   ]
 }
