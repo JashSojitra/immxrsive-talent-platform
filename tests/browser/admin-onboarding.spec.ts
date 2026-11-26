@@ -98,6 +98,10 @@ test("staff import, configure, credit, preview and publish without student accou
     await page.getByRole("button", { name: "Restore as private draft" }).click(); await expect(page.getByRole("status")).toContainText("draft");
     expect((await page.request.get(`/api/v1/projects/${id}`)).status()).toBe(404);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    if (info.project.name === "desktop") for (const width of [1201, 1280, 1361, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    }
     await page.screenshot({ path: info.outputPath("admin-project-restored.png"), fullPage: true });
     // Revoke while an editor is open, then verify the server rejects its next operation.
     await db.delete(s.studioRoles).where(eq(s.studioRoles.userId, user.id));
