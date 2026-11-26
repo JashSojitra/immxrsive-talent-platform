@@ -16,6 +16,7 @@ test("uploaded and branded covers keep the same card and article shape", async (
       { slug: `coverless-${id}`, title: "Inside the XR studio", coverMediaId: null, coverAlt: "" },
       { slug: `covered-${id}`, title: "Building the next immersive experience", coverMediaId: media.id, coverAlt: "Test fixture: plain purple graphic" },
     ].map(a => ({ ...a, category: "news" as const, status: "published" as const, excerpt: "Browser test fixture only.", bodyMarkdown: "Test-only cover layout verification.", publishedAt: new Date(), authorDisplayName: "Fixture editor", createdBy: id, updatedBy: id }))).returning();
+    await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/updates?category=news");
     const cards = articles.map(a => page.getByRole("article").filter({ has: page.getByRole("heading", { name: a.title, exact: true }) }));
     const boxes = [];
@@ -31,6 +32,8 @@ test("uploaded and branded covers keep the same card and article shape", async (
     expect(boxes[0].height).toBeCloseTo(boxes[1].height, 0);
     expect(boxes[0].width / boxes[0].height).toBeCloseTo(1.6, 1);
     await cards[1].getByRole("heading").getByRole("link").blur();
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
     await page.screenshot({ path: `test-results/updates-covers-${info.project.name}.png`, fullPage: true });
     for (const article of articles) {
       await page.goto(`/updates/${article.slug}`);
