@@ -8,6 +8,7 @@ const { requireAuthenticatedUser, verification, profile, relationships, credits 
 }));
 vi.mock("@/auth/server", () => ({ requireAuthenticatedUser, getStudentVerificationStatus: verification, getInternalUserId: (user: { id: string }) => user.id }));
 vi.mock("@/db/runtime", () => ({ getRuntimeDatabase: () => ({}) }));
+vi.mock("@/updates/service", () => ({ studentStoriesForApproval: async () => [] }));
 vi.mock("@/profile/service", () => ({ getPrivateStudentProfile: profile }));
 vi.mock("@/projects/service", () => ({ listProjectRelationships: relationships }));
 vi.mock("@/admin/public", () => ({ queryCuratedCredits: credits }));
