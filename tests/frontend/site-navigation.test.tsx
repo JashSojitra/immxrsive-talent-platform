@@ -9,11 +9,24 @@ const location = vi.hoisted(() => ({ pathname: "/projects/P01" }));
 vi.mock("next/navigation", () => ({ usePathname: () => location.pathname }));
 
 beforeEach(() => {
+  location.pathname = "/projects/P01";
   Object.defineProperty(HTMLDialogElement.prototype, "showModal", { configurable: true, value: function(this: HTMLDialogElement) { this.setAttribute("open", ""); } });
   Object.defineProperty(HTMLDialogElement.prototype, "close", { configurable: true, value: function(this: HTMLDialogElement) { this.removeAttribute("open"); this.dispatchEvent(new Event("close")); } });
 });
 
 describe("shared navigation", () => {
+  it("links to World and marks it current in desktop and mobile navigation", async () => {
+    location.pathname = "/world";
+    render(<SiteNavigation accountLinks={[]} />);
+    const desktop = screen.getByRole("navigation", { name: "Main navigation" });
+    expect(within(desktop).getByRole("link", { name: "World" })).toHaveAttribute("href", "/world");
+    expect(within(desktop).getByRole("link", { name: "World" })).toHaveAttribute("aria-current", "page");
+    await userEvent.setup().click(screen.getByRole("button", { name: "Open navigation menu" }));
+    const mobile = screen.getByRole("navigation", { name: "Mobile navigation" });
+    expect(within(mobile).getByRole("link", { name: "World" })).toHaveAttribute("href", "/world");
+    expect(within(mobile).getByRole("link", { name: "World" })).toHaveAttribute("aria-current", "page");
+  });
+
   it("marks the parent destination active on deep routes without marking home", () => {
     render(<SiteNavigation accountLinks={[{ href: "/student/sign-in", label: "Student sign in" }]} />);
     const navigation = screen.getByRole("navigation", { name: "Main navigation" });

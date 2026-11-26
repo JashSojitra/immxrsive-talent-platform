@@ -7,7 +7,7 @@ export function SiteFooter() {
     <div className={styles.footerInner}>
       <div className={styles.footerTop}>
         <div><p className={styles.footerBrand}>Ideas deserve<br /><em>an audience.</em></p><p>Discover the people and projects<br />shaping immersive experiences.</p></div>
-        <nav aria-label="Footer navigation"><span className={styles.footerLabel}>Explore</span><Link href="/talent">Discover talent</Link><Link href="/projects">Explore projects</Link><Link href="/showcase">Experience the showcase</Link><Link href="/partners">Industry partners</Link></nav>
+        <nav aria-label="Footer navigation"><span className={styles.footerLabel}>Explore</span><Link href="/talent">Discover talent</Link><Link href="/projects">Explore projects</Link><Link href="/showcase">Experience the showcase</Link><Link href="/world">ImmXrsive World</Link><Link href="/partners">Industry partners</Link></nav>
         <nav aria-label="Get involved"><span className={styles.footerLabel}>Get involved</span><Link href="/student/dashboard">Student workspace</Link><Link href="/admin">Staff / Admin Portal</Link><Link href="/contact">Start an inquiry</Link><span>COSC 3506 · Brampton</span></nav>
       </div>
       <FooterWordmark />

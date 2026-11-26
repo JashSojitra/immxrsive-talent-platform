@@ -11,7 +11,7 @@ test("homepage hero exposes one accessible headline, real published counts and e
   await page.goto("/");
   const main = page.getByRole("main");
   await expect(main.getByRole("heading", { level: 1 })).toHaveAccessibleName(/The people\.\s*The ideas\.\s*The possibilities\./);
-  for (const [name, href] of [["Discover talent", "/talent"], ["Explore the work", "/projects"], ["Explore the immersive showcase", "/showcase"], ["View all projects", "/projects"], ["Meet the talent", "/talent"], ["Meet industry partners", "/partners"], ["Start an inquiry", "/contact"], ["Open student workspace", "/student/dashboard"]] as const) {
+  for (const [name, href] of [["Discover talent", "/talent"], ["Explore the work", "/projects"], ["Step into the ImmXrsive World", "/world"], ["View all projects", "/projects"], ["Meet the talent", "/talent"], ["Meet industry partners", "/partners"], ["Start an inquiry", "/contact"], ["Open student workspace", "/student/dashboard"]] as const) {
     await expect(main.getByRole("link", { name, exact: true })).toHaveAttribute("href", href);
   }
   const telemetry = main.locator("dl");

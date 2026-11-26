@@ -62,10 +62,10 @@ export function HomeHero({ stats }: { stats: HeroStats }) {
       </motion.div>
     </motion.div>
     <motion.div className={styles.portalWrap} style={{ x: farX, y: farY }}>
-      <Link href="/showcase" className={`${styles.portal} ui-glass`} aria-label="Explore the immersive showcase">
+      <Link href="/world" className={`${styles.portal} ui-glass`} aria-label="Step into the ImmXrsive World">
         <span className={styles.portalKicker}>Beyond the screen</span>
-        <strong>A different point of view.</strong>
-        <span className={styles.portalNote}>Explore immersive projects &amp; playable demos</span>
+        <strong>Step into the ImmXrsive World</strong>
+        <span className={styles.portalNote}>Meet Spark. Explore stories and projects.</span>
         <span className={styles.portalArrow} aria-hidden="true">&#8599;</span>
       </Link>
     </motion.div>
