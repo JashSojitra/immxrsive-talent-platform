@@ -513,7 +513,7 @@ export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion:
     const shadowScale = clamp(1.4 - altitude * 0.08, 0.3, 1.2);
     spark.shadow.scale.setScalar(shadowScale);
 
-    for (const building of buildings) building.update(ambientTime, dt);
+    for (const building of buildings) building.update(ambientTime, dt, camera);
     sky.update(ambientTime, pixelRatio);
     ambient.update(ambientTime, pixelRatio * (height / 900));
     terrainUniforms.uTime.value = ambientTime;
