@@ -389,8 +389,15 @@ rep('    async function initialize() {', r"""    async function loadPublishedSto
           const book = BOOKS[index];
           card.querySelector("strong").textContent = book.title;
           if (book.href) {
+            card.classList.add("fallback-book--published");
+            if (book.photo) {
+              const photo = document.createElement("img"); photo.src = book.photo; photo.alt = book.title;
+              photo.width = 160; photo.height = 160;
+              card.prepend(photo);
+            }
+            const role = document.createElement("p"); role.textContent = book.discipline; card.append(role);
+            const excerpt = document.createElement("p"); excerpt.textContent = book.deck; card.append(excerpt);
             const link = document.createElement("a"); link.textContent = "Read the full story"; link.href = book.href;
-            link.style.cssText = "display:block;color:inherit;margin-top:1rem";
             link.addEventListener("click", event => { if (window.parent !== window) { event.preventDefault(); window.parent.postMessage({ type: "immxrsive:open-story", href: book.href }, window.location.origin); } });
             card.append(link);
           }
@@ -399,6 +406,14 @@ rep('    async function initialize() {', r"""    async function loadPublishedSto
     }
     async function initialize() {
       await loadPublishedStories();""")
+rep('</style>', '''/* Published story covers. */
+    .fallback-book--published { height: auto; min-height: var(--book-height); }
+    .fallback-book--published::before, .fallback-book--published::after { display: none; }
+    .fallback-book--published img { display: block; width: 100%; height: 160px; object-fit: cover; border-radius: 6px; margin-bottom: 1rem; }
+    .fallback-book--published p { font-size: .85rem; line-height: 1.5; }
+    .fallback-book--published a { display: block; color: inherit; margin-top: 1rem; text-underline-offset: .2em; }
+    .fallback-book--published a:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+  </style>''')
 rep('      <dl class="meta-list">', '      <button id="read-full-story" type="button" hidden>Read the full story</button>\n      <dl class="meta-list">')
 rep('      detailDeck.textContent = book.deck;', """      detailDeck.textContent = book.deck;
       const fullStory = document.getElementById("read-full-story");
