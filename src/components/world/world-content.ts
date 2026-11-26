@@ -54,7 +54,7 @@ export const studentStories: StoryCard[] = [
 export const places: readonly Place[] = [
   {
     id: "hub",
-    name: "The X",
+    name: "XR Hub",
     kicker: "Start here",
     title: "Step into ImmXrsive.",
     body: "ImmXrsive is the National Centre of Excellence for Immersive Technology at Algoma University. This little world is a quick tour of the people, the work and the ways to get involved. Fly to any building to explore.",

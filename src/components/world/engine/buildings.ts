@@ -1,9 +1,11 @@
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
+import { SVGLoader } from "three/addons/loaders/SVGLoader.js";
 
 import type { PlaceId } from "../world-content";
 import { accent, brand } from "./palette";
 import { mulberry32 } from "./noise";
+import { XR_ICON_PATHS, XR_ICON_VIEWBOX } from "./xr-icon";
 import { bayCentre, frames, placeOnSurface, stepAlong, WATER_RADIUS } from "./terrain";
 
 export type Building = {
@@ -15,7 +17,8 @@ export type Building = {
   height: number;
   /** Collision radius in world units around the place centre. */
   footprint: number;
-  update: (time: number, dt: number) => void;
+  /** `camera` lets a building react to the viewer (e.g. the XR Hub turns to face it). */
+  update: (time: number, dt: number, camera?: THREE.Camera) => void;
 };
 
 /* ---------- materials & textures ---------- */
@@ -79,50 +82,64 @@ function roundTree(x: number, z: number, scale = 1) {
   return group;
 }
 
-/* ---------- The X (hub) ---------- */
+/* ---------- XR Hub: the official XR icon as a 3D sculpture ---------- */
+
+/**
+ * Builds the IMMXRSIVE XR icon from its exact vector paths (see xr-icon.ts). The XR letters are
+ * extruded deeper than the hexagon linework so they read from a distance; geometry is untouched.
+ */
+function buildXrIcon(height: number) {
+  const [minX, minY, width, viewHeight] = XR_ICON_VIEWBOX.split(" ").map(Number);
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${XR_ICON_VIEWBOX}">${XR_ICON_PATHS.map(d => `<path d="${d}"/>`).join("")}</svg>`;
+  const parsed = new SVGLoader().parse(svg);
+  const scale = height / viewHeight;
+  const letters = new THREE.MeshBasicMaterial({ color: new THREE.Color(accent.bone).multiplyScalar(1.12), toneMapped: false, side: THREE.DoubleSide });
+  const lines = new THREE.MeshBasicMaterial({ color: new THREE.Color(accent.bone).multiplyScalar(0.95), toneMapped: false, side: THREE.DoubleSide });
+  const icon = new THREE.Group();
+  for (const path of parsed.paths) {
+    for (const shape of SVGLoader.createShapes(path)) {
+      const box = new THREE.Box2().setFromPoints(shape.getPoints());
+      // Hexagon outlines span the full icon; the X and R glyphs are much narrower.
+      const isLetter = box.max.x - box.min.x < width * 0.6;
+      const geometry = new THREE.ExtrudeGeometry(shape, { depth: isLetter ? 9 : 3.5, bevelEnabled: false, curveSegments: 6 });
+      geometry.translate(-(minX + width / 2), -(minY + viewHeight / 2), isLetter ? -4.5 : -1.75);
+      geometry.scale(scale, -scale, scale);
+      icon.add(new THREE.Mesh(geometry, isLetter ? letters : lines));
+    }
+  }
+  return icon;
+}
 
 function buildHub(): Omit<Building, "id"> {
   const group = new THREE.Group();
-  const plinth = new THREE.CylinderGeometry(4.2, 4.9, 0.8, 8);
-  group.add(mesh(plinth, solid(0x221b45), 0, 0.4, 0));
-  const ring = mesh(new THREE.TorusGeometry(4.25, 0.06, 6, 8), neon(brand.pink), 0, 0.82, 0);
+  // Hexagonal plinth and ring echo the logo's hexagon.
+  group.add(mesh(new THREE.CylinderGeometry(4.2, 4.9, 0.8, 6), solid(0x221b45), 0, 0.4, 0));
+  const ring = mesh(new THREE.TorusGeometry(4.3, 0.06, 6, 6), neon(brand.pink), 0, 0.82, 0);
   ring.rotation.x = Math.PI / 2;
-  ring.rotation.z = Math.PI / 8;
   group.add(ring);
 
-  const x = new THREE.Group();
-  x.position.y = 5.3;
-  const blade = new RoundedBoxGeometry(1.15, 9.2, 0.8, 2, 0.18);
-  const bladeMaterial = glass(0x241035, brand.plum, 0.35);
-  for (const angle of [0.62, -0.62]) {
-    const b = mesh(blade, bladeMaterial);
-    b.rotation.z = angle;
-    const outline = edges(new THREE.BoxGeometry(1.15, 9.2, 0.8), angle > 0 ? brand.pink : brand.warmPurple, 0.9);
-    outline.rotation.z = angle;
-    x.add(b, outline);
-  }
-  x.add(mesh(new THREE.IcosahedronGeometry(0.55, 1), neon(accent.bone, 2.6)));
-  group.add(x);
-
-  const gate = new THREE.Group();
-  gate.position.y = 5.3;
-  const octagon = mesh(new THREE.TorusGeometry(6.2, 0.13, 6, 8), neon(brand.warmPurple, 2));
-  octagon.rotation.z = Math.PI / 8;
-  const octagonInner = mesh(new THREE.TorusGeometry(5.7, 0.04, 4, 8), neon(brand.pink, 1.6));
-  octagonInner.rotation.z = Math.PI / 8;
-  gate.add(octagon, octagonInner);
-  group.add(gate);
+  const logo = new THREE.Group();
+  logo.position.y = 6.2;
+  logo.add(buildXrIcon(10));
+  group.add(logo);
   group.add(light(brand.pink, 60, 26, 5.3));
 
+  const toCamera = new THREE.Vector3();
   return {
     group,
     extras: [],
-    height: 11.8,
+    height: 12.4,
     footprint: 5,
-    update: time => {
-      gate.rotation.y = time * 0.25;
-      x.position.y = 5.3 + Math.sin(time * 0.8) * 0.18;
-      x.rotation.y = Math.sin(time * 0.3) * 0.25;
+    update: (time, dt, camera) => {
+      logo.position.y = 6.2 + Math.sin(time * 0.8) * 0.18;
+      // Turn to face the viewer so "XR" never reads mirrored from behind.
+      if (camera) {
+        group.worldToLocal(toCamera.copy(camera.position));
+        const target = Math.atan2(toCamera.x, toCamera.z);
+        let delta = target - logo.rotation.y;
+        delta = Math.atan2(Math.sin(delta), Math.cos(delta));
+        logo.rotation.y += delta * Math.min(1, dt * 2.5);
+      }
     },
   };
 }
