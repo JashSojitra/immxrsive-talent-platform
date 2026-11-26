@@ -242,6 +242,8 @@ export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion:
   };
 
   /* ---------- movement ---------- */
+  // A positive angle turns f toward n×f, which is the camera's LEFT (camera right is f×n).
+  // turnInput is "+ = right" everywhere, so a right turn is rotateHeading(-angle).
   const rotateHeading = (angle: number) => {
     tmp.crossVectors(n, f);
     f.multiplyScalar(Math.cos(angle)).addScaledVector(tmp, Math.sin(angle)).normalize();
@@ -276,8 +278,9 @@ export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion:
         const want = tangentTowards(n, autopilot.target, tmp2);
         const signed = Math.atan2(tmp.crossVectors(f, want).dot(n), f.dot(want));
         const maxTurn = 3.6 * dt;
+        // signed > 0: the target is to the left, so rotate by +signed (left) to steer onto it.
         rotateHeading(clamp(signed, -maxTurn, maxTurn));
-        turnInput = clamp(signed, -1, 1);
+        turnInput = clamp(-signed, -1, 1);
         const cruise = autopilot.far ? FLY_SPEED : 11;
         targetSpeed = Math.min(cruise, remaining * 2.4 + 1.5) * (Math.abs(signed) > 1.1 ? 0.25 : 1);
         if (autopilot.far && remaining > 14) targetAltitude = CRUISE;
@@ -286,7 +289,7 @@ export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion:
       const boost = keys.has("ShiftLeft") || keys.has("ShiftRight");
       targetSpeed = clamp(kForward, -1, 1) * (boost ? BOOST_SPEED : WALK_SPEED);
       turnInput = clamp(kTurn, -1, 1);
-      rotateHeading(turnInput * TURN_RATE * dt);
+      rotateHeading(-turnInput * TURN_RATE * dt);
       if (facingGoal) {
         const goal = tangentTowards(n, tmp2.copy(n).add(facingGoal), tmp2);
         const signed = Math.atan2(tmp.crossVectors(f, goal).dot(n), f.dot(goal));
@@ -383,9 +386,14 @@ export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion:
   /* ---------- input ---------- */
   const isTyping = (target: EventTarget | null) => target instanceof HTMLElement && (target.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName));
   const controlKeys = new Set(["KeyW", "KeyA", "KeyS", "KeyD", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "ShiftLeft", "ShiftRight"]);
+  // The world sits in the page between the site header and footer. Once it is mostly scrolled away,
+  // arrows and Space scroll the page again instead of driving Spark, and rendering stops.
+  let visibleRatio = 1;
+  const visibility = new IntersectionObserver(([entry]) => { visibleRatio = entry.intersectionRatio; }, { threshold: [0, 0.5] });
+  visibility.observe(canvas);
   const onKeyDown = (event: KeyboardEvent) => {
     if (isTyping(event.target) || event.metaKey || event.ctrlKey || event.altKey) return;
-    if (mode === "focus" || mode === "intro") return;
+    if (mode === "focus" || mode === "intro" || visibleRatio < 0.5) return;
     const onControl = event.target instanceof HTMLElement && event.target.closest("button, a");
     if (controlKeys.has(event.code)) {
       if (onControl && event.code.startsWith("Arrow")) return;
@@ -449,6 +457,9 @@ export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion:
   canvas.addEventListener("pointerdown", onPointerDown);
   window.addEventListener("pointermove", onPointerMove);
   window.addEventListener("pointerup", onPointerUp);
+  // Touch pans the page outside map mode (touch-action: pan-y), which cancels the gesture.
+  const onPointerCancel = () => { down = null; };
+  window.addEventListener("pointercancel", onPointerCancel);
 
   /* ---------- sizing & loop ---------- */
   let width = 1, height = 1;
@@ -481,7 +492,7 @@ export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion:
 
   const tick = (now: number) => {
     frame = requestAnimationFrame(tick);
-    if (document.hidden || paused) { last = now; return; }
+    if (document.hidden || paused || visibleRatio === 0) { last = now; return; }
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
     clockTime += dt;
@@ -572,6 +583,8 @@ export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion:
     dispose: () => {
       cancelAnimationFrame(frame);
       resizeObserver.disconnect();
+      visibility.disconnect();
+      window.removeEventListener("pointercancel", onPointerCancel);
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("keyup", onKeyUp);
       window.removeEventListener("blur", onBlur);

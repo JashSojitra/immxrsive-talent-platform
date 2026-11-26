@@ -22,10 +22,3 @@ test("the accessible list view renders every place with its real content", () =>
   expect(screen.getByRole("img", { name: /QR code that opens the ImmXrsive platform/ })).toBeInTheDocument();
   expect(screen.getByRole("link", { name: /Algoma University/ })).toHaveAttribute("rel", "noopener noreferrer");
 });
-
-test("the list view offers a way back into the 3D world when it was opened from there", () => {
-  let backed = false;
-  render(<WorldListView onBack={() => { backed = true; }} />);
-  screen.getByRole("button", { name: "Back to the 3D world" }).click();
-  expect(backed).toBe(true);
-});

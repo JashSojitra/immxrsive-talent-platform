@@ -26,6 +26,7 @@ function hasWebGL() {
 
 export function WorldExperience() {
   const labelEls = useRef(new Map<PlaceId, HTMLElement>());
+  const worldElRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const worldRef = useRef<WorldHandle | null>(null);
   const panelHeadingRef = useRef<HTMLHeadingElement | null>(null);
@@ -36,7 +37,6 @@ export function WorldExperience() {
   const [panel, setPanel] = useState<PlaceId | null>(null);
   const [touring, setTouring] = useState(false);
   const [caption, setCaption] = useState<PlaceId | null>(null);
-  const [listView, setListView] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [showPlaces, setShowPlaces] = useState(false);
   const [shelfOpen, setShelfOpen] = useState(false);
@@ -119,10 +119,10 @@ export function WorldExperience() {
     let handle: WorldHandle | null = null;
     (async () => {
       try {
-        await document.fonts?.ready;
-        if (disposed) return;
         setKiosk(params.has("kiosk"));
         setCoarse(window.matchMedia("(pointer: coarse)").matches);
+        await document.fonts?.ready;
+        if (disposed) return;
         if (params.has("list") || !hasWebGL()) { setPhase("fallback"); return; }
         const { createWorld } = await import("./engine/world");
         if (disposed || !canvasRef.current) return;
@@ -166,13 +166,30 @@ export function WorldExperience() {
     };
   }, [noteInput, openPanel]);
 
-  /* Lock page scroll while the world is open. */
+  /* The world fills the viewport below the site header. The header is sticky with a portal bar
+     that scrolls away, so measure its real height instead of hard-coding it. */
   useEffect(() => {
-    if (phase === "fallback") return;
-    const previous = document.documentElement.style.overflow;
-    document.documentElement.style.overflow = "hidden";
-    return () => { document.documentElement.style.overflow = previous; };
-  }, [phase]);
+    const world = worldElRef.current;
+    const header = document.querySelector<HTMLElement>("body > header");
+    if (!world || !header) return;
+    const sync = () => world.style.setProperty("--world-top", `${header.offsetHeight}px`);
+    sync();
+    const observer = new ResizeObserver(sync);
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, []);
+
+  /* Kiosk (event tables): full screen, without the site header, footer or page scroll.
+     The no-WebGL list view keeps the site chrome (and its project notice). */
+  const kioskActive = kiosk && phase !== "fallback";
+  useEffect(() => {
+    if (!kioskActive) return;
+    const root = document.documentElement;
+    const previous = root.style.overflow;
+    root.dataset.worldKiosk = "";
+    root.style.overflow = "hidden";
+    return () => { delete root.dataset.worldKiosk; root.style.overflow = previous; };
+  }, [kioskActive]);
 
   const enter = useCallback(() => {
     worldRef.current?.enter();
@@ -216,18 +233,17 @@ export function WorldExperience() {
     if (panel) panelHeadingRef.current?.focus({ preventScroll: true });
   }, [panel]);
 
-  if (phase === "fallback" || listView) {
-    return <WorldListView onBack={phase === "fallback" ? undefined : () => setListView(false)} />;
-  }
+  // Automatic without WebGL, or via /world?list. Not advertised in the UI.
+  if (phase === "fallback") return <WorldListView />;
 
   const nearPlace = near ? placeById(near) : null;
   const captionPlace = caption ? placeById(caption) : null;
   const panelPlace = panel ? placeById(panel) : null;
 
   return (
-    <div className={styles.world} data-phase={phase} data-mode={mode} data-panel={panel ? "open" : undefined}>
+    <div ref={worldElRef} className={styles.world} data-phase={phase} data-mode={mode} data-panel={panel ? "open" : undefined} data-kiosk={kiosk || undefined}>
       <div className={styles.stage}>
-        <canvas ref={canvasRef} className={styles.canvas} aria-label="Interactive 3D world. Use the place buttons, or switch to the list view." role="img" />
+        <canvas ref={canvasRef} className={styles.canvas} aria-label="Interactive 3D world. Use the Places menu to visit each place." role="img" />
       </div>
 
       {/* Floating place labels (positioned by the engine). */}
@@ -273,17 +289,10 @@ export function WorldExperience() {
           <p className={styles.introBody}>A small world of student stories, real projects and ways to connect. Guide Spark around the planet and step into any building.</p>
           <div className={styles.introActions}>
             <button type="button" className={styles.primary} onClick={enter} autoFocus>Enter the world</button>
-            <button type="button" className={styles.ghost} onClick={() => setListView(true)}>View as a list</button>
+            {!kiosk && <Link href="/" className={styles.ghost}>Back to main site</Link>}
           </div>
           <p className={styles.introHint}>{coarse ? "Drag the joystick to move · tap a building to fly there" : "WASD or arrow keys to move · click a building to fly there"}</p>
         </section>
-      )}
-
-      {phase !== "loading" && (
-        <header className={styles.topbar}>
-          <Link href="/" className={styles.back}><span aria-hidden="true">←</span> Main site</Link>
-          <p className={styles.brand}>{WORLD_TITLE}</p>
-        </header>
       )}
 
       {phase === "explore" && (
@@ -293,7 +302,6 @@ export function WorldExperience() {
             { id: "places", label: "Places", icon: DockIcons.places, expanded: showPlaces, controls: "world-places", onClick: () => { setShowHelp(false); setShowPlaces(value => !value); } },
             { id: "map", label: mode === "map" ? "Close map" : "Map", icon: DockIcons.map, active: mode === "map", onClick: () => { noteInput(); setShowPlaces(false); worldRef.current?.setMap(mode !== "map"); } },
             { id: "tour", label: touring ? "Stop tour" : "Tour", icon: touring ? DockIcons.stop : DockIcons.tour, active: touring, onClick: () => { setShowPlaces(false); if (touring) stopTour(); else startTour(); } },
-            { id: "list", label: "List", icon: DockIcons.list, onClick: () => setListView(true) },
             { id: "help", label: "Help", icon: DockIcons.help, expanded: showHelp, controls: "world-help", onClick: () => { setShowPlaces(false); setShowHelp(value => !value); } },
           ]}
         />
@@ -366,7 +374,8 @@ export function WorldExperience() {
         </div>
       )}
 
-      <p className={styles.disclaimer}>Independent student-built course project. Not an official ImmXrsive or Algoma University service.</p>
+      {/* The site footer carries the disclaimer; kiosk hides the site chrome, so it shows here instead. */}
+      {kiosk && <p className={styles.disclaimer}>Independent student-built course project. Not an official ImmXrsive or Algoma University service.</p>}
       <p className={styles.srOnly} aria-live="polite">{announcement}</p>
     </div>
   );
@@ -433,14 +442,13 @@ function Joystick({ world, onInput }: { world: RefObject<WorldHandle | null>; on
 }
 
 /** Accessible, no-WebGL version of the world with the same content. */
-export function WorldListView({ onBack }: { onBack?: () => void }) {
+export function WorldListView() {
   return (
     <div className={styles.list}>
       <header className={styles.listHeader}>
         <p className={styles.introKicker}>Algoma University · NCoE ImmXrsive</p>
         <h1 className={styles.listTitle}>{WORLD_TITLE}</h1>
         <p className={styles.introBody}>Every place in the world, as a simple list.</p>
-        {onBack && <button type="button" className={styles.primary} onClick={onBack}>Back to the 3D world</button>}
       </header>
       {places.map(place => (
         <section key={place.id} className={styles.listSection} aria-labelledby={`list-${place.id}`}>

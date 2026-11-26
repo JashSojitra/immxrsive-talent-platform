@@ -13,10 +13,11 @@ A standalone, explorable 3D world for events and first meetings. It does not cha
   - **Showcase Lab**: SYNC, Canon DNA, Project Nexus, plus a "coming soon" slot.
   - **Industry Dock**: partners and inquiries (bay, ferry, lighthouse).
   - **Launchpad**: join and sign in, with a real QR code (`public/world/join-qr.svg`).
-- **Controls:** WASD/arrows to move, Shift to boost, Space to hop, E/Enter to go inside, M for the map, Esc to close. Click a building or label to fly there; on touch devices, use the joystick and tap.
+- **Layout:** the world is a block inside the main site: the normal site header above it (its real height is measured, since the header is sticky with a 32 px portal bar), the site footer below it on scroll. It fills the viewport below the header. The intro uses the site's content column, type tokens (`--step-*`) and `.ui-button` dimensions. The intro offers "Enter the world" and "Back to main site".
+- **Controls:** WASD/arrows to move, Shift to boost, Space to hop, E/Enter to go inside, M for the map, Esc to close. Click a building or label to fly there; on touch devices, use the joystick and tap. `turnInput` means "+ = right" everywhere (keys, joystick, autopilot), and Spark banks into the turn. Once the world is mostly scrolled away, keys scroll the page again and rendering pauses. On touch, vertical swipes scroll the page except in map mode.
 - **Tour:** the "Tour" button flies to every place with a caption. It also starts by itself after 45 s idle.
-- **Kiosk mode:** `/world?kiosk` enters automatically and starts the tour after 25 s idle. Use it at event tables.
-- **List view:** `/world?list`, or the "List" button. The same content without WebGL. This is also the automatic fallback when WebGL is unavailable.
+- **Kiosk mode:** `/world?kiosk` is full screen without the site header and footer (so it shows its own course-project notice), enters automatically and starts the tour after 25 s idle. Use it at event tables.
+- **List view:** the automatic fallback when WebGL is unavailable, also reachable at `/world?list`. The same content without WebGL. It is not advertised in the UI.
 - **Quality:** resolution and then bloom drop automatically on slow devices. On a software renderer (SwiftShader, llvmpipe, Microsoft Basic Render Driver: no GPU, a blocklisted GPU, CI runners) the world starts at half resolution with no shadows, bloom or MSAA. `/world?hq` locks full quality (use it for recordings).
 
 ## Stories House shelf (`/world/stories-shelf.html`)
@@ -78,4 +79,4 @@ All geometry is generated in code: no paid 3D services and no external model fil
 - `tests/unit/world-content.test.ts`: content integrity, no invented content
 - `tests/unit/world-software-renderer.test.ts`: software-renderer detection (world and shelf)
 - `tests/frontend/world-list-view.test.tsx`: accessible list view
-- `tests/browser/world.spec.ts`: `/world` intro and the list fallback on desktop and 390 px
+- `tests/browser/world.spec.ts`: `/world` intro inside the site chrome, kiosk mode, and the list fallback on desktop and 390 px

@@ -15,8 +15,8 @@ export type DockItem = {
   controls?: string;
 };
 
-const BASE = 46;
-const MAX = 66;
+const BASE = 40;
+const MAX = 56;
 const REACH = 140;
 
 /**
@@ -49,7 +49,7 @@ function DockButton({ item, mouseX, live }: { item: DockItem; mouseX: MotionValu
   });
   const target = useTransform(distance, [-REACH, 0, REACH], [BASE, MAX, BASE], { clamp: true });
   const size = useSpring(target, { mass: 0.12, stiffness: 180, damping: 14 });
-  const lift = useTransform(size, [BASE, MAX], [0, -8]);
+  const lift = useTransform(size, [BASE, MAX], [0, -6]);
   return (
     <motion.button
       ref={ref}
@@ -75,6 +75,5 @@ export const DockIcons = {
   map: <svg viewBox="0 0 24 24" {...stroke}><circle cx="12" cy="12" r="8.5" /><path d="M3.5 12h17M12 3.5c2.6 2.4 3.9 5.2 3.9 8.5s-1.3 6.1-3.9 8.5c-2.6-2.4-3.9-5.2-3.9-8.5s1.3-6.1 3.9-8.5Z" /></svg>,
   tour: <svg viewBox="0 0 24 24" {...stroke}><path d="M8 5.5v13l10.5-6.5L8 5.5Z" /></svg>,
   stop: <svg viewBox="0 0 24 24" {...stroke}><rect x="6.5" y="6.5" width="11" height="11" rx="2" /></svg>,
-  list: <svg viewBox="0 0 24 24" {...stroke}><path d="M9 6.5h10M9 12h10M9 17.5h10" /><circle cx="5" cy="6.5" r=".9" /><circle cx="5" cy="12" r=".9" /><circle cx="5" cy="17.5" r=".9" /></svg>,
   help: <svg viewBox="0 0 24 24" {...stroke}><circle cx="12" cy="12" r="8.5" /><path d="M9.7 9.4a2.4 2.4 0 1 1 3.4 2.2c-.7.3-1.1.9-1.1 1.6v.4" /><circle cx="12" cy="16.6" r=".6" /></svg>,
 };

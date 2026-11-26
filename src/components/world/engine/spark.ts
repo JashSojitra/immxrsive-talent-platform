@@ -144,7 +144,8 @@ export function createSpark(): Spark {
 
     // Lean into motion, bank into turns.
     lean += ((still ? 0 : Math.min(1, speed / 14) * 0.38) - lean) * Math.min(1, dt * 6);
-    bank += ((still ? 0 : -turn * 0.3) - bank) * Math.min(1, dt * 5);
+    // turn is "+ = right". Local X is n×f (screen-left), so +rotation.z tips the top to the right: into a right turn.
+    bank += ((still ? 0 : turn * 0.3) - bank) * Math.min(1, dt * 5);
     body.rotation.set(lean, 0, bank);
 
     // Squash on landing a hop, stretch while dashing.

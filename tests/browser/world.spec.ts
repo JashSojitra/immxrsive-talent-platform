@@ -11,13 +11,36 @@ test("/world opens the 3D intro (or the list fallback when WebGL is unavailable)
   const enter = page.getByRole("button", { name: "Enter the world" });
   const listHeading = page.getByRole("heading", { level: 1, name: "ImmXrsive World" });
   await expect(enter.or(listHeading)).toBeVisible({ timeout: SLOW_3D_MS });
+  // The world sits inside the main site's chrome.
+  await expect(page.locator("body > header")).toBeVisible();
+  await expect(page.locator("body > footer")).toBeAttached();
   if (await enter.isVisible()) {
-    await expect(page.getByRole("link", { name: /Main site/ })).toHaveAttribute("href", "/");
+    await expect(page.getByRole("link", { name: "Back to main site" })).toHaveAttribute("href", "/");
+    await expect(page.getByRole("button", { name: "View as a list" })).toHaveCount(0);
     await enter.click();
     await page.getByRole("button", { name: "Places" }).click({ timeout: SLOW_3D_MS });
     await expect(page.getByRole("navigation", { name: "Places" }).getByRole("button")).toHaveCount(6);
+    await expect(page.getByRole("navigation", { name: "World controls" }).getByRole("button", { name: "List" })).toHaveCount(0);
   }
   expect(errors).toEqual([]);
+});
+
+test("/world?kiosk is full screen without the site chrome but keeps the project notice", async ({ page }) => {
+  test.setTimeout(SLOW_3D_MS * 2);
+  await page.goto("/world?kiosk");
+  const enter = page.getByRole("button", { name: "Enter the world" });
+  const listHeading = page.getByRole("heading", { level: 1, name: "ImmXrsive World" });
+  await expect(enter.or(listHeading)).toBeVisible({ timeout: SLOW_3D_MS });
+  if (await listHeading.isVisible()) {
+    // Without WebGL the list view keeps the site chrome, which carries the notice.
+    await expect(page.locator("body > header")).toBeVisible();
+    await expect(page.locator("body > footer")).toBeAttached();
+    return;
+  }
+  await expect(page.locator("body > header")).toBeHidden();
+  await expect(page.locator("body > footer")).toBeHidden();
+  await expect(page.getByText("Independent student-built course project.")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Back to main site" })).toHaveCount(0);
 });
 
 test("/world?list renders every place without WebGL", async ({ page }) => {
