@@ -22,7 +22,7 @@ export type PlaceFrame = {
   plaza: number;
 };
 
-const plazaSize: Record<PlaceId, number> = { hub: 0.2, queen: 0.26, stories: 0.2, showcase: 0.2, dock: 0.2, launchpad: 0.18 };
+const plazaSize: Record<PlaceId, number> = { hub: 0.2, queen: 0.26, stories: 0.2, showcase: 0.2, dock: 0.2, launchpad: 0.18, newsstand: 0.16 };
 
 function frameFor(id: PlaceId, lat: number, lon: number): PlaceFrame {
   const n = new THREE.Vector3(...latLonToUnit(lat, lon)).normalize();

@@ -331,3 +331,9 @@ function labelForValue(value: string) {
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(" ");
 }
+
+/** Count public portfolios without fetching directory cards or project evidence. */
+export async function countPublishedTalent(db: Database) {
+  const [row] = await db.execute<{ total: string }>(sql`SELECT (SELECT count(*) FROM ${students} WHERE ${students.profileStatus} = 'published') + (SELECT count(*) FROM ${studentProfiles} WHERE ${studentProfiles.publicationStatus} = 'published' AND ${studentProfiles.studentStatus} IS NOT NULL) AS total`);
+  return Number(row.total);
+}

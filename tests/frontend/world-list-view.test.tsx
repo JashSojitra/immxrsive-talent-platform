@@ -12,7 +12,8 @@ test("the accessible list view renders every place with its real content", () =>
   for (const place of places) expect(screen.getByRole("heading", { level: 2, name: place.title })).toBeInTheDocument();
 
   const stories = screen.getByRole("list", { name: "Student stories" });
-  expect(within(stories).getByText("Jash Sojitra")).toBeInTheDocument();
+  expect(within(stories).queryByText("Jash Sojitra")).toBeNull();
+  expect(screen.getByText("News coming soon")).toBeVisible();
   expect(within(stories).getAllByText("Story coming soon").length).toBeGreaterThan(0);
 
   const showcase = screen.getByRole("list", { name: "Showcase projects" });

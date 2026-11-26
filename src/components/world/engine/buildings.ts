@@ -631,6 +631,53 @@ function buildLaunchpad(): Omit<Building, "id"> {
   };
 }
 
+/** One 1024px atlas is shared by every folded paper; no lights or per-paper textures. */
+export function buildNewsstand(papers: import("@/updates/world-content").NewsPaper[]): Omit<Building, "id"> {
+  const group = new THREE.Group();
+  const purple = solid(0x582c83), pink = solid(0xe31c79), cream = solid(0xf4f0e8);
+  group.add(mesh(new THREE.BoxGeometry(6, .4, 4), purple, 0, .2, 0));
+  group.add(mesh(new THREE.BoxGeometry(5.4, 2.7, 1.2), purple, 0, 1.75, -1));
+  group.add(mesh(new THREE.BoxGeometry(6, .35, 2.3), cream, 0, 2.9, .35));
+  for (const x of [-2.7, 2.7]) group.add(mesh(new THREE.BoxGeometry(.18, 5.4, .18), purple, x, 2.9, .8));
+  for (let i = 0; i < 10; i++) {
+    const stripe = mesh(new THREE.BoxGeometry(.62, .18, 3.2), i % 2 ? purple : pink, (i - 4.5) * .62, 5.3, 0);
+    stripe.rotation.x = .16; group.add(stripe);
+  }
+  const atlas = canvasTexture(1024, 1024, ctx => {
+    ctx.fillStyle = "#f4f0e8"; ctx.fillRect(0, 0, 1024, 1024);
+    ctx.fillStyle = "#582c83"; ctx.font = `bold 100px ${FONT}`; ctx.fillText("UPDATES", 40, 135);
+    papers.slice(0, 5).forEach((paper, i) => {
+      const y = 205 + i * 160;
+      ctx.fillStyle = "#e31c79"; ctx.font = `24px ${FONT}`; ctx.fillText(paper.date, 35, y + 30);
+      ctx.fillStyle = "#211127"; ctx.font = `bold 32px ${FONT}`;
+      const words = paper.title.split(/\s+/); let line = "", row = 0;
+      for (const word of words) {
+        const next = line ? `${line} ${word}` : word;
+        if (ctx.measureText(next).width > 940 && line) { ctx.fillText(line, 35, y + 72 + row * 36, 940); line = word; row++; if (row === 2) break; } else line = next;
+      }
+      if (row < 2) ctx.fillText(line, 35, y + 72 + row * 36, 940);
+    });
+  });
+  const atlasMaterial = new THREE.MeshBasicMaterial({ map: atlas, side: THREE.DoubleSide });
+  function atlasPlane(width: number, height: number, top: number, bottom: number) {
+    const geometry = new THREE.PlaneGeometry(width, height);
+    const uv = geometry.getAttribute("uv");
+    for (let i = 0; i < uv.count; i++) uv.setY(i, 1 - (top + (1 - uv.getY(i)) * (bottom - top)) / 1024);
+    return new THREE.Mesh(geometry, atlasMaterial);
+  }
+  const sign = atlasPlane(5, 1, 0, 180); sign.position.set(0, 4.45, 1); group.add(sign);
+  group.add(mesh(new THREE.BoxGeometry(5.5, .16, 1.6), purple, 0, 1.7, 1.5));
+  for (let i = 0; i < 5; i++) {
+    const paper = new THREE.Group();
+    const front = atlasPlane(.9, 1.4, 205 + i * 160, 205 + (i + 1) * 160);
+    front.rotation.x = -.18; front.position.z = .05;
+    const fold = mesh(new THREE.PlaneGeometry(.9, 1.4), cream, 0, 0, -.12); fold.rotation.x = .18;
+    paper.add(front, fold); paper.position.set((i - 2) * 1.04, 2.35, 1.65); group.add(paper);
+  }
+  // Boxes + 11 planes stay below 300 triangles at every quality level.
+  return { group, extras: [], height: 6, footprint: 4.2, update: () => {} };
+}
+
 const builders: Record<PlaceId, () => Omit<Building, "id">> = {
   hub: buildHub,
   queen: buildQueen,
@@ -638,11 +685,12 @@ const builders: Record<PlaceId, () => Omit<Building, "id">> = {
   showcase: buildShowcase,
   dock: buildDock,
   launchpad: buildLaunchpad,
+  newsstand: () => buildNewsstand([]),
 };
 
-export function buildBuildings(): Building[] {
+export function buildBuildings(papers: import("@/updates/world-content").NewsPaper[] = []): Building[] {
   return (Object.keys(builders) as PlaceId[]).map(id => {
-    const built = builders[id]();
+    const built = id === "newsstand" ? buildNewsstand(papers.slice(0, 5)) : builders[id]();
     const frame = frames[id];
     placeOnSurface(built.group, frame.n, frame.front);
     built.group.name = `place:${id}`;

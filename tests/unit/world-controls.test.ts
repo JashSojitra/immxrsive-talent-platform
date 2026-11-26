@@ -110,7 +110,7 @@ test.each(places.filter(place => place.id !== "hub").map(place => place.id))(
     world.flyTo(id);
     advance(45);
     expect(arrived).toHaveBeenCalledWith(id);
-    const distance = id === "queen" ? 13.5 : id === "showcase" ? 9.5 : 9;
+    const distance = id === "newsstand" ? 7 : id === "queen" ? 13.5 : id === "showcase" ? 9.5 : 9;
     expect(normal().angleTo(doorstep(id, distance))).toBeLessThan(0.01);
     const towardBuilding = frames[id].n.clone().addScaledVector(normal(), -normal().dot(frames[id].n)).normalize();
     expect(heading().dot(towardBuilding)).toBeGreaterThan(0.99);

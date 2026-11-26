@@ -25,7 +25,7 @@ test("world links are either internal routes or HTTPS pages opened as external",
 test("stories and showcase never invent content: unknown slots are explicit placeholders", () => {
   const stories = places.find(place => place.id === "stories")!.stories!;
   const students = stories.filter(story => story.kind === "student");
-  expect(students.map(story => story.name)).toEqual(["Jash Sojitra"]);
+  expect(students).toHaveLength(0);
   expect(stories.filter(story => story.kind === "coming-soon").length).toBeGreaterThan(0);
 
   const showcase = places.find(place => place.id === "showcase")!.showcase!;

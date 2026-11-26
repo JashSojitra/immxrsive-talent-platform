@@ -45,9 +45,10 @@ test("/world opens the 3D intro (or the list fallback when WebGL is unavailable)
       await hop.click();
     }
     await page.getByRole("button", { name: "Places" }).click({ timeout: SLOW_3D_MS });
-    await expect(page.getByRole("navigation", { name: "Places" }).getByRole("button")).toHaveCount(6);
+    await expect(page.getByRole("navigation", { name: "Places" }).getByRole("button")).toHaveCount(7);
     await expect(page.getByRole("navigation", { name: "World controls" }).getByRole("button", { name: "List" })).toHaveCount(0);
   }
+  await page.screenshot({ path: `test-results/world-${test.info().project.name}.png` });
   expect(errors).toEqual([]);
 });
 
@@ -73,8 +74,10 @@ test("/world?kiosk is full screen without the site chrome but keeps the project 
 test("/world?list renders every place without WebGL", async ({ page }) => {
   await page.goto("/world?list");
   await expect(page.getByRole("heading", { level: 1, name: "ImmXrsive World" })).toBeVisible();
-  await expect(page.getByRole("list", { name: "Student stories" })).toContainText("Jash Sojitra");
+  await expect(page.getByRole("list", { name: "Student stories" })).toContainText("Story coming soon");
   await expect(page.getByRole("list", { name: "Showcase projects" })).toContainText("Project Nexus");
+  await expect(page.getByRole("heading", { name: "Fresh off the press." })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Newsstand papers" })).toBeVisible();
   await expect(page.getByRole("img", { name: /QR code/ })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth))
     .toBeLessThanOrEqual(test.info().project.name === "mobile-390" ? 390 : 1_280);
@@ -91,10 +94,38 @@ test("the Stories House shelf renders the student volumes (3D, or the static she
   if (await fallback.count()) {
     // CI runners often have no WebGL: the shelf must still list every volume.
     await expect(fallback.locator(".fallback-book")).toHaveCount(7);
-    await expect(fallback).toContainText("Jash Sojitra");
+    await expect(fallback).toContainText("Coming Soon");
   } else {
     await expect(tabs).toHaveCount(7);
-    await expect(page.locator("#selection-title")).toHaveText("Jash Sojitra");
+    await expect(page.locator("#selection-title")).toHaveText("Coming Soon");
   }
+  await page.screenshot({ path: `test-results/shelf-${test.info().project.name}.png`, fullPage: true });
   expect(errors).toEqual([]);
+});
+
+
+test("Newsstand shows at most five published papers in the accessible world", async ({ page, request }) => {
+  await page.goto("/world?list");
+  const papers = page.getByRole("region", { name: "Newsstand papers" });
+  await expect(papers).toBeVisible();
+  expect(await papers.getByRole("article").count()).toBeLessThanOrEqual(5);
+  const volumes = await (await request.get("/api/world/stories")).json();
+  expect(volumes).toHaveLength(7);
+  for (const volume of volumes) expect(volume.href === null || volume.href.startsWith("/updates/")).toBe(true);
+  await papers.screenshot({ path: `test-results/newsstand-list-${test.info().project.name}.png` });
+});
+
+test("arrival at the Newsstand opens its paper panel in 3D or the list fallback", async ({ page }) => {
+  test.setTimeout(120000);
+  await page.goto("/world");
+  const enter = page.getByRole("button", { name: "Enter the world" });
+  const fallback = page.getByRole("heading", { level: 1, name: "ImmXrsive World" });
+  await expect(enter.or(fallback)).toBeVisible({ timeout: SLOW_3D_MS });
+  if (await enter.isVisible()) {
+    await enter.click();
+    await page.getByRole("button", { name: "Places", exact: true }).click();
+    await page.getByRole("navigation", { name: "Places" }).getByRole("button", { name: /Newsstand/ }).click();
+    await expect(page.getByRole("heading", { name: "Fresh off the press." })).toBeVisible({ timeout: SLOW_3D_MS });
+  }
+  await page.screenshot({ path: `test-results/newsstand-${test.info().project.name}.png` });
 });

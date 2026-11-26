@@ -10,6 +10,7 @@ A standalone, explorable 3D world for events and first meetings. It lives at `/w
   - **XR Hub** (north pole): what ImmXrsive is. The centrepiece is the official IMMXRSIVE XR icon, built in 3D from the style guide's exact vector paths (`engine/xr-icon.ts`); it turns to face the viewer so it never reads mirrored. (It replaced an earlier abstract \"X\" to avoid any association with the X/Twitter brand.)
   - **24 Queen St E**: Algoma University's Brampton campus with Garden Square, modelled from Google Street View: a cream 11-storey tower with a full-height blue glass bay, a two-storey podium, a green glass canopy and the Algoma University sign band. Other tenants' signs are left blank on purpose.
   - **Stories House**: opens the **student shelf** full screen (see below). The list view keeps the story cards.
+  - **Newsstand** (latitude -10, longitude 36): a pink/purple striped kiosk with five folded papers, the latest published event/news headlines and an Updates sign. Arrival opens its paper list.
   - **Showcase Lab**: SYNC, Canon DNA, Project Nexus, plus a "coming soon" slot.
   - **Industry Dock**: partners and inquiries (bay, ferry, lighthouse).
   - **Launchpad**: join and sign in, with a real QR code (`public/world/join-qr.svg`).
@@ -30,7 +31,7 @@ python3 scripts/threeui/adapt-complete-shelf.py package/lib-dist/assets/landing-
 ```
 
 Changes made:
-- Seven student volumes replace the seven tools: Jash Sojitra (with photo), plus six explicit **Coming Soon** volumes.
+- Seven reserved volumes replace the seven tools. At boot the shelf fetches `/api/world/stories`: up to seven published, approved student stories, padded with **Coming Soon** volumes.
 - The tool cover-art atlas was removed. Covers are drawn in code from each volume's colours and motif, and a student photo goes in an arched window.
 - The ImmXrsive accent replaces copper, and the editorial copy is rebranded.
 - A hover preview card (avatar, name, preview text) for mouse users. On touch devices the selected volume's preview shows in the bottom bar instead.
@@ -39,11 +40,11 @@ Changes made:
 - Escape with no open volume tells the parent world to close the shelf, and the world stops rendering while the shelf is open.
 - On a software renderer the shelf shows its static catalog: the 3D scene runs at about 1 fps there.
 
-To add a student, edit the `books` list in the adaptation script (`photo` points to `public/world/students/<id>.jpg`, about 720×792) and regenerate. Also update `world-content.ts`.
+To add a story, publish it through **Updates & Stories** in the admin portal after student approval. The linked portfolio must remain public. The server supplies the student name, headline, avatar, excerpt and article link. The shelf waits at most four seconds for its API, then uses seven built-in Coming Soon volumes if offline. Both the 3D detail panel and static catalog offer **Read the full story**. In the world iframe this sends a same-origin `immxrsive:open-story` message; the parent validates the origin and the `/updates/` article path before navigating.
 
 ## Content rules
 
-Everything in `world-content.ts` is real, approved content or an explicit placeholder. Do not add student names, quotes, photos or project claims without approval. To add a student story, change a `{ kind: "coming-soon" }` entry to a `student` entry (with `photo` once a photo is supplied).
+Everything in `world-content.ts` is real, approved content or an explicit placeholder. Do not add student names, quotes, photos or project claims without approval. Student stories and event/news posts come from published database records. The world route fetches them on the server and passes only public volume/paper fields into the client. The homepage separates student success stories (six) from event/news highlights (four), and the Newsstand lists at most five event/news posts.
 
 ## Code map
 
@@ -54,7 +55,7 @@ Everything in `world-content.ts` is real, approved content or an explicit placeh
 | `src/components/world/PlaceContent.tsx` | Place content shared by the panel and the list view |
 | `src/components/world/engine/world.ts` | three.js renderer, camera rig, movement, autopilot flight, picking, labels, adaptive quality |
 | `src/components/world/engine/terrain.ts` | Planet surface function, water, atmosphere, paths, scatter |
-| `src/components/world/engine/buildings.ts` | The six procedural buildings |
+| `src/components/world/engine/buildings.ts` | The seven procedural buildings |
 | `src/components/world/engine/spark.ts` | Spark character |
 | `src/components/world/engine/sky.ts` | Stars, nebulae, moon, particle ring, drones |
 | `scripts/generate-world-qr.ts` | Regenerates the QR code (`npx tsx scripts/generate-world-qr.ts [url]`) |
@@ -81,3 +82,10 @@ All geometry is generated in code: no paid 3D services and no external model fil
 - `tests/unit/world-software-renderer.test.ts`: software-renderer detection (world and shelf)
 - `tests/frontend/world-list-view.test.tsx`: accessible list view
 - `tests/browser/world.spec.ts`: `/world` intro inside the site chrome, kiosk mode, and the list fallback on desktop and 390 px
+
+
+## Newsstand rendering budget
+
+The kiosk uses simple box geometry and five folded paper planes, below 300 triangles in total and well below the 3,000 triangle budget. One shared 1024 x 1024 CanvasTexture atlas contains the UPDATES sign plus up to five headline/date rows; plane UVs select each row. All papers share one unlit atlas material. It adds no lights, network image requests or frame-loop texture work. Empty slots are blank folded paper; with no posts the panel says **News coming soon**. It uses the existing world quality ladder and software renderer path. Its southern plaza avoids the other buildings. Navigation, labels, collision/door distances, tour and accessible list all use the shared PlaceId.
+
+`tests/unit/world-updates.test.ts` checks seven-volume padding, category separation, five-paper limits and message validation. `tests/frontend/newsstand.test.tsx` counts real geometry triangles, lights and atlas textures. The shelf generator is verified against the upstream SHA-256 above; licence notices stay in the generated HTML and repo files.

@@ -43,44 +43,33 @@ rep("<strong>Working Volumes</strong>\n        <span>Seven field guides for maki
 rep("<span>Edition 02 · 2026</span>", "<span>Algoma University · 2026</span>")
 rep('<span id="palette-label">Ultramarine · bone · copper</span>', '<span id="palette-label">ImmXrsive pink · bone · plum</span>')
 rep('<span id="pointer-label-index">Volume 01</span>\n      <strong id="pointer-label-title">Codex</strong>',
-    '<span id="pointer-label-index">Volume 01</span>\n      <strong id="pointer-label-title">Jash Sojitra</strong>')
-rep('<h1 class="selection__title" id="selection-title">Codex</h1>', '<h1 class="selection__title" id="selection-title">Jash Sojitra</h1>')
+    '<span id="pointer-label-index">Volume 01</span>\n      <strong id="pointer-label-title">Coming Soon</strong>')
+rep('<h1 class="selection__title" id="selection-title">Codex</h1>', '<h1 class="selection__title" id="selection-title">Coming Soon</h1>')
 rep('<p class="selection__note" id="selection-note">Precise intent, translated into tested systems.</p>',
-    '<p class="selection__note" id="selection-note">Built this platform and the ImmXrsive World.</p>')
-rep('<p class="eyebrow" id="detail-eyebrow">Volume I · Agentic craft</p>', '<p class="eyebrow" id="detail-eyebrow">Volume I · Platform &amp; partnerships</p>')
-rep('<h2 class="detail-title" id="detail-title">Codex</h2>', '<h2 class="detail-title" id="detail-title">Jash Sojitra</h2>')
+    '<p class="selection__note" id="selection-note">A student story is being prepared.</p>')
+rep('<p class="eyebrow" id="detail-eyebrow">Volume I · Agentic craft</p>', '<p class="eyebrow" id="detail-eyebrow">Volume I · Student stories</p>')
+rep('<h2 class="detail-title" id="detail-title">Codex</h2>', '<h2 class="detail-title" id="detail-title">Coming Soon</h2>')
 rep("""        A field manual for turning clear intent into working software, with verification treated as part of the craft.""",
-    """        Developer of this platform and the ImmXrsive World.""")
+    """        A student story is being prepared.""")
 rep("<dt>Binding</dt>", "<dt>Home</dt>")
 rep("<dt>Format</dt>", "<dt>Role</dt>")
 rep("<dt>Theme</dt>", "<dt>Work</dt>")
 rep('<dd id="detail-binding">Evergreen cloth · antique brass foil</dd>', '<dd id="detail-binding">Algoma University · Brampton</dd>')
-rep('<dd id="detail-format">148 × 216 mm · imagined edition</dd>', '<dd id="detail-format">XR Program &amp; Partnership Student Coordinator</dd>')
+rep('<dd id="detail-format">148 × 216 mm · imagined edition</dd>', '<dd id="detail-format">Story in preparation</dd>')
 rep('<dd id="detail-theme">Intent into implementation</dd>', '<dd id="detail-theme">ImmXrsive platform · SYNC · Canon DNA · Project Nexus</dd>')
 rep('<dd id="detail-motif">Nested brackets</dd>', '<dd id="detail-motif">Spark</dd>')
 rep('<p class="fallback__kicker">Working Volumes · Static catalog</p>', '<p class="fallback__kicker">Stories House · Static shelf</p>')
 rep('<h2 id="fallback-title">Seven tools for making.</h2>', '<h2 id="fallback-title">The people behind the work.</h2>')
 rep('aria-label="Seven conceptual hardcovers"', 'aria-label="Student volumes"')
 
-# 6. Student volumes. Only Jash is a real person; the rest are explicitly reserved.
+# 6. Seven reserved volumes. Approved stories are loaded from the application API.
 walnut = {"shelf": "#3a2118", "shelfDark": "#1c0e0a"}
 def palette(paper, deep, pale, ink, soft, light, fill):
     return {"paper": paper, "paperDeep": deep, "paperPale": pale, "ink": ink, "inkSoft": soft, "wall": paper, **walnut, "light": light, "fill": fill}
 
-books = [
-    {
-        "id": "jash-sojitra", "title": "Jash Sojitra", "roman": "I", "discipline": "Platform & partnerships",
-        "note": "Built this platform and the ImmXrsive World.",
-        "deck": "Jash is the developer of this platform and the ImmXrsive World, and works with the NCoE as XR Program & Partnership Student Coordinator. His full story is being written.",
-        "binding": "Algoma University · Brampton", "format": "XR Program & Partnership Student Coordinator",
-        "theme": "ImmXrsive platform · SYNC · Canon DNA · Project Nexus", "motif": "Spark", "motifKey": "orbits",
-        "paletteLabel": "ImmXrsive pink · bone · plum", "color": "#c2185f", "foil": "#ffd7e8",
-        "palette": palette("#2a0f2b", "#1c0a1d", "#ffe3ef", "#fff0f6", "#e6b6cc", "#ffc6de", "#b0406f"),
-        "width": 1.04, "height": 1.62, "depth": 0.28, "chapters": ["The platform", "The work", "What's next"], "seed": 11, "initials": "JS",
-        "photo": "/world/students/jash-sojitra.jpg",
-    },
-]
+books = []
 reserved = [
+    ("student-story", "Student stories", "I", "orbits", "#c2185f", "#ffd7e8", "ImmXrsive pink / bone / plum", palette("#2a0f2b", "#1c0a1d", "#ffe3ef", "#fff0f6", "#e6b6cc", "#ffc6de", "#b0406f"), 1.04, 1.62, 0.28),
     ("extended-reality", "Extended Reality", "II", "brackets", "#582c83", "#e9d7ff", "Cold purple · lilac · bone", palette("#1d1236", "#130b25", "#ece2ff", "#f6f0ff", "#c9b7ea", "#e2d2ff", "#7d5bb8"), 1.1, 1.48, 0.29),
     ("spatial-computing", "Spatial Computing", "III", "paths", "#00205b", "#b9d4ff", "Dark blue · sky · silver", palette("#0b1a3f", "#07112b", "#dfe9ff", "#f2f6ff", "#b4c6ea", "#d9e6ff", "#3d63b8"), 0.94, 1.55, 0.23),
     ("interactive-design", "Interactive Design", "IV", "modules", "#981d97", "#ffc2f5", "Warm purple · blush · bone", palette("#2c0f33", "#1d0922", "#ffe0fa", "#fff0fc", "#e3b3dc", "#ffd2f6", "#b04aa8"), 1.06, 1.66, 0.25),
@@ -237,13 +226,13 @@ rep("""      try {
 # 9b. Hover preview card: avatar, name and short preview text.
 rep("""    <div class="pointer-label" id="pointer-label" aria-hidden="true">
       <span id="pointer-label-index">Volume 01</span>
-      <strong id="pointer-label-title">Jash Sojitra</strong>
+      <strong id="pointer-label-title">Coming Soon</strong>
     </div>""", """    <div class="pointer-label" id="pointer-label" aria-hidden="true">
       <span class="pointer-label__avatar" id="pointer-label-avatar">JS</span>
       <span class="pointer-label__text">
         <span id="pointer-label-index">Volume 01</span>
-        <strong id="pointer-label-title">Jash Sojitra</strong>
-        <span class="pointer-label__note" id="pointer-label-note">Built this platform and the ImmXrsive World.</span>
+        <strong id="pointer-label-title">Coming Soon</strong>
+        <span class="pointer-label__note" id="pointer-label-note">A student story is being prepared.</span>
       </span>
     </div>""")
 rep("""    @media (pointer: coarse) {
@@ -382,6 +371,43 @@ rep("""        showFallback("WebGL is unavailable in this browser. The complete 
         return;
       }
 """)
+
+# 12. Fetch approved volumes before initialising geometry or choosing the CPU fallback.
+rep('    async function initialize() {', r"""    async function loadPublishedStories() {
+      try {
+        const response = await fetch("/api/world/stories", { signal: AbortSignal.timeout(4000) });
+        if (!response.ok) return;
+        const volumes = await response.json();
+        if (!Array.isArray(volumes)) return;
+        volumes.slice(0, 7).forEach((volume, index) => {
+          if (!volume || typeof volume.name !== "string" || typeof volume.role !== "string" || typeof volume.excerpt !== "string" || !/^\/updates\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(volume.href || "")) return;
+          const book = BOOKS[index];
+          Object.assign(book, { title: volume.name, discipline: volume.role, note: volume.excerpt, deck: volume.excerpt, format: volume.role, theme: "Published student story", initials: volume.name.split(" ").map(word => word[0]).slice(0, 2).join(""), href: volume.href, photo: /^\/media\/[0-9a-f-]{36}$/i.test(volume.photoUrl || "") ? volume.photoUrl : null });
+        });
+        const grid = document.querySelector(".fallback__grid");
+        [...grid.children].forEach((card, index) => {
+          const book = BOOKS[index];
+          card.querySelector("strong").textContent = book.title;
+          if (book.href) {
+            const link = document.createElement("a"); link.textContent = "Read the full story"; link.href = book.href;
+            link.style.cssText = "display:block;color:inherit;margin-top:1rem";
+            link.addEventListener("click", event => { if (window.parent !== window) { event.preventDefault(); window.parent.postMessage({ type: "immxrsive:open-story", href: book.href }, window.location.origin); } });
+            card.append(link);
+          }
+        });
+      } catch { /* Offline and missing API retain the built-in Coming Soon set. */ }
+    }
+    async function initialize() {
+      await loadPublishedStories();""")
+rep('      <dl class="meta-list">', '      <button id="read-full-story" type="button" hidden>Read the full story</button>\n      <dl class="meta-list">')
+rep('      detailDeck.textContent = book.deck;', """      detailDeck.textContent = book.deck;
+      const fullStory = document.getElementById("read-full-story");
+      fullStory.hidden = !book.href;
+      fullStory.onclick = () => {
+        if (!book.href) return;
+        if (window.parent === window) window.location.assign(book.href);
+        else window.parent.postMessage({ type: "immxrsive:open-story", href: book.href }, window.location.origin);
+      };""")
 
 leftovers = [w for w in ["Working Volumes", "WORKING VOLUMES", "Codex", "Claude Code", "Cursor", "Antigravity", "Figma", "Framer", "Xcode", "imagined edition"] if w in out]
 print("leftover strings:", leftovers)

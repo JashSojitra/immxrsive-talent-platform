@@ -19,9 +19,12 @@ test("the shelf shows only real student content and explicit placeholders", () =
   for (const name of ["Codex", "Claude Code", "Cursor", "Antigravity", "Figma", "Framer", "Xcode", "Working Volumes"]) {
     expect(shelf).not.toContain(name);
   }
-  expect(shelf).toContain('"title": "Jash Sojitra"');
-  expect(shelf).toContain('"photo": "/world/students/jash-sojitra.jpg"');
-  expect(shelf.match(/"title": "Coming Soon"/g)).toHaveLength(6);
+  expect(shelf).not.toContain('"title": "Jash Sojitra"');
+  expect(shelf).toContain('fetch("/api/world/stories"');
+  expect(shelf).toContain('type: "immxrsive:open-story"');
+  expect(shelf).toContain('id="read-full-story"');
+  expect(shelf).toContain("await loadPublishedStories()");
+  expect(shelf.match(/"title": "Coming Soon"/g)).toHaveLength(7);
   expect(shelf).toContain('const COVER_ATLAS_DATA = "";');
   expect(existsSync(new URL("../../public/world/students/jash-sojitra.jpg", import.meta.url))).toBe(true);
 });

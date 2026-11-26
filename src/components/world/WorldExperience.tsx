@@ -1,12 +1,14 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { padStoryVolumes, safeStoryMessage, type StoryVolume, type NewsPaper } from "@/updates/world-content";
 import Link from "next/link";
 import { Fragment, useCallback, useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type RefObject } from "react";
 
 import type { FocusLayout, WorldHandle, WorldMode } from "./engine/world";
 import { PlaceContent } from "./PlaceContent";
 import { DockIcons, WorldDock } from "./WorldDock";
-import { placeById, places, STORIES_SHELF_URL, tourOrder, WORLD_TITLE, type PlaceId } from "./world-content";
+import { placeById, places as staticPlaces, STORIES_SHELF_URL, tourOrder, WORLD_TITLE, type PlaceId, type Place } from "./world-content";
 import styles from "./world.module.css";
 
 type Phase = "loading" | "intro" | "explore" | "fallback";
@@ -24,7 +26,11 @@ function hasWebGL() {
   }
 }
 
-export function WorldExperience() {
+const emptyVolumes = padStoryVolumes([]);
+const emptyPapers: NewsPaper[] = [];
+export function WorldExperience({ volumes = emptyVolumes, papers = emptyPapers }: { volumes?: StoryVolume[]; papers?: NewsPaper[] }) {
+  const router = useRouter();
+  const places = staticPlaces.map(place => place.id === "stories" ? { ...place, stories: volumes.map(v => v.href ? { kind: "student" as const, name: v.name, role: v.role, initials: v.name.split(" ").map(w => w[0]).slice(0, 2).join(""), photo: v.photoUrl ?? undefined, preview: v.excerpt, href: v.href } : { kind: "coming-soon" as const }) } : place.id === "newsstand" ? { ...place, papers } : place);
   const labelEls = useRef(new Map<PlaceId, HTMLElement>());
   const worldElRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -99,11 +105,13 @@ export function WorldExperience() {
   useEffect(() => {
     if (!shelfOpen) return;
     const onMessage = (event: MessageEvent) => {
+      const href = safeStoryMessage(event.origin, window.location.origin, event.data);
+      if (href) { router.push(href); return; }
       if (event.origin === window.location.origin && event.data?.type === "immxrsive:shelf-escape") closeShelf();
     };
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
-  }, [shelfOpen, closeShelf]);
+  }, [shelfOpen, closeShelf, router]);
 
   const closePanel = useCallback(() => {
     worldRef.current?.focus(null);
@@ -126,7 +134,7 @@ export function WorldExperience() {
         if (params.has("list") || !hasWebGL()) { setPhase("fallback"); return; }
         const { createWorld } = await import("./engine/world");
         if (disposed || !canvasRef.current) return;
-        handle = createWorld(canvasRef.current, { reducedMotion: reduce.matches, fixedQuality: params.has("hq") }, {
+        handle = createWorld(canvasRef.current, { reducedMotion: reduce.matches, fixedQuality: params.has("hq"), papers }, {
           onNear: id => {
             setNear(id);
             if (id) setAnnouncement(`${placeById(id).name} is nearby. Press E or Enter to go inside.`);
@@ -136,6 +144,7 @@ export function WorldExperience() {
           onUserInput: () => noteInput(),
           onArrive: id => {
             if (!id) return;
+            if (id === "newsstand") openPanel(id);
             setAnnouncement(`Arrived at ${placeById(id).name}.`);
             setArrived({ id, key: performance.now() });
             if (!touringRef.current) return;
@@ -164,7 +173,7 @@ export function WorldExperience() {
       handle?.dispose();
       worldRef.current = null;
     };
-  }, [noteInput, openPanel]);
+  }, [noteInput, openPanel, papers]);
 
   /* The world fills the viewport below the site header. The header is sticky with a portal bar
      that scrolls away, so measure its real height instead of hard-coding it. */
@@ -234,11 +243,11 @@ export function WorldExperience() {
   }, [panel]);
 
   // Automatic without WebGL, or via /world?list. Not advertised in the UI.
-  if (phase === "fallback") return <WorldListView />;
+  if (phase === "fallback") return <WorldListView places={places} />;
 
   const nearPlace = near ? placeById(near) : null;
   const captionPlace = caption ? placeById(caption) : null;
-  const panelPlace = panel ? placeById(panel) : null;
+  const panelPlace = panel ? places.find(place => place.id === panel)! : null;
 
   return (
     <div ref={worldElRef} className={styles.world} data-phase={phase} data-mode={mode} data-panel={panel ? "open" : undefined} data-kiosk={kiosk || undefined}>
@@ -442,7 +451,7 @@ function Joystick({ world, onInput }: { world: RefObject<WorldHandle | null>; on
 }
 
 /** Accessible, no-WebGL version of the world with the same content. */
-export function WorldListView() {
+export function WorldListView({ places = staticPlaces }: { places?: readonly Place[] }) {
   return (
     <div className={styles.list}>
       <header className={styles.listHeader}>
