@@ -25,6 +25,66 @@ beforeAll(async()=>{
 });
 afterAll(()=>c.client.end());
 async function company(content=companyContent){const result=await saveCompany(db,admin,{content,status:"published",duplicateAcknowledged:true});if(!result.company)throw new Error("Company not saved");return result.company;}
+
+test("public relationships are bidirectional, deduplicated by type and never grant verification or staff access",async()=>{
+ const actor=randomUUID(), publicId=randomUUID(), draftId=randomUUID();
+ await db.insert(s.authUsers).values({id:actor,name:"Relationship test student",email:`${actor}@example.test`});
+ await db.insert(s.studentAffiliations).values({userId:actor,status:"verified",institutionalEmail:`${actor}@algomau.ca`,verifiedAt:new Date()});
+ await db.insert(s.projects).values([
+  {id:publicId,title:"Relationship public project",description:"Public",domain:"XR",origin:"student",maintainerUserId:actor,publicationStatus:"published"},
+  {id:draftId,title:"SECRET draft project",description:"Draft",domain:"XR",origin:"student",maintainerUserId:actor,publicationStatus:"unpublished"},
+ ]);
+ const comp=await company(), second=await company(), restricted=await company(), hidden=await company();
+ const rolesBefore=await db.select().from(s.studioRoles);
+ const content={companyId:comp.id,title:"Public history",description:"Public collaboration",outcome:"Prototype",year:2026,date:null,status:"current",visibility:"public",projectIds:[publicId,publicId,draftId],participantIds:[]};
+ await expect(saveCollaboration(db,actor,{content})).rejects.toMatchObject({status:403});
+ await saveCollaboration(db,admin,{content});
+ await saveCollaboration(db,admin,{content:{...content,title:"Second public history",status:"past"}});
+ await saveCollaboration(db,admin,{content:{...content,companyId:second.id}});
+ for(const visibility of ["private","limited"])await saveCollaboration(db,admin,{content:{...content,companyId:restricted.id,visibility,title:"SECRET collaboration"}});
+ await saveCollaboration(db,admin,{content:{...content,companyId:hidden.id}});
+ await saveCompany(db,admin,{id:hidden.id,version:hidden.version,content:hidden.content,status:"draft"});
+ const before=await publicProjectPartners(db,publicId);
+ expect(before.official).toBe(false);expect(before.companies).toEqual([]);
+ expect(before.collaborationCompanies.map(c=>c.id).sort()).toEqual([comp.id,second.id].sort());
+ const partnerBefore=await publicPartner(db,comp.id);
+ expect(partnerBefore?.verifiedProjects).toEqual([]);
+ expect(partnerBefore?.collaborations).toHaveLength(2);
+ for(const collaboration of partnerBefore!.collaborations)expect(collaboration.projects).toEqual([{id:publicId,title:"Relationship public project"}]);
+ expect(JSON.stringify(await publicPartner(db,restricted.id))).not.toContain(publicId);
+ expect(JSON.stringify(partnerBefore)).not.toContain("SECRET");
+
+ async function request(companyId:string,projectId=publicId){return submitRequest(db,actor,{kind:"association",projectId,companyId,note:"Review relationship",evidence:"",suggestedCompany:""});}
+ const pending=await request(comp.id);
+ await expect(decideRequest(db,actor,{id:pending.id,status:"approved",note:"Student cannot approve",companyId:comp.id})).rejects.toMatchObject({status:403});
+ expect((await publicPartner(db,comp.id))?.verifiedProjects).toEqual([]);
+ expect((await publicProjectPartners(db,publicId)).companies).toEqual([]);
+ await decideRequest(db,admin,{id:pending.id,status:"approved",note:"Independent staff review",companyId:comp.id});
+ const rejected=await request(second.id);
+ await decideRequest(db,admin,{id:rejected.id,status:"rejected",note:"Not approved",companyId:second.id});
+ expect((await publicPartner(db,second.id))?.verifiedProjects).toEqual([]);
+ const approvedSecond=await request(second.id);
+ await decideRequest(db,admin,{id:approvedSecond.id,status:"approved",note:"New evidence reviewed",companyId:second.id});
+ const draftRequest=await request(comp.id,draftId);
+ await decideRequest(db,admin,{id:draftRequest.id,status:"approved",note:"Draft remains hidden",companyId:comp.id});
+ const after=await publicProjectPartners(db,publicId);
+ expect(after.official).toBe(false);
+ expect(after.companies.map(c=>c.id).sort()).toEqual([comp.id,second.id].sort());
+ expect(after.collaborationCompanies.map(c=>c.id).sort()).toEqual([comp.id,second.id].sort());
+ expect((await publicPartner(db,comp.id))?.verifiedProjects).toEqual([{id:publicId,title:"Relationship public project"}]);
+ expect(await publicProjectPartners(db,draftId)).toEqual({official:false,companies:[],collaborationCompanies:[]});
+ expect(await publicPartner(db,hidden.id)).toBeNull();
+ await saveCompany(db,admin,{id:comp.id,version:comp.version,content:comp.content,status:"draft"});
+ const unpublishedCompany=await publicProjectPartners(db,publicId);
+ expect(unpublishedCompany.companies.map(c=>c.id)).toEqual([second.id]);
+ expect(unpublishedCompany.collaborationCompanies.map(c=>c.id)).toEqual([second.id]);
+ await db.update(s.projects).set({publicationStatus:"unpublished"}).where(eq(s.projects.id,publicId));
+ expect((await publicPartner(db,second.id))?.verifiedProjects).toEqual([]);
+ expect((await publicPartner(db,second.id))?.collaborations[0].projects).toEqual([]);
+ expect(await publicProjectPartners(db,publicId)).toEqual({official:false,companies:[],collaborationCompanies:[]});
+ expect(await db.select().from(s.studioRoles)).toEqual(rolesBefore);
+ await expect(staffQueue(db,actor)).rejects.toMatchObject({status:403});
+});
 test("staff role protection and duplicate warning with optimistic updates",async()=>{
  for(const actor of [student,curator])await expect(saveCompany(db,actor,{content:companyContent,status:"draft"})).rejects.toMatchObject({status:403});
  await expect(staffQueue(db,student)).rejects.toMatchObject({status:403});

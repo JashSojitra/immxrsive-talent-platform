@@ -33,6 +33,20 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   if (!project) notFound();
 
   const relationships = await publicProjectPartners(getRuntimeDatabase(),projectId);
-  return <><ProjectDetailView project={project} /><section aria-label="Official project relationships" className={styles.relationships}>{relationships.official&&<p>✓ Official project verification — approved by staff</p>}<h2>Verified industry partners</h2>{relationships.companies.map(c=><p key={c.id}><Link href={`/partners/${c.id}`}>{c.content.name}</Link></p>)}{!relationships.companies.length&&<p>No staff-approved partner associations yet.</p>}<Link href="/partners">Explore industry partners</Link></section></>;
-
+  return <><ProjectDetailView project={project} />
+    <section aria-label="Official project relationships" className={styles.relationships}>
+      {relationships.official && <p>✓ Official project verification — approved by staff</p>}
+      <h2>Verified industry partners</h2>
+      <p>Independently approved by staff.</p>
+      {relationships.companies.map(company => <p key={company.id}><Link href={`/partners/${company.id}`}>{company.content.name}</Link></p>)}
+      {!relationships.companies.length && <p>No staff-approved partner associations yet.</p>}
+      <Link href="/partners">Explore industry partners</Link>
+    </section>
+    <section aria-label="Public collaboration partners" className={styles.relationships}>
+      <h2>Public collaboration partners</h2>
+      <p>Partners with public collaboration history for this project. Collaborations do not confer verified partner status.</p>
+      {relationships.collaborationCompanies.map(company => <p key={company.id}><Link href={`/partners/${company.id}`}>{company.content.name}</Link></p>)}
+      {!relationships.collaborationCompanies.length && <p>No public collaboration partners to display.</p>}
+    </section>
+  </>;
 }

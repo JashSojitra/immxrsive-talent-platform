@@ -138,11 +138,19 @@ export async function publicPartner(db: Database, companyId: string) {
   const publicStudents = (await Promise.all(studentRows.map(e => queryPublicStudentProfile(db,e.profileId)))).filter(p => p !== null).map(p => ({id:p.id,name:p.name}));
   visible.push({id:row.id,title:c.title,year:c.year,status:c.status,description:c.description,outcome:c.outcome,date:c.date,projects:publicProjects,students:publicStudents});
  }
- return {...company,collaborations:visible};
+ const approvedLinks = await db.select({projectId:partners.projectId}).from(partners).where(eq(partners.companyId,companyId));
+ const verifiedProjects = (await Promise.all([...new Set(approvedLinks.map(link => link.projectId))].map(projectId => queryPublicProject(db,projectId))))
+  .filter(p => p !== null).map(p => ({id:p.id,title:p.title}));
+ return {...company,collaborations:visible,verifiedProjects};
 }
 export async function publicProjectPartners(db: Database, projectId: string) {
- if(!await queryPublicProject(db,projectId)) return {official:false,companies:[]};
+ if(!await queryPublicProject(db,projectId)) return {official:false,companies:[],collaborationCompanies:[]};
  const verified = await db.select().from(official).where(eq(official.projectId,projectId));
  const linked = await db.select({id:companies.id,content:companies.content}).from(partners).innerJoin(companies,eq(companies.id,partners.companyId)).where(and(eq(partners.projectId,projectId),eq(companies.status,"published")));
- return {official:!!verified.length,companies:linked};
+ // Deduplicate within this relationship type; collaboration never implies verification.
+ const collaborationCompanies = await db.selectDistinct({id:companies.id,content:companies.content}).from(edges)
+  .innerJoin(collaborations,eq(collaborations.id,edges.collaborationId))
+  .innerJoin(companies,eq(companies.id,collaborations.companyId))
+  .where(and(eq(edges.projectId,projectId),eq(companies.status,"published"),sql`${collaborations.content}->>'visibility' = 'public'`));
+ return {official:!!verified.length,companies:linked,collaborationCompanies};
 }

@@ -19,6 +19,12 @@ export default async function PartnerPage({ params }: { params: Promise<{ compan
       <Link className={styles.button} href={`/inquiry/partner/${company.id}`}>Discuss a collaboration <span aria-hidden="true">&#8599;</span></Link>
       {website ? new URL(website).hostname.endsWith(".example.test") ? <p>Reserved fixture website: {website} (not a hosted source)</p> : <a href={website} target="_blank" rel="noopener noreferrer">Company website <span aria-hidden="true">&#8599;</span></a> : <p>Company website not listed.</p>}
     </div>
+    <section className={styles.section} aria-labelledby="verified-projects-title">
+      <h2 id="verified-projects-title">Verified project associations</h2>
+      <p>Independently approved by staff. Collaboration history is listed separately below.</p>
+      {company.verifiedProjects.map(project => <p key={project.id}><Link href={`/projects/${project.id}`}>{project.title}</Link></p>)}
+      {!company.verifiedProjects.length && <p className={styles.empty}>No staff-approved project associations yet.</p>}
+    </section>
     {(["current", "past"] as const).map(status => <section key={status} className={styles.section} aria-labelledby={`${status}-collaborations-title`}>
       <p className={styles.eyebrow}>{status === "current" ? "Happening now" : "Collaboration archive"}</p>
       <h2 id={`${status}-collaborations-title`}>{status === "current" ? "Current collaborations" : "Past collaborations"}</h2>
