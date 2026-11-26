@@ -14,10 +14,36 @@ test("/world opens the 3D intro (or the list fallback when WebGL is unavailable)
   // The world sits inside the main site's chrome.
   await expect(page.locator("body > header")).toBeVisible();
   await expect(page.locator("body > footer")).toBeAttached();
+  await expect(page.getByRole("navigation", { name: "Footer navigation" }).getByRole("link", { name: "ImmXrsive World" })).toHaveAttribute("href", "/world");
   if (await enter.isVisible()) {
+    const header = await page.locator("body > header").boundingBox();
+    const canvas = await page.locator("canvas").boundingBox();
+    expect(canvas!.y).toBeCloseTo(header!.height, 0);
+    expect(canvas!.height + header!.height).toBeCloseTo(page.viewportSize()!.height, 0);
+    await page.locator("body > footer").scrollIntoViewIfNeeded();
+    await expect(page.locator("body > footer")).toBeInViewport();
+    await page.evaluate(() => window.scrollTo(0, 0));
     await expect(page.getByRole("link", { name: "Back to main site" })).toHaveAttribute("href", "/");
     await expect(page.getByRole("button", { name: "View as a list" })).toHaveCount(0);
     await enter.click();
+    const hop = page.getByRole("button", { name: "Hop", exact: true });
+    if (test.info().project.name === "mobile-390") {
+      await expect(hop).toBeVisible();
+      const stick = page.locator('[class*="_stick"]');
+      const dock = await page.getByRole("navigation", { name: "World controls" }).boundingBox();
+      const stickBox = await stick.boundingBox();
+      const hopBox = await hop.boundingBox();
+      expect(stickBox!.y).toBeGreaterThan(dock!.y + dock!.height);
+      expect(hopBox!.y).toBeGreaterThan(dock!.y + dock!.height);
+      expect(stickBox!.y).toBeGreaterThan(header!.height);
+      await page.mouse.move(stickBox!.x + stickBox!.width / 2, stickBox!.y + stickBox!.height / 2);
+      await page.mouse.down();
+      await page.mouse.move(stickBox!.x + stickBox!.width - 5, stickBox!.y + stickBox!.height / 2);
+      await expect(stick.locator("span")).not.toHaveCSS("transform", "matrix(1, 0, 0, 1, 0, 0)");
+      await page.mouse.up();
+      await expect(stick.locator("span")).toHaveCSS("transform", "matrix(1, 0, 0, 1, 0, 0)");
+      await hop.click();
+    }
     await page.getByRole("button", { name: "Places" }).click({ timeout: SLOW_3D_MS });
     await expect(page.getByRole("navigation", { name: "Places" }).getByRole("button")).toHaveCount(6);
     await expect(page.getByRole("navigation", { name: "World controls" }).getByRole("button", { name: "List" })).toHaveCount(0);
