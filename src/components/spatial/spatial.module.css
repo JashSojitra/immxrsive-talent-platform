@@ -11,3 +11,12 @@
   .posterArt { left: 50%; top: 20%; width: min(86vw, 340px); transform: translate(-50%, -50%); }
   .vignette { background: linear-gradient(to top, var(--ink) 4%, rgb(5 6 10 / .78) 42%, rgb(5 6 10 / .1) 70%); }
 }
+
+/* Official XR mark: its fallback and geometry share a copy-safe composition. */
+.xrPosterArt, .xrGlow { position: absolute; left: 70.5%; top: 44%; height: min(58%, 36vw, 540px); width: auto; transform: translate(-50%, -50%); }
+.xrPosterArt { filter: drop-shadow(0 0 28px rgb(var(--purple-rgb) / .25)); }
+.xrGlow { width: min(80vh, 50vw, 760px); height: min(80vh, 50vw, 760px); background: radial-gradient(ellipse, rgb(var(--purple-rgb) / .24), rgb(var(--pink-rgb) / .08) 35%, transparent 70%); pointer-events: none; }
+@media (max-width: 900px) {
+  .xrPosterArt { left: 50%; top: 142px; height: min(52vw, 210px); }
+  .xrGlow { left: 50%; top: 142px; width: 360px; height: 360px; }
+}

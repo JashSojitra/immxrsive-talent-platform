@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import type { SpatialStatus } from "./SpatialCanvas";
 import styles from "./spatial.module.css";
 
+const XRCanvas = dynamic(() => import("./XRCanvas").then(module => module.XRCanvas), { ssr: false });
+
 const SpatialCanvas = dynamic(() => import("./SpatialCanvas").then(module => module.SpatialCanvas), { ssr: false });
 
 type StageStatus = "poster" | SpatialStatus;
@@ -14,7 +16,7 @@ type StageStatus = "poster" | SpatialStatus;
  * requested after the page is idle; it is skipped for Save-Data, and renders a single still
  * frame for reduced motion. `data-status` exposes poster | ready | unsupported for tests.
  */
-export function SpatialStage({ className = "" }: { className?: string }) {
+export function SpatialStage({ className = "", xrMark = false }: { className?: string; xrMark?: boolean }) {
   const [mount, setMount] = useState(false);
   const [still, setStill] = useState(false);
   const [status, setStatus] = useState<StageStatus>("poster");
@@ -30,15 +32,22 @@ export function SpatialStage({ className = "" }: { className?: string }) {
     const handle = idle(() => setMount(true), { timeout: 1600 });
     return () => { reduce.removeEventListener("change", update); cancel(handle); };
   }, []);
-  return <div className={`${styles.stage} ${className}`} data-status={status} data-still={still || undefined}>
-    <SpatialPoster />
-    {mount && <SpatialCanvas className={styles.canvas} still={still} onStatus={setStatus} />}
+  return <div className={`${styles.stage} ${className}`} data-mark={xrMark ? "xr" : undefined} data-status={status} data-still={still || undefined}>
+    {xrMark && <div className={styles.xrGlow} aria-hidden="true" />}
+    <SpatialPoster xrMark={xrMark} />
+    {mount && (xrMark ? <XRCanvas className={styles.canvas} still={still} onStatus={setStatus} /> : <SpatialCanvas className={styles.canvas} still={still} onStatus={setStatus} />)}
     <div className={styles.vignette} aria-hidden="true" />
   </div>;
 }
 
-/** Static composition of "The Crossing": gate, glass X and point floor. Decorative only. */
-export function SpatialPoster() {
+/** Official XR poster on the homepage; original Crossing poster elsewhere. Decorative only. */
+export function SpatialPoster({ xrMark = false }: { xrMark?: boolean }) {
+  if (xrMark) return <div className={styles.poster} aria-hidden="true">
+    <div className={styles.floor} />
+    <svg className={styles.xrPosterArt} viewBox="0 0 113.09 126.75">
+      <image href="/branding/immxrsive-icon-reverse.svg" width="113.09" height="126.75" />
+    </svg>
+  </div>;
   return <div className={styles.poster} aria-hidden="true">
     <div className={styles.floor} />
     <svg className={styles.posterArt} viewBox="0 0 800 800" fill="none">

@@ -14,7 +14,7 @@ export type HeroStats = { projects: number; portfolios: number; partners: number
 export function HomeHero({ stats }: { stats: HeroStats }) {
   const ref = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
-  // Scroll-linked exit: the copy recedes as the camera dollies through the gate (shader reads the same scroll).
+  // Scroll-linked exit: the copy recedes as the camera dollies through the gate (the scene reads the same scroll).
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const progress = useSpring(scrollYProgress, follow.scroll);
   const copyY = useTransform(progress, [0, 1], ["0%", "-18%"]);
@@ -39,7 +39,7 @@ export function HomeHero({ stats }: { stats: HeroStats }) {
       pointerY.set(event.clientY / window.innerHeight - 0.5);
     }}
   >
-    <SpatialStage />
+    <SpatialStage xrMark />
     <div className={styles.heroHud} aria-hidden="true">
       <span>ImmXrsive / Scene 01</span>
       <span className={styles.hudCenter}>The crossing</span>
