@@ -24,6 +24,7 @@ test("staff publishes an event, public discovery works, and a story needs studen
     const [profile]=await c.db.insert(s.studentProfiles).values({ownerUserId:user.id,publicationStatus:"published",headline:"Test headline",program:"Test program",studentStatus:"current"}).returning();
     await page.goto("/admin/updates/new");await page.getByLabel("Title",{exact:true}).fill(`Synthetic story ${randomUUID()}`);await page.getByRole("combobox",{name:"Category",exact:true}).selectOption("student_success");await page.getByLabel("Student profile ID").fill(profile.id);await page.getByLabel("Excerpt (up to 200 characters)").fill("Test-only student story.");await page.getByLabel("Author display name").fill("Synthetic Updates Editor");await page.getByLabel("Body (Markdown)").fill("A test-only story requiring approval.");await page.getByRole("button",{name:"Publish",exact:true}).click();await expect(page.getByRole("status").first()).toContainText("approve");
     await page.getByRole("button",{name:"Request student approval"}).click();await expect(page.getByRole("status").first()).toContainText("in_review");
+    await expect(page).toHaveURL(/\/admin\/updates\/[a-f0-9-]{36}$/);
     const storyId=page.url().split("/").pop()!;const [story]=await c.db.select().from(s.articles).where(eq(s.articles.id,storyId));expect(story.studentApprovedAt).toBeNull();expect(story.status).toBe("in_review");
   } finally {await c.client.end();}
 });
