@@ -54,6 +54,12 @@ export function SpatialCanvas({ scene = "crossing", still = false, className, on
     gl.linkProgram(program);
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) { statusRef.current?.("unsupported"); return; }
     gl.useProgram(program);
+    const palette = getComputedStyle(document.documentElement);
+    for (const [uniform, token] of [["FLARE", "--brand-pink"], ["EMBER", "--brand-purple"], ["ION", "--brand-cold-purple"]]) {
+      const hex = palette.getPropertyValue(token).trim().slice(1);
+      gl.uniform3f(gl.getUniformLocation(program, uniform),
+        parseInt(hex.slice(0, 2), 16) / 255, parseInt(hex.slice(2, 4), 16) / 255, parseInt(hex.slice(4, 6), 16) / 255);
+    }
     const buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);

@@ -64,3 +64,7 @@ This supersedes the earlier Phase 1/reference-only statement about Skiper usage:
 Known pre-existing fallback limit: `/projects/[projectId]` uses a Next.js streamed `loading.tsx` boundary; with JavaScript fully disabled, Chromium can remain on that loading state. This change does not claim full no-JavaScript project-detail or talent-API support. Normal JavaScript with WebGL unavailable, reduced motion, touch or Lenis disabled remains supported and tested.
 
 No visual acceptance is asserted. Genuine project imagery and any Pro/Unicorn integration remain dependent on authorized source assets.
+
+## Brand refresh attribution placement
+
+Interactive components adapted from [Skiper UI](https://skiper-ui.com) by Gurvinder Singh. Attribution and the original upstream author/license notices remain in the repository (component source and `docs/design/skiper-registry/`). The brand refresh removes the public footer credit; it does not remove or change those notices. The homepage now uses shared Student stories; project exhibitions remain on `/projects` and `/showcase`.

@@ -9,7 +9,7 @@ import { getPrivateStudentProfile } from "@/profile/service";
 
 export const metadata: Metadata = {
   title: "Private public-profile preview",
-  description: "Owner-only preview of the saved NOT ImmXrsive public profile projection.",
+  description: "Owner-only preview of the saved ImmXrsive public profile projection.",
   robots: { index: false, follow: false },
 };
 

@@ -1,28 +1,16 @@
+/* Cap height of I is ~11% of the supplied horizontal artwork width. */
 .logoLink {
-  position: relative;
+  --logo-width: 160px;
   display: inline-flex;
-  width: 220px;
-  height: 72px;
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  background: transparent;
+  min-height: 44px;
+  padding: calc(var(--logo-width) * .115);
   text-decoration: none;
 }
-
-.logo {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: block;
-  width: 137%;
-  max-width: none;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 46%;
-  transform: translate(-50%, -50%);
-}
+.logo { display: block; width: var(--logo-width); min-width: 72px; height: auto; }
+@media (max-width: 700px) { .logoLink { --logo-width: 136px; } }
 
 .disclaimer {
   position: relative;
@@ -34,11 +22,4 @@
   font-size: 0.7rem;
   line-height: 1.5;
   text-align: center;
-}
-
-@media (max-width: 600px) {
-  .logoLink {
-    width: 156px;
-    height: 54px;
-  }
 }

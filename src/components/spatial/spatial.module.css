@@ -5,9 +5,18 @@
 .stage[data-status="ready"] .poster { opacity: 0; }
 /* Matches the shader framing: right of the headline on wide screens, high and centered on narrow. */
 .posterArt { position: absolute; top: 50%; left: 69%; width: min(74vh, 52vw); height: auto; transform: translate(-50%, -52%) rotateY(-14deg); }
-.floor { position: absolute; left: -25%; right: -25%; bottom: -10%; height: 55%; background-image: radial-gradient(circle, rgb(142 240 212 / .32) 1.2px, transparent 1.6px); background-size: 26px 26px; transform: perspective(500px) rotateX(68deg); transform-origin: 50% 100%; mask-image: linear-gradient(to top, #000 10%, transparent 80%); }
+.floor { position: absolute; left: -25%; right: -25%; bottom: -10%; height: 55%; background-image: radial-gradient(circle, rgb(var(--purple-rgb) / .32) 1.2px, transparent 1.6px); background-size: 26px 26px; transform: perspective(500px) rotateX(68deg); transform-origin: 50% 100%; mask-image: linear-gradient(to top, #000 10%, transparent 80%); }
 .vignette { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgb(5 6 10 / .82) 0%, rgb(5 6 10 / .35) 38%, transparent 62%), linear-gradient(to top, var(--ink) 0%, transparent 22%); }
 @media (max-width: 900px) {
   .posterArt { left: 50%; top: 20%; width: min(86vw, 340px); transform: translate(-50%, -50%); }
   .vignette { background: linear-gradient(to top, var(--ink) 4%, rgb(5 6 10 / .78) 42%, rgb(5 6 10 / .1) 70%); }
+}
+
+/* Official XR mark: its fallback and geometry share a copy-safe composition. */
+.xrPosterArt, .xrGlow { position: absolute; left: 70.5%; top: 44%; height: min(58%, 36vw, 540px); width: auto; transform: translate(-50%, -50%); }
+.xrPosterArt { filter: drop-shadow(0 0 28px rgb(var(--purple-rgb) / .25)); }
+.xrGlow { width: min(80vh, 50vw, 760px); height: min(80vh, 50vw, 760px); background: radial-gradient(ellipse, rgb(var(--purple-rgb) / .24), rgb(var(--pink-rgb) / .08) 35%, transparent 70%); pointer-events: none; }
+@media (max-width: 900px) {
+  .xrPosterArt { left: 50%; top: 142px; height: min(52vw, 210px); }
+  .xrGlow { left: 50%; top: 142px; width: 360px; height: 360px; }
 }

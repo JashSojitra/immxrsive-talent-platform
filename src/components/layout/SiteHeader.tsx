@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getAuthenticatedUser, getStudentVerificationStatus } from "@/auth/server";
 import { getRuntimeDatabase } from "@/db/runtime";
 import { staffRole } from "@/studio/service";
-import { BrandMark } from "./BrandMark";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 import { SiteNavigation, type AccountLink } from "./SiteNavigation";
 import styles from "./site.module.css";
 export async function SiteHeader() {
@@ -21,7 +21,7 @@ export async function SiteHeader() {
     </div>
     <div className={styles.headerBar}>
       <div className={styles.headerInner}>
-        <Link className={styles.wordmark} href="/" aria-label="NOT ImmXrsive home"><BrandMark className={styles.brandMark} /><span className={styles.wordmarkText}><small>NOT</small>Imm<span className={styles.brandAccent}>X</span>rsive</span></Link>
+        <BrandLogo />
         <SiteNavigation accountLinks={accountLinks} />
       </div>
     </div>

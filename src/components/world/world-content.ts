@@ -11,7 +11,7 @@ export type PlaceId = "hub" | "queen" | "stories" | "showcase" | "dock" | "launc
 export type WorldLink = { label: string; href: string; external?: boolean };
 
 export type StoryCard =
-  | { kind: "student"; name: string; role: string; initials: string; photo?: string; href?: string }
+  | { kind: "student"; name: string; role: string; initials: string; photo?: string; preview: string; href?: string }
   | { kind: "coming-soon" };
 
 export type ShowcaseCard =
@@ -36,6 +36,20 @@ export type Place = {
 export const WORLD_TITLE = "ImmXrsive World";
 /** The Stories House shelf (adapted ThreeUI Complete Shelf, see docs/design/immxrsive-world.md). */
 export const STORIES_SHELF_URL = "/world/stories-shelf.html";
+
+export const studentStories: StoryCard[] = [
+  {
+    kind: "student",
+    name: "Jash Sojitra",
+    role: "Developer of this platform · XR Program & Partnership Student Coordinator",
+    initials: "JS",
+    preview: "Built this platform and the ImmXrsive World.",
+    photo: "/world/students/jash-sojitra.jpg",
+    href: "https://www.linkedin.com/in/jashsojitra/",
+  },
+  { kind: "coming-soon" },
+  { kind: "coming-soon" },
+];
 
 export const places: readonly Place[] = [
   {
@@ -67,18 +81,7 @@ export const places: readonly Place[] = [
     lat: 40,
     lon: 72,
     links: [{ label: "Meet all talent", href: "/talent" }],
-    stories: [
-      {
-        kind: "student",
-        name: "Jash Sojitra",
-        role: "Developer of this platform · XR Program & Partnership Student Coordinator",
-        initials: "JS",
-        photo: "/world/students/jash-sojitra.jpg",
-        href: "https://www.linkedin.com/in/jashsojitra/",
-      },
-      { kind: "coming-soon" },
-      { kind: "coming-soon" },
-    ],
+    stories: studentStories,
   },
   {
     id: "showcase",

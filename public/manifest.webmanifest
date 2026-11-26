@@ -1,0 +1,12 @@
+{
+  "name": "ImmXrsive Talent & Industry Platform",
+  "short_name": "ImmXrsive",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#0a0c12",
+  "theme_color": "#00205B",
+  "icons": [
+    { "src": "/branding/immxrsive-icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/branding/immxrsive-icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

@@ -6,16 +6,16 @@ import styles from "./brand.module.css";
 export function BrandLogo({ className = "" }: { className?: string }) {
   return (
     <Link
-      href="/talent"
+      href="/"
       className={`${styles.logoLink} ${className}`}
-      aria-label="NOT ImmXrsive talent directory home"
+      aria-label="ImmXrsive home"
     >
       <Image
         className={styles.logo}
-        src="/branding/not-immxrsive-logo.png"
-        alt="NOT ImmXrsive"
-        width={2_000}
-        height={2_000}
+        src="/branding/immxrsive-logo-reverse.svg"
+        alt="ImmXrsive"
+        width={404.51}
+        height={123.79}
         priority
       />
     </Link>

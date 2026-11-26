@@ -13,7 +13,7 @@ import authStyles from "../../auth.module.css";
 
 export const metadata: Metadata = {
   title: "Edit private student profile",
-  description: "Create and maintain your private NOT ImmXrsive student profile draft.",
+  description: "Create and maintain your private ImmXrsive student profile draft.",
 };
 
 export const dynamic = "force-dynamic";

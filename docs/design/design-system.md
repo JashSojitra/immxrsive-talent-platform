@@ -1,5 +1,9 @@
 ﻿# ImmXrsive design system
 
+> **Brand refresh (2026-11-25):** `src/app/globals.css` is the current palette authority: pink `#E31C79`, warm purple `#981D97`, plum `#991E66`, cold purple `#582C83`, dark blue `#00205B` and gray `#3C3C3B`. Small accent text uses AA-tested pink/purple tints; primary buttons use white on plum. Header/footer use the supplied reverse artwork unchanged, with cap-height clear space and widths above 72px; app icons use the supplied dark-blue tile. The course-project notice remains visible. Homepage Student stories and the world share `studentStories` in `world-content.ts`; project exhibitions remain on `/projects` and `/showcase`. Earlier palette and identity notes below are historical.
+
+Desktop/mobile captures: [1440px homepage](screenshots/brand-refresh/home-1440.png), [390px homepage](screenshots/brand-refresh/home-390.png), [1440px stories](screenshots/brand-refresh/stories-1440.png), [390px stories](screenshots/brand-refresh/stories-390.png). Captures use the disposable browser-test fixtures for the existing project/talent sections and the approved Jash story. Reduced motion is enabled so the full-page capture shows settled content.
+
 > **Phase 1 update (2026-11-19):** identity, tokens, typography, motion system, homepage, header, navigation and footer are now defined in [phase-1-spatial-identity.md](phase-1-spatial-identity.md), which supersedes the token table, the homepage interaction notes and the header/footer notes below. Legacy token names remain valid. Operational guidance for directory, student and staff screens below still applies until Phase 2.
 
 ## Identity and surfaces
