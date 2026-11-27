@@ -25,15 +25,19 @@ test("a published student story fills the static shelf from the world API", asyn
         return original.apply(this, args);
       } as typeof original;
     });
+    if (info.project.name === "desktop") await page.setViewportSize({ width: 1280, height: 1000 });
     await page.goto("/world/stories-shelf.html");
     const book = page.locator("#static-fallback .fallback-book").filter({ hasText: "Published fixture student" });
     await expect(book).toBeVisible();
     await expect(book).toContainText("XR design student");
     await expect(book.getByRole("img", { name: "Published fixture student" })).toHaveAttribute("src", `/media/${photo.id}`);
     await expect.poll(() => book.locator("img").evaluate((image: HTMLImageElement) => image.naturalWidth)).toBe(240);
-    await expect(book.getByRole("link", { name: "Read the full story" })).toHaveAttribute("href", `/updates/${slug}`);
+    const fullStory = book.getByRole("link", { name: "Read the full story" });
+    await expect(fullStory).toHaveAttribute("href", `/updates/${slug}`);
+    await fullStory.scrollIntoViewIfNeeded();
+    await expect(fullStory).toBeVisible();
     await page.screenshot({ path: `test-results/shelf-published-${info.project.name}.png`, fullPage: true });
-    await book.getByRole("link", { name: "Read the full story" }).click();
+    await fullStory.click();
     await expect(page.getByRole("heading", { level: 1, name: "A published shelf fixture" })).toBeVisible();
   } finally {
     await c.db.update(s.studentProfiles).set({ publicationStatus: "unpublished" }).where(eq(s.studentProfiles.ownerUserId, userId));
