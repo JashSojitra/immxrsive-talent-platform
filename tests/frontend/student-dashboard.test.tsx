@@ -60,8 +60,8 @@ test("a saved private profile is never presented as publicly discoverable", asyn
 test("staff-curated credits are read-only and never counted as owned projects", async () => {
   credits.mockResolvedValue([{ projectId: "curated-1", title: "Curated showcase", summary: "", domain: "XR", roles: ["Designer"], technologies: [] }]);
   render(await StudentDashboardPage());
-  expect(credits).toHaveBeenCalledWith(expect.anything(), "profile-1");
-  const panel = screen.getByRole("region", { name: "Credited in curated projects" });
+  expect(credits).toHaveBeenCalledWith(expect.anything(), "profile-1", true);
+  const panel = screen.getByRole("region", { name: "Projects you're credited on" });
   expect(within(panel).getByRole("link", { name: /Curated showcase/ })).toHaveAttribute("href", "/projects/curated-1");
   expect(within(panel).getByText(/do not add you to the project team or give you editing access/)).toBeInTheDocument();
   expect(within(panel).queryByRole("link", { name: /edit/i })).not.toBeInTheDocument();
@@ -72,5 +72,5 @@ test("unverified accounts never query curated credits", async () => {
   verification.mockResolvedValue({ status: "unverified" });
   render(await StudentDashboardPage());
   expect(credits).not.toHaveBeenCalled();
-  expect(screen.queryByRole("region", { name: "Credited in curated projects" })).not.toBeInTheDocument();
+  expect(screen.queryByRole("region", { name: "Projects you're credited on" })).not.toBeInTheDocument();
 });

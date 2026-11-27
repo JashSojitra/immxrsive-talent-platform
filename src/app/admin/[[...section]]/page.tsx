@@ -50,8 +50,8 @@ export default async function AdminPage({ params, searchParams }: { params: Prom
     if (section.length > 3 || section[2] && !["edit", "preview", "demo"].includes(section[2])) notFound();
     let detail;
     try { detail = await adminDetail(db, user.id, section[1]); } catch (e) { if (e instanceof ProjectError && e.status === 404) notFound(); throw e; }
-    if (section[2] === "preview") return <ProjectDetailView project={projectPresentation(detail.project.id, detail.detail.content)} preview />;
-    return shell(detail.project.title, <><AdminEditor initial={detail.detail.content} record={{ id: detail.project.id, version: detail.project.version, lifecycle: detail.detail.lifecycle }} role={detail.role} focusDemo={section[2] === "demo"} /><h2>Project activity</h2><EventList events={detail.events} /></>);
+    if (section[2] === "preview") return <ProjectDetailView project={{ ...projectPresentation(detail.project.id, detail.detail.content), screenshots: detail.screenshots }} preview />;
+    return shell(detail.project.title, <><AdminEditor creditStatuses={detail.creditStatuses} initial={detail.detail.content} record={{ id: detail.project.id, version: detail.project.version, lifecycle: detail.detail.lifecycle }} role={detail.role} focusDemo={section[2] === "demo"} /><h2>Project activity</h2><EventList events={detail.events} /></>);
   }
   if (section.join("/") === "activity") return shell("Activity ledger", <><p>The latest 100 staff actions, with reasons and saved revisions for traceability.</p><EventList events={await adminActivity(db, user.id)} /></>);
   if (section.join("/") === "reviews") {

@@ -59,3 +59,8 @@
 @media(prefers-reduced-motion:reduce) { .workspace * { scroll-behavior:auto; transition:none; } .workspace button:not(:disabled):active { transform:none; } }
 .actions > a.primary { display:inline-flex; min-height:46px; padding:12px 18px; text-decoration:none; border-radius:4px; }
 .nav[aria-label="Breadcrumb"] { justify-content:flex-start; min-height:64px; font-size:.8rem; gap:12px; color:var(--muted); }
+.dropZone { border: 1px dashed #8d7299; border-radius: 1rem; padding: 1.5rem; margin-bottom: 1rem; }
+.screenshotList { display: grid; gap: 1.5rem; padding: 0; list-style: none; }
+.screenshotList img { display: block; width: min(100%, 320px); height: auto; border-radius: .5rem; }
+
+.section > fieldset { min-width: 0; border: 0; padding: 0; margin: 0; }

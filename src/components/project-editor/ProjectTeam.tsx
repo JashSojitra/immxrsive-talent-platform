@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ScreenshotsEditor } from "./ScreenshotsEditor";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { PersonalContribution, ProjectTeamData } from "@/projects/team-types";
 import styles from "./project-editor.module.css";
@@ -119,6 +120,7 @@ export function ProjectTeam({ initialData }: { initialData: ProjectTeamData }) {
         </article>)}
       </section>
     </> : null}
+    {own?.state === "accepted" && !data.isMaintainer && <ScreenshotsEditor projectId={data.project.id} />}
     <section className={styles.section}><p className={`ui-eyebrow ${styles.eyebrow}`}>Consent before responsibility</p><h2>Maintenance offers.</h2>
       {!data.transfers.length ? <p>No maintenance offers.</p> : data.transfers.map(t => <article key={t.id} className={styles.card}><p>Maintenance offer: {t.state}</p>
         {t.state === "pending" && t.projectVersion !== data.project.version ? <p>This offer is stale. Ask the maintainer for a fresh offer before accepting.</p> : null}

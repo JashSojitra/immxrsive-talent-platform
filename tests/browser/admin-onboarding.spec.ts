@@ -79,7 +79,7 @@ test("staff import, configure, credit, preview and publish without student accou
     await page.getByRole("button", { name: "Launch embedded experience" }).click();
     await expect(page.getByText("Synthetic fallback description of the experience.")).toBeVisible();
     await page.getByRole("link", { name: "Return to editor", exact: true }).click();
-    await page.getByRole("button", { name: "Publish directly", exact: true }).click(); await expect(page.getByRole("status")).toContainText("published");
+    await page.getByRole("button", { name: "Publish directly", exact: true }).click(); await expect(page.getByRole("status").first()).toContainText("published");
     const publicResponse = await page.request.get(`/api/v1/projects/${id}`); expect(publicResponse.status()).toBe(200); const data = await publicResponse.json();
     expect(data.contributors[0]).toMatchObject({ name: "Descriptive creator", profileUrl: "" }); expect(JSON.stringify(data)).not.toContain(user.id);
     expect(await db.select().from(s.studentProfiles).where(eq(s.studentProfiles.ownerUserId, user.id))).toHaveLength(0);
@@ -93,9 +93,9 @@ test("staff import, configure, credit, preview and publish without student accou
     expect((await db.select().from(s.studioRoles).where(eq(s.studioRoles.userId, target.user.id)))[0].role).toBe("xr_curator");
     await page.getByLabel("New role").selectOption(""); await page.getByLabel("Reason / approved change reference").fill("Synthetic approved curator revocation");
     await page.getByRole("button", { name: "Save access change" }).click(); await expect(page.getByText("Current role: No staff role", { exact: true })).toBeVisible();
-    await page.goto(`/admin/projects/${id}/edit`); await page.getByRole("button", { name: "Archive saved project" }).click(); await expect(page.getByRole("status")).toContainText("archived");
+    await page.goto(`/admin/projects/${id}/edit`); await page.getByRole("button", { name: "Archive saved project" }).click(); await expect(page.getByRole("status").first()).toContainText("archived");
     expect((await page.request.get(`/api/v1/projects/${id}`)).status()).toBe(404);
-    await page.getByRole("button", { name: "Restore as private draft" }).click(); await expect(page.getByRole("status")).toContainText("draft");
+    await page.getByRole("button", { name: "Restore as private draft" }).click(); await expect(page.getByRole("status").first()).toContainText("draft");
     expect((await page.request.get(`/api/v1/projects/${id}`)).status()).toBe(404);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     if (info.project.name === "desktop") for (const width of [1201, 1280, 1361, 1440]) {
@@ -137,10 +137,10 @@ test("staff link a verified student profile as a read-only credit", async ({ bro
     await page.getByLabel("Summary", { exact: true }).fill("Synthetic curated summary.");
     await page.getByLabel("Full description", { exact: true }).fill("Synthetic curated description.");
     await page.getByLabel("Fallback narrative (required to publish)").fill("Synthetic fallback narrative.");
-    await page.getByLabel("Find a verified public profile").fill(studentName);
+    await page.getByLabel("Find a student profile by name").fill(studentName);
     await page.getByRole("button", { name: "Search profiles" }).click();
     await page.getByRole("button", { name: `Add linked credit for ${studentName}` }).click();
-    await expect(page.getByLabel("Public profile internal ID (optional) — credit 1")).toHaveValue(profile.id);
+    await expect(page.getByLabel("Profile internal ID (optional) — credit 1")).toHaveValue(profile.id);
     await expect(page.getByLabel("Project role — credit 1")).toHaveValue("");
     await page.getByLabel("Project role — credit 1").fill("Interaction designer");
     await page.getByRole("button", { name: "Save draft", exact: true }).click();
@@ -159,7 +159,7 @@ test("staff link a verified student profile as a read-only credit", async ({ bro
 
     // Student: read-only dashboard credit; no membership, admin access or editor access.
     const studentPage = student.page; await studentPage.goto(`${origin}/student/dashboard`);
-    const panel = studentPage.getByRole("region", { name: "Credited in curated projects" });
+    const panel = studentPage.getByRole("region", { name: "Projects you're credited on" });
     await expect(panel.getByRole("link", { name: new RegExp(title) })).toHaveAttribute("href", `/projects/${id}`);
     await expect(panel).toContainText("do not add you to the project team or give you editing access");
     expect(await studentPage.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
@@ -171,7 +171,7 @@ test("staff link a verified student profile as a read-only credit", async ({ bro
     expect(await db.select().from(s.projectMemberships).where(eq(s.projectMemberships.projectId, id))).toHaveLength(0);
     expect((await db.select().from(s.projects).where(eq(s.projects.id, id)))[0]).toMatchObject({ managementMode: "ADMIN_MANAGED", maintainerUserId: null });
 
-    // Privacy: unpublishing the profile removes the credit from both surfaces.
+    // Unpublishing removes public links while retaining the student's private dashboard credit.
     await db.update(s.studentProfiles).set({ publicationStatus: "unpublished" }).where(eq(s.studentProfiles.id, profile.id));
     expect((await visitor.request.get(`${origin}/api/v1/students/${profile.id}`)).status()).toBe(404);
     await visitor.goto(`${origin}/students/${profile.id}`);
@@ -179,6 +179,6 @@ test("staff link a verified student profile as a read-only credit", async ({ bro
     await expect(visitor.getByRole("region", { name: "Credited in curated projects" })).toHaveCount(0);
     await studentPage.goto(`${origin}/student/dashboard`);
     await expect(studentPage.getByRole("heading", { name: "My profile" })).toBeVisible();
-    await expect(studentPage.getByRole("region", { name: "Credited in curated projects" })).toHaveCount(0);
+    await expect(studentPage.getByRole("region", { name: "Projects you're credited on" })).toContainText(title);
   } finally { for (const context of contexts) await context.close(); await c.client.end(); }
 });

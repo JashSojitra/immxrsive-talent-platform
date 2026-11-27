@@ -192,7 +192,7 @@ describe("administrator portal on disposable PostgreSQL 17", () => {
     await act(project.id, "publish"); expect(await queryCuratedCredits(db, profile.id)).toHaveLength(1);
     await db.update(studentProfiles).set({ publicationStatus: "unpublished" }).where(eq(studentProfiles.id, profile.id));
     expect(await queryCuratedCredits(db, profile.id)).toEqual([]);
-    expect(await adminProfileLookup(db, adminId, profile.id)).toEqual([]);
+    expect(await adminProfileLookup(db, adminId, profile.id)).toHaveLength(1);
   });
   const request = (body: unknown, origin = "https://platform.example") => new Request("https://platform.example/api/admin/projects", { method: "POST", headers: { origin, "Content-Type": "application/json" }, body: JSON.stringify(body) });
   test("API derives actor from session, rejects forged actor/role and enforces origin", async () => {

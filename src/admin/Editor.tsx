@@ -7,10 +7,12 @@ import type { Role } from "@/studio/policy";
 import type { adminGitHubSuggestions } from "./github";
 import styles from "@/components/project-editor/project-editor.module.css";
 import admin from "./admin.module.css";
+import { ScreenshotsEditor } from "@/components/project-editor/ScreenshotsEditor";
+import { verificationRequestSchema } from "@/verification/validation";
 type Suggestions = Awaited<ReturnType<typeof adminGitHubSuggestions>>;
 type RecordState = { id: string; version: number; lifecycle: string };
 type ProfileCandidate = { id: string; name: string; headline: string; program: string };
-export function AdminEditor({ initial = emptyContent, record, role, focusDemo = false }: { initial?: AdminContent; record?: RecordState; role: Role; focusDemo?: boolean }) {
+export function AdminEditor({ initial = emptyContent, record, role, focusDemo = false, creditStatuses: initialStatuses = [] }: { initial?: AdminContent; record?: RecordState; role: Role; focusDemo?: boolean; creditStatuses?: string[] }) {
   const editor = useRef<HTMLDivElement>(null);
   useEffect(() => {
     // Server-rendered fields can appear before their client handlers are hydrated.
@@ -23,8 +25,9 @@ export function AdminEditor({ initial = emptyContent, record, role, focusDemo = 
   const [matches, setMatches] = useState<Array<{ id: string; title: string; exact: boolean; adminManaged: boolean }>>([]);
   const [profileQuery, setProfileQuery] = useState(""); const [profileResults, setProfileResults] = useState<ProfileCandidate[] | null>(null);
   const [note, setNote] = useState(""); const editable = canManage(role) && current?.lifecycle !== "archived";
+  const [creditStatuses, setCreditStatuses] = useState(initialStatuses); const [bulk, setBulk] = useState("");
   const value = () => ({ ...content, technologies: tech.split(",").map(s => s.trim()).filter(Boolean), tools: tools.split(",").map(s => s.trim()).filter(Boolean) });
-  function patch<K extends keyof AdminContent>(key: K, v: AdminContent[K]) { setContent(c => ({ ...c, [key]: v })); }
+  function patch<K extends keyof AdminContent>(key: K, v: AdminContent[K]) { setContent(c => ({ ...c, [key]: v })); if (key === "credits") setCreditStatuses([]); }
   async function json(path: string, body: unknown) {
     const response = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
     const data = await response.json(); if (!response.ok) throw new Error([data.error?.message ?? "Unable to save.", ...(data.error?.details ?? []).map((d: { field: string; message: string }) => `${d.field}: ${d.message}`)].join(" ")); return data;
@@ -39,10 +42,12 @@ export function AdminEditor({ initial = emptyContent, record, role, focusDemo = 
       let saved = current;
       if (!saved) {
         const created = await json("/api/admin/projects", { content: c }); saved = { id: created.project.id, version: created.project.version, lifecycle: created.detail.lifecycle }; setCurrent(saved);
+        setCreditStatuses(created.creditStatuses ?? []);
       }
       if (current || action !== "save") {
         const data = await json(`/api/admin/projects/${saved.id}`, { action, version: saved.version, note, ...(["save", "publish"].includes(action) ? { content: c } : {}) });
         saved = { id: data.project.id, version: data.project.version, lifecycle: data.detail.lifecycle }; setCurrent(saved);
+        setCreditStatuses(data.creditStatuses ?? []);
       }
       setMessage(`Saved revision ${saved.version}. Status: ${saved.lifecycle}.`); setNote("");
       if (!record) router.replace(`/admin/projects/${saved.id}/edit`);
@@ -72,6 +77,13 @@ export function AdminEditor({ initial = emptyContent, record, role, focusDemo = 
     // Pre-fills the name only; staff still enter the role and statement from real records.
     patch("credits", [...content.credits, { name: p.name, role: "", statement: "", profileId: p.id }]);
     setMessage(`Added a linked credit for ${p.name}. Enter their project role before saving.`);
+  }
+  function addBulkCredits() {
+    const lines = bulk.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+    if (content.credits.length + lines.length > 30) { setErrors(["A project can have at most 30 credits."]); return; }
+    const rows = lines.map(line => { const [email, ...role] = line.split(","); return { name: "", role: role.join(",").trim(), statement: "", profileId: "", institutionalEmail: email.trim().toLowerCase() }; });
+    if (!rows.length || rows.some(r => !verificationRequestSchema.safeParse({ email: r.institutionalEmail }).success || !r.role)) { setErrors(["Use one email, role pair per line. Add each person's public display name in the new rows before saving."]); return; }
+    patch("credits", [...content.credits, ...rows]); setBulk(""); setMessage("Credits added. Enter a required public display name for each new credit before saving.");
   }
   function applySuggestions() {
     if (!suggestions) return;
@@ -105,11 +117,13 @@ export function AdminEditor({ initial = emptyContent, record, role, focusDemo = 
       <fieldset disabled={!editable || busy} className={styles.section}><legend>Thumbnail and gallery</legend>{field("thumbnail", "Thumbnail HTTPS URL", "url")}{field("thumbnailAlt", "Thumbnail description")}
         {content.gallery.map((g,i) => <div className={styles.row} key={i}><label htmlFor={`gallery-url-${i}`}>Gallery image {i+1} HTTPS URL</label><input id={`gallery-url-${i}`} type="url" value={g.url} onChange={e => patch("gallery", content.gallery.map((v,n) => n === i ? { ...v, url: e.target.value } : v))} /><label htmlFor={`gallery-alt-${i}`}>Gallery image {i+1} description</label><input id={`gallery-alt-${i}`} value={g.alt} onChange={e => patch("gallery", content.gallery.map((v,n) => n === i ? { ...v, alt: e.target.value } : v))} /><button type="button" onClick={() => patch("gallery", content.gallery.filter((_,n) => n !== i))}>Remove gallery image {i+1}</button></div>)}<button type="button" disabled={content.gallery.length >= 12} onClick={() => patch("gallery", [...content.gallery, { url: "", alt: "" }])}>Add gallery image</button>
       </fieldset>
-      <fieldset disabled={!editable || busy} className={styles.section}><legend>Descriptive contributor credits</legend><p>Credits do not create accounts, verify identity, grant ownership or generate personal skills. Link only a legitimate existing public profile relationship; leave the profile ID empty for manual credits.</p>
-        <div className={admin.profileLookup}><label htmlFor="credit-profile-search">Find a verified public profile</label><input id="credit-profile-search" type="search" value={profileQuery} onChange={e => setProfileQuery(e.target.value)} onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); if (profileQuery.trim().length >= 2) void findProfiles(); } }} /><button type="button" disabled={busy || profileQuery.trim().length < 2} onClick={findProfiles}>Search profiles</button>
-          {profileResults && (profileResults.length ? <ul aria-label="Matching verified public profiles">{profileResults.map(p => <li key={p.id}><span>{p.name}{p.headline ? ` — ${p.headline}` : ""}{p.program ? ` (${p.program})` : ""}</span> <button type="button" disabled={content.credits.some(c => c.profileId.toLowerCase() === p.id)} onClick={() => linkProfile(p)}>Add linked credit for {p.name}</button></li>)}</ul> : <p role="status">No verified public profiles match. Students must verify their affiliation and publish their profile before they can be linked; a manual credit can still be added.</p>)}
+      <ScreenshotsEditor projectId={current?.id} disabled={!editable || busy} />
+      <fieldset disabled={!editable || busy} className={styles.section}><legend>Descriptive contributor credits</legend><p>Each credit needs a public display name and role. Algoma emails are private to staff and automatically link verified student accounts. Credits grant no project ownership or editing access. Unpublished profiles appear as plain-text names publicly.</p>
+        <div className={admin.profileLookup}><label htmlFor="credit-profile-search">Find a student profile by name</label><input id="credit-profile-search" type="search" value={profileQuery} onChange={e => setProfileQuery(e.target.value)} onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); if (profileQuery.trim().length >= 2) void findProfiles(); } }} /><button type="button" disabled={busy || profileQuery.trim().length < 2} onClick={findProfiles}>Search profiles</button>
+          {profileResults && (profileResults.length ? <ul aria-label="Matching student profiles">{profileResults.map(p => <li key={p.id}><span>{p.name}{p.headline ? ` — ${p.headline}` : ""}{p.program ? ` (${p.program})` : ""}</span> <button type="button" disabled={content.credits.some(c => c.profileId.toLowerCase() === p.id)} onClick={() => linkProfile(p)}>Add linked credit for {p.name}</button></li>)}</ul> : <p role="status">No profiles match. Add an Algoma email credit to link a student when they join, or add a descriptive credit without a link.</p>)}
         </div>
-        {content.credits.map((c,i) => <div className={styles.row} key={i}>{([['name','Name'],['role','Project role'],['statement','Contribution description'],['profileId','Public profile internal ID (optional)']] as const).map(([key,label]) => <div key={key}><label htmlFor={`credit-${i}-${key}`}>{label} — credit {i+1}</label><input id={`credit-${i}-${key}`} value={c[key]} onChange={e => patch("credits", content.credits.map((v,n) => n === i ? { ...v, [key]: e.target.value } : v))} /></div>)}<button type="button" onClick={() => patch("credits", content.credits.filter((_,n) => n !== i))}>Remove credit {i+1}</button></div>)}<button type="button" disabled={content.credits.length >= 30} onClick={() => patch("credits", [...content.credits, { name: "", role: "", statement: "", profileId: "" }])}>Add contributor credit</button>
+        {content.credits.map((c,i) => <div className={`${styles.row} ${admin.creditRow}`} key={i}>{([['name','Name'],['role','Project role'],['statement','Contribution description'],['profileId','Profile internal ID (optional)'],['institutionalEmail','Algoma email (staff only, optional)']] as const).map(([key,label]) => <div key={key}><label htmlFor={`credit-${i}-${key}`}>{label} — credit {i+1}</label><input id={`credit-${i}-${key}`} value={c[key] ?? ""} onChange={e => patch("credits", content.credits.map((v,n) => n === i ? { ...v, [key]: e.target.value } : v))} /></div>)}<p>{creditStatuses[i] ?? "Save to check this credit"}</p><button type="button" onClick={() => patch("credits", content.credits.filter((_,n) => n !== i))}>Remove credit {i+1}</button></div>)}<button type="button" disabled={content.credits.length >= 30} onClick={() => patch("credits", [...content.credits, { name: "", role: "", statement: "", profileId: "" }])}>Add contributor credit</button>
+        <label htmlFor="bulk-credits">Bulk add credits (email, role)</label><textarea id="bulk-credits" value={bulk} onChange={e => setBulk(e.target.value)} /><p>Add public display names to the rows after adding them.</p><button type="button" disabled={!bulk.trim()} onClick={addBulkCredits}>Add pasted credits</button>
       </fieldset>
       <fieldset disabled={!editable || busy} className={styles.section}><legend>Presentation order</legend><label className={styles.choice}><input type="checkbox" checked={content.featured} onChange={e => patch("featured", e.target.checked)} />Featured showcase</label><label htmlFor="admin-displayOrder">Display order (lower first)</label><input id="admin-displayOrder" type="number" min={0} max={100000} value={content.displayOrder} onChange={e => patch("displayOrder", Number(e.target.value))} /></fieldset>
       {canManage(role) && <section className={`${styles.publication} ${styles.section}`}><h2>Publication and lifecycle</h2><p>Publishing makes the saved project immediately public. Updating published content is immediate. Archiving hides the project; restoring returns a private draft.</p><label htmlFor="change-note">Change note / operational reference (optional)</label><textarea id="change-note" maxLength={2000} value={note} onChange={e => setNote(e.target.value)} disabled={busy} /><div className={styles.actions}>

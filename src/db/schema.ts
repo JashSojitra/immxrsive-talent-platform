@@ -527,7 +527,7 @@ export const affiliationVerificationRateLimits = pgTable(
 );
 
 const bytea = customType<{ data: Buffer; driverData: Buffer }>({ dataType: () => "bytea" });
-export const mediaKindEnum = pgEnum("media_kind", ["avatar", "article_cover", "article_inline"]);
+export const mediaKindEnum = pgEnum("media_kind", ["avatar", "article_cover", "article_inline", "project_screenshot"]);
 export const mediaAssets = pgTable("media_assets", {
   id: uuid("id").defaultRandom().primaryKey(),
   ownerUserId: text("owner_user_id").notNull().references(() => authUsers.id, { onDelete: "restrict" }),
@@ -778,6 +778,24 @@ export const adminCreditLinks = pgTable("admin_credit_links", {
   projectId: text("project_id").notNull().references(() => adminProjectDetails.projectId, { onDelete: "restrict" }),
   profileId: uuid("profile_id").notNull().references(() => studentProfiles.id, { onDelete: "restrict" }),
 }, t => [primaryKey({ columns: [t.projectId, t.profileId] })]).enableRLS();
+export const adminCreditEmails = pgTable("admin_credit_emails", {
+  projectId: text("project_id").notNull().references(() => adminProjectDetails.projectId, { onDelete: "cascade" }),
+  institutionalEmail: text("institutional_email").notNull(),
+  creditIndex: integer("credit_index").notNull(),
+  displayName: text("display_name").notNull(),
+  role: text("role").notNull(), statement: text("statement").notNull(),
+  createdBy: text("created_by").notNull().references(() => authUsers.id, { onDelete: "restrict" }),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+}, t => [primaryKey({ columns: [t.projectId, t.institutionalEmail] }), uniqueIndex("admin_credit_email_position_unique").on(t.projectId, t.creditIndex), check("admin_credit_email_normalized", sql`${t.institutionalEmail} = lower(trim(${t.institutionalEmail}))`), check("admin_credit_email_name_required", sql`length(trim(${t.displayName})) BETWEEN 1 AND 160`)]).enableRLS();
+export const projectScreenshots = pgTable("project_screenshots", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  projectId: text("project_id").notNull().references(() => projects.id, { onDelete: "cascade" }),
+  mediaId: uuid("media_id").notNull().references(() => mediaAssets.id, { onDelete: "restrict" }),
+  altText: text("alt_text").notNull(), caption: text("caption").default("").notNull(),
+  displayOrder: integer("display_order").notNull(),
+  createdBy: text("created_by").notNull().references(() => authUsers.id, { onDelete: "restrict" }),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+}, t => [index("project_screenshots_order_idx").on(t.projectId, t.displayOrder), check("project_screenshot_alt_required", sql`length(trim(${t.altText})) BETWEEN 1 AND 300`), check("project_screenshot_caption_limit", sql`length(${t.caption}) <= 300`), check("project_screenshot_order_range", sql`${t.displayOrder} BETWEEN 0 AND 9`)]).enableRLS();
 export const adminEvents = pgTable("admin_events", {
   id: uuid("id").primaryKey().defaultRandom(),
   projectId: text("project_id").references(() => adminProjectDetails.projectId, { onDelete: "restrict" }),

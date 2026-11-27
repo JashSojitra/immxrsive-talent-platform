@@ -2,6 +2,7 @@ import "server-only";
 
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import { betterAuth } from "better-auth";
+import { creditSessionHooks } from "@/admin/credit-links";
 
 import {
   GITHUB_OAUTH_SCOPES,
@@ -58,6 +59,7 @@ function createAuth() {
       expiresIn: 60 * 60 * 24 * 7,
       updateAge: 60 * 60 * 24,
     },
+    databaseHooks: creditSessionHooks(getRuntimeDatabase),
     advanced: {
       cookiePrefix: "immxrsive",
     },

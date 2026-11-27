@@ -1,10 +1,11 @@
 "use client";
-import Image from "next/image";
+import { ProjectGallery } from "@/components/project-detail/ProjectGallery";
+import type { Screenshot } from "@/projects/screenshots-policy";
 import { useEffect, useRef, useState } from "react";
 import { safeAdminUrl } from "./policy";
 import type { PublicAdminPresentation } from "./public";
 import styles from "@/components/project-detail/project-demo.module.css";
-export function AdminExperience({ content: c }: { content: PublicAdminPresentation }) {
+export function AdminExperience({ content: c, screenshots = [] }: { content: PublicAdminPresentation; screenshots?: Screenshot[] }) {
   const [active, setActive] = useState(false); const [status, setStatus] = useState(""); const [failed, setFailed] = useState<string[]>([]);
   const frame = useRef<HTMLIFrameElement>(null); const launch = useRef<HTMLButtonElement>(null);
   const live = safeAdminUrl(c.liveUrl); const video = safeAdminUrl(c.videoUrl);
@@ -35,9 +36,7 @@ export function AdminExperience({ content: c }: { content: PublicAdminPresentati
     {active && live && <iframe title={`${c.title} isolated experience`} ref={frame} src={live} className={styles.frame} sandbox="allow-scripts" referrerPolicy="no-referrer" allowFullScreen allow="fullscreen; camera 'none'; microphone 'none'; geolocation 'none'; payment 'none'; usb 'none'; xr-spatial-tracking 'none'" onLoad={() => setStatus("Frame navigation finished. If framing is blocked or the experience is blank, launch externally or use the fallback below.")} onError={() => setStatus("Experience could not load. Use external launch or fallback evidence.")} />}
     {video && <article className={styles.evidence}><h3>Video walkthrough</h3><p>{c.videoDescription}</p>{/\.(mp4|webm|ogv)(\?|$)/i.test(new URL(video).pathname) && !failed.includes(video) && <video src={video} controls playsInline preload="none" aria-label={`${c.title} video walkthrough`} onError={() => fail(video)} />}{failed.includes(video) && <p>Video unavailable here. Use the external link or fallback narrative.</p>}{external(video, "Watch walkthrough")}</article>}
     <div className={styles.fallback}><h3>Alternate evidence</h3><p>{c.fallbackText || "Read the project narrative and source links below."}</p><p>On mobile or unsupported devices, use the video, gallery and external links. Some hosts block framing; their availability cannot be confirmed by this player.</p>{safeAdminUrl(c.fallbackUrl) && external(c.fallbackUrl, "Open fallback content")}
-      {[...(c.thumbnail ? [{ url: c.thumbnail, alt: c.thumbnailAlt }] : []), ...c.gallery].filter(g => safeAdminUrl(g.url)).map((g, i) => <figure className={styles.evidence} key={`${g.url}-${i}`}>
-        {!failed.includes(g.url) ? <Image unoptimized src={g.url} alt={g.alt} width={900} height={506} loading="lazy" referrerPolicy="no-referrer" onError={() => fail(g.url)} /> : <p>Image unavailable. {g.alt}</p>}<figcaption>{g.alt}</figcaption>
-      </figure>)}
+      <ProjectGallery images={[...screenshots, ...[...(c.thumbnail ? [{ url: c.thumbnail, alt: c.thumbnailAlt }] : []), ...c.gallery].filter(g => safeAdminUrl(g.url)).map(g => ({ url: g.url, altText: g.alt, caption: g.alt }))]} />
     </div>
   </section>;
 }

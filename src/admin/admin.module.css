@@ -48,3 +48,7 @@
 .profileLookup { margin:8px 0 20px; padding:16px; border:1px dashed var(--line); }
 .profileLookup ul { list-style:none; margin:12px 0 0; padding:0; display:grid; gap:8px; }
 .profileLookup li { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px; }
+
+.creditRow { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 1rem; }
+.creditRow > p, .creditRow > button { grid-column: 1 / -1; }
+@media(max-width:760px) { .creditRow { grid-template-columns: minmax(0, 1fr); } }

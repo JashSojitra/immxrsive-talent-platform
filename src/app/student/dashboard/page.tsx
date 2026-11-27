@@ -26,7 +26,7 @@ export default async function StudentDashboardPage() {
   const profile = verified ? await getPrivateStudentProfile(db, user.id) : null;
   const relationships = profile ? await listProjectRelationships({ db, actorUserId: user.id }) : [];
   // Read-only: staff credits grant no membership, editing or ownership.
-  const credits = profile ? await queryCuratedCredits(db, profile.id) : [];
+  const credits = profile ? await queryCuratedCredits(db, profile.id, true) : [];
   const pendingStories = await studentStoriesForApproval(db, user.id);
   const projects = relationships.filter(project => project.state === "accepted");
   const invitations = relationships.filter(project => project.state === "pending" || project.pendingMaintenance);
@@ -71,9 +71,9 @@ export default async function StudentDashboardPage() {
       </section>
     </div>
     {credits.length > 0 && <section className={`${styles.panel} ${styles.credits}`} aria-labelledby="credits-heading">
-      <div className={styles.sectionHeading}><h2 id="credits-heading">Credited in curated projects</h2><span className={styles.badge}>Read-only</span></div>
-      <p>Platform staff credited your public profile on these showcases. Credits link to your portfolio but do not add you to the project team or give you editing access. Contact platform staff to correct or remove a credit.</p>
-      <ul className={styles.projects}>{credits.map(credit => <li key={credit.projectId}><Link href={`/projects/${credit.projectId}`}>{credit.title}<span aria-hidden="true">↗</span></Link><p>{credit.roles.join(" / ") || "Contributor"} · Staff-curated credit</p></li>)}</ul>
+      <div className={styles.sectionHeading}><h2 id="credits-heading">Projects you&apos;re credited on</h2><span className={styles.badge}>Read-only</span></div>
+      <p>Platform staff credited you on these showcases. Credits link to your portfolio only while your profile is public; they do not add you to the project team or give you editing access. Contact platform staff to correct or remove a credit.</p>
+      <ul className={styles.projects}>{credits.map(credit => <li key={credit.projectId}><>{credit.published === false ? <strong>{credit.title} · Not public yet</strong> : <Link href={`/projects/${credit.projectId}`}>{credit.title}<span aria-hidden="true">↗</span></Link>}</><p>{credit.roles.join(" / ") || "Contributor"} · Staff-curated credit</p></li>)}</ul>
     </section>}
     <details className={styles.account}><summary>Account & sign-in details</summary><p>{user.name} · {user.email}</p>{verified && <p>Verified email: {verification.institutionalEmail}</p>}<p>Account reference: <code>{getInternalUserId(user)}</code></p><SignOutButton /></details>
   </main>;

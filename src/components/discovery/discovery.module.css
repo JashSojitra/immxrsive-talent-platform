@@ -28,3 +28,5 @@
 @media (hover:hover) and (pointer:fine) { .projectCard { transition:border-color var(--motion-fast) ease; } .projectCard:hover { border-color:var(--signal); } }
 @media(max-width:1000px) { .grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .filters { grid-template-columns:1fr 1fr; } }
 @media(max-width:650px) { .page { padding-top:32px; } .grid,.paths,.filters { grid-template-columns:1fr; } .filters { padding:20px; } .summary { align-items:flex-start; } .projectCard { padding:24px; } }
+
+.projectThumbnail { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; border-radius: .75rem; margin-bottom: 1rem; }

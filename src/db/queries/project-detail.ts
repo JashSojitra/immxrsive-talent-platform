@@ -1,4 +1,5 @@
 import { queryAdminPublicProject } from "@/admin/public";
+import { queryProjectScreenshots } from "@/projects/screenshot-queries";
 import { and, asc, eq } from "drizzle-orm";
 
 import type { Database } from "@/db/client";
@@ -28,6 +29,7 @@ export interface PublicProjectAsset {
 }
 
 export interface PublicProjectDetail {
+  screenshots?: import("@/projects/screenshots-policy").Screenshot[];
   id: string;
   title: string;
   description: string;
@@ -68,7 +70,7 @@ export async function queryProjectPresentation(db: Database, projectId: string, 
   if (!project) return null;
   if (project.origin === "admin") return queryAdminPublicProject(db, projectId);
 
-  const [technologyRows, contributorRows, assetRows, accountRows, structuredAssets] = await Promise.all([
+  const [technologyRows, contributorRows, assetRows, accountRows, structuredAssets, screenshots] = await Promise.all([
     db
       .select({ name: projectTechnologies.technologyName })
       .from(projectTechnologies)
@@ -105,6 +107,7 @@ export async function queryProjectPresentation(db: Database, projectId: string, 
       .orderBy(asc(projectAssets.displayOrder), asc(projectAssets.id)),
     queryAccountContributors(db, projectId),
     queryStructuredProjectAssets(db, [projectId]),
+    queryProjectScreenshots(db, [projectId]),
   ]);
 
   return {
@@ -116,5 +119,6 @@ export async function queryProjectPresentation(db: Database, projectId: string, 
       profileUrl: `/students/${contributor.studentId}`,
     })), ...accountRows.map(({ statement, ...contributor }) => ({ ...contributor, profileUrl: `/students/${contributor.studentId}`, ...(statement ? { statement } : {}) }))],
     assets: [...assetRows, ...publicAssets(structuredAssets, projectId)],
+    screenshots,
   };
 }
