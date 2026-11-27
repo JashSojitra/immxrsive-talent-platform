@@ -8,7 +8,7 @@ import { createDatabase } from "../../src/db/client";
 import * as s from "../../src/db/schema";
 const origin = "http://127.0.0.1:3100";
 // Scoped captures exclude the sticky site header outside the captured panel.
-const captureStyle = "body > header { visibility: hidden !important; }";
+const captureStyle = "body > header, a[href='#project-workspace'] { visibility: hidden !important; }";
 test("staff credit statuses, student credit card, screenshot uploads and public lightbox", async ({ page, browser }, info) => {
   test.setTimeout(120000);
   const c = createDatabase(process.env.TEST_DATABASE_URL!); const db = c.db; const contexts: BrowserContext[] = []; const owners: string[] = [];
