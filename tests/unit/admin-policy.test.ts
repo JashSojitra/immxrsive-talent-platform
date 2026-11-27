@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { accessCommandSchema, adminCommandSchema, adminContentSchema, canManage, emptyContent, publicationIssues, safeAdminUrl } from "@/admin/policy";
 import { adminGitHubSuggestions } from "@/admin/github";
 import { projectPresentation } from "@/admin/public";
