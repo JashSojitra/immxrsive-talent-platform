@@ -1,3 +1,4 @@
+import { approvedInstitutionalDomains } from "@/verification/config";
 import { staffArticles } from "@/updates/service";
 import { ArticleEditor } from "@/updates/Editor";
 import { ArticleList } from "@/updates/List";
@@ -46,12 +47,12 @@ export default async function AdminPage({ params, searchParams }: { params: Prom
   }
   if (section[0] === "projects") {
     if (section.length === 1) { const data = await adminList(db, user.id); const filter = (await searchParams).status; return shell("Project library", <><p>Manage staff-curated project presentations. Student-maintained projects remain in their owners&apos; workspaces.</p>{canManage(identity.role) && <Link href="/admin/projects/new">Create / import project</Link>}<AdminProjectList rows={data.projects} initialStatus={["draft", "published", "unpublished", "archived"].includes(filter ?? "") ? filter : "all"} /></>); }
-    if (section[1] === "new" && section.length === 2) return shell("Create a project", canManage(identity.role) ? <AdminEditor role={identity.role} /> : <p>Your curator role can review existing projects. Creation requires XR admin or platform super admin access.</p>);
+    if (section[1] === "new" && section.length === 2) return shell("Create a project", canManage(identity.role) ? <AdminEditor approvedDomains={[...approvedInstitutionalDomains()]} role={identity.role} /> : <p>Your curator role can review existing projects. Creation requires XR admin or platform super admin access.</p>);
     if (section.length > 3 || section[2] && !["edit", "preview", "demo"].includes(section[2])) notFound();
     let detail;
     try { detail = await adminDetail(db, user.id, section[1]); } catch (e) { if (e instanceof ProjectError && e.status === 404) notFound(); throw e; }
     if (section[2] === "preview") return <ProjectDetailView project={{ ...projectPresentation(detail.project.id, detail.detail.content), screenshots: detail.screenshots }} preview />;
-    return shell(detail.project.title, <><AdminEditor creditStatuses={detail.creditStatuses} initial={detail.detail.content} record={{ id: detail.project.id, version: detail.project.version, lifecycle: detail.detail.lifecycle }} role={detail.role} focusDemo={section[2] === "demo"} /><h2>Project activity</h2><EventList events={detail.events} /></>);
+    return shell(detail.project.title, <><AdminEditor approvedDomains={[...approvedInstitutionalDomains()]} creditStatuses={detail.creditStatuses} initial={detail.detail.content} record={{ id: detail.project.id, version: detail.project.version, lifecycle: detail.detail.lifecycle }} role={detail.role} focusDemo={section[2] === "demo"} /><h2>Project activity</h2><EventList events={detail.events} /></>);
   }
   if (section.join("/") === "activity") return shell("Activity ledger", <><p>The latest 100 staff actions, with reasons and saved revisions for traceability.</p><EventList events={await adminActivity(db, user.id)} /></>);
   if (section.join("/") === "reviews") {

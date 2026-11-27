@@ -8,7 +8,7 @@ import { createDatabase } from "../../src/db/client";
 import * as s from "../../src/db/schema";
 const origin = "http://127.0.0.1:3100";
 // Scoped captures exclude the sticky site header outside the captured panel.
-const captureStyle = "body > header, a[href='#project-workspace'] { visibility: hidden !important; }";
+const captureStyle = "body > header, a[href='#project-workspace'], a[href='#admin-main'] { visibility: hidden !important; }";
 test("staff credit statuses, student credit card, screenshot uploads and public lightbox", async ({ page, browser }, info) => {
   test.setTimeout(120000);
   const c = createDatabase(process.env.TEST_DATABASE_URL!); const db = c.db; const contexts: BrowserContext[] = []; const owners: string[] = [];
@@ -34,9 +34,13 @@ test("staff credit statuses, student credit card, screenshot uploads and public 
     await page.getByLabel("Summary", { exact: true }).fill("A disposable fixture for project credits and screenshots.");
     await page.getByLabel("Full description", { exact: true }).fill("Local browser fixture only. No production content."); await page.getByLabel("Fallback narrative (required to publish)").fill("Test-only project narrative.");
     const futureEmail = `future-${randomUUID()}@algomau.ca`;
-    await page.getByLabel("Bulk add credits (email, role)").fill(`${verifiedEmail}, Designer\n${privateEmail}, Developer\n${futureEmail}, Researcher`);
+    await page.getByLabel("Bulk add credits (name, email, role)").fill(",invalid@algomau.ca,Designer\nFixture,bad@example.test,Developer");
     await page.getByRole("button", { name: "Add pasted credits" }).click();
-    for (const [i,name] of ["Published fixture student", "Private fixture student", "Future fixture student"].entries()) await page.getByLabel(`Name — credit ${i + 1}`, { exact: true }).fill(name);
+    await expect(page.locator("#bulk-credit-errors")).toContainText("Line 1"); await expect(page.locator("#bulk-credit-errors")).toContainText("Line 2");
+    await page.getByLabel("Bulk add credits (name, email, role)").fill(`Published fixture student, ${verifiedEmail}, Designer\nPrivate fixture student, ${privateEmail}, Developer\nFuture fixture student, ${futureEmail}, Researcher`);
+    await page.getByRole("button", { name: "Add pasted credits" }).click();
+    await expect(page.getByLabel("Name — credit 1", { exact: true })).toHaveValue("Published fixture student");
+    await expect(page.getByLabel("Profile internal ID (optional) — credit 1")).not.toBeVisible();
     await page.getByRole("button", { name: "Publish directly", exact: true }).click();
     await expect(page).toHaveURL(/\/admin\/projects\/[a-f0-9-]{36}\/edit$/); await page.reload();
     const projectId = page.url().split('/')[5];
@@ -45,7 +49,9 @@ test("staff credit statuses, student credit card, screenshot uploads and public 
     await creditGroup.screenshot({ style: captureStyle, path: `test-results/admin-credit-statuses-${info.project.name}.png` });
     const adminShots = page.getByRole("region", { name: "Screenshots", exact: true });
     const file = await sharp({ create: { width: 1000, height: 650, channels: 3, background: "#582c83" } }).png().toBuffer();
-    await adminShots.locator('input[type="file"]').setInputFiles([{ name: "studio-fixture.png", mimeType: "image/png", buffer: file }, { name: "detail-fixture.png", mimeType: "image/png", buffer: await sharp({ create: { width: 1000, height: 650, channels: 3, background: "#e31c79" } }).png().toBuffer() }]);
+    await adminShots.locator('input[type="file"]').focus(); await expect(adminShots.locator('input[type="file"]')).toBeFocused();
+    const chooserEvent = page.waitForEvent("filechooser"); await page.keyboard.press("Space"); const chooser = await chooserEvent;
+    await chooser.setFiles([{ name: "studio-fixture.png", mimeType: "image/png", buffer: file }, { name: "detail-fixture.png", mimeType: "image/png", buffer: await sharp({ create: { width: 1000, height: 650, channels: 3, background: "#e31c79" } }).png().toBuffer() }]);
     await adminShots.getByRole("button", { name: "Upload screenshots" }).click(); await expect(adminShots.getByRole("status")).toContainText("alt description");
     await adminShots.getByLabel("Alt text for selected image 1").fill("Purple interface test graphic"); await adminShots.getByLabel("Caption for selected image 1").fill("Test-only studio overview");
     await adminShots.getByLabel("Alt text for selected image 2").fill("Pink detail test graphic"); await adminShots.getByRole("button", { name: "Upload screenshots" }).click(); await expect(adminShots.getByRole("status")).toHaveText("Screenshots uploaded.");

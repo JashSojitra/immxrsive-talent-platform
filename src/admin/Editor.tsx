@@ -8,11 +8,11 @@ import type { adminGitHubSuggestions } from "./github";
 import styles from "@/components/project-editor/project-editor.module.css";
 import admin from "./admin.module.css";
 import { ScreenshotsEditor } from "@/components/project-editor/ScreenshotsEditor";
-import { verificationRequestSchema } from "@/verification/validation";
+import { parseBulkCredits } from "./bulk-credits";
 type Suggestions = Awaited<ReturnType<typeof adminGitHubSuggestions>>;
 type RecordState = { id: string; version: number; lifecycle: string };
 type ProfileCandidate = { id: string; name: string; headline: string; program: string };
-export function AdminEditor({ initial = emptyContent, record, role, focusDemo = false, creditStatuses: initialStatuses = [] }: { initial?: AdminContent; record?: RecordState; role: Role; focusDemo?: boolean; creditStatuses?: string[] }) {
+export function AdminEditor({ initial = emptyContent, record, role, focusDemo = false, creditStatuses: initialStatuses = [], approvedDomains = ["algomau.ca"] }: { initial?: AdminContent; record?: RecordState; role: Role; focusDemo?: boolean; creditStatuses?: string[]; approvedDomains?: string[] }) {
   const editor = useRef<HTMLDivElement>(null);
   useEffect(() => {
     // Server-rendered fields can appear before their client handlers are hydrated.
@@ -25,7 +25,7 @@ export function AdminEditor({ initial = emptyContent, record, role, focusDemo = 
   const [matches, setMatches] = useState<Array<{ id: string; title: string; exact: boolean; adminManaged: boolean }>>([]);
   const [profileQuery, setProfileQuery] = useState(""); const [profileResults, setProfileResults] = useState<ProfileCandidate[] | null>(null);
   const [note, setNote] = useState(""); const editable = canManage(role) && current?.lifecycle !== "archived";
-  const [creditStatuses, setCreditStatuses] = useState(initialStatuses); const [bulk, setBulk] = useState("");
+  const [creditStatuses, setCreditStatuses] = useState(initialStatuses); const [bulk, setBulk] = useState(""); const [bulkErrors, setBulkErrors] = useState<{ line: number; message: string }[]>([]);
   const value = () => ({ ...content, technologies: tech.split(",").map(s => s.trim()).filter(Boolean), tools: tools.split(",").map(s => s.trim()).filter(Boolean) });
   function patch<K extends keyof AdminContent>(key: K, v: AdminContent[K]) { setContent(c => ({ ...c, [key]: v })); if (key === "credits") setCreditStatuses([]); }
   async function json(path: string, body: unknown) {
@@ -79,11 +79,12 @@ export function AdminEditor({ initial = emptyContent, record, role, focusDemo = 
     setMessage(`Added a linked credit for ${p.name}. Enter their project role before saving.`);
   }
   function addBulkCredits() {
-    const lines = bulk.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
-    if (content.credits.length + lines.length > 30) { setErrors(["A project can have at most 30 credits."]); return; }
-    const rows = lines.map(line => { const [email, ...role] = line.split(","); return { name: "", role: role.join(",").trim(), statement: "", profileId: "", institutionalEmail: email.trim().toLowerCase() }; });
-    if (!rows.length || rows.some(r => !verificationRequestSchema.safeParse({ email: r.institutionalEmail }).success || !r.role)) { setErrors(["Use one email, role pair per line. Add each person's public display name in the new rows before saving."]); return; }
-    patch("credits", [...content.credits, ...rows]); setBulk(""); setMessage("Credits added. Enter a required public display name for each new credit before saving.");
+    const parsed = parseBulkCredits(bulk, approvedDomains);
+    setBulkErrors(parsed.errors);
+    if (parsed.errors.length) return;
+    if (!parsed.credits.length) { setBulkErrors([{ line: 1, message: "Enter name, email, role." }]); return; }
+    if (content.credits.length + parsed.credits.length > 30) { setBulkErrors([{ line: 1, message: "A project can have at most 30 credits." }]); return; }
+    patch("credits", [...content.credits, ...parsed.credits]); setBulk(""); setMessage(`Added ${parsed.credits.length} credits.`);
   }
   function applySuggestions() {
     if (!suggestions) return;
@@ -122,8 +123,8 @@ export function AdminEditor({ initial = emptyContent, record, role, focusDemo = 
         <div className={admin.profileLookup}><label htmlFor="credit-profile-search">Find a student profile by name</label><input id="credit-profile-search" type="search" value={profileQuery} onChange={e => setProfileQuery(e.target.value)} onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); if (profileQuery.trim().length >= 2) void findProfiles(); } }} /><button type="button" disabled={busy || profileQuery.trim().length < 2} onClick={findProfiles}>Search profiles</button>
           {profileResults && (profileResults.length ? <ul aria-label="Matching student profiles">{profileResults.map(p => <li key={p.id}><span>{p.name}{p.headline ? ` — ${p.headline}` : ""}{p.program ? ` (${p.program})` : ""}</span> <button type="button" disabled={content.credits.some(c => c.profileId.toLowerCase() === p.id)} onClick={() => linkProfile(p)}>Add linked credit for {p.name}</button></li>)}</ul> : <p role="status">No profiles match. Add an Algoma email credit to link a student when they join, or add a descriptive credit without a link.</p>)}
         </div>
-        {content.credits.map((c,i) => <div className={`${styles.row} ${admin.creditRow}`} key={i}>{([['name','Name'],['role','Project role'],['statement','Contribution description'],['profileId','Profile internal ID (optional)'],['institutionalEmail','Algoma email (staff only, optional)']] as const).map(([key,label]) => <div key={key}><label htmlFor={`credit-${i}-${key}`}>{label} — credit {i+1}</label><input id={`credit-${i}-${key}`} value={c[key] ?? ""} onChange={e => patch("credits", content.credits.map((v,n) => n === i ? { ...v, [key]: e.target.value } : v))} /></div>)}<p>{creditStatuses[i] ?? "Save to check this credit"}</p><button type="button" onClick={() => patch("credits", content.credits.filter((_,n) => n !== i))}>Remove credit {i+1}</button></div>)}<button type="button" disabled={content.credits.length >= 30} onClick={() => patch("credits", [...content.credits, { name: "", role: "", statement: "", profileId: "" }])}>Add contributor credit</button>
-        <label htmlFor="bulk-credits">Bulk add credits (email, role)</label><textarea id="bulk-credits" value={bulk} onChange={e => setBulk(e.target.value)} /><p>Add public display names to the rows after adding them.</p><button type="button" disabled={!bulk.trim()} onClick={addBulkCredits}>Add pasted credits</button>
+        {content.credits.map((c,i) => <div className={`${styles.row} ${admin.creditRow}`} key={i}>{([['name','Name'],['role','Project role'],['statement','Contribution description'],['institutionalEmail','Algoma email (staff only, optional)']] as const).map(([key,label]) => <div key={key}><label htmlFor={`credit-${i}-${key}`}>{label} — credit {i+1}</label><input id={`credit-${i}-${key}`} value={c[key] ?? ""} onChange={e => patch("credits", content.credits.map((v,n) => n === i ? { ...v, [key]: e.target.value } : v))} /></div>)}<details className={admin.advancedCredit}><summary>Advanced</summary><label htmlFor={`credit-${i}-profileId`}>Profile internal ID (optional) — credit {i+1}</label><input id={`credit-${i}-profileId`} value={c.profileId} onChange={e => patch("credits", content.credits.map((v,n) => n === i ? { ...v, profileId: e.target.value } : v))} /></details><p>{creditStatuses[i] ?? "Save to check this credit"}</p><button type="button" onClick={() => patch("credits", content.credits.filter((_,n) => n !== i))}>Remove credit {i+1}</button></div>)}<button type="button" disabled={content.credits.length >= 30} onClick={() => patch("credits", [...content.credits, { name: "", role: "", statement: "", profileId: "" }])}>Add contributor credit</button>
+        <label htmlFor="bulk-credits">Bulk add credits (name, email, role)</label><textarea id="bulk-credits" value={bulk} aria-invalid={bulkErrors.length > 0} aria-describedby="bulk-credit-help bulk-credit-errors" onChange={e => { setBulk(e.target.value); setBulkErrors([]); }} /><p id="bulk-credit-help">One name, Algoma email, and project role per line. All three are required.</p><ul id="bulk-credit-errors" role={bulkErrors.length ? "alert" : undefined}>{bulkErrors.map(error => <li key={error.line}>Line {error.line}: {error.message}</li>)}</ul><button type="button" disabled={!bulk.trim()} onClick={addBulkCredits}>Add pasted credits</button>
       </fieldset>
       <fieldset disabled={!editable || busy} className={styles.section}><legend>Presentation order</legend><label className={styles.choice}><input type="checkbox" checked={content.featured} onChange={e => patch("featured", e.target.checked)} />Featured showcase</label><label htmlFor="admin-displayOrder">Display order (lower first)</label><input id="admin-displayOrder" type="number" min={0} max={100000} value={content.displayOrder} onChange={e => patch("displayOrder", Number(e.target.value))} /></fieldset>
       {canManage(role) && <section className={`${styles.publication} ${styles.section}`}><h2>Publication and lifecycle</h2><p>Publishing makes the saved project immediately public. Updating published content is immediate. Archiving hides the project; restoring returns a private draft.</p><label htmlFor="change-note">Change note / operational reference (optional)</label><textarea id="change-note" maxLength={2000} value={note} onChange={e => setNote(e.target.value)} disabled={busy} /><div className={styles.actions}>

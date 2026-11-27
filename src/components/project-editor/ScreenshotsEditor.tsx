@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { screenshotTextSchema, type Screenshot, type ScreenshotState } from "@/projects/screenshots-policy";
 import styles from "./project-editor.module.css";
 type PendingImage = { file: File; altText: string; caption: string };
@@ -10,7 +10,7 @@ export function ScreenshotsEditor({ projectId, disabled = false }: { projectId?:
   const [pending, setPending] = useState<PendingImage[]>([]);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
-  const working = useRef(false);
+  const working = useRef(false); const fileId = useId();
   const dirty = Boolean(saved && JSON.stringify(items) !== JSON.stringify(saved.screenshots));
   useEffect(() => {
     let alive = true;
@@ -54,7 +54,7 @@ export function ScreenshotsEditor({ projectId, disabled = false }: { projectId?:
     <h2>Screenshots</h2><p>Upload up to 10 real project images. Describe each image before uploading; captions are optional. Changes here save separately from the project narrative.</p>
     {!projectId ? <p>Save the project first to add screenshots.</p> : <fieldset disabled={disabled || busy || !saved}>
       <div className={styles.dropZone} onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); if (!disabled && !busy && !dirty) choose([...e.dataTransfer.files]); }}>
-        <label>Choose screenshots or drop images here<input type="file" accept="image/jpeg,image/png,image/webp" multiple disabled={dirty || items.length + pending.length >= 10} onChange={e => { choose([...e.target.files ?? []]); e.target.value = ""; }} /></label>
+        <label className={styles.uploadButton} htmlFor={fileId}><span aria-hidden="true">+</span> Choose screenshots</label><p>or drop your project images here</p><p className={styles.uploadHint}>JPG, PNG or WebP / up to 8 MB each / 10 images per project</p><input id={fileId} className={styles.fileInput} aria-label="Choose screenshots" type="file" accept="image/jpeg,image/png,image/webp" multiple disabled={dirty || items.length + pending.length >= 10} onChange={e => { choose([...e.target.files ?? []]); e.target.value = ""; }} />
       </div>
       {pending.map((image,i) => <div className={styles.row} key={`${image.file.name}-${i}`}><p>{image.file.name}</p><label>Alt text for selected image {i + 1}<input value={image.altText} maxLength={300} onChange={e => setPending(p => p.map((v,n) => n === i ? { ...v, altText: e.target.value } : v))} /></label><label>Caption for selected image {i + 1}<input value={image.caption} maxLength={300} onChange={e => setPending(p => p.map((v,n) => n === i ? { ...v, caption: e.target.value } : v))} /></label><button type="button" onClick={() => setPending(p => p.filter((_,n) => n !== i))}>Remove selected image {i + 1}</button></div>)}
       {pending.length > 0 && <button type="button" disabled={dirty} onClick={upload}>Upload screenshots</button>}
