@@ -78,7 +78,7 @@ export function ProjectTeam({ initialData }: { initialData: ProjectTeamData }) {
         <Link href="/student/project-invitations">Invitations &amp; shared projects</Link></div>
     </div>
     {error ? <div className={styles.feedback} role="alert" aria-labelledby="team-error-title" tabIndex={-1} ref={feedback}><h2 id="team-error-title">Team change not saved</h2><p>{error}</p><p>Your entered information has been kept.</p>{conflict ? <button disabled={busy} onClick={reload}>Load latest project team</button> : null}</div> : null}
-    <p role="status" className={styles.success}>{notice}</p>
+    <p role="status" aria-label="Team feedback" className={styles.success}>{notice}</p>
     {own?.state === "pending" ? <section className={styles.section} aria-labelledby="invitation-title"><p className={`ui-eyebrow ${styles.eyebrow}`}>A place on the team</p><h2 id="invitation-title">Your invitation.</h2>
       <p>Proposed role: <strong>{data.roles.find(r => r.id === own.proposedRoleId)?.name}</strong></p>
       <p>Accepting creates your contributor relationship. On published profiles, your role is publicly attributed and this project is featured by default. You can change both choices in your personal controls. Declining never publishes you as a contributor.</p>
