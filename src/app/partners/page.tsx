@@ -8,7 +8,7 @@ export const metadata = { title: "Industry partners" };
 export default async function PartnersPage() {
   const companies = await publicCompanies(getRuntimeDatabase());
   return <main className={styles.page}>
-    <p className={`ui-eyebrow ${styles.eyebrow}`}>Ideas meet industry</p>
+    <p className="ui-eyebrow">Ideas meet industry</p>
     <h1 className="ui-display">Connections that<br /><em className="ui-display-accent">move work forward.</em></h1>
     <p>Meet our industry partners. Explore the organizations, student projects, and collaborations bringing ideas into practice.</p>
     <div className={styles.actions}><Link href="/projects">Explore connected work <span aria-hidden="true"> &#8599;</span></Link></div>

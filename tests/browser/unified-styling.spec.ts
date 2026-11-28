@@ -23,6 +23,9 @@ test("main routes use the shared display font and fit the viewport", async ({ pa
     const heading = page.getByRole("heading", { level: 1 });
     await expect(heading, path).toBeVisible();
     await expect(heading, path).toHaveCSS("font-family", /Bricolage Grotesque Variable/);
+    if (["updates", "article", "partners", "partner"].includes(name)) {
+      await expect(page.locator("main .ui-eyebrow").first(), path).toHaveCSS("color", "rgb(255, 111, 174)");
+    }
     expect(await page.evaluate(() => document.documentElement.scrollWidth), path)
       .toBeLessThanOrEqual(page.viewportSize()!.width);
     if (capture) {

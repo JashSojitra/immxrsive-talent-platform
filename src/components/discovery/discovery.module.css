@@ -10,7 +10,7 @@
 .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; }
 .projectCard { position:relative; display:flex; flex-direction:column; min-width:0; padding:28px; border:1px solid var(--line); border-radius:var(--radius-md); background:var(--surface); }
 .cardTop { display:flex; justify-content:space-between; color:var(--electric); font-size:.72rem; letter-spacing:.06em; }
-.projectCard h2 { font-weight:500; font-size:1.6rem; line-height:1.2; letter-spacing:-.04em; margin:36px 0 16px; overflow-wrap:anywhere; }
+.projectCard h2 { font-size:1.6rem; line-height:1.2; margin:36px 0 16px; overflow-wrap:anywhere; }
 .projectCard h2 a { text-decoration:none; display:flex; justify-content:space-between; gap:20px; }
 .projectCard h2 a::after { content:''; position:absolute; inset:0; border-radius:var(--radius-md); }
 .projectCard h2 a:focus-visible { outline:none; }

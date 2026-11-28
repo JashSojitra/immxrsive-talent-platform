@@ -11,7 +11,7 @@ export default async function PartnerPage({ params }: { params: Promise<{ compan
   const website = companyWebsiteUrl(company.content.website);
   return <main className={styles.page}>
     <nav aria-label="Breadcrumb"><Link href="/partners">Industry partners</Link><span aria-current="page">Organization</span></nav>
-    <p className={`ui-eyebrow ${styles.eyebrow}`}>Industry partner</p>
+    <p className="ui-eyebrow">Industry partner</p>
     <h1 className="ui-display">{company.content.name}</h1>
     <p className={styles.metadata}>{[company.content.location, company.content.sector].filter(Boolean).join(" / ")}</p>
     <p>{company.content.description}</p>
@@ -26,7 +26,7 @@ export default async function PartnerPage({ params }: { params: Promise<{ compan
       {!company.verifiedProjects.length && <p className={styles.empty}>No staff-approved project associations yet.</p>}
     </section>
     {(["current", "past"] as const).map(status => <section key={status} className={styles.section} aria-labelledby={`${status}-collaborations-title`}>
-      <p className={`ui-eyebrow ${styles.eyebrow}`}>{status === "current" ? "Happening now" : "Collaboration archive"}</p>
+      <p className="ui-eyebrow">{status === "current" ? "Happening now" : "Collaboration archive"}</p>
       <h2 id={`${status}-collaborations-title`}>{status === "current" ? "Current collaborations" : "Past collaborations"}</h2>
       <div className={styles.timeline}>{company.collaborations.filter(collaboration => collaboration.status === status).map(collaboration => <article key={collaboration.id} className={styles.card}>
         <p className={styles.metadata}>{collaboration.year}{collaboration.date ? ` / ${collaboration.date}` : ""}</p>
