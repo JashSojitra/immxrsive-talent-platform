@@ -2,7 +2,7 @@
 
 ## Production prerequisite
 
-This PR is stacked on `feat/updates-home-world` (#21) and requires PR A's media storage. The production prerequisite is complete: the owner-approved, schema-only migration `0015_purple_hiroim.sql` was applied on November 26, 2026 (Toronto time), with [backup and verification evidence](../production-project-assign-migration-2026-11-26.md). It adds the private `admin_credit_emails` and `project_screenshots` tables, RLS/grant hardening, and the `project_screenshot` media kind. No production content was inserted.
+This PR targets main and includes the homepage fix and unified styling stack. It requires the media storage already on main. The production prerequisite is complete: the owner-approved, schema-only migration `0015_purple_hiroim.sql` was applied on November 26, 2026 (Toronto time), with [backup and verification evidence](../production-project-assign-migration-2026-11-26.md). It adds the private `admin_credit_emails` and `project_screenshots` tables, RLS/grant hardening, and the `project_screenshot` media kind. No production content was inserted.
 
 The operation followed [the production bootstrap](../production-admin-bootstrap-2026-11-17.md) and [Updates migration evidence](../production-updates-migration-2026-11-26.md): project identity, matching committed hashes, encrypted backup with an isolated restore, migration connection, then tables, constraints, RLS/grants and journal verification. The journal advanced from 15 to 16 entries; nothing remains pending across #20, #21 and #22. Do not run fixtures against production.
 

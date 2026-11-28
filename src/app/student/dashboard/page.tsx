@@ -71,7 +71,7 @@ export default async function StudentDashboardPage() {
       </section>
     </div>
     {credits.length > 0 && <section className={`${styles.panel} ${styles.credits}`} aria-labelledby="credits-heading">
-      <div className={styles.sectionHeading}><h2 id="credits-heading">Projects you&apos;re credited on</h2><span className={styles.badge}>Read-only</span></div>
+      <div className={styles.sectionHeading}><h2 id="credits-heading" className="ui-card-title">Projects you&apos;re credited on</h2><span className={styles.badge}>Read-only</span></div>
       <p>Platform staff credited you on these showcases. Credits link to your portfolio only while your profile is public; they do not add you to the project team or give you editing access. Contact platform staff to correct or remove a credit.</p>
       <ul className={styles.projects}>{credits.map(credit => <li key={credit.projectId}><>{credit.published === false ? <strong>{credit.title} · Not public yet</strong> : <Link href={`/projects/${credit.projectId}`}>{credit.title}<span aria-hidden="true">↗</span></Link>}</><p>{credit.roles.join(" / ") || "Contributor"} · Staff-curated credit</p></li>)}</ul>
     </section>}
