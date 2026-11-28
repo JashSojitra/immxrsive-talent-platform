@@ -28,7 +28,7 @@ export function PlaceContent({ place, headingId, headingLevel = 2 }: { place: Pl
               <div>
                 <p className={styles.cardName}>{story.name}</p>
                 <p className={styles.cardMeta}>{story.role}</p>
-                {story.href && <a className={styles.cardLink} href={story.href} target="_blank" rel="noopener noreferrer">Connect<span aria-hidden="true"> ↗</span></a>}
+                {story.href && <a className={styles.cardLink} href={story.href} rel="noopener noreferrer">Read the full story<span aria-hidden="true"> ↗</span></a>}
               </div>
             </li>
           ) : (
@@ -43,6 +43,7 @@ export function PlaceContent({ place, headingId, headingLevel = 2 }: { place: Pl
         </ul>
       )}
 
+      {place.papers && <section aria-label="Newsstand papers">{place.papers.length ? place.papers.slice(0, 5).map(paper => <article key={paper.href} className={styles.projectCard}><h3><Link href={paper.href}>{paper.title}</Link></h3><time dateTime={paper.date}>{paper.date}</time><p>{paper.excerpt}</p></article>) : <p>News coming soon</p>}</section>}
       {place.showcase && (
         <ul className={styles.cardGrid} aria-label="Showcase projects">
           {place.showcase.map((item, index) => item.kind === "project" ? (

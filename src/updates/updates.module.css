@@ -1,4 +1,4 @@
-.page { max-width: 1180px; margin: auto; padding: 7rem 1.5rem 5rem; }
+.page { max-width: 1180px; margin: auto; padding: 7rem 1.5rem 5rem; overflow-wrap: anywhere; }
 .heading { max-width: 780px; margin-bottom: 3rem; }
 .heading h1 { font-size: clamp(3rem, 8vw, 6.5rem); line-height: .98; letter-spacing: -.05em; margin: 1rem 0; }
 .heading p { max-width: 65ch; color: var(--text-muted, #b8b2c2); }
@@ -33,3 +33,5 @@
 .empty { padding: 3rem; border: 1px dashed #81728c; border-radius: 1rem; }
 @media (max-width: 800px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .editor { grid-template-columns: 1fr; } }
 @media (max-width: 520px) { .grid { grid-template-columns: 1fr; } .page { padding-top: 4rem; } }
+
+.avatarFallback { display: grid; place-items: center; font-size: 2rem; background: #582c8344; }

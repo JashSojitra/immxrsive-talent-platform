@@ -7,7 +7,7 @@ export function articleSlug(title: string) {
   return title.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 120).replace(/-$/, "");
 }
 export const articleInput = z.object({
-  title: z.string().trim().min(1).max(200), slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(120),
+  title: z.string().trim().min(1).max(200), slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(120).refine(v => v !== "og", "Choose another slug; og is reserved for share images."),
   category: z.enum(categories), excerpt: z.string().trim().max(200), bodyMarkdown: z.string().max(40000),
   coverMediaId: z.uuid().nullable(), coverAlt: z.string().trim().max(400), studentProfileId: z.uuid().nullable(),
   eventName: z.string().trim().max(200), eventDate: z.iso.date().nullable(), eventLocation: z.string().trim().max(300),

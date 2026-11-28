@@ -1655,6 +1655,13 @@
       }
     }
 
+  /* Published story covers. */
+    .fallback-book--published { height: auto; min-height: var(--book-height); }
+    .fallback-book--published::before, .fallback-book--published::after { display: none; }
+    .fallback-book--published img { display: block; width: 100%; height: 160px; object-fit: cover; border-radius: 6px; margin-bottom: 1rem; }
+    .fallback-book--published p { font-size: .85rem; line-height: 1.5; }
+    .fallback-book--published a { display: block; color: inherit; margin-top: 1rem; text-underline-offset: .2em; }
+    .fallback-book--published a:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
   </style>
   <script type="importmap">
     {
@@ -1686,8 +1693,8 @@
       <span class="pointer-label__avatar" id="pointer-label-avatar">JS</span>
       <span class="pointer-label__text">
         <span id="pointer-label-index">Volume 01</span>
-        <strong id="pointer-label-title">Jash Sojitra</strong>
-        <span class="pointer-label__note" id="pointer-label-note">Built this platform and the ImmXrsive World.</span>
+        <strong id="pointer-label-title">Coming Soon</strong>
+        <span class="pointer-label__note" id="pointer-label-note">A student story is being prepared.</span>
       </span>
     </div>
 
@@ -1695,8 +1702,8 @@
       <div class="selection">
         <span class="counter" id="counter">01 / 07</span>
         <div class="selection__copy">
-          <h1 class="selection__title" id="selection-title">Jash Sojitra</h1>
-          <p class="selection__note" id="selection-note">Built this platform and the ImmXrsive World.</p>
+          <h1 class="selection__title" id="selection-title">Coming Soon</h1>
+          <p class="selection__note" id="selection-note">A student story is being prepared.</p>
         </div>
       </div>
 
@@ -1728,11 +1735,12 @@
       <button class="close-button" id="close-detail" type="button" aria-label="Return volume to shelf">
         <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8"></path></svg>
       </button>
-      <p class="eyebrow" id="detail-eyebrow">Volume I · Platform &amp; partnerships</p>
-      <h2 class="detail-title" id="detail-title">Jash Sojitra</h2>
+      <p class="eyebrow" id="detail-eyebrow">Volume I · Student stories</p>
+      <h2 class="detail-title" id="detail-title">Coming Soon</h2>
       <p class="detail-deck" id="detail-deck">
-        Developer of this platform and the ImmXrsive World.
+        A student story is being prepared.
       </p>
+      <button id="read-full-story" type="button" hidden>Read the full story</button>
       <dl class="meta-list">
         <div>
           <dt>Home</dt>
@@ -1740,7 +1748,7 @@
         </div>
         <div>
           <dt>Role</dt>
-          <dd id="detail-format">XR Program &amp; Partnership Student Coordinator</dd>
+          <dd id="detail-format">Story in preparation</dd>
         </div>
         <div>
           <dt>Work</dt>
@@ -1785,7 +1793,7 @@
         </p>
       </div>
       <div class="fallback__grid" aria-label="Student volumes">
-        <article class="fallback-book" style="--book-color:#c2185f;--book-foil:#ffd7e8;--book-height:388px"><span>Volume I</span><strong>Jash Sojitra</strong></article>
+        <article class="fallback-book" style="--book-color:#c2185f;--book-foil:#ffd7e8;--book-height:388px"><span>Volume I</span><strong>Coming Soon</strong></article>
         <article class="fallback-book" style="--book-color:#582c83;--book-foil:#e9d7ff;--book-height:355px"><span>Volume II</span><strong>Coming Soon</strong></article>
         <article class="fallback-book" style="--book-color:#00205b;--book-foil:#b9d4ff;--book-height:372px"><span>Volume III</span><strong>Coming Soon</strong></article>
         <article class="fallback-book" style="--book-color:#981d97;--book-foil:#ffc2f5;--book-height:398px"><span>Volume IV</span><strong>Coming Soon</strong></article>
@@ -1816,18 +1824,19 @@
 
     const BOOKS = [
       {
-        "id": "jash-sojitra",
-        "title": "Jash Sojitra",
+        "id": "student-story",
+        "title": "Coming Soon",
         "roman": "I",
-        "discipline": "Platform & partnerships",
-        "note": "Built this platform and the ImmXrsive World.",
-        "deck": "Jash is the developer of this platform and the ImmXrsive World, and works with the NCoE as XR Program & Partnership Student Coordinator. His full story is being written.",
-        "binding": "Algoma University · Brampton",
-        "format": "XR Program & Partnership Student Coordinator",
-        "theme": "ImmXrsive platform · SYNC · Canon DNA · Project Nexus",
-        "motif": "Spark",
+        "discipline": "Student stories",
+        "initials": "?",
+        "note": "A student story is being prepared.",
+        "deck": "This volume is reserved for an ImmXrsive student story (student stories). Their photo, story and projects will appear here once they are approved.",
+        "binding": "Reserved volume",
+        "format": "Story in preparation",
+        "theme": "Student stories",
+        "motif": "Orbits",
         "motifKey": "orbits",
-        "paletteLabel": "ImmXrsive pink · bone · plum",
+        "paletteLabel": "ImmXrsive pink / bone / plum",
         "color": "#c2185f",
         "foil": "#ffd7e8",
         "palette": {
@@ -1846,13 +1855,12 @@
         "height": 1.62,
         "depth": 0.28,
         "chapters": [
-          "The platform",
-          "The work",
+          "Coming soon",
+          "Projects",
           "What's next"
         ],
-        "seed": 11,
-        "initials": "JS",
-        "photo": "/world/students/jash-sojitra.jpg"
+        "seed": 22,
+        "photo": null
       },
       {
         "id": "extended-reality",
@@ -1890,7 +1898,7 @@
           "Projects",
           "What's next"
         ],
-        "seed": 22,
+        "seed": 33,
         "photo": null
       },
       {
@@ -1929,7 +1937,7 @@
           "Projects",
           "What's next"
         ],
-        "seed": 33,
+        "seed": 44,
         "photo": null
       },
       {
@@ -1968,7 +1976,7 @@
           "Projects",
           "What's next"
         ],
-        "seed": 44,
+        "seed": 55,
         "photo": null
       },
       {
@@ -2007,7 +2015,7 @@
           "Projects",
           "What's next"
         ],
-        "seed": 55,
+        "seed": 66,
         "photo": null
       },
       {
@@ -2046,7 +2054,7 @@
           "Projects",
           "What's next"
         ],
-        "seed": 66,
+        "seed": 77,
         "photo": null
       },
       {
@@ -2085,7 +2093,7 @@
           "Projects",
           "What's next"
         ],
-        "seed": 77,
+        "seed": 88,
         "photo": null
       }
     ];
@@ -4534,6 +4542,13 @@
       detailEyebrow.textContent = `Volume ${book.roman} · ${book.discipline}`;
       detailTitle.textContent = book.title;
       detailDeck.textContent = book.deck;
+      const fullStory = document.getElementById("read-full-story");
+      fullStory.hidden = !book.href;
+      fullStory.onclick = () => {
+        if (!book.href) return;
+        if (window.parent === window) window.location.assign(book.href);
+        else window.parent.postMessage({ type: "immxrsive:open-story", href: book.href }, window.location.origin);
+      };
       detailBinding.textContent = book.binding;
       detailFormat.textContent = book.format;
       detailTheme.textContent = book.theme;
@@ -5958,7 +5973,39 @@
       renderer?.dispose();
     }
 
+    async function loadPublishedStories() {
+      try {
+        const response = await fetch("/api/world/stories", { signal: AbortSignal.timeout(4000) });
+        if (!response.ok) return;
+        const volumes = await response.json();
+        if (!Array.isArray(volumes)) return;
+        volumes.slice(0, 7).forEach((volume, index) => {
+          if (!volume || typeof volume.name !== "string" || typeof volume.role !== "string" || typeof volume.excerpt !== "string" || !/^\/updates\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(volume.href || "")) return;
+          const book = BOOKS[index];
+          Object.assign(book, { title: volume.name, discipline: volume.role, note: volume.excerpt, deck: volume.excerpt, format: volume.role, theme: "Published student story", initials: volume.name.split(" ").map(word => word[0]).slice(0, 2).join(""), href: volume.href, photo: /^\/media\/[0-9a-f-]{36}$/i.test(volume.photoUrl || "") ? volume.photoUrl : null });
+        });
+        const grid = document.querySelector(".fallback__grid");
+        [...grid.children].forEach((card, index) => {
+          const book = BOOKS[index];
+          card.querySelector("strong").textContent = book.title;
+          if (book.href) {
+            card.classList.add("fallback-book--published");
+            if (book.photo) {
+              const photo = document.createElement("img"); photo.src = book.photo; photo.alt = book.title;
+              photo.width = 160; photo.height = 160;
+              card.prepend(photo);
+            }
+            const role = document.createElement("p"); role.textContent = book.discipline; card.append(role);
+            const excerpt = document.createElement("p"); excerpt.textContent = book.deck; card.append(excerpt);
+            const link = document.createElement("a"); link.textContent = "Read the full story"; link.href = book.href;
+            link.addEventListener("click", event => { if (window.parent !== window) { event.preventDefault(); window.parent.postMessage({ type: "immxrsive:open-story", href: book.href }, window.location.origin); } });
+            card.append(link);
+          }
+        });
+      } catch { /* Offline and missing API retain the built-in Coming Soon set. */ }
+    }
     async function initialize() {
+      await loadPublishedStories();
       const woodTexturePromise = woodTextureImage.decode().then(
         () => true,
         () => false

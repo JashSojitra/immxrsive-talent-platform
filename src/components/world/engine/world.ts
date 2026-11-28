@@ -74,7 +74,7 @@ const TURN_RATE = 2.4;
 const HOVER = 1.35;
 const CRUISE = 10;
 /** Where Spark stops in front of each place (world units from the centre). */
-const DOOR_DISTANCE: Record<PlaceId, number> = { hub: 10, queen: 13.5, stories: 9, showcase: 9.5, dock: 9, launchpad: 9 };
+const DOOR_DISTANCE: Record<PlaceId, number> = { hub: 10, queen: 13.5, stories: 9, showcase: 9.5, dock: 9, launchpad: 9, newsstand: 7 };
 
 /** Tangent at `n` pointing towards `target` (both unit vectors). */
 function tangentTowards(n: THREE.Vector3, target: THREE.Vector3, out = new THREE.Vector3()) {
@@ -83,7 +83,7 @@ function tangentTowards(n: THREE.Vector3, target: THREE.Vector3, out = new THREE
   return out.normalize();
 }
 
-export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion: boolean; fixedQuality?: boolean }, events: WorldEvents): WorldHandle {
+export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion: boolean; fixedQuality?: boolean; papers?: import("@/updates/world-content").NewsPaper[] }, events: WorldEvents): WorldHandle {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance", alpha: false });
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -117,7 +117,7 @@ export function createWorld(canvas: HTMLCanvasElement, options: { reducedMotion:
   scene.add(planet, buildWater(), buildAtmosphere());
   const { group: paths, arcs } = buildPaths();
   scene.add(paths, buildScatter(arcs));
-  const buildings = buildBuildings();
+  const buildings = buildBuildings(options.papers);
   for (const building of buildings) scene.add(building.group, ...building.extras);
   const buildingById = new Map<PlaceId, Building>(buildings.map(b => [b.id, b]));
   const sky = buildSky();

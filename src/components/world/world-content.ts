@@ -6,7 +6,7 @@
  * The 3D engine and the accessible list view both render from this single source.
  */
 
-export type PlaceId = "hub" | "queen" | "stories" | "showcase" | "dock" | "launchpad";
+export type PlaceId = "hub" | "queen" | "stories" | "showcase" | "dock" | "launchpad" | "newsstand";
 
 export type WorldLink = { label: string; href: string; external?: boolean };
 
@@ -30,6 +30,7 @@ export type Place = {
   lon: number;
   links: WorldLink[];
   stories?: StoryCard[];
+  papers?: import("@/updates/world-content").NewsPaper[];
   showcase?: ShowcaseCard[];
 };
 
@@ -37,21 +38,8 @@ export const WORLD_TITLE = "ImmXrsive World";
 /** The Stories House shelf (adapted ThreeUI Complete Shelf, see docs/design/immxrsive-world.md). */
 export const STORIES_SHELF_URL = "/world/stories-shelf.html";
 
-export const studentStories: StoryCard[] = [
-  {
-    kind: "student",
-    name: "Jash Sojitra",
-    role: "Developer of this platform · XR Program & Partnership Student Coordinator",
-    initials: "JS",
-    preview: "Built this platform and the ImmXrsive World.",
-    photo: "/world/students/jash-sojitra.jpg",
-    href: "https://www.linkedin.com/in/jashsojitra/",
-  },
-  { kind: "coming-soon" },
-  { kind: "coming-soon" },
-];
-
 export const places: readonly Place[] = [
+  { id: "newsstand", name: "Newsstand", kicker: "Updates", title: "Fresh off the press.", body: "Events and news from ImmXrsive.", lat: -10, lon: 36, links: [{ label: "All updates", href: "/updates" }], papers: [] },
   {
     id: "hub",
     name: "XR Hub",
@@ -81,7 +69,7 @@ export const places: readonly Place[] = [
     lat: 40,
     lon: 72,
     links: [{ label: "Meet all talent", href: "/talent" }],
-    stories: studentStories,
+    stories: [{ kind: "coming-soon" }],
   },
   {
     id: "showcase",
@@ -139,7 +127,7 @@ export const places: readonly Place[] = [
 export const placeById = (id: PlaceId) => places.find(place => place.id === id)!;
 
 /** Order used by the guided tour. */
-export const tourOrder: readonly PlaceId[] = ["hub", "queen", "stories", "showcase", "dock", "launchpad"];
+export const tourOrder: readonly PlaceId[] = ["hub", "queen", "stories", "newsstand", "showcase", "dock", "launchpad"];
 
 /** Unit vector for a latitude/longitude pair, y-up. */
 export function latLonToUnit(lat: number, lon: number): [number, number, number] {

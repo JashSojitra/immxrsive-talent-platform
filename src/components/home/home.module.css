@@ -176,3 +176,6 @@
 @media (prefers-reduced-motion: reduce) {
   .heroCopy, .driftRow, .connectBand > div { will-change: auto; }
 }
+
+.updatePlate { gap: 1rem; grid-template-rows: auto auto 1fr; overflow-wrap: anywhere; }
+.updateCover { width: 100%; height: auto; aspect-ratio: 16/10; object-fit: cover; border-radius: .6rem; }

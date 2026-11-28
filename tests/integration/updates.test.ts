@@ -7,6 +7,7 @@ import { createDatabase } from "@/db/client";
 import { adminEvents, articles, authUsers, studentProfiles, studioRoles } from "@/db/schema";
 import { emptyArticle } from "@/updates/policy";
 vi.mock("server-only",()=>({}));
+import { worldUpdates } from "@/updates/world";
 import { publicArticles, respondToStory, saveArticle, studentStoriesForApproval } from "@/updates/service";
 const c=createDatabase(process.env.TEST_DATABASE_URL!);const actor=randomUUID(),owner=randomUUID(),outsider=randomUUID();let profileId:string;
 beforeAll(async()=>{
@@ -28,6 +29,7 @@ test("approval is owned, revision-bound, audited, and reset by edits",async()=>{
   await respondToStory(c.db,owner,{id:draft.id,version:review.version,approve:true,note:""});
   const [approved]=await c.db.select().from(articles).where(eq(articles.id,draft.id));
   const published=await saveArticle(c.db,actor,{id:draft.id,version:approved.version,action:"published",content});
+  const world = await worldUpdates(c.db); expect(world.volumes).toHaveLength(7); expect(world.volumes[0].href).toBe(`/updates/${content.slug}`); expect(world.volumes.slice(1).every(v => v.name === "Coming Soon")).toBe(true);
   const [publicPost]=await publicArticles(c.db);expect(publicPost.slug).toBe(content.slug);expect(publicPost).not.toHaveProperty("studentNote");expect(publicPost).not.toHaveProperty("createdBy");
   await c.db.update(studentProfiles).set({publicationStatus:"unpublished"}).where(eq(studentProfiles.id,profileId));expect(await publicArticles(c.db)).toHaveLength(0);
   await c.db.update(studentProfiles).set({publicationStatus:"published"}).where(eq(studentProfiles.id,profileId));
