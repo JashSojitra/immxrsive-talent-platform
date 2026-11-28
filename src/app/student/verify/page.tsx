@@ -34,9 +34,9 @@ export default async function StudentVerifyPage({ searchParams }: VerifyPageProp
       </nav>
       <main className={styles.main}>
         <section aria-labelledby="verification-title">
-          <p className={styles.eyebrow}>Student access / Affiliation</p>
-          <h1 className={styles.headline} id="verification-title">
-            Verify your<br /><em>Algoma connection.</em>
+          <p className={`ui-eyebrow ${styles.eyebrow}`}>Student access / Affiliation</p>
+          <h1 className={`ui-display ${styles.headline}`} id="verification-title">
+            Verify your<br /><em className="ui-display-accent">Algoma connection.</em>
           </h1>
           <p className={styles.intro}>
             Signed in as <strong>{user.name}</strong> ({user.email}). Confirm a

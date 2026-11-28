@@ -15,7 +15,7 @@ export default async function Studio({ searchParams }: { searchParams: Promise<{
   const filteredRows = rows.filter(r => !state || r.submission.state === state);
   return <ProjectWorkspace title="Shape the showcase." intro={`XR Studio / ${role.replaceAll("_", " ")}. Curate evidence while students retain ownership.`}>
     <form className={styles.section}><label htmlFor="state">Review status</label><select id="state" name="state" defaultValue={state ?? ""}><option value="">All statuses</option>{states.map(s => <option key={s} value={s}>{s.replaceAll("_", " ")}</option>)}</select><button type="submit">Filter queue</button></form>
-    {filteredRows.map(({ submission: s, projectTitle }) => <article className={styles.card} key={s.projectId}><p className={styles.eyebrow}>{s.state.replaceAll("_", " ")} / {s.effectivePublished ? "Showcased" : "Not showcased"}</p><h2><Link href={`/studio/${encodeURIComponent(s.projectId)}`}>{projectTitle}</Link></h2></article>)}
+    {filteredRows.map(({ submission: s, projectTitle }) => <article className={styles.card} key={s.projectId}><p className={`ui-eyebrow ${styles.eyebrow}`}>{s.state.replaceAll("_", " ")} / {s.effectivePublished ? "Showcased" : "Not showcased"}</p><h2><Link href={`/studio/${encodeURIComponent(s.projectId)}`}>{projectTitle}</Link></h2></article>)}
     {!filteredRows.length && <p>{state ? "No showcase requests match this status." : "No showcase requests yet."}</p>}
   </ProjectWorkspace>;
 }

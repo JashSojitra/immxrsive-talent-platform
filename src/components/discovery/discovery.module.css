@@ -1,8 +1,7 @@
 .page { width: var(--content); margin: auto; padding: 56px 0; }
 .breadcrumb { color: var(--muted); font-size: .8rem; margin-bottom: 36px; }
 .breadcrumb a { min-height: 36px; display: inline-flex; align-items: center; }
-.heading { max-width: 850px; margin: 16px 0 24px; font-weight: 450; font-size: clamp(2.8rem,6vw,5.5rem); letter-spacing: -.065em; line-height: 1.03; }
-.heading em { font-family:'Instrument Serif',Georgia,serif; color:var(--signal); font-weight:400; }
+.heading { max-width: 850px; margin: 16px 0 24px; font-size: clamp(2.8rem,6vw,5.5rem); line-height: 1.03; }
 .intro { max-width: 640px; font-size: 1.05rem; line-height: 1.7; color:var(--muted); }
 .filters { margin: 40px 0 28px; padding: 24px; display: grid; grid-template-columns: 2fr 1fr 1fr auto; align-items: end; gap: 16px; background:var(--surface); border: 1px solid var(--line); border-radius:var(--radius-md); }
 .filters label { display: grid; gap: 10px; font-size: .8rem; }

@@ -8,8 +8,8 @@ export const metadata = { title: "Industry partners" };
 export default async function PartnersPage() {
   const companies = await publicCompanies(getRuntimeDatabase());
   return <main className={styles.page}>
-    <p className={styles.eyebrow}>Ideas meet industry</p>
-    <h1>Connections that<br />move work forward.</h1>
+    <p className={`ui-eyebrow ${styles.eyebrow}`}>Ideas meet industry</p>
+    <h1 className="ui-display">Connections that<br /><em className="ui-display-accent">move work forward.</em></h1>
     <p>Meet our industry partners. Explore the organizations, student projects, and collaborations bringing ideas into practice.</p>
     <div className={styles.actions}><Link href="/projects">Explore connected work <span aria-hidden="true"> &#8599;</span></Link></div>
     <Skiper28 text="A shared field of possibility. Explore the people, projects and organizations bringing ideas into practice." />
@@ -18,7 +18,7 @@ export default async function PartnersPage() {
       <p>Published organizations and their public collaborations.</p>
       <div className={styles.grid}>{companies.map(company => <article key={company.id} className={styles.card}>
         <span className={styles.companyMark} aria-hidden="true">{company.content.name.charAt(0)}</span>
-        <h2><Link href={`/partners/${company.id}`}>{company.content.name}</Link></h2>
+        <h2 className="ui-card-title"><Link href={`/partners/${company.id}`}>{company.content.name}</Link></h2>
         <p className={styles.metadata}>{[company.content.sector, company.content.location].filter(Boolean).join(" / ")}</p>
         <p>{company.content.description}</p>
         <Link className={styles.cardLink} href={`/partners/${company.id}`}>Explore collaborations <span aria-hidden="true">&#8599;</span></Link>

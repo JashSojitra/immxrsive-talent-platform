@@ -28,8 +28,8 @@ export function ProjectDetailView({ project, preview = false }: { project: Publi
           <strong>{project.managementMode === "ADMIN_MANAGED" ? "Staff-curated" : "Student project"}</strong>
         </div>
         <div className={styles.heroBody}>
-          <p className={styles.domain} data-project-lead>{project.domain}</p>
-          <h1 id="project-title" data-project-title>{project.title}</h1>
+          <p className={`ui-eyebrow ${styles.domain}`} data-project-lead>{project.domain}</p>
+          <h1 id="project-title" data-project-title className="ui-display">{project.title}</h1>
           <p className={styles.description} data-project-lead>{project.description}</p>
           <dl className={styles.heroMeta} data-project-meta>
             <div><dt>Collection</dt><dd>{project.managementMode === "ADMIN_MANAGED" ? "Staff-curated" : "Student-managed"}</dd></div>

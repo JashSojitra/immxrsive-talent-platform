@@ -56,7 +56,7 @@ export function StudentProfileView({
             <span>{profile.program || "Program not added"}</span>
           </p>
           {profile.avatarMediaId && <Image src={`/media/${profile.avatarMediaId}`} alt="" width={144} height={144} unoptimized style={{ borderRadius: "50%", objectFit: "cover" }} />}
-          <h1 id="student-name" data-profile-name>{profile.name}</h1>
+          <h1 id="student-name" data-profile-name className="ui-display">{profile.name}</h1>
           <p className={styles.headline} data-profile-lead>{profile.headline}</p>
           <dl className={styles.heroMeta} data-profile-meta>
             <div>

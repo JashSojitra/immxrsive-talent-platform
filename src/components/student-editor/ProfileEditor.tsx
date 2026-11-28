@@ -274,8 +274,8 @@ export function ProfileEditor({
     <form className={styles.editor} onSubmit={save} noValidate>
       <header className={styles.editorHeader}>
         <div>
-          <p className={styles.kicker}>Student profile workspace</p>
-          <h1>Shape your professional profile.</h1>
+          <p className="ui-eyebrow">Student profile workspace</p>
+          <h1 className="ui-display">Shape your <em className="ui-display-accent">professional profile.</em></h1>
           <p>
             Maintain your private profile data, choose which optional fields may be public,
             and publish only when you are ready.

@@ -10,7 +10,7 @@
 .sidebar a { display:flex; align-items:center; min-height:46px; padding:12px; border:1px solid transparent; text-decoration:none; color:var(--muted); font-size:.8rem; }
 .sidebar a[aria-current="page"] { border-color:var(--line); background:var(--surface-raised); color:var(--bone); box-shadow:inset 2px 0 var(--signal); }
 .main { min-width:0; }
-.main h1 { font-size:clamp(2rem,3.5vw,3.4rem); line-height:1.1; font-weight:480; letter-spacing:-.045em; overflow-wrap:anywhere; margin:16px 0 24px; }
+.main h1 { font-size:clamp(2rem,3.5vw,3.4rem); line-height:1.1; overflow-wrap:anywhere; margin:16px 0 24px; }
 .main h2 { font-size:1.5rem; font-weight:500; letter-spacing:-.025em; margin-top:36px; }
 .main > p { max-width:76ch; color:var(--muted); }
 .metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:24px 0 36px; }

@@ -13,7 +13,7 @@ export default function StudentProfileNotFound() {
       </header>
       <section className={styles.inquirySection} aria-labelledby="not-found-title">
         <p className={styles.chapter}>404 / No public signal</p>
-        <h1 id="not-found-title" className={styles.stateTitle}>Student profile<br /><em>not available.</em></h1>
+        <h1 id="not-found-title" className={`ui-display ${styles.stateTitle}`}>Student profile<br /><em className="ui-display-accent">not available.</em></h1>
         <p>The requested profile is not publicly available. Discover published talent in the directory.</p>
         <Link className={styles.inquiryCta} href="/talent">
           Return to talent index <span aria-hidden="true">↗</span>
