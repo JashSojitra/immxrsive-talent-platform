@@ -108,7 +108,7 @@ const Carousel_001 = ({
                 <span className={styles.graphicLabel}>{image.technologies?.slice(0, 3).join(" / ") || image.domain}</span>
                 {image.src && !failedMedia[image.src] && <Image unoptimized width={720} height={480} className={styles.slideImage} src={image.src} alt={image.alt} referrerPolicy="no-referrer" onError={() => setFailedMedia(previous => ({ ...previous, [image.src!]: true }))} />}
               </span>
-              <span className={styles.slideCopy}><span className="ui-eyebrow">{image.domain}</span><strong>{image.title}</strong><span>{image.description.slice(0, 160)}</span><span>Explore project ↗</span></span>
+              <span className={styles.slideCopy}><span className="ui-eyebrow">{image.domain}</span><strong className="ui-card-title">{image.title}</strong><span>{image.description.slice(0, 160)}</span><span>Explore project ↗</span></span>
             </Link>
           </SwiperSlide>
         ))}

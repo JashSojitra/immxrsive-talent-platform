@@ -4,9 +4,8 @@
 .hero h1, .hero > p, .hero .directoryLinks { position: relative; z-index: 1; text-shadow: 0 2px 20px #05060a; }
 .hero,.directory,.directoryNote { width: var(--content); margin-inline: auto; }
 .hero { padding: clamp(36px,6vw,76px) 0 38px; border-bottom: 1px solid var(--line); }
-.eyebrow { margin: 0 0 22px; color: var(--signal); font-size: .75rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 650; }
-.hero h1 { margin: 0; max-width: 1000px; font-size: clamp(2.6rem,5.7vw,5.5rem); line-height: 1.04; font-weight: 450; letter-spacing: -.055em; }
-.hero h1 em { color: var(--signal); font-family: "Instrument Serif",Georgia,serif; font-weight: 400; }
+.eyebrow { margin: 0 0 22px; font-size: .75rem; }
+.hero h1 { margin: 0; max-width: 1000px; font-size: clamp(2.6rem,5.7vw,5.5rem); line-height: 1.04; }
 .hero > p:last-of-type { color: var(--muted); max-width: 610px; line-height: 1.7; font-size: 1rem; margin: 24px 0; }
 .directoryLinks { display: flex; gap: 24px; flex-wrap: wrap; }
 .directoryLinks a { display: inline-flex; gap: 20px; align-items: center; min-height: 44px; font-size: .875rem; text-underline-offset: 6px; }
@@ -63,7 +62,7 @@
 .cardTopline span:last-child { color: var(--electric); }
 .cardIdentity { display: grid; grid-template-columns: 48px minmax(0,1fr); gap: 14px; align-items: start; margin: 26px 0 22px; }
 .avatarMark { display: grid; width: 48px; height: 48px; place-items: center; border-radius: 50%; background: color-mix(in srgb,var(--signal) 12%,var(--ink)); color: var(--signal); font-family: "Instrument Serif",Georgia,serif; font-size: 1.65rem; }
-.cardIdentity h3 { margin: 0; font-size: 1.25rem; font-weight: 550; letter-spacing: -.025em; overflow-wrap: anywhere; }
+.cardIdentity h3 { margin: 0; font-size: 1.25rem; overflow-wrap: anywhere; }
 .cardIdentity p { margin: 7px 0 0; color: var(--muted); font-size: .875rem; line-height: 1.55; }
 .skillList { display: flex; flex-wrap: wrap; align-content: start; list-style: none; gap: 6px; padding: 0; margin: 0 0 24px; }
 .skillList li { padding: 6px 9px; border: 1px solid var(--line); border-radius: 3px; font-size: .75rem; color: var(--bone); }

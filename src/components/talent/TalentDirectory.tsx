@@ -230,8 +230,8 @@ export function TalentDirectory({ initialSearch = "" }: { initialSearch?: string
       <a className={styles.skipLink} href="#directory">Skip to talent directory</a>
       <section className={styles.hero} aria-labelledby="hero-title">
         <SpatialStage className={styles.talentStage} />
-        <p className={styles.eyebrow}>The talent directory</p>
-        <h1 id="hero-title">Discover the people<br />building what&apos;s <em>next.</em></h1>
+        <p className={`ui-eyebrow ${styles.eyebrow}`}>The talent directory</p>
+        <h1 id="hero-title" className="ui-display">Discover the people<br />building what&apos;s <em className="ui-display-accent">next.</em></h1>
         <p>Explore published student and alumni portfolios. Find skills, see the work, and start a conversation.</p>
         <div className={styles.directoryLinks}><Link href="/projects">Explore their projects <span aria-hidden="true">&#8599;</span></Link><Link href="/student">Create your profile <span aria-hidden="true">&#8599;</span></Link></div>
       </section>
@@ -529,7 +529,7 @@ function StudentCard({ student, index }: { student: TalentDirectoryItem; index: 
         </div>
         <div className={styles.cardIdentity}>
           <span className={styles.avatarMark} aria-hidden="true">{student.avatarMediaId ? <Image src={`/media/${student.avatarMediaId}`} alt="" width={64} height={64} unoptimized style={{ borderRadius: "50%", objectFit: "cover" }} /> : student.name.charAt(0)}</span>
-          <div><h3>{student.name}</h3><p>{student.headline}</p></div>
+          <div><h3 className="ui-card-title">{student.name}</h3><p>{student.headline}</p></div>
         </div>
         <ul className={styles.skillList} aria-label={`${student.name}'s key skills`}>
           {student.skills.slice(0, 4).map((skill) => <li key={skill}>{skill}</li>)}

@@ -1,77 +1,11 @@
+@import "../styles/tokens.css";
+
 /*
  * ImmXrsive design system — "The Crossing".
  * ImmXrsive pink and purple accents on a blue-black void.
  * Legacy token names (--ink, --signal, --electric, …) are kept as the public API for every page.
  * Documentation: docs/design/phase-1-spatial-identity.md
  */
-:root {
-  color-scheme: dark;
-  font-family: var(--font-sans);
-  background: var(--ink);
-  color: var(--bone);
-
-  /* Authorised ImmXrsive palette. Tints below keep small accent text at AA. */
-  --brand-pink: #E31C79;
-  --brand-purple: #981D97;
-  --brand-plum: #991E66;
-  --brand-cold-purple: #582C83;
-  --brand-blue: #00205B;
-  --brand-gray: #3C3C3B;
-  --pink-rgb: 227 28 121;
-  --purple-rgb: 88 44 131;
-  --void: #05060a;
-  --ink: #0a0c12;
-  --surface: #12151d;
-  --surface-raised: #1a1e28;
-  --bone: #f4f0e8;
-  --muted: #a9b0bc;
-  --line: #2a303c;
-  --line-strong: #3d4554;
-  --control-border: #687284;
-  --flare: #ff6fae;
-  --flare-hot: #ff8cc0;
-  --ion: #c6a2ed;
-  --signal: var(--flare);
-  --electric: var(--ion);
-  --danger: #ff9e91;
-  --success: var(--ion);
-  --glass: rgb(14 17 25 / .62);
-  --glass-line: rgb(244 240 232 / .1);
-  --glow-flare: 0 0 0 1px rgb(var(--pink-rgb) / .5), 0 10px 40px -8px rgb(var(--pink-rgb) / .55);
-
-  /* Type */
-  --font-sans: "Onest", Arial, Helvetica, sans-serif;
-  --font-display: "Bricolage Grotesque Variable", "Onest", Arial, sans-serif;
-  --font-serif: "Instrument Serif", Georgia, serif;
-  --font-mono: "JetBrains Mono Variable", ui-monospace, Consolas, monospace;
-  --step--1: clamp(.72rem, .7rem + .1vw, .8rem);
-  --step-0: clamp(.95rem, .92rem + .15vw, 1.05rem);
-  --step-1: clamp(1.15rem, 1.05rem + .45vw, 1.45rem);
-  --step-2: clamp(1.5rem, 1.25rem + 1.1vw, 2.2rem);
-  --step-3: clamp(2.1rem, 1.6rem + 2.4vw, 3.6rem);
-  --step-4: clamp(2.8rem, 1.9rem + 4.2vw, 5.6rem);
-  --step-5: clamp(3.3rem, 2rem + 6.4vw, 8.2rem);
-
-  /* Layout */
-  --content: min(1320px, calc(100% - 80px));
-  --header-h: 88px;
-  --radius-sm: 6px;
-  --radius-md: 14px;
-  --radius-lg: 28px;
-  --radius-pill: 999px;
-  --shadow-panel: 0 24px 80px rgb(0 0 0 / .45);
-
-  /* Motion (CSS). Spring presets for Motion live in src/components/motion/tokens.ts */
-  --motion-fast: 140ms;
-  --motion-panel: 240ms;
-  --motion-exit: 180ms;
-  --motion-scene: 900ms;
-  --ease-out: cubic-bezier(.32,.72,0,1);
-  --ease-in: cubic-bezier(.55,0,1,.45);
-  --ease-move: cubic-bezier(.77,0,.175,1);
-  --ease-spring: linear(0, .009, .035 2.1%, .141 4.4%, .723 12.9%, .938 16.7%, 1.017 19.4%, 1.067, 1.099 24.3%, 1.106 26.3%, 1.093 28.6%, 1.033 34.3%, 1.007 38.1%, .993 43.8%, .999 57.5%, 1);
-}
-
 * { box-sizing: border-box; }
 
 body {
@@ -131,10 +65,13 @@ html:has(dialog[open]) { overflow: hidden; }
   transition: background var(--motion-fast) ease, border-color var(--motion-fast) ease, box-shadow var(--motion-panel) var(--ease-out), transform var(--motion-fast) var(--ease-out);
 }
 .ui-button-primary { background: var(--brand-plum); border-color: var(--brand-plum); color: #fff; }
+.ui-button-compact { min-height: 44px; padding: 8px 16px; }
 .ui-button:active { transform: scale(.97); }
 .ui-eyebrow { color: var(--flare); font-family: var(--font-mono); font-size: .72rem; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; }
 .ui-empty { padding: 28px; border: 1px dashed var(--line-strong); border-radius: var(--radius-md); color: var(--muted); line-height: 1.7; }
-.ui-display { font-family: var(--font-display); font-weight: 560; font-stretch: 88%; letter-spacing: -.045em; line-height: .95; }
+.ui-display { font-family: var(--font-display); font-weight: var(--weight-display); font-stretch: 84%; letter-spacing: -.045em; line-height: 1; color: var(--bone); text-wrap: balance; overflow-wrap: anywhere; }
+.ui-display-accent { font-family: var(--font-serif); font-style: italic; font-weight: 400; letter-spacing: -.02em; color: var(--flare); }
+.ui-card-title { font-family: var(--font-display); font-weight: var(--weight-card); letter-spacing: -.025em; }
 .ui-serif { font-family: var(--font-serif); font-style: italic; font-weight: 400; letter-spacing: -.01em; }
 .ui-mono { font-family: var(--font-mono); letter-spacing: .02em; }
 .ui-glass { background: var(--glass); border: 1px solid var(--glass-line); backdrop-filter: blur(18px) saturate(1.3); -webkit-backdrop-filter: blur(18px) saturate(1.3); }

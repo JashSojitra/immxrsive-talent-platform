@@ -41,8 +41,8 @@ export default async function StudentDashboardPage() {
 
   return <main className={styles.dashboard}>
     <header className={styles.heading}>
-      <div><p className={styles.eyebrow}>Student workspace</p><h1>Your next chapter<br />starts <em>here.</em></h1><p>Welcome back, {user.name}. Shape your portfolio and keep your work moving.</p></div>
-      {verified && profile ? <Link className={styles.primary} href="/student/projects/new">Create project <span aria-hidden="true">↗</span></Link> : <Link className={styles.primary} href={verified ? "/student/profile/edit" : "/student/verify"}>{verified ? "Create your profile" : "Verify affiliation"} <span aria-hidden="true">↗</span></Link>}
+      <div><p className={`ui-eyebrow ${styles.eyebrow}`}>Student workspace</p><h1 className="ui-display">Your next chapter<br />starts <em className="ui-display-accent">here.</em></h1><p>Welcome back, {user.name}. Shape your portfolio and keep your work moving.</p></div>
+      {verified && profile ? <Link className="ui-button ui-button-primary" href="/student/projects/new">Create project <span aria-hidden="true">↗</span></Link> : <Link className="ui-button ui-button-primary" href={verified ? "/student/profile/edit" : "/student/verify"}>{verified ? "Create your profile" : "Verify affiliation"} <span aria-hidden="true">↗</span></Link>}
     </header>
 
     <section className={styles.metrics} aria-label="Workspace overview">

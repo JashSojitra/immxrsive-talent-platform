@@ -3,9 +3,9 @@
 .nav nav { display:flex; flex-wrap:wrap; gap:12px 24px; font-size:.8rem; }
 .nav a,.actions a,.footer a { display:inline-flex; min-height:44px; align-items:center; text-underline-offset:5px; }
 .hero { position:relative; padding:48px 0 40px; }
-.hero h1 { position:relative; z-index:1; max-width:950px; margin:16px 0 20px; font-size:clamp(2.5rem,5.5vw,5rem); line-height:1.04; font-weight:450; letter-spacing:-.05em; overflow-wrap:anywhere; }
+.hero h1 { position:relative; z-index:1; max-width:950px; margin:16px 0 20px; font-size:clamp(2.5rem,5.5vw,5rem); line-height:1.04; overflow-wrap:anywhere; }
 .hero > p:last-of-type { max-width:660px; line-height:1.7; color:var(--muted); font-size:.95rem; }
-.eyebrow { color:var(--signal); font-size:.72rem; text-transform:uppercase; letter-spacing:.13em; font-weight:600; }
+.eyebrow {  font-size:.72rem; }
 .orbit { display:none; }
 .editor { max-width:1000px; }
 .section { min-width:0; margin:0 0 36px; padding:28px 0 0; border:0; border-top:1px solid var(--line); }

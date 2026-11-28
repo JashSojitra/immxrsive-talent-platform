@@ -23,7 +23,7 @@ export function AdminExperience({ content: c }: { content: PublicAdminPresentati
   }
   function stop() { setActive(false); setStatus("Experience closed. Alternate evidence remains available."); requestAnimationFrame(() => launch.current?.focus()); }
   return <section className={styles.section} aria-labelledby="admin-experience-title">
-    <p className={styles.eyebrow}>01 / Experience the work</p><h2 id="admin-experience-title">Explore the experience.</h2>
+    <p className={`ui-eyebrow ${styles.eyebrow}`}>01 / Experience the work</p><h2 id="admin-experience-title">Explore the experience.</h2>
     <p className={styles.intro}>{c.summary}</p>
     {c.demoMode === "native" && <div className={styles.evidence}><h3>XR / native experience</h3><p>This experience may require a supported device and installed software. It does not run automatically in this browser.</p><p>{c.deviceInfo}</p><p>{c.instructions}</p></div>}
     <div className={styles.actions}>

@@ -33,9 +33,9 @@ export default async function StudentSignInPage({ searchParams }: SignInPageProp
       </nav>
       <main className={styles.main}>
         <section aria-labelledby="student-access-title">
-          <p className={styles.eyebrow}>Student access</p>
-          <h1 className={styles.headline} id="student-access-title">
-            Your work.<br /><em>Your identity.</em>
+          <p className={`ui-eyebrow ${styles.eyebrow}`}>Student access</p>
+          <h1 className={`ui-display ${styles.headline}`} id="student-access-title">
+            Your work.<br /><em className="ui-display-accent">Your identity.</em>
           </h1>
           <p className={styles.intro}>
             Sign in with GitHub to create or return to your private student workspace.
@@ -44,7 +44,7 @@ export default async function StudentSignInPage({ searchParams }: SignInPageProp
         </section>
 
         <section className={styles.card} aria-labelledby="github-sign-in-title">
-          <p className={styles.eyebrow}>Secure account</p>
+          <p className={`ui-eyebrow ${styles.eyebrow}`}>Secure account</p>
           <h2 id="github-sign-in-title">Continue as a student</h2>
           <p className={styles.cardText}>
             One account for your profile, projects and collaborations.

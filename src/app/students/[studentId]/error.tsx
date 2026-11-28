@@ -15,7 +15,7 @@ export default function StudentProfileError({ reset }: { error: Error & { digest
       </header>
       <section className={styles.inquirySection} aria-labelledby="profile-error-title" role="alert">
         <p className={styles.chapter}>Connection interrupted</p>
-        <h1 id="profile-error-title" className={styles.stateTitle}>Profile temporarily<br /><em>unavailable.</em></h1>
+        <h1 id="profile-error-title" className={`ui-display ${styles.stateTitle}`}>Profile temporarily<br /><em className="ui-display-accent">unavailable.</em></h1>
         <p>We couldn&apos;t load this profile right now. Try the database request again or return to the talent index.</p>
         <div className={styles.stateActions}>
           <button className={styles.inquiryCta} type="button" onClick={reset}>Try again <span aria-hidden="true">↻</span></button>

@@ -11,6 +11,6 @@ export default async function RequestsPage({params}:{params:Promise<{projectId:s
  let data;
  try { data = await maintainerRequests(getRuntimeDatabase(),user.id,projectId); }
  catch(error) {if(!(error instanceof ProjectError)||error.status!==403)throw error;}
- if(!data)return <main className={styles.page}><h1>Maintainer access required</h1><Link href="/student/projects">My projects</Link></main>;
- return <main className={styles.page}><Link href="/student/projects">My projects</Link><h1>Request staff review</h1><p>Staff independently review official verification and company associations. Submitting does not grant either status.</p><StudentRequests projectId={projectId} data={data}/></main>;
+ if(!data)return <main className={styles.page}><h1 className="ui-display">Maintainer access required</h1><Link href="/student/projects">My projects</Link></main>;
+ return <main className={styles.page}><Link href="/student/projects">My projects</Link><h1 className="ui-display">Request staff review</h1><p>Staff independently review official verification and company associations. Submitting does not grant either status.</p><StudentRequests projectId={projectId} data={data}/></main>;
 }
