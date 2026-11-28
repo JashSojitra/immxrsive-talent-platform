@@ -56,7 +56,7 @@ export async function respondToStory(db: Database, actor: string, raw: unknown) 
 // Explicit public projection: no owner IDs, staff account IDs, approval notes or draft state.
 export const publicArticleFields = { id: articles.id, slug: articles.slug, category: articles.category, title: articles.title, excerpt: articles.excerpt, bodyMarkdown: articles.bodyMarkdown, coverMediaId: articles.coverMediaId, coverAlt: articles.coverAlt, studentProfileId: articles.studentProfileId, eventName: articles.eventName, eventDate: articles.eventDate, eventLocation: articles.eventLocation, tags: articles.tags, authorDisplayName: articles.authorDisplayName, publishedAt: articles.publishedAt, updatedAt: articles.updatedAt };
 export type PublicArticle = Pick<typeof articles.$inferSelect, keyof typeof publicArticleFields>;
-export async function publicArticles(db: Database, category?: string, limit?: number, slug?: string) {
+export async function publicArticles(db: Pick<Database, "select">, category?: string, limit?: number, slug?: string) {
   const query = db.select(publicArticleFields).from(articles).leftJoin(studentProfiles, eq(studentProfiles.id, articles.studentProfileId))
     .where(and(eq(articles.status, "published"), slug ? eq(articles.slug, slug) : undefined, category === "updates" ? or(eq(articles.category, "event"), eq(articles.category, "news")) : ["student_success", "event", "news"].includes(category ?? "") ? eq(articles.category, category as "news" | "event" | "student_success") : undefined,
       or(sql`${articles.category} <> 'student_success'`, and(eq(studentProfiles.publicationStatus, "published"), sql`${articles.studentApprovedAt} IS NOT NULL`))))
@@ -66,7 +66,7 @@ export async function publicArticles(db: Database, category?: string, limit?: nu
 export async function publicArticle(db: Database, slug: string) {
   const rows = await publicArticles(db, undefined, 1, slug); return rows[0] ?? null;
 }
-export async function articleStudent(db: Database, id: string) {
+export async function articleStudent(db: Pick<Database, "select">, id: string) {
   const [row] = await db.select({ id: studentProfiles.id, name: authUsers.name, headline: studentProfiles.headline, avatarMediaId: studentProfiles.avatarMediaId }).from(studentProfiles).innerJoin(authUsers, eq(authUsers.id, studentProfiles.ownerUserId)).where(and(eq(studentProfiles.id, id), eq(studentProfiles.publicationStatus, "published")));
   return row ?? null;
 }

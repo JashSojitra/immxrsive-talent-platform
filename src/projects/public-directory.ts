@@ -4,7 +4,7 @@ import { adminProjectDetails, projects, projectTechnologies } from "@/db/schema"
 import { safeAdminUrl } from "@/admin/policy";
 
 // Public index uses the same publication/lifecycle gates as public project detail.
-export async function listPublicProjects(db: Database) {
+export async function listPublicProjects(db: Pick<Database, "select">) {
   const [rows, technologies] = await Promise.all([
     db.select({ id: projects.id, title: projects.title, description: projects.description, domain: projects.domain, managementMode: projects.managementMode, status: projects.projectStatus, presentation: adminProjectDetails.content })
     .from(projects).leftJoin(adminProjectDetails, eq(adminProjectDetails.projectId, projects.id))
