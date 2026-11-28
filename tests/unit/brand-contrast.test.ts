@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { expect, test } from "vitest";
 
-const css = readFileSync("src/app/globals.css", "utf8");
+const css = readFileSync("src/styles/tokens.css", "utf8");
 const color = (name: string) => css.match(new RegExp(`--${name}: #(\\w{6});`))![1];
 function luminance(hex: string) {
   const rgb = [0, 2, 4].map(offset => parseInt(hex.slice(offset, offset + 2), 16) / 255)
