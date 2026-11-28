@@ -54,4 +54,4 @@
 @media(max-width:760px) { .creditRow { grid-template-columns: minmax(0, 1fr); } }
 
 .advancedCredit { grid-column: 1 / -1; padding-block: .75rem; }
-.advancedCredit summary { color: var(--flare);  cursor: pointer; min-height: 44px; display: list-item; padding-block: .7rem; }
+.advancedCredit summary { color: var(--flare); cursor: pointer; min-height: 44px; display: list-item; padding-block: .7rem; }
