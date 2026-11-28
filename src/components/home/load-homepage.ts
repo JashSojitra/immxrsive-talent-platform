@@ -9,7 +9,7 @@ import { articleStudent, publicArticles } from "@/updates/service";
 async function loadSection<T>(
   db: Database,
   name: string,
-  read: (connection: Database) => Promise<T>,
+  read: (connection: Pick<Database, "select" | "execute">) => Promise<T>,
   fallback: T,
   deadlineMs: number,
   statementMs: number,
@@ -39,7 +39,7 @@ async function loadSection<T>(
 }
 
 export async function loadHomepage(db: Database, deadlineMs = 5000, statementMs = 1200) {
-  const section = <T>(name: string, read: (connection: Database) => Promise<T>, fallback: T) =>
+  const section = <T>(name: string, read: (connection: Pick<Database, "select" | "execute">) => Promise<T>, fallback: T) =>
     loadSection(db, name, read, fallback, deadlineMs, statementMs);
   const [projects, portfolios, partners, homeStories, updates] = await Promise.all([
     section("projects", listPublicProjects, []),

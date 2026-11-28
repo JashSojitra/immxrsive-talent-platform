@@ -122,7 +122,7 @@ export async function maintainerRequests(db: Database, actor: string, projectId:
  if(!p || p.maintainerUserId !== actor || p.managementMode !== "STUDENT_MANAGED") fail("FORBIDDEN",403);
  return {requests:await db.select().from(requests).where(eq(requests.projectId,projectId)), companies:await publicCompanies(db)};
 }
-export async function publicCompanies(db: Database) { return db.select({id:companies.id,content:companies.content}).from(companies).where(eq(companies.status,"published")); }
+export async function publicCompanies(db: Pick<Database, "select">) { return db.select({id:companies.id,content:companies.content}).from(companies).where(eq(companies.status,"published")); }
 export async function publicPartner(db: Database, companyId: string) {
  if(!id.safeParse(companyId).success) return null;
  const [company] = await db.select({id:companies.id,content:companies.content}).from(companies).where(and(eq(companies.id,companyId),eq(companies.status,"published"))); if(!company) return null;
