@@ -46,26 +46,20 @@
 
 .eyebrow {
   margin: 0 0 20px;
-  color: var(--electric);
+
   font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+
+
+
 }
 
 .headline {
   max-width: 820px;
   margin: 0;
   font-size: clamp(3.25rem, 8vw, 7.5rem);
-  font-weight: 520;
-  letter-spacing: -0.075em;
-  line-height: 0.88;
-}
 
-.headline em {
-  color: var(--signal);
-  font-family: "Instrument Serif", Georgia, serif;
-  font-weight: 400;
+
+  line-height: 0.88;
 }
 
 .intro {
@@ -121,19 +115,16 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  border: 1px solid var(--bone);
-  background: var(--bone);
-  color: var(--ink);
+  border: 1px solid var(--brand-plum);
+  border-radius: var(--radius-pill);
+  background: var(--brand-plum);
+  color: white;
   cursor: pointer;
   font-weight: 720;
   transition: background 180ms ease, color 180ms ease, transform 180ms ease;
 }
 
-.card button:hover:not(:disabled) {
-  background: var(--electric);
-  border-color: var(--electric);
-  transform: translateY(-2px);
-}
+.card button:hover:not(:disabled) { background: var(--brand-cold-purple); border-color: var(--brand-cold-purple); }
 
 .card button:disabled {
   cursor: not-allowed;
@@ -336,14 +327,12 @@
 .nav { justify-content:flex-start; min-height:60px; padding-block:8px; border-bottom:1px solid var(--line); flex-wrap:wrap; gap:8px 24px; }
 .backLink { display:inline-flex; align-items:center; min-height:44px; font-size:.8rem; }
 .main { min-height:0; padding-block:64px; gap:clamp(32px,6vw,88px); }
-.headline { font-size:clamp(3rem,6.5vw,6rem); line-height:.98; letter-spacing:-.06em; font-weight:480; }
-.eyebrow { color:var(--signal); letter-spacing:.14em; font-size:.72rem; }
+.headline { font-size:clamp(3rem,6.5vw,6rem); line-height:.98; }
+.eyebrow {   font-size:.72rem; }
 .intro { margin-top:24px; font-size:1rem; color:var(--muted); }
 .card { padding:32px; border-radius:4px; background:var(--surface); box-shadow:none; }
 .card::before { background:var(--signal); width:48px; }
 .card h2 { font-size:1.7rem; font-weight:550; letter-spacing:-.035em; }
-.card button { min-height:48px; border-radius:4px; transition:none; }
-.card button:hover:not(:disabled) { transform:none; background:var(--bone); border-color:var(--bone); }
 .card button:active:not(:disabled) { transform:scale(.98); }
 .cardText { font-size:.9rem; }
 .privacy { font-size:.78rem; }

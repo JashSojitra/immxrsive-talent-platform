@@ -5,6 +5,7 @@ import { AdminEditor } from "@/admin/Editor";
 import { AdminExperience } from "@/admin/Experience";
 import { emptyContent } from "@/admin/policy";
 import "./setup";
+vi.mock("@/components/project-editor/ScreenshotsEditor", () => ({ ScreenshotsEditor: () => null }));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ replace: vi.fn(), refresh: vi.fn() }) }));
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 const initial = { ...emptyContent, title: "Synthetic showcase", summary: "Summary", description: "Narrative", fallbackText: "Independent fallback narrative", credits: [{ name: "Manual credit", role: "Designer", statement: "Made images", profileId: "" }] };
@@ -58,14 +59,14 @@ test("profile lookup adds a linked credit without inventing role or contribution
   const profileId = "11111111-2222-4333-8444-555555555555";
   const fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => [{ id: profileId, name: "Verified Student", headline: "XR developer", program: "CS" }] }); vi.stubGlobal("fetch", fetch);
   render(<AdminEditor initial={initial} record={record} role="xr_admin" />);
-  const search = screen.getByLabelText("Find a verified public profile");
+  const search = screen.getByLabelText("Find a student profile by name");
   expect((screen.getByRole("button", { name: "Search profiles" }) as HTMLButtonElement).disabled).toBe(true);
   fireEvent.change(search, { target: { value: "Verified & co" } }); fireEvent.click(screen.getByRole("button", { name: "Search profiles" }));
   const add = await screen.findByRole("button", { name: "Add linked credit for Verified Student" });
   expect(fetch.mock.calls[0][0]).toBe("/api/admin/profiles?q=Verified%20%26%20co");
   fireEvent.click(add);
   expect((screen.getByLabelText("Name — credit 2") as HTMLInputElement).value).toBe("Verified Student");
-  expect((screen.getByLabelText("Public profile internal ID (optional) — credit 2") as HTMLInputElement).value).toBe(profileId);
+  expect((screen.getByLabelText("Profile internal ID (optional) — credit 2") as HTMLInputElement).value).toBe(profileId);
   expect((screen.getByLabelText("Project role — credit 2") as HTMLInputElement).value).toBe("");
   expect((screen.getByLabelText("Contribution description — credit 2") as HTMLInputElement).value).toBe("");
   expect((screen.getByRole("button", { name: "Add linked credit for Verified Student" }) as HTMLButtonElement).disabled).toBe(true);
@@ -73,10 +74,10 @@ test("profile lookup adds a linked credit without inventing role or contribution
 test("empty profile lookup explains verification and publication requirements", async () => {
   vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, json: async () => [] }));
   render(<AdminEditor initial={initial} record={record} role="xr_admin" />);
-  fireEvent.change(screen.getByLabelText("Find a verified public profile"), { target: { value: "Nobody" } }); fireEvent.click(screen.getByRole("button", { name: "Search profiles" }));
-  expect(await screen.findByText(/must verify their affiliation and publish their profile/)).toBeDefined();
+  fireEvent.change(screen.getByLabelText("Find a student profile by name"), { target: { value: "Nobody" } }); fireEvent.click(screen.getByRole("button", { name: "Search profiles" }));
+  expect(await screen.findByText(/Add an Algoma email credit to link a student when they join/)).toBeDefined();
 });
 test("curator cannot use profile lookup", () => {
   render(<AdminEditor initial={initial} record={record} role="xr_curator" />);
-  expect(screen.getByLabelText("Find a verified public profile").closest("fieldset")?.disabled).toBe(true);
+  expect(screen.getByLabelText("Find a student profile by name").closest("fieldset")?.disabled).toBe(true);
 });

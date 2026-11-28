@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { PublicProjectDetail } from "@/db/queries/project-detail";
 
 import { ProjectDemo } from "./ProjectDemo";
+import { ProjectGallery } from "./ProjectGallery";
 import { ProjectDetailMotion } from "./ProjectDetailMotion";
 import styles from "./project-detail.module.css";
 const mediaTypeLabels: Record<string, string> = { playable: "Playable web URL", video: "Video / demo", source: "Source", fallback_image: "Fallback image", fallback_video: "Fallback video", fallback_link: "Fallback link", link: "Project link" };
@@ -28,8 +29,8 @@ export function ProjectDetailView({ project, preview = false }: { project: Publi
           <strong>{project.managementMode === "ADMIN_MANAGED" ? "Staff-curated" : "Student project"}</strong>
         </div>
         <div className={styles.heroBody}>
-          <p className={styles.domain} data-project-lead>{project.domain}</p>
-          <h1 id="project-title" data-project-title>{project.title}</h1>
+          <p className={`ui-eyebrow ${styles.domain}`} data-project-lead>{project.domain}</p>
+          <h1 id="project-title" data-project-title className="ui-display">{project.title}</h1>
           <p className={styles.description} data-project-lead>{project.description}</p>
           <dl className={styles.heroMeta} data-project-meta>
             <div><dt>Collection</dt><dd>{project.managementMode === "ADMIN_MANAGED" ? "Staff-curated" : "Student-managed"}</dd></div>
@@ -42,7 +43,7 @@ export function ProjectDetailView({ project, preview = false }: { project: Publi
       </section>
 
       <div id="project-evidence">
-        {project.adminPresentation ? <AdminExperience key={`${project.id}-${JSON.stringify(project.adminPresentation)}`} content={project.adminPresentation} /> : <ProjectDemo key={`${project.id}-${JSON.stringify(project.assets)}`} title={project.title} assets={project.assets} />}
+        {project.adminPresentation ? <AdminExperience key={`${project.id}-${JSON.stringify(project.adminPresentation)}`} content={project.adminPresentation} screenshots={project.screenshots} /> : <><ProjectDemo key={`${project.id}-${JSON.stringify(project.assets)}`} title={project.title} assets={project.assets} /><ProjectGallery images={project.screenshots ?? []} /></>}
         {project.adminPresentation && <section className={styles.technologySection}><h2>Project context</h2><p>{project.adminPresentation.institution}</p><p>Tools / frameworks: {project.adminPresentation.tools.join(", ") || "Not supplied"}</p><p>Project dates: {project.adminPresentation.startDate || "Not supplied"} — {project.adminPresentation.endDate || "Ongoing"}</p><p>Admin-managed presentation. Contributor credits are descriptive attribution and do not verify identities, confer ownership or create personal skills.</p></section>}
         <section className={styles.technologySection} aria-labelledby="technologies-title" data-project-section>
           <SectionHeading index="02" label="Technology system" id="technologies-title">

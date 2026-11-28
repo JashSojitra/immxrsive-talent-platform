@@ -1,9 +1,14 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
-import { and, asc, desc, eq, ilike, inArray, sql } from "drizzle-orm";
+import { asc, desc, eq, ilike, inArray, sql } from "drizzle-orm";
 import { z } from "zod";
 import type { Database } from "@/db/client";
-import { adminCreditLinks, adminEvents, adminProjectDetails, authUsers, projectRepositories, projects, studentAffiliations, studentProfiles, studioEvents, studioRoles } from "@/db/schema";
+import { adminCreditEmails, adminEvents, adminProjectDetails, authUsers, projectRepositories, projects, studentProfiles, studioEvents, studioRoles } from "@/db/schema";
+import { reconcileProjectCredits } from "./credit-links";
+import { resolvedEmailCredits } from "./credit-queries";
+import { approvedInstitutionalDomains } from "@/verification/config";
+import { normalizeInstitutionalEmail } from "@/verification/validation";
+import { queryProjectScreenshots } from "@/projects/screenshot-queries";
 import { ProjectError } from "@/projects/service";
 import { lockRepositoryKeys, queryProjectDuplicates, similarProjectName } from "@/projects/duplicates";
 import { accessCommandSchema, adminCommandSchema, adminContentSchema, canManage, publicationIssues, type AdminContent } from "./policy";
@@ -34,26 +39,47 @@ export async function adminDetail(db: Database, actor: string, id: string) {
     const [detail] = await tx.select().from(adminProjectDetails).where(eq(adminProjectDetails.projectId, id));
     if (!detail) fail("NOT_FOUND", 404);
     const events = await tx.select().from(adminEvents).where(eq(adminEvents.projectId, id)).orderBy(desc(adminEvents.createdAt));
-    return { role, project: p, detail, events };
+    const creditState = await adminCreditState(tx, id, detail.content);
+    return { role, project: p, detail: { ...detail, content: canManage(role) ? creditState.content : detail.content }, events, creditStatuses: creditState.statuses, screenshots: await queryProjectScreenshots(tx, [id]) };
   });
 }
 export async function adminActivity(db: Database, actor: string) {
   return db.transaction(async tx => { await lockStaff(tx, actor); return tx.select().from(adminEvents).orderBy(desc(adminEvents.createdAt)).limit(100); });
 }
 async function validateCreditLinks(tx: Tx, id: string, content: AdminContent) {
-  // PostgreSQL UUIDs are canonical lowercase. Compare older saved content the
-  // same way so a previously linked profile never becomes a new consent gate.
   const ids = [...new Set(content.credits.flatMap(c => c.profileId ? [c.profileId.toLowerCase()] : []))];
-  const configured = await tx.select().from(adminCreditLinks).where(eq(adminCreditLinks.projectId, id));
-  const newlyLinked = ids.filter(profileId => !configured.some(c => c.profileId === profileId));
-  if (newlyLinked.length) {
-    const profiles = await tx.select({ id: studentProfiles.id }).from(studentProfiles)
-      .innerJoin(studentAffiliations, eq(studentAffiliations.userId, studentProfiles.ownerUserId))
-      .where(and(inArray(studentProfiles.id, newlyLinked), eq(studentProfiles.publicationStatus, "published"), eq(studentAffiliations.status, "verified"))).for("share");
-    if (profiles.length !== newlyLinked.length) fail("PROFILE_LINK_UNAVAILABLE", 422, "Linked profiles must be currently public and verified. Remove unavailable links; descriptive credits can remain.");
+  if (ids.length) {
+    const profiles = await tx.select({ id: studentProfiles.id }).from(studentProfiles).where(inArray(studentProfiles.id, ids)).for("share");
+    if (profiles.length !== ids.length) fail("PROFILE_NOT_FOUND", 422, "Choose an existing profile or leave the profile ID empty.");
   }
-  await tx.delete(adminCreditLinks).where(eq(adminCreditLinks.projectId, id));
-  if (ids.length) await tx.insert(adminCreditLinks).values(ids.map(profileId => ({ projectId: id, profileId })));
+  await reconcileProjectCredits(tx, id);
+}
+function publicContent(input: AdminContent): AdminContent {
+  return { ...input, credits: input.credits.map(c => ({ name: c.name, role: c.role, statement: c.statement, profileId: c.profileId })) };
+}
+async function saveCreditEmails(tx: Tx, projectId: string, actor: string, input: AdminContent) {
+  const domains = approvedInstitutionalDomains();
+  const old = await tx.select().from(adminCreditEmails).where(eq(adminCreditEmails.projectId, projectId));
+  const rows = input.credits.flatMap((c, creditIndex) => {
+    if (!c.institutionalEmail) return [];
+    const institutionalEmail = normalizeInstitutionalEmail(c.institutionalEmail, domains);
+    if (!institutionalEmail) fail("INVALID_CREDIT_EMAIL", 422, "Use an allowed Algoma institutional email for each email credit.");
+    const previous = old.find(v => v.institutionalEmail === institutionalEmail);
+    return [{ projectId, institutionalEmail, creditIndex, displayName: c.name, role: c.role, statement: c.statement, createdBy: previous?.createdBy ?? actor, createdAt: previous?.createdAt ?? new Date() }];
+  });
+  if (new Set(rows.map(r => r.institutionalEmail)).size !== rows.length) fail("DUPLICATE_CREDIT_EMAIL", 422, "Use each institutional email once per project.");
+  await tx.delete(adminCreditEmails).where(eq(adminCreditEmails.projectId, projectId));
+  if (rows.length) await tx.insert(adminCreditEmails).values(rows);
+}
+async function adminCreditState(tx: Tx, projectId: string, content: AdminContent) {
+  const emails = await tx.select({ creditIndex: adminCreditEmails.creditIndex, institutionalEmail: adminCreditEmails.institutionalEmail }).from(adminCreditEmails).where(eq(adminCreditEmails.projectId, projectId));
+  const resolved = await resolvedEmailCredits(tx, [projectId]);
+  const ids = content.credits.flatMap(c => c.profileId ? [c.profileId] : []);
+  const direct = ids.length ? await tx.select({ id: studentProfiles.id, name: authUsers.name, publicationStatus: studentProfiles.publicationStatus }).from(studentProfiles).innerJoin(authUsers, eq(authUsers.id, studentProfiles.ownerUserId)).where(inArray(studentProfiles.id, ids)) : [];
+  return { content: { ...content, credits: content.credits.map((c, i) => ({ ...c, institutionalEmail: emails.find(e => e.creditIndex === i)?.institutionalEmail ?? "" })) }, statuses: content.credits.map((c, i) => {
+    const profile = c.profileId ? direct.find(p => p.id === c.profileId) : resolved.find(p => p.creditIndex === i);
+    return !profile ? "Waiting for this student to join" : profile.publicationStatus !== "published" ? "Profile not public yet" : `Linked to ${profile.name}`;
+  }) };
 }
 async function repository(tx: Tx, id: string, content: AdminContent) {
   const key = content.originalRepository || null;
@@ -67,7 +93,7 @@ async function repository(tx: Tx, id: string, content: AdminContent) {
   return key;
 }
 export async function adminCreate(db: Database, actor: string, raw: unknown) {
-  const content = adminContentSchema.parse(raw);
+  const input = adminContentSchema.parse(raw); const content = publicContent(input);
   return db.transaction(async tx => {
     await lockStaff(tx, actor, true);
     const id = randomUUID();
@@ -75,9 +101,10 @@ export async function adminCreate(db: Database, actor: string, raw: unknown) {
     const [project] = await tx.insert(projects).values({ id, title: content.title, description: content.description, domain: content.domain, projectStatus: content.projectStatus, projectDate: content.startDate || null, origin: "admin", managementMode: "ADMIN_MANAGED" }).returning();
     const key = await repository(tx, id, content);
     const [detail] = await tx.insert(adminProjectDetails).values({ projectId: id, createdBy: actor, content, repositoryKey: key }).returning();
+    await saveCreditEmails(tx, id, actor, input);
     await validateCreditLinks(tx, id, content);
     await tx.insert(adminEvents).values({ projectId: id, actorUserId: actor, action: "create", note: "", snapshot: { project, detail } });
-    return { project, detail };
+    return { project, detail, creditStatuses: (await adminCreditState(tx, id, content)).statuses };
   });
 }
 export async function adminCommand(db: Database, actor: string, id: string, raw: unknown) {
@@ -90,7 +117,7 @@ export async function adminCommand(db: Database, actor: string, id: string, raw:
     if (!d) fail("NOT_FOUND", 404);
     if (p.version !== command.version) fail("EDIT_CONFLICT", 409, "Another administrator changed this project. Your entries are retained. Reload and reconcile before saving.");
     let lifecycle = d.lifecycle;
-    const content = command.content ?? d.content;
+    const input = command.content; const content = input ? publicContent(input) : d.content;
     if (command.action === "save" && !command.content) fail("CONTENT_REQUIRED", 422);
     if (d.lifecycle === "archived" && command.action !== "restore") fail("INVALID_TRANSITION");
     if (command.action === "restore") { if (d.lifecycle !== "archived") fail("INVALID_TRANSITION"); lifecycle = "draft"; }
@@ -101,11 +128,12 @@ export async function adminCommand(db: Database, actor: string, id: string, raw:
       const issues = publicationIssues(content); if (issues.length) fail("PUBLICATION_VALIDATION", 422, issues.join(" "));
     }
     const key = await repository(tx, id, content);
-    await validateCreditLinks(tx, id, content);
     const [project] = await tx.update(projects).set({ title: content.title, description: content.description, domain: content.domain, projectStatus: content.projectStatus, projectDate: content.startDate || null, version: p.version + 1, updatedAt: new Date(), publicationStatus: lifecycle === "published" ? "published" : "unpublished", publishedAt: lifecycle === "published" && p.publicationStatus !== "published" ? new Date() : p.publishedAt }).where(eq(projects.id, id)).returning();
     const [detail] = await tx.update(adminProjectDetails).set({ lifecycle, content, repositoryKey: key }).where(eq(adminProjectDetails.projectId, id)).returning();
+    if (input) await saveCreditEmails(tx, id, actor, input);
+    await validateCreditLinks(tx, id, content);
     await tx.insert(adminEvents).values({ projectId: id, actorUserId: actor, action: command.action, note: command.note, snapshot: { project, detail } });
-    return { project, detail };
+    return { project, detail, creditStatuses: (await adminCreditState(tx, id, content)).statuses };
   });
 }
 export async function adminDuplicates(db: Database, actor: string, repositoryUrl: string, title: string) {
@@ -124,8 +152,7 @@ export async function adminDuplicates(db: Database, actor: string, repositoryUrl
 const lookupQuery = z.string().trim().min(2, "Enter at least two characters.").max(120);
 export const escapeLike = (value: string) => value.replace(/[\\%_]/g, c => `\\${c}`);
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-// Credit-link candidates: only profiles that validateCreditLinks would accept.
-// Returns already-public directory fields; never email, owner ID or drafts.
+// Staff can find any profile, but never another account's email or private biography.
 export async function adminProfileLookup(db: Database, actor: string, raw: unknown) {
   const q = lookupQuery.parse(raw);
   return db.transaction(async tx => {
@@ -133,8 +160,7 @@ export async function adminProfileLookup(db: Database, actor: string, raw: unkno
     const match = UUID.test(q) ? eq(studentProfiles.id, q.toLowerCase()) : ilike(authUsers.name, `%${escapeLike(q)}%`);
     return tx.select({ id: studentProfiles.id, name: authUsers.name, headline: studentProfiles.headline, program: studentProfiles.program }).from(studentProfiles)
       .innerJoin(authUsers, eq(authUsers.id, studentProfiles.ownerUserId))
-      .innerJoin(studentAffiliations, eq(studentAffiliations.userId, studentProfiles.ownerUserId))
-      .where(and(match, eq(studentProfiles.publicationStatus, "published"), eq(studentAffiliations.status, "verified")))
+      .where(match)
       .orderBy(asc(authUsers.name), asc(studentProfiles.id)).limit(20);
   });
 }

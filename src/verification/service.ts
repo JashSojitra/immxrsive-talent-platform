@@ -1,4 +1,5 @@
 import "server-only";
+import { linkVerifiedCredits } from "@/admin/credit-links";
 
 import { randomUUID } from "node:crypto";
 
@@ -247,6 +248,7 @@ export async function confirmAffiliationVerification(input: {
         createdAt: now,
         updatedAt: now,
       });
+      await linkVerifiedCredits(transaction, input.userId);
       await transaction
         .update(affiliationVerificationChallenges)
         .set({ consumedAt: now })

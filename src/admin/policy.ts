@@ -17,7 +17,7 @@ export function safeAdminUrl(value: string) {
 const url = text(2048).refine(v => !v || Boolean(safeAdminUrl(v)), "Use a public HTTPS URL without credentials or local addresses.");
 const repository = text(2048).refine(v => { try { return !v || Boolean(githubRepository(v)); } catch { return false; } }, "Use a public GitHub repository page.").transform(v => v ? githubRepository(v).key : "");
 const date = text(10).refine(v => !v || /^(?!0000)\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(v)) && new Date(v).toISOString().slice(0, 10) === v, "Use a valid YYYY-MM-DD date from year 0001 onwards.");
-export const creditSchema = z.object({ name: text(160).min(1), role: text(160).min(1), statement: text(2000), profileId: z.union([z.uuid(), z.literal("")]).transform(v => v.toLowerCase()) }).strict();
+export const creditSchema = z.object({ name: text(160).min(1), role: text(160).min(1), statement: text(2000), profileId: z.union([z.uuid(), z.literal("")]).transform(v => v.toLowerCase()), institutionalEmail: z.union([z.string().trim().email().max(254).transform(v => v.toLowerCase()), z.literal("")]).optional() }).strict().refine(c => !c.institutionalEmail || !c.profileId, { message: "Use an Algoma email or a profile ID, not both.", path: ["institutionalEmail"] });
 export const adminContentSchema = z.object({
   title: text(160).min(1), summary: text(600), description: text(12000), domain: text(100).min(1),
   projectStatus: z.enum(["in_progress", "completed", "on_hold"]), startDate: date, endDate: date,

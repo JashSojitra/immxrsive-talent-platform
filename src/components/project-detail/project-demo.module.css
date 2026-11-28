@@ -1,5 +1,5 @@
 .section { padding: 48px 0; border-top: 1px solid var(--line); }
-.eyebrow { color: var(--electric); font-size: .75rem; text-transform: uppercase; letter-spacing: .16em; }
+.eyebrow {  font-size: .75rem; }
 .section h2 { margin: 22px 0; font-size: clamp(2rem,3.8vw,3.5rem); line-height: .98; font-weight: 350; letter-spacing: -.055em; overflow-wrap: anywhere; }
 .section h2 em { font-style: normal; color: var(--signal); }
 .intro { max-width: 720px; color: var(--muted); line-height: 1.8; }

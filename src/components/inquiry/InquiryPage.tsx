@@ -35,8 +35,8 @@ export function InquiryPage({ source }: { source: InquirySourceView }) {
           </strong>
         </div>
         <div>
-          <p className={styles.eyebrow}>{isStudent ? "Interested in working with" : "Inquiry about"}</p>
-          <h1 id="inquiry-title">{source.name}</h1>
+          <p className={`ui-eyebrow ${styles.eyebrow}`}>{isStudent ? "Interested in working with" : "Inquiry about"}</p>
+          <h1 id="inquiry-title" className="ui-display">{source.name}</h1>
           <p className={styles.contextDetail}>{source.detail}</p>
           <p className={styles.lockedContext}>Your message includes this {source.type} so the team has the right context.</p>
         </div>
@@ -44,7 +44,7 @@ export function InquiryPage({ source }: { source: InquirySourceView }) {
 
       <section id="inquiry-form" className={styles.formSection} aria-labelledby="form-title">
         <div className={styles.formIntro}>
-          <p className={styles.eyebrow}>01 / Your inquiry</p>
+          <p className={`ui-eyebrow ${styles.eyebrow}`}>01 / Your inquiry</p>
           <h2 id="form-title">Start the<br /><em>conversation.</em></h2>
           <p>Four fields, no account required. Required fields are marked in their labels.</p>
         </div>

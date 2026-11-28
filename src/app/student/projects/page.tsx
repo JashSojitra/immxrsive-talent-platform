@@ -17,9 +17,9 @@ export default async function MyProjectsPage() {
   return <ProjectWorkspace title="My projects." intro="A workspace for the things you make. Manage your projects, shape your contributions and choose what to publish.">
     {profile ? <>
       <div className={styles.actions}><Link className={styles.primary} href="/student/projects/new">Add Project <span aria-hidden="true">↗</span></Link><Link href="/student/project-invitations">Invitations &amp; shared projects</Link></div>
-      <p className={styles.eyebrow}>{projects.filter(project => project.state === "accepted").length} active projects · {projects.filter(project => project.state === "pending").length} pending invitations</p>
+      <p className={`ui-eyebrow ${styles.eyebrow}`}>{projects.filter(project => project.state === "accepted").length} active projects · {projects.filter(project => project.state === "pending").length} pending invitations</p>
       {projects.length ? projects.map(project => <article className={styles.card} key={project.id}>
-        <p className={styles.eyebrow}>{project.publicationStatus === "published" ? "Published" : "Private draft"} / {project.isMaintainer ? "Maintainer" : project.state === "accepted" ? "Contributor" : project.state === "pending" ? "Invitation pending" : project.state === "declined" ? "Invitation declined" : "Past contributor"}</p>
+        <p className={`ui-eyebrow ${styles.eyebrow}`}>{project.publicationStatus === "published" ? "Published" : "Private draft"} / {project.isMaintainer ? "Maintainer" : project.state === "accepted" ? "Contributor" : project.state === "pending" ? "Invitation pending" : project.state === "declined" ? "Invitation declined" : "Past contributor"}</p>
         <h2><Link href={`/student/projects/${project.id}/${project.isMaintainer ? "edit" : "team"}`}>{project.title}</Link></h2>
         <p>{project.description}</p>
         <div className={styles.actions}>

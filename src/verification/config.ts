@@ -2,6 +2,12 @@ const DEFAULT_APPROVED_DOMAIN = "algomau.ca";
 const DEFAULT_TTL_MINUTES = 30;
 const MAX_TTL_MINUTES = 30;
 
+export function approvedInstitutionalDomains(environment: Record<string, string | undefined> = process.env) {
+  const domains = new Set((environment.ALGOMA_APPROVED_EMAIL_DOMAINS ?? DEFAULT_APPROVED_DOMAIN).split(",").map(d => d.trim().toLowerCase()).filter(Boolean));
+  if (!domains.size) domains.add(DEFAULT_APPROVED_DOMAIN);
+  return domains;
+}
+
 export type AffiliationVerificationConfig = {
   approvedDomains: ReadonlySet<string>;
   ttlMinutes: number;
@@ -12,13 +18,7 @@ export type AffiliationVerificationConfig = {
 export function getAffiliationVerificationConfig(
   environment: Record<string, string | undefined> = process.env,
 ): AffiliationVerificationConfig {
-  const approvedDomains = new Set(
-    (environment.ALGOMA_APPROVED_EMAIL_DOMAINS ?? DEFAULT_APPROVED_DOMAIN)
-      .split(",")
-      .map((domain) => domain.trim().toLowerCase())
-      .filter(Boolean),
-  );
-  if (approvedDomains.size === 0) approvedDomains.add(DEFAULT_APPROVED_DOMAIN);
+  const approvedDomains = approvedInstitutionalDomains(environment);
 
   const requestedTtl = Number(
     environment.AFFILIATION_VERIFICATION_TTL_MINUTES ?? DEFAULT_TTL_MINUTES,

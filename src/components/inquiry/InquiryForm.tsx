@@ -242,7 +242,7 @@ export function InquiryForm({ source }: { source: SourceContext }) {
         <p role="status" aria-live="polite">
           {isPending ? "Submitting inquiry…" : "No account required."}
         </p>
-        <button type="submit" disabled={isPending}>
+        <button className="ui-button ui-button-primary" type="submit" disabled={isPending}>
           {isPending ? "Submitting…" : "Submit inquiry"}<span aria-hidden="true">↗</span>
         </button>
       </div>

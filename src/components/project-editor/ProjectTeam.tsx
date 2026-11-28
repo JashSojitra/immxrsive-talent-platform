@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ScreenshotsEditor } from "./ScreenshotsEditor";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { PersonalContribution, ProjectTeamData } from "@/projects/team-types";
 import styles from "./project-editor.module.css";
@@ -77,8 +78,8 @@ export function ProjectTeam({ initialData }: { initialData: ProjectTeamData }) {
         <Link href="/student/project-invitations">Invitations &amp; shared projects</Link></div>
     </div>
     {error ? <div className={styles.feedback} role="alert" aria-labelledby="team-error-title" tabIndex={-1} ref={feedback}><h2 id="team-error-title">Team change not saved</h2><p>{error}</p><p>Your entered information has been kept.</p>{conflict ? <button disabled={busy} onClick={reload}>Load latest project team</button> : null}</div> : null}
-    <p role="status" className={styles.success}>{notice}</p>
-    {own?.state === "pending" ? <section className={styles.section} aria-labelledby="invitation-title"><p className={styles.eyebrow}>A place on the team</p><h2 id="invitation-title">Your invitation.</h2>
+    <p role="status" aria-label="Team feedback" className={styles.success}>{notice}</p>
+    {own?.state === "pending" ? <section className={styles.section} aria-labelledby="invitation-title"><p className={`ui-eyebrow ${styles.eyebrow}`}>A place on the team</p><h2 id="invitation-title">Your invitation.</h2>
       <p>Proposed role: <strong>{data.roles.find(r => r.id === own.proposedRoleId)?.name}</strong></p>
       <p>Accepting creates your contributor relationship. On published profiles, your role is publicly attributed and this project is featured by default. You can change both choices in your personal controls. Declining never publishes you as a contributor.</p>
       <div className={styles.actions}><button disabled={busy} className={styles.primary} onClick={() => run(`project-memberships/${own.id}/response`, { version: own.version, accept: true }, "Invitation accepted. Your personal contribution is now yours to shape.", true)}>Accept invitation</button>
@@ -86,7 +87,7 @@ export function ProjectTeam({ initialData }: { initialData: ProjectTeamData }) {
     {own?.state === "removed" ? <section className={styles.card}><h2>Your relationship was removed.</h2><p>Your contribution and original relationship are preserved. The maintainer can restore them.</p><p>Reason: {own.removalReason || "No reason supplied."}</p><p>Removed: {own.removedAt ? new Date(own.removedAt).toISOString().slice(0, 10) : "Recorded privately"}</p></section> : null}
     {own?.state === "declined" ? <section className={styles.card}><h2>You declined this invitation.</h2><p>No accepted contribution or portfolio association was created.</p></section> : null}
     {own?.state === "accepted" && own.contribution ? <form className={styles.section} onSubmit={e => { e.preventDefault(); void run(`project-memberships/${own.id}/contribution`, { version: own.contribution!.version, contribution: draft }, "Personal contribution saved.", true, "PATCH"); }}>
-      <p className={styles.eyebrow}>Your work, in your words</p><h2>Your contribution.</h2><p>Only you can change this statement, role and visibility. Project technologies do not become your personal skills.</p>
+      <p className={`ui-eyebrow ${styles.eyebrow}`}>Your work, in your words</p><h2>Your contribution.</h2><p>Only you can change this statement, role and visibility. Project technologies do not become your personal skills.</p>
       {own.restoredAt ? <p>Your preserved relationship has been restored.</p> : null}
       <label htmlFor="personal-role">Your standardized role</label><select id="personal-role" value={draft.roleId} onChange={e => setDraft({ ...draft, roleId: e.target.value })}>{data.roles.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}</select>
       <label htmlFor="personal-statement">Your contribution statement / role description (optional)</label><textarea id="personal-statement" maxLength={3000} value={draft.statement} onChange={e => setDraft({ ...draft, statement: e.target.value })} />
@@ -97,17 +98,17 @@ export function ProjectTeam({ initialData }: { initialData: ProjectTeamData }) {
       <div className={styles.actions}><button className={styles.primary} disabled={busy || !dirty} type="submit">Save my contribution</button>{dirty ? <span>You have unsaved personal changes.</span> : null}</div>
     </form> : null}
     {data.isMaintainer ? <>
-      <section className={styles.section}><p className={styles.eyebrow}>Open the door with consent</p><h2>Requests to join.</h2><p>Approval proposes a role through a private invitation. The requester becomes accepted only after responding to that invitation.</p>
+      <section className={styles.section}><p className={`ui-eyebrow ${styles.eyebrow}`}>Open the door with consent</p><h2>Requests to join.</h2><p>Approval proposes a role through a private invitation. The requester becomes accepted only after responding to that invitation.</p>
         {(data.joinRequests ?? []).length ? data.joinRequests.map(r => <article key={r.id} className={styles.card}><h3>{r.name}</h3><p>Join request: {r.state}</p>{r.state === "pending" ? <><label htmlFor={`join-role-${r.id}`}>Proposed role for {r.name}</label><select id={`join-role-${r.id}`} value={joinRoles[r.id] ?? data.roles[0]?.id} onChange={e => setJoinRoles({ ...joinRoles, [r.id]: e.target.value })}>{data.roles.map(role => <option key={role.id} value={role.id}>{role.name}</option>)}</select><div className={styles.actions}><button disabled={busy || dirty} onClick={() => run(`project-join-requests/${r.id}/response`, { version: r.version, projectVersion: data.project.version, approve: true, roleId: joinRoles[r.id] ?? data.roles[0]?.id }, "Join request approved. A private invitation awaits their acceptance.")}>Approve request from {r.name}</button><button disabled={busy || dirty} onClick={() => run(`project-join-requests/${r.id}/response`, { version: r.version, projectVersion: data.project.version, approve: false }, "Join request declined.")}>Decline request from {r.name}</button></div></> : null}</article>) : <p>No requests to join.</p>}
       </section>
-      <section className={styles.section}><p className={styles.eyebrow}>Build together</p><h2>Add Teammate.</h2><p>Search published verified students, or enter an exact profile ID privately shared with you. No email search or GitHub contribution is treated as consent.</p>
+      <section className={styles.section}><p className={`ui-eyebrow ${styles.eyebrow}`}>Build together</p><h2>Add Teammate.</h2><p>Search published verified students, or enter an exact profile ID privately shared with you. No email search or GitHub contribution is treated as consent.</p>
         <form onSubmit={search}><label htmlFor="student-search">Student name or shared profile ID</label><input id="student-search" minLength={2} maxLength={160} required value={query} onChange={e => setQuery(e.target.value)} /><div className={styles.actions}><button disabled={busy || dirty}>Find students</button></div></form>
         {students.length ? <form onSubmit={e => { e.preventDefault(); void run(`projects/${data.project.id}/invitations`, { version: data.project.version, profileId, roleId }, "Invitation sent. They decide whether to accept."); }}>
           <label htmlFor="invite-student">Student to invite</label><select id="invite-student" value={profileId} onChange={e => setProfileId(e.target.value)}>{students.map(s => <option key={s.id} value={s.id}>{s.name} — {s.headline}</option>)}</select>
           <label htmlFor="proposed-role">Proposed standardized role</label><select id="proposed-role" value={roleId} onChange={e => setRoleId(e.target.value)}>{data.roles.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}</select>
           <div className={styles.actions}><button disabled={busy || dirty || !profileId}>Send invitation</button></div></form> : null}
       </section>
-      <section className={styles.section}><p className={styles.eyebrow}>Relationships that last</p><h2>Project team.</h2><p>Removing a contributor is reversible. Their statement, role, original acceptance and preferences are retained; you cannot rewrite their words.</p>
+      <section className={styles.section}><p className={`ui-eyebrow ${styles.eyebrow}`}>Relationships that last</p><h2>Project team.</h2><p>Removing a contributor is reversible. Their statement, role, original acceptance and preferences are retained; you cannot rewrite their words.</p>
         <label htmlFor="removal-reason">Removal reason (optional, visible to that contributor)</label><input id="removal-reason" maxLength={500} value={reason} onChange={e => setReason(e.target.value)} />
         {data.members.map(m => <article key={m.id} className={styles.card}><h3>{m.name}</h3><p>{m.state} · {data.roles.find(r => r.id === (m.contribution?.roleId ?? m.proposedRoleId))?.name}</p><code>{m.profileId}</code>
           {m.contribution?.statement ? <p className={styles.statement}>{m.contribution.statement}</p> : null}
@@ -119,7 +120,8 @@ export function ProjectTeam({ initialData }: { initialData: ProjectTeamData }) {
         </article>)}
       </section>
     </> : null}
-    <section className={styles.section}><p className={styles.eyebrow}>Consent before responsibility</p><h2>Maintenance offers.</h2>
+    {own?.state === "accepted" && !data.isMaintainer && <ScreenshotsEditor projectId={data.project.id} />}
+    <section className={styles.section}><p className={`ui-eyebrow ${styles.eyebrow}`}>Consent before responsibility</p><h2>Maintenance offers.</h2>
       {!data.transfers.length ? <p>No maintenance offers.</p> : data.transfers.map(t => <article key={t.id} className={styles.card}><p>Maintenance offer: {t.state}</p>
         {t.state === "pending" && t.projectVersion !== data.project.version ? <p>This offer is stale. Ask the maintainer for a fresh offer before accepting.</p> : null}
         {t.state === "pending" && t.toMembershipId === own?.id ? <><p>Accepting makes you the only shared-field editor. The project ID and URL stay unchanged.</p><div className={styles.actions}>

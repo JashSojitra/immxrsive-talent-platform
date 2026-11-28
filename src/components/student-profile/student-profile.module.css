@@ -181,11 +181,10 @@
 }
 .page[data-preset="editorial"] .spatialBackdrop { display: none; }
 .page[data-preset="editorial"] .hero { grid-template-columns: .7fr 2.3fr; padding-top: 110px; }
-.page[data-preset="editorial"] .hero h1,
 .page[data-preset="editorial"] .sectionHeading h2,
 .page[data-preset="editorial"] .inquirySection h2 {
-  font-family: Georgia, "Times New Roman", serif;
-  letter-spacing: -0.055em;
+  font-family: var(--font-serif);
+  letter-spacing: -.055em;
 }
 .page[data-preset="editorial"] .hero h1 { max-width: 900px; font-size: clamp(5rem, 9vw, 8.4rem); }
 .page[data-preset="editorial"] .capabilities,
@@ -255,9 +254,9 @@
   max-width: 1120px;
   margin: 0;
   font-size: clamp(2.8rem, 6.8vw, 6.5rem);
-  font-weight: 350;
+
   line-height: 1.03;
-  letter-spacing: -0.075em;
+
 }
 
 .headline {
@@ -541,12 +540,11 @@
   max-width: 1100px;
   margin: 0;
   font-size: clamp(4.5rem, 9vw, 9rem);
-  font-weight: 350;
+
   line-height: 0.9;
-  letter-spacing: -0.07em;
+
 }
 
-.stateTitle em { color: var(--signal); font-style: normal; }
 
 .stateActions {
   display: flex;

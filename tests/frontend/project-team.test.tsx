@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import "./setup";
+vi.mock("@/components/project-editor/ScreenshotsEditor", () => ({ ScreenshotsEditor: () => null }));
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, test, vi } from "vitest";

@@ -1,10 +1,7 @@
 import Link from "next/link";
 import { getRuntimeDatabase } from "@/db/runtime";
-import { countPublishedTalent } from "@/db/queries/talent";
-import { publicArticles, articleStudent } from "@/updates/service";
+import { loadHomepage } from "@/components/home/load-homepage";
 import { UpdatesHighlights } from "@/components/home/UpdatesHighlights";
-import { listPublicProjects } from "@/projects/public-directory";
-import { publicCompanies } from "@/partners/service";
 import { Connection } from "@/components/home/Connection";
 import { HomeHero } from "@/components/home/HomeHero";
 import { Manifesto } from "@/components/home/Manifesto";
@@ -21,18 +18,10 @@ import styles from "@/components/home/home.module.css";
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const db = getRuntimeDatabase();
-  const [projects, portfolios, partners, stories, updates] = await Promise.all([
-    listPublicProjects(db),
-    countPublishedTalent(db),
-    publicCompanies(db),
-    publicArticles(db, "student_success", 6),
-    publicArticles(db, "updates", 4),
-  ]);
+  const { projects, portfolios, partners, homeStories, updates } = await loadHomepage(getRuntimeDatabase());
   // Only published, public fields cross into client components.
   const editorialProjects = projects.filter(project => !isReviewRecord(project.title));
   const featured = editorialProjects.slice(0, 6).map(({ id, title, description, domain, status, managementMode, technologies }) => ({ id, title, description, domain, status, managementMode, technologies }));
-  const homeStories = await Promise.all(stories.map(async story => ({ ...story, student: story.studentProfileId ? await articleStudent(db, story.studentProfileId) : null })));
   const partnerNames = partners.filter(company => !isReviewRecord(company.content.name)).map(company => ({ id: company.id, name: company.content.name }));
   return <MotionRoot>
     <SmoothScroll />

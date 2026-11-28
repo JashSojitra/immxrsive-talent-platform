@@ -11,12 +11,12 @@ export default async function PartnerPage({ params }: { params: Promise<{ compan
   const website = companyWebsiteUrl(company.content.website);
   return <main className={styles.page}>
     <nav aria-label="Breadcrumb"><Link href="/partners">Industry partners</Link><span aria-current="page">Organization</span></nav>
-    <p className={styles.eyebrow}>Industry partner</p>
-    <h1>{company.content.name}</h1>
+    <p className="ui-eyebrow">Industry partner</p>
+    <h1 className="ui-display">{company.content.name}</h1>
     <p className={styles.metadata}>{[company.content.location, company.content.sector].filter(Boolean).join(" / ")}</p>
     <p>{company.content.description}</p>
     <div className={styles.actions}>
-      <Link className={styles.button} href={`/inquiry/partner/${company.id}`}>Discuss a collaboration <span aria-hidden="true">&#8599;</span></Link>
+      <Link className="ui-button ui-button-primary" href={`/inquiry/partner/${company.id}`}>Discuss a collaboration <span aria-hidden="true">&#8599;</span></Link>
       {website ? new URL(website).hostname.endsWith(".example.test") ? <p>Reserved fixture website: {website} (not a hosted source)</p> : <a href={website} target="_blank" rel="noopener noreferrer">Company website <span aria-hidden="true">&#8599;</span></a> : <p>Company website not listed.</p>}
     </div>
     <section className={styles.section} aria-labelledby="verified-projects-title">
@@ -26,7 +26,7 @@ export default async function PartnerPage({ params }: { params: Promise<{ compan
       {!company.verifiedProjects.length && <p className={styles.empty}>No staff-approved project associations yet.</p>}
     </section>
     {(["current", "past"] as const).map(status => <section key={status} className={styles.section} aria-labelledby={`${status}-collaborations-title`}>
-      <p className={styles.eyebrow}>{status === "current" ? "Happening now" : "Collaboration archive"}</p>
+      <p className="ui-eyebrow">{status === "current" ? "Happening now" : "Collaboration archive"}</p>
       <h2 id={`${status}-collaborations-title`}>{status === "current" ? "Current collaborations" : "Past collaborations"}</h2>
       <div className={styles.timeline}>{company.collaborations.filter(collaboration => collaboration.status === status).map(collaboration => <article key={collaboration.id} className={styles.card}>
         <p className={styles.metadata}>{collaboration.year}{collaboration.date ? ` / ${collaboration.date}` : ""}</p>

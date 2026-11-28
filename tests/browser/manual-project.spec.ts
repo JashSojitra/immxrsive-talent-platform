@@ -94,12 +94,12 @@ test("verified student manually creates, previews, resolves conflicts and publis
     await page.unroute(`**/api/v1/student/projects/${id}`);
     await page.getByLabel("Repository 1 URL").fill("https://github.com/example-org/new-source");
     await page.getByRole("button", { name: "Remove repository 2", exact: true }).click();
-    await page.getByRole("button", { name: "Save project", exact: true }).click(); await expect(page.getByRole("status")).toHaveText("Project saved.");
+    await page.getByRole("button", { name: "Save project", exact: true }).click(); await expect(page.getByRole("status", { name: "Project feedback" })).toHaveText("Project saved.");
     await page.getByRole("button", { name: "Remove repository 1", exact: true }).click();
-    await page.getByRole("button", { name: "Save project", exact: true }).click(); await expect(page.getByRole("status")).toHaveText("Project saved.");
+    await page.getByRole("button", { name: "Save project", exact: true }).click(); await expect(page.getByRole("status", { name: "Project feedback" })).toHaveText("Project saved.");
     expect((await (await page.request.get(`/api/v1/student/projects/${id}`)).json()).draft.repositories).toEqual([]);
     page.once("dialog", dialog => dialog.accept()); await page.getByRole("button", { name: "Publish project", exact: true }).click();
-    await expect(page.getByRole("status")).toHaveText("Project published.");
+    await expect(page.getByRole("status", { name: "Project feedback" })).toHaveText("Project published.");
     await page.getByRole("link", { name: "View public project", exact: true }).click();
     await expect(page.getByRole("heading", { level: 1, name: "Spatial Learning Studio — finished" })).toBeVisible();
     await expect(page.getByText("XR Developer", { exact: true })).toBeVisible();
@@ -142,7 +142,7 @@ test("verified student manually creates, previews, resolves conflicts and publis
     await page.getByLabel("Project title", { exact: true }).focus(); await expect(page.getByLabel("Project title", { exact: true })).toBeFocused();
     await page.screenshot({ path: testInfo.outputPath("project-editor.png"), fullPage: true });
     page.once("dialog", dialog => dialog.accept()); await page.getByRole("button", { name: "Unpublish project", exact: true }).click();
-    await expect(page.getByRole("status")).toContainText("Project unpublished");
+    await expect(page.getByRole("status", { name: "Project feedback" })).toContainText("Project unpublished");
     expect((await page.request.get(`/projects/${id}`)).status()).toBe(404);
     expect((await page.request.get(`/api/v1/projects/${id}`)).status()).toBe(404);
     expect((await (await page.request.get(`/api/v1/students/${profile.id}`)).json()).projects).toEqual([]);

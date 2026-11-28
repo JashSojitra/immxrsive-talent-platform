@@ -67,6 +67,7 @@ describeWithDatabase("public project detail API", () => {
     expect(response.status).toBe(200);
     expect(response.headers.get("cache-control")).toBe("no-store");
     expect(body).toEqual({
+      screenshots: [],
       id: "P01",
       title: "Industrial Safety VR Trainer",
       description: "Immersive safety training prototype for industrial onboarding.",

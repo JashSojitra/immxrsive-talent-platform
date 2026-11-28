@@ -13,7 +13,7 @@ export default function ProjectNotFound() {
       </header>
       <section className={styles.inquirySection} aria-labelledby="not-found-title">
         <p className={styles.chapter}>404 / No project signal</p>
-        <h1 id="not-found-title" className={styles.stateTitle}>Project<br /><em>not available.</em></h1>
+        <h1 id="not-found-title" className={`ui-display ${styles.stateTitle}`}>Project<br /><em className="ui-display-accent">not available.</em></h1>
         <p>The requested project could not be found. Explore published talent and their project evidence.</p>
         <Link className={styles.inquiryCta} href="/talent">Return to talent index <span aria-hidden="true">↗</span></Link>
       </section>
