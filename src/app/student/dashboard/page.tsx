@@ -1,3 +1,5 @@
+import { studentStoriesForApproval } from "@/updates/service";
+import { StudentApprovals } from "@/updates/StudentApprovals";
 ﻿import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -25,6 +27,7 @@ export default async function StudentDashboardPage() {
   const relationships = profile ? await listProjectRelationships({ db, actorUserId: user.id }) : [];
   // Read-only: staff credits grant no membership, editing or ownership.
   const credits = profile ? await queryCuratedCredits(db, profile.id) : [];
+  const pendingStories = await studentStoriesForApproval(db, user.id);
   const projects = relationships.filter(project => project.state === "accepted");
   const invitations = relationships.filter(project => project.state === "pending" || project.pendingMaintenance);
   const checklist = [
@@ -51,6 +54,7 @@ export default async function StudentDashboardPage() {
     {!verified && <section className={styles.notice} aria-labelledby="verification-heading"><h2 id="verification-heading">Confirm your Algoma connection</h2><p>Verify your university email to create a student profile and manage projects. Staff access is assigned separately.</p><Link href="/student/verify">Verify affiliation ↗</Link></section>}
     {invitations.length > 0 && <section className={styles.notice} aria-labelledby="attention-heading"><h2 id="attention-heading">You have {invitations.length} {invitations.length === 1 ? "invitation or offer" : "invitations or offers"} to review</h2><p>Accept only the contributions and responsibilities you want represented in your portfolio.</p><Link href="/student/project-invitations">Review invitations ↗</Link></section>}
 
+    <StudentApprovals stories={pendingStories.map(({ article }) => ({ id: article.id, version: article.version, title: article.title, excerpt: article.excerpt, bodyMarkdown: article.bodyMarkdown, coverMediaId: article.coverMediaId, coverAlt: article.coverAlt }))} />
     <div className={styles.grid}>
       <section className={styles.panel} aria-labelledby="profile-heading">
         <div className={styles.sectionHeading}><h2 id="profile-heading">My profile</h2><span className={styles.badge}>{verified ? "Affiliation verified" : "Verification needed"}</span></div>

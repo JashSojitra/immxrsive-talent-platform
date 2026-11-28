@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import Link from "next/link";
 import { SpatialStage } from "@/components/spatial/SpatialStage";
@@ -527,7 +528,7 @@ function StudentCard({ student, index }: { student: TalentDirectoryItem; index: 
           <span>{prettyValue(student.status)}</span>
         </div>
         <div className={styles.cardIdentity}>
-          <span className={styles.avatarMark} aria-hidden="true">{student.name.charAt(0)}</span>
+          <span className={styles.avatarMark} aria-hidden="true">{student.avatarMediaId ? <Image src={`/media/${student.avatarMediaId}`} alt="" width={64} height={64} unoptimized style={{ borderRadius: "50%", objectFit: "cover" }} /> : student.name.charAt(0)}</span>
           <div><h3>{student.name}</h3><p>{student.headline}</p></div>
         </div>
         <ul className={styles.skillList} aria-label={`${student.name}'s key skills`}>

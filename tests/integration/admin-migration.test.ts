@@ -52,7 +52,7 @@ test.each([12, 13])("upgrade from journal prefix %i preserves populated historic
     async function historicalRows() {
       const snapshots: Record<string, unknown> = {};
       for (const { tablename } of tables) {
-        const [row] = await db.execute(sql`SELECT coalesce(jsonb_agg(to_jsonb(t) - 'management_mode' ORDER BY (to_jsonb(t) - 'management_mode')::text),'[]'::jsonb) AS rows FROM public.${sql.identifier(String(tablename))} t`);
+        const [row] = await db.execute(sql`SELECT coalesce(jsonb_agg(to_jsonb(t) - 'management_mode' - 'avatar_media_id' ORDER BY (to_jsonb(t) - 'management_mode' - 'avatar_media_id')::text),'[]'::jsonb) AS rows FROM public.${sql.identifier(String(tablename))} t`);
         snapshots[String(tablename)] = row.rows;
       }
       return snapshots;
@@ -60,7 +60,7 @@ test.each([12, 13])("upgrade from journal prefix %i preserves populated historic
     const before = await historicalRows();
     const ledger = await db.execute(sql`SELECT * FROM drizzle.__drizzle_migrations ORDER BY id`);
     await migrate(db, { migrationsFolder: "drizzle" });
-    expect(await db.execute(sql`SELECT * FROM drizzle.__drizzle_migrations`)).toHaveLength(14);
+    expect(await db.execute(sql`SELECT * FROM drizzle.__drizzle_migrations`)).toHaveLength(journal.entries.length);
     expect(await historicalRows()).toEqual(before);
     expect(await db.execute(sql`SELECT * FROM drizzle.__drizzle_migrations ORDER BY id LIMIT ${upgradeIndex}`)).toEqual(ledger);
     expect(await db.execute(sql`SELECT id,management_mode FROM projects ORDER BY id`)).toEqual([

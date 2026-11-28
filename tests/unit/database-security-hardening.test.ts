@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { describe, expect, test } from "vitest";
 
+const updatesMigration = readFileSync("drizzle/0014_special_alex_power.sql", "utf8");
 const adminMigration = readFileSync("drizzle/0012_cooing_shatterstar.sql", "utf8");
 const partnerMigration = readFileSync("drizzle/0013_r4_partners.sql", "utf8");
 const schemaSource = readFileSync("src/db/schema.ts", "utf8");
@@ -62,7 +63,10 @@ describe("database Data API hardening", () => {
     expect(partnerTables).toHaveLength(9);
     expect(partnerMigration).toContain("ENABLE ROW LEVEL SECURITY");
     expect(partnerMigration).not.toMatch(/CREATE POLICY|GRANT .* TO (anon|authenticated)/);
-    expect([...partnerTables, ...historical, ...protectedTables(sharedMigration), ...protectedTables(joinMigration), ...protectedTables(studioMigration), ...adminTables].sort()).toEqual(expected);
+    const updatesTables = ["articles", "media_assets"];
+    for (const table of updatesTables) expect(updatesMigration).toContain(`ALTER TABLE "${table}" ENABLE ROW LEVEL SECURITY`);
+    expect(updatesMigration).toContain("REVOKE ALL PRIVILEGES");
+    expect([...updatesTables, ...partnerTables, ...historical, ...protectedTables(sharedMigration), ...protectedTables(joinMigration), ...protectedTables(studioMigration), ...adminTables].sort()).toEqual(expected);
     expect(studioMigration).toMatch(/ENABLE ROW LEVEL SECURITY/);
     expect(studioMigration).toMatch(/REVOKE ALL PRIVILEGES ON TABLE/);
     expect(studioMigration).not.toMatch(/CREATE POLICY|GRANT .* TO (anon|authenticated)/);

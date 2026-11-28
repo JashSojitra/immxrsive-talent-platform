@@ -1,3 +1,6 @@
+import { staffArticles } from "@/updates/service";
+import { ArticleEditor } from "@/updates/Editor";
+import { ArticleList } from "@/updates/List";
 import { staffQueue } from "@/partners/service";
 import { PartnerStaff } from "@/partners/Staff";
 import type { Metadata } from "next";
@@ -29,6 +32,14 @@ export default async function AdminPage({ params, searchParams }: { params: Prom
   catch (e) { if (!(e instanceof ProjectError) || e.status !== 403) throw e; return <AdminShell title="Administrator access required" role="no staff role"><p>Your signed-in account has no administrator access. Ask a platform super administrator to grant an appropriate role using your internal account ID.</p><p>Internal account ID: <code>{user.id}</code></p><Link href="/student/dashboard">Return to your account</Link></AdminShell>; }
   const shell = (title: string, children: React.ReactNode) => <AdminShell title={title} role={identity.role}>{children}</AdminShell>;
   if (section.join("/") === "partners") return shell("Partnerships & review tasks", <PartnerStaff data={await staffQueue(db,user.id)} />);
+  if (section[0] === "updates") {
+    const rows = await staffArticles(db, user.id);
+    if (section.length === 1) return shell("Updates & Stories", <ArticleList rows={rows} />);
+    if (section.length !== 2) notFound();
+    if (section[1] === "new") return shell("Create a post", canManage(identity.role) ? <ArticleEditor /> : <p>Administrator access is required to create posts.</p>);
+    const post = rows.find(a => a.id === section[1]); if (!post) notFound();
+    return shell("Edit post", <ArticleEditor initial={{ ...post, studentApprovedAt: post.studentApprovedAt?.toISOString() ?? null }} canEdit={canManage(identity.role)} />);
+  }
   if (!section.length) {
     const [data, events, queue] = await Promise.all([adminList(db, user.id), adminActivity(db, user.id), staffQueue(db,user.id)]);
     return shell("Your platform at a glance.", <><p>Review what needs attention, curate project experiences and manage industry relationships. Student-owned work keeps its separate consent and approval process.</p><div className={styles.actions}>{canManage(identity.role) && <><Link href="/admin/projects/new">Create project</Link><Link href="/admin/projects/new#intake-repository">Import repository</Link></>}<Link href="/admin/reviews">Review technical readiness</Link></div><div className={admin.metrics}>{["draft", "published", "unpublished", "archived"].map(state => <Link key={state} href={`/admin/projects?status=${state}`}><strong>{data.projects.filter(p => p.lifecycle === state).length}</strong>{state}</Link>)}</div><h2>Staff work queue</h2><div className={`${admin.metrics} ${admin.queueMetrics}`}><Link href="/admin/partners#verification"><strong>{queue.requests.filter(r=>r.request.kind === "verification" && r.request.status === "pending").length}</strong>Verification requests</Link><Link href="/admin/partners#companies"><strong>{queue.companies.filter(c=>c.status === "draft").length + queue.imports.length}</strong>Company drafts / imports</Link><Link href="/admin/partners#association"><strong>{queue.requests.filter(r=>r.request.kind === "association" && r.request.status === "pending").length}</strong>Association requests</Link></div><h2>Recently updated</h2><AdminProjectList rows={data.projects.slice(0, 6)} /><h2>Recent activity</h2><EventList events={events.slice(0, 5)} /></>);

@@ -1,3 +1,6 @@
+import { AvatarEditor } from "@/updates/MediaUpload";
+import { eq } from "drizzle-orm";
+import { studentProfiles } from "@/db/schema";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -25,6 +28,7 @@ export default async function StudentProfileEditorPage() {
     getPrivateStudentProfile(db, user.id),
     getProfileEditorVocabulary(db),
   ]);
+  const [photo] = await db.select({ id: studentProfiles.avatarMediaId }).from(studentProfiles).where(eq(studentProfiles.ownerUserId, user.id));
   const serializableProfile = profile ? {
     ...profile,
     createdAt: profile.createdAt.toISOString(),
@@ -38,6 +42,7 @@ export default async function StudentProfileEditorPage() {
       <nav className={`${authStyles.nav} ${authStyles.profileNav}`} aria-label="Student profile editor">
         <Link className={authStyles.backLink} href="/student/dashboard">Dashboard</Link> <Link className={authStyles.backLink} href="/student/projects">My Projects</Link>
       </nav>
+      {profile && <AvatarEditor initialId={photo?.id ?? null} />}
       <ProfileEditor
         initialProfile={serializableProfile}
         vocabulary={vocabulary}

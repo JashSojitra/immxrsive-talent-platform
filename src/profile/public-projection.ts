@@ -35,6 +35,7 @@ export async function querySelfServiceProfileProjection(
   const [profile] = await db.select({
     id: studentProfiles.id,
     name: authUsers.name,
+    avatarMediaId: studentProfiles.avatarMediaId,
     headline: studentProfiles.headline,
     biography: studentProfiles.biography,
     publicLocation: studentProfiles.publicLocation,
@@ -97,6 +98,7 @@ export async function querySelfServiceProfileProjection(
   return {
     id: profile.id,
     name: profile.name,
+    avatarMediaId: profile.avatarMediaId,
     headline: profile.headline,
     biography: profile.biography,
     program: profile.program,

@@ -7,7 +7,7 @@ on:
   push:
     branches: [feat/immxrsive-ux-overhaul]
   pull_request:
-    branches: [main]
+    branches: [main, feat/updates-and-stories]
   workflow_dispatch:
 
 permissions:

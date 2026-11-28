@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import {
   boolean,
+  customType,
   date,
   check,
   index,
@@ -525,10 +526,22 @@ export const affiliationVerificationRateLimits = pgTable(
   (table) => [index("affiliation_rate_limits_action_idx").on(table.action)],
 );
 
+const bytea = customType<{ data: Buffer; driverData: Buffer }>({ dataType: () => "bytea" });
+export const mediaKindEnum = pgEnum("media_kind", ["avatar", "article_cover", "article_inline"]);
+export const mediaAssets = pgTable("media_assets", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  ownerUserId: text("owner_user_id").notNull().references(() => authUsers.id, { onDelete: "restrict" }),
+  kind: mediaKindEnum("kind").notNull(),
+  mime: text("mime").notNull(), width: integer("width").notNull(), height: integer("height").notNull(),
+  byteSize: integer("byte_size").notNull(), sha256: text("sha256").notNull(), bytes: bytea("bytes").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+}, t => [index("media_assets_owner_idx").on(t.ownerUserId)]).enableRLS();
+
 export const studentProfiles = pgTable(
   "student_profiles",
   {
     id: uuid("id").defaultRandom().primaryKey(),
+    avatarMediaId: uuid("avatar_media_id").references(() => mediaAssets.id, { onDelete: "set null" }),
     ownerUserId: text("owner_user_id")
       .notNull()
       .unique()
@@ -564,6 +577,31 @@ export const studentProfiles = pgTable(
     index("student_profiles_publication_idx").on(table.publicationStatus),
   ],
 );
+
+export const articleCategoryEnum = pgEnum("article_category", ["student_success", "event", "news"]);
+export const articleStatusEnum = pgEnum("article_status", ["draft", "in_review", "published", "archived"]);
+export const articles = pgTable("articles", {
+  id: uuid("id").defaultRandom().primaryKey(), slug: text("slug").notNull().unique(),
+  category: articleCategoryEnum("category").notNull(), status: articleStatusEnum("status").default("draft").notNull(),
+  title: text("title").notNull(), excerpt: text("excerpt").default("").notNull(), bodyMarkdown: text("body_markdown").default("").notNull(),
+  coverMediaId: uuid("cover_media_id").references(() => mediaAssets.id, { onDelete: "restrict" }), coverAlt: text("cover_alt").default("").notNull(),
+  studentProfileId: uuid("student_profile_id").references(() => studentProfiles.id, { onDelete: "restrict" }),
+  eventName: text("event_name").default("").notNull(), eventDate: date("event_date"), eventLocation: text("event_location").default("").notNull(),
+  tags: text("tags").array().default([]).notNull(), authorDisplayName: text("author_display_name").notNull(),
+  studentApprovedAt: timestamp("student_approved_at", { withTimezone: true }), approvalRequestedAt: timestamp("approval_requested_at", { withTimezone: true }),
+  studentNote: text("student_note").default("").notNull(), publishedAt: timestamp("published_at", { withTimezone: true }),
+  createdBy: text("created_by").notNull().references(() => authUsers.id, { onDelete: "restrict" }),
+  updatedBy: text("updated_by").notNull().references(() => authUsers.id, { onDelete: "restrict" }),
+  version: integer("version").default(1).notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+}, t => [
+  check("articles_success_profile_check", sql`${t.category} <> 'student_success' OR ${t.studentProfileId} IS NOT NULL`),
+  check("articles_excerpt_check", sql`length(${t.excerpt}) <= 200`),
+  check("articles_cover_alt_check", sql`${t.coverMediaId} IS NULL OR length(trim(${t.coverAlt})) > 0`),
+  check("articles_success_approval_check", sql`${t.status} <> 'published' OR ${t.category} <> 'student_success' OR ${t.studentApprovedAt} IS NOT NULL`),
+  index("articles_public_idx").on(t.status, t.category, t.publishedAt),
+]).enableRLS();
 
 export const studentProfileSkills = pgTable(
   "student_profile_skills",
